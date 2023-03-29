@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid empty statements [PB.USC.AES]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid empty statements [PB.USC.AES]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies empty statements in the code. An error
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An error is not reported in the following situations because
+these two coding patterns are often used intentionally:
+
+1) Empty statements immediately after for loops
+   for (int i = 0; i &lt; NUM ; i++);
+2) Empty statements immediately after while loops
+   while (true);
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The code does not sufficiently manage its control flow during execution,
+creating conditions in which the control flow can be modified in unexpected
+ways." [CWE-691]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Empty statements are typically unnecessary left-over code,
+so they should be removed to simplify code.
+Empty statements might also be mistakenly placed
+commas, which might alter the control flow in unintentional
+ways.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class AES {
+    final static String hello = "Hello World!";
+    public static void main (String args[]) {
+        foo () ;
+    ; //VIOLATION
+        if (args.length== 0); //VIOLATION
+            System.out.println("no argument");
+    }
+    private static void foo () {
+        System.out.println(hello);; 
+        //VIOLATION: 2nd semicolon
+    }
+    
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class AESFixed
+{
+    final static String hello = "Hello World!";
+    public static void main (String args[]) {
+        foo () ; //FIXED
+        if (args.length== 0) //FIXED
+            System.out.println("no argument");
+    }
+    private static void foo () {
+        System.out.println(hello); //FIXED
+    }
+    
+}
+
+</PRE>
+</BODY>
+</HTML>

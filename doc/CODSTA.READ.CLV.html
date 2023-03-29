@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Comment local variables [CODSTA.READ.CLV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Comment local variables [CODSTA.READ.CLV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the declarations of all local variables have a comment
+either before or after them.  A violation will be flagged for each local 
+variable which is not commented.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for variables declared in the initializer
+of a "for" loop.  It is common practice to define index variables here with no
+comment.
+
+For lines on which there are multiple variable declarations, the rule will not 
+flag a violation for either the first or the last variable declared on the line 
+if there is a comment at the end of the line.  In this case, it is unclear 
+whether the comment was intended to go with the first variable declaration or 
+the last variable declaration, so neither is flagged.  This only applies with 
+the default setting of the parameters ("After declaration").  For example, it is
+unclear which variable the comment is supposed to go with in the following line:
+
+int i, j, k;  //This comment is ambiguous.
+
+Neither "i" nor "k" would be flagged.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Comment Positioning
+    -Before declaration
+        -If this option is selected, the rule will look for a comment 
+         immediately preceding the variable declaration, either on the same line
+         or on the previous line.
+    -After declaration (default value)
+        -If this option is selected, the rule will look for a comment 
+         immediately following the variable declaration.  The comment must begin 
+         on the same line as the variable declaration.
+-Excluded Variable Types (Specify fully qualified names)
+    -Variables which have a type specified in this list will not be checked.
+    -Default value is an empty list.
+    -The rule will check the type hierarchy of each variable type to make sure 
+     no type in the type's hierarchy is in this list.  This means that a
+     variable's type will be excluded from the checking even if that type is not
+     in the list if one of its superclasses or superinterfaces is in the list. 
+    -For example, if variables of type "java.util.Set" are not to be flagged,
+     you would add "java.util.Set" to this list.
+-Excluded Variable Names (Specify using a regular expression)
+    -This parameter can be turned on or off using the check box. (Default is 
+     "on".)
+    -Variables which have a name matching the regular expression specified here
+     will not be checked.
+    -Default value is "^[a-zA-Z]$".  This means that variables which have a name
+     consisting of one letter will not be checked by default.         
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+  
+All local variables should be commented to indicate what their purpose is.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class CLV {
+    static int add(int a, int b, int c) {
+        int i = 0;
+        i = a + b + c;
+        return i;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide each local variable with a comment indicating its purpose.
+
+package examples.rules.codsta.read;
+
+public class CLVFixed {
+    static int add(int a, int b, int c){
+        int i = 0;  //keeps track of the sum of the parameters
+        i = a + b + c;
+        return i;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

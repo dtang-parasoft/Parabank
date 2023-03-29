@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid catch clauses with the same content [EXCEPT.CDUPL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid catch clauses with the same content [EXCEPT.CDUPL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies try-catch blocks where two or more catch clauses have the same content. 
+The rule ignores comments, spaces and tabs when comparing content.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule has one quickfix - "Catch duplicated blocks in one catch block"
+which removes duplicated blocks and adds exception to exceptions list in first parentheses.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+In Java SE 7 and later, a single catch block can handle more than one type of exception. 
+This rule limits duplication of code and reduces the likelihood that additional general 
+exceptions will be caught. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+        try {
+            if(a == 1) {
+                throw new ValidationException("test");
+            }
+            throw new NullPointerException();
+        } catch (NullPointerException e) { // VIOLATION
+            e.printStackTrace();
+        } catch (ValidationException e) { // VIOLATION 
+            e.printStackTrace();
+        } 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+        try {
+            if(a == 1) {
+                throw new ValidationException("test");
+            }
+            throw new NullPointerException();
+        } catch (NullPointerException|ValidationException e) { // FIXED
+            e.printStackTrace();
+        } 
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+<A HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/language/catch-multiple.html">http://docs.oracle.com/javase/7/docs/technotes/guides/language/catch-multiple.html</A>
+
+</PRE>
+</BODY>
+</HTML>

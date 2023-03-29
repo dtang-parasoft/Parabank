@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include an appropriate Javadoc tag in the Javadoc for JUnit test methods [JUNIT.UPJT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include an appropriate Javadoc tag in the Javadoc for JUnit test methods [JUNIT.UPJT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+All JUnit test methods for fixing bugs in programs and testing new features 
+should have a Javadoc tag that identifies the bug or feature request the test 
+case corresponds to.
+This rule detects JUnit test methods that do not contain an acceptable Javadoc
+tag. 
+
+The rule must be parameterized to specify a list of acceptable tags; see
+PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+  
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Include one of the following tags in the Javadoc for each JUnit test method
+    -This parameter specifies the list of tags that will be enforced for each
+     JUnit test method. Each JUnit test method must contain one of the tags 
+     included in this list.  (Default values are "@pr" and "@fr".) 
+-Javadoc tag must be followed by a token.
+    -If this parameter is enabled, a Javadoc tag must be followed by a token.
+	 If a token is missing, the rule will trigger even if the method contains
+	 an acceptable Javadoc tag. (Default is "true".)
+-Make tag checking case sensitive
+    -If this parameter is enabled, Javadoc tags in the test methods must
+     exactly match the tags specified in the list, including letter casing.
+	 (Default is "false".)
+         
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using Javadoc tags with JUnit test methods is a good way to keep track of which 
+bug or feature request a test case corresponds to.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class UPJT extends TestCase {
+
+    /**
+     * @author Parasoft  //VIOLATION- no "@pr" or "@fr" tag in Javadoc  
+     */
+    public void testMethod() {
+        //some test code
+    }
+    
+    /**
+     * @pr  //VIOLATION- "@pr" tag present but has no token following it 
+     */
+    public void testMethod1() {
+        //some test code
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class UPJTFixed extends TestCase {
+
+    /**
+     * @author Parasoft 
+     * @fr 1800  //FIXED
+     */
+    public void testMethod() {
+        //some test code
+    }
+    
+    /**
+     * @pr <A HREF="http://parasoft.com?pr=1233">http://parasoft.com?pr=1233</A>  //FIXED
+     */
+    public void testMethod1() {
+        //some test code
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

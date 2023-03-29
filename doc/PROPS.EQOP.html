@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always use the '=' operator [PROPS.EQOP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always use the '=' operator [PROPS.EQOP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any property operator that is not '='. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore property file name (regular expression)
+    -Allows you to provide a list of property files to ignore. If a property file 
+     matches any of the regular expressions, it will be exempt from this rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is common to use the '=' operator in property files. Using the '=' operator will increase
+the file's readability. Also, it can detect a missing line continuation character '/' on 
+the preceding line.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+a  A   // VIOLATION
+b : B  // VIOLATION
+c = C
+b e  // VIOLATION : missing '/; on the preceding line
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+a = A  // FIXED
+b = B  // FIXED
+c = C /  // FIXED
+b e
+
+</PRE>
+</BODY>
+</HTML>

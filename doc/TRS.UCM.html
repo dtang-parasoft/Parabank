@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use unsynchronized Collections/Maps only when safe [TRS.UCM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use unsynchronized Collections/Maps only when safe [TRS.UCM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies fields initialized to unsynchronized classes or subclasses
+of 'java.util.Collection' and 'java.util.Map'.
+The rule does not report:
+- "private" fields that are only accessed from a static initializer,
+a synchronized method, or a synchronized block.
+- fields in test classes (JUnit 3, 4, and 5), which are unlikely to be called
+by multiple threads.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check:
+- local variables (the rule can be used in conjunction with OPT.SDLS, which
+  detects local variables that are not synchronized.)
+- vectors and hashtables, which are synchronized for legacy reasons.
+
+By default, the rule does not check immutable collections (see PARAMETERS).
+Note that immutable and unmodifiable collections are not the same:
+"The immutable collections behave in the same way as the 'Collections.unmodifiable...'
+wrappers. However, these collections are not wrappers — these are data
+structures implemented by classes where any attempt to modify the data causes
+an exception to be thrown.
+If you create a 'List' and pass it to the 'Collections.unmodifiableList' method,
+then you get an unmodifiable view. The underlying list is still modifiable, and
+modifications to it are visible through the 'List' that is returned,
+so it is not actually immutable." [Oracle JDK 9 Documentation]
+
+As a result of this behavior, 'Collections.unmodifiable...' wrappers are not
+secure in terms of multithreading, because such a collection can be modified
+after it is constructed, while other threads are processing it.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore non-static fields. (default on)
+-Ignore immutable collections. (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent confusing and erroneous behavior that may be caused
+by the use of unsynchronized collections or maps.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The use of synchronized collections may impact performance.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.util.*;
+
+public class UCM {
+    static List _list1 = Collections.synchronizedList(new ArrayList());
+    static List _list2 = new ArrayList(); //VIOLATION
+    static Map _map1;
+    static Map _map2;
+
+    public void initMap1() {
+        _map1 = Collections.synchronizedMap(new HashMap());
+    }
+    public void initMap2() {
+        _map2 = new HashMap(); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.util.*;
+
+public class UCMFixed {
+    static List _list1 = Collections.synchronizedList(new ArrayList());
+    static List _list2 = Collections.synchronizedList(new ArrayList()); //FIXED
+    static Map _map1;
+    static Map _map2;
+
+    public void initMap1() {
+        _map1 = Collections.synchronizedMap(new HashMap());
+    }
+    public void initMap2() {
+        _map2 = Collections.synchronizedMap(new HashMap()); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Oracle JDK 9 Documentation
+Creating Immutable Lists, Sets, and Map
+<A HREF="https://docs.oracle.com/javase/9/core/creating-immutable-lists-sets-and-maps.htm">https://docs.oracle.com/javase/9/core/creating-immutable-lists-sets-and-maps.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

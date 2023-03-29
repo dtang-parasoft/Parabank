@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assume that a Java char fully represents a Unicode code point [PB.CUB.NCUCP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assume that a Java char fully represents a Unicode code point [PB.CUB.NCUCP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not write code that assumes that a value of the primitive type 'char' (or
+a Character object) fully represents a Unicode code point. Conformance with
+this requirement typically requires using methods that accept a Unicode code
+point as an 'int' value and avoiding methods that accept a Unicode code unit
+as a 'char' value because these latter methods cannot support supplementary
+characters." [SEI CERT Oracle Coding Standard for Java]
+
+Supplementary characters are Unicode characters whose code points are above
+U+FFFF, which therefore cannot be described as single 16-bit entities, such as
+the 'char' data type.
+
+Methods that only take a 'char' type parameter do not support supplementary
+characters. For this reason, corresponding methods that take an 'int' type
+parameter should be used to ensure that supplementary characters are supported.
+
+By default, the rule is parameterized to detect when the methods form
+the 'java.lang.Character class' that only take a 'char' type parameter
+are used in code. You can customize the list of detected methods.
+See PARAMETERS for details.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Methods to be checked" parameter allows you to define the methods the rule
+will report as incorrect, as well as to specify the methods that should be used
+instead:
+ - The "Incorrect method (qualified name)" column specifies the qualified name
+   of a method that only takes a 'char' type parameter and is reported by this
+   rule as incorrect
+ - The "Correct method (qualified name)" column specifies the qualified name of
+   a method that should replace the reported method to ensure that supplementary
+   characters are supported.
+
+By default, the rule is parameterized to report the following methods:
+- java.lang.Character$isDefined(char)
+- java.lang.Character$isDigit(char)
+- java.lang.Character$isIdentifierIgnorable(char)
+- java.lang.Character$isISOControl(char)
+- java.lang.Character$isJavaIdentifierPart(char)
+- java.lang.Character$isJavaIdentifierStart(char)
+- java.lang.Character$isLetter(char)
+- java.lang.Character$isLetterOrDigit(char)
+- java.lang.Character$isLowerCase(char)
+- java.lang.Character$isMirrored(char)
+- java.lang.Character$isSpaceChar(char)
+- java.lang.Character$isTitleCase(char)
+- java.lang.Character$isUnicodeIdentifierPart(char)
+- java.lang.Character$isUnicodeIdentifierStart(char)
+- java.lang.Character$isUpperCase(char)
+- java.lang.Character$isWhitespace(char)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent compatibility issues and other errors that may
+occur when inadequate methods are used for String manipulation. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.PB.CUB;
+
+public class NCUCP
+{
+    public static String trim(String string) {
+        char ch;
+        int i;
+        for (i = 0; i &lt; string.length(); i += 1) {
+            ch = string.charAt(i);
+            if (!Character.isLetter(ch)) { //VIOLATION
+                break;
+            }
+        }
+        return string.substring(i);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use the integer form of the 'Character.isLetter()' method that
+accepts a Unicode code point as an 'int' argument.
+
+package examples.rules.PB.CUB;
+
+public class NCUCPFixed
+{
+    public static String trim(String string) {
+        int ch;
+        int i;
+        for (i = 0; i &lt; string.length(); i += Character.charCount(ch)) {
+            ch = string.codePointAt(i);
+            if (!Character.isLetter(ch)) { //FIXED
+                break;
+            }
+        }
+        return string.substring(i);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+STR01-J. Do not assume that a Java char fully represents a Unicode code point
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/STR01-J.+Do+not+assume+that+a+Java+char+fully+represents+a+Unicode+code+point">https://wiki.sei.cmu.edu/confluence/display/java/STR01-J.+Do+not+assume+that+a+Java+char+fully+represents+a+Unicode+code+point</A>
+
+The Java Tutorials
+Unicode: Design Considerations
+<A HREF="https://docs.oracle.com/javase/tutorial/i18n/text/design.html">https://docs.oracle.com/javase/tutorial/i18n/text/design.html</A>
+
+</PRE>
+</BODY>
+</HTML>

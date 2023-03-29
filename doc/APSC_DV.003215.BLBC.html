@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Put a blank line before each C-style comment [APSC_DV.003215.BLBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Put a blank line before each C-style comment [APSC_DV.003215.BLBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Every block (C-style) comment should have a blank line preceding it.  This rule
+will flag any block comment which is not immediately preceded by a blank line.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Placing a blank line before a block comment helps to set the comment apart from
+the rest of the code.  This improves the readability of the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class BLBC{
+    public void myMeth(){
+        int i= 0;
+        /*      //VIOLATION- no blank line preceding comment
+         * increments i
+         */
+        i= i+1;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place a blank line before the comment.
+
+public class BLBCFixed{
+    public void myMeth(){
+        int i= 0;
+                //FIXED
+        /*    
+         * increments i
+         */
+        i= i+1;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#680">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#680</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare 'serialPersistentFields' "private static final" [SERIAL.SPF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare 'serialPersistentFields' "private static final" [SERIAL.SPF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if the "serialPersistentFields" of a "Serializable"
+class is not declared "private static final".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The Java specification states that "serialPersistentFields" must be declared
+"private static final". If this is not the case, then the default methodology
+for determining which fields are serialized may be used instead (all
+non-"static" and non-"transient" fields).
+See REFERENCES.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+The "serialPersistentFields" field is used to control which fields will be 
+serialized.  This field is commonly used to prevent sensitive data (such as 
+passwords) from being serialized.  If this field is not properly defined, then 
+the sensitive data may be serialized anyways.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SPF implements java.io.Serializable {
+    private String data;
+
+    ObjectStreamField[] serialPersistentFields = { //VIOLATION
+        new ObjectStreamField("data", String.class)
+    };
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SPFFixed implements java.io.Serializable {
+    private String data;
+
+    private static final ObjectStreamField[] serialPersistentFields = { //FIXED
+        new ObjectStreamField("data", String.class)
+    };
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Serializable (Java 2 Platform SE 5.0):
+   <A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/io/Serializable.html">http://java.sun.com/j2se/1.5.0/docs/api/java/io/Serializable.html</A>
+
+2. Defining Serializable Fields for a Class:
+   <A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/serialization/spec/serial-arch.html#6250">http://docs.oracle.com/javase/1.5.0/docs/guide/serialization/spec/serial-arch.html#6250</A>
+
+3. Cigital Java Security Rule Pack # 60:
+   <A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+4. OWASP API Security Top 10-2019
+   API3-Excessive Data Exposure
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the 'minlength' validator for password fields in 'validation.xml' [STRUTS.MLVP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the 'minlength' validator for password fields in 'validation.xml' [STRUTS.MLVP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks password '&lt;field&gt;' elements in 'validation.xml' files. A
+'&lt;field&gt;' is considered a password if the @property contains "password" (case
+insensitive). A violation is flagged for each password field which meets one of
+the following:
+    1) Does not specify a "minlength" validator
+    2) Specifies a "minlength" validator but it has an invalid value (such as a
+       negative value)
+    3) Specifies a "minlength" validator but it is less than the specified
+       minimum
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Specifying a minimum length for passwords can help prevent against a number of
+attacks.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security
+Standard) Requirement #8: "Assign a unique ID to each person with computer
+access".  Specifically, this rule helps to test for Issue 8.5.10: "Require a
+minimum password length of at least seven characters.".
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Minimum length for password should be at least (default 10)
+    Flag any "minlength" validators for password fields which are less than the
+    specified length.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The form below specifies two fields.  Field 'passwordA' does not define any
+validator.  Field 'passwordB' has a min lenght validator, but the min length
+of 5 is less than this rule's default of 10.
+
+validation.xml:
+
+&lt;form-validation&gt;
+  &lt;formset&gt;
+    &lt;form name="sampleForm"&gt;
+      &lt;!-- VIOLATION: no minlength validator specified --&gt;
+      &lt;field property="passwordA" depends="required"&gt;&lt;/field&gt;
+
+      &lt;!-- VIOLATION: 5 is less than value specified in parameter --&gt;
+      &lt;field property="passwordB" depends="required"&gt;
+          &lt;var&gt;
+              &lt;var-name&gt;minlength&lt;/var-name&gt;
+              &lt;var-value&gt;5&lt;/var-value&gt;
+          &lt;/var&gt;
+      &lt;/field&gt;
+    &lt;/form&gt;
+  &lt;/formset&gt;
+&lt;/form-validation&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+validation.xml:
+
+&lt;form-validation&gt;
+  &lt;formset&gt;
+    &lt;form name="sampleForm"&gt;
+      &lt;!-- FIXED --&gt;
+      &lt;field property="passwordA" depends="required"&gt;
+          &lt;var&gt;
+              &lt;var-name&gt;minlength&lt;/var-name&gt;
+              &lt;var-value&gt;10&lt;/var-value&gt;
+          &lt;/var&gt;
+      &lt;/field&gt;
+
+      &lt;!-- FIXED --&gt;
+      &lt;field property="passwordB" depends="required"&gt;
+          &lt;var&gt;
+              &lt;var-name&gt;minlength&lt;/var-name&gt;
+              &lt;var-value&gt;10&lt;/var-value&gt;
+          &lt;/var&gt;
+      &lt;/field&gt;
+    &lt;/form&gt;
+  &lt;/formset&gt;
+&lt;/form-validation&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.8 Improper access control
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-521: Weak Password Requirements
+<A HREF="https://cwe.mitre.org/data/definitions/521.html">https://cwe.mitre.org/data/definitions/521.html</A>
+
+Struts 1.3.10 Documentation
+<A HREF="http://struts.apache.org/release/1.3.x/userGuide/index.html">http://struts.apache.org/release/1.3.x/userGuide/index.html</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001680: The application must enforce a minimum 15-character password length
+
+Tags: PCI-DSS, CWE
+
+</PRE>
+</BODY>
+</HTML>

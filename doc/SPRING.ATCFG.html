@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow configuration class conventions [SPRING.ATCFG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow configuration class conventions [SPRING.ATCFG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that Spring configuration classes follow these requirements:
+
+1. Configuration classes must be non-final.
+2. Configuration classes must be non-local (may not be declared within a method).
+3. Configuration classes must have a default/no-arg constructor and may not use Autowired constructor parameters.
+
+A violation is reported for each class that is marked with the @Configuration annotation and 
+that violates above conditions. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This are required constraints for configuration classes.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+@Configuration
+final class FinalConfiguration { // VIOLATION - final modifier
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+@Configuration
+class FinalConfiguration { // FIXED
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/annotation/Configuration.html">http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/annotation/Configuration.html</A>
+
+</PRE>
+</BODY>
+</HTML>

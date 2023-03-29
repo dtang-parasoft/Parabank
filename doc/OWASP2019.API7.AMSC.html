@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not access or modify security configuration objects [OWASP2019.API7.AMSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not access or modify security configuration objects [OWASP2019.API7.AMSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies bean classes that access or modify security
+configuration objects. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Security Inspection
+
+Accessing or modifying the security configuration object in code is
+suspicious behavior from a security standpoint.  You should not have 
+to do this.  Doing so may compromise the security of the system.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and applications".
+Specifically, this rule tests for Issue 6.5.10: "Insecure configuration 
+management".
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability "A5-Security Misconfiguration".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See "SECURITY RELEVANCE" section.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.ejb.*;
+import java.security.*;
+
+public class AMSC implements EntityBean {    
+    public void setPolicy() {
+        Policy.setPolicy(new MyPolicy());  //VIOLATION- attempt to 
+                                    //set a custom security policy
+    }
+    
+    class MyPolicy extends Policy {
+        //Method stubs
+        public PermissionCollection getPermissions(CodeSource codesource) {
+            return null;
+        }
+
+        public void refresh() {
+        }
+    }
+    
+    //Stubs for EntityBean methods
+    public void setEntityContext(EntityContext ctx) { }
+    public void unsetEntityContext() { }
+    public void ejbActivate() { }
+    public void ejbPassivate() { }
+    public void ejbRemove() { }
+    public void ejbLoad() { }
+    public void ejbStore() { }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not access or modify the security configuration object within
+the bean class.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+Enterprise JavaBeans Programming restrictions on EJB 
+by Sanjay Mahapatra  -- JavaWorld August 2000
+
+PCI Data Security Standard:
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+</PRE>
+</BODY>
+</HTML>

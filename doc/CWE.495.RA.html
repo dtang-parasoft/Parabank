@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid methods that might expose internal representations by returning arrays or other mutable fields [CWE.495.RA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid methods that might expose internal representations by returning arrays or other mutable fields [CWE.495.RA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that might expose internal 
+representations by returning arrays or other mutable 
+objects. An error is reported for each occurrence. 
+
+If an array field or any other mutable field is declared 
+as "private", "package-private" or "protected", and there 
+is a return statement that returns the reference to the 
+mutable object, then the caller would be able to modify 
+the content of the field regardless of the accessibility
+modifiers on the field.
+
+Enforcing this rule will help to protect against the OWASP Top 10 
+application vulnerability "A4-Insecure Direct Object Reference".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+See BENEFITS section.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check arrays (default true)
+-Check mutable types (default false)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a field is declared as "private", "package-private"
+or "protected", it should not be modified by any caller that 
+does not have such accessibility. However, in the situation 
+described above, the field might be exposed to unauthorized
+modification. To prevent this, you could return a copy of the 
+field instead of the field itself. Thus, any changes made 
+outside would not affect the original copy kept by the class 
+itself.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class RA {  
+    private int[] secret= new int[10];
+    public int[] getSecret() { 
+        return secret; //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class RAFixed {
+    private int[] secret= new int[10];
+    public int[] getSecret() {
+        return (int[])secret.clone(); //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A4-Insecure Direct Object Reference):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+CWE-375: Returning a Mutable Object to an Untrusted Caller
+<A HREF="https://cwe.mitre.org/data/definitions/375.html">https://cwe.mitre.org/data/definitions/375.html</A>
+
+CWE-495: Private Array-Typed Field Returned From A Public Method
+<A HREF="https://cwe.mitre.org/data/definitions/495.html">https://cwe.mitre.org/data/definitions/495.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+</PRE>
+</BODY>
+</HTML>

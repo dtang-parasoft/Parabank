@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing arrays as arguments to methods that take non-array parameters [PB.CUB.APAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing arrays as arguments to methods that take non-array parameters [PB.CUB.APAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies arrays passed to methods, when the method declaration
+specifies a singular type.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check the following types:
+    -Check Object array types (default)
+    -Check all array types
+-Ignore the following methods (specify as regular expression):
+    -"assertNull", "assertNotNull", "put", "add" (default)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Although it is possible to pass an array to methods which specify a singular
+type, it can be confusing or unintended. It is better to overload the method
+in question that takes an array of the same type.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+class APAM {
+    public void method() {
+        Object obj = new Object();
+        Object[] objs = { new Object() };
+        printObject(obj);
+        printObject(objs); //VIOLATION
+    }
+    printObject(Object obj) {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Fix an erroneous call or overload the method to alleviate confusion.
+
+package examples.rules.pb.cub;
+
+class APAMFixed {
+    public void method() {
+        Object obj = new Object();
+        Object[] objs = { new Object() };
+        printObject(obj);
+        printObject(objs);
+    }
+    printObject(Object obj) {
+        ...
+    }
+    printObject(Object[] objs) { //FIXED
+        ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

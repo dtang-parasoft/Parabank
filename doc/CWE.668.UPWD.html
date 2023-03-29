@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid storing unencrypted Hibernate usernames and passwords in 'web.xml' files [CWE.668.UPWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid storing unencrypted Hibernate usernames and passwords in 'web.xml' files [CWE.668.UPWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for Hibernate usernames and passwords which are stored in plain
+text in "web.xml" files.   Hibernate usernames and passwords should always be 
+encrypted if they are to be stored in XML files.  Since there are many different 
+kinds of encryption algorithms in the market, in this rule, we assume that an 
+encrypted password is a combination of uppercase letters, lowercase letters, 
+digits and symbols.  A violation will be flagged for each Hibernate username or
+password which is stored in a "web.xml" file and which does not contain an 
+uppercase letter, lowercase letter, digit or symbol.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If a user stores a plain text username or password in an XML Hibernate 
+configuration file, the username or password can easily be stolen by anyone with 
+access to that file.  This makes it very easy for hackers to steal the username
+or password.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+This rule also helps to enforce the PCI DSS Requirement #8: "Assign a unique ID 
+to each person with computer access."  Specifically, this rule helps to test for 
+Issue 8.4: "Render all passwords unreadable during transmission and storage on 
+all system components using strong cryptography" and Issue 8.5.11: "Use 
+passwords containing both numeric and alphabetic characters."
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A6-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+web.xml:
+
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;  
+        &lt;property name="hibernate.connection.username"&gt;User&lt;/property&gt;  &lt;!-- VIOLATION: Username not encrypted --&gt;
+        &lt;property name="hibernate.connection.password"&gt;Pass&lt;/property&gt;  &lt;!-- VIOLATION: Password not encrypted --&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use an encryption algorithm to encrypt the username and password.  The choice of
+an encryption algorithm and how to encrypt and decrypt the username and password
+is up to you.
+
+web.xml:
+
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;  
+        &lt;property name="hibernate.connection.username"&gt;jI$^!nv&amp;j`9n7c@U1i&lt;/property&gt;  &lt;!-- FIXED --&gt;
+        &lt;property name="hibernate.connection.password"&gt;SnRlc3Q6bnVsbA==&lt;/property&gt;  &lt;!-- FIXED --&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/c16ef621-d8f2-4203-80ed-39c0b6ce859f">https://app.hackedu.com/link/c16ef621-d8f2-4203-80ed-39c0b6ce859f</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Unprotected Storage of Credentials,
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-256: Unprotected Storage of Credentials,
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+Cigital Java Security Rulepack # 20:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call methods in loop condition statements [OPT.CEL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call methods in loop condition statements [OPT.CEL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of method calls in loop conditions.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule ignores the following classes and any subclasses:
+  - java.util.Enumeration
+  - java.util.Iterator
+
+The "Quickfix All" feature is not available for this rule because
+the quickfix requires user input of a variable name to replace
+the method call with.
+
+This rule will not flag certain cases where it is clearly necessary to call a
+method after each loop iteration, such as when the calling object is modified
+in the body of the loop. It will also not flag cases where a method is called
+with a loop variable as an argument (as the method call is not returning
+constant values).
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+You can configure the rule to ignore specific expressions by setting additional
+parameters. Regular expressions placed under the "Type" tab are used to ignore 
+classes and their subclasses. 
+
+The "Method" tab is for excluding methods when it's invoked in a loop body. This 
+parameter contains two columns in which methods can be specified. The first column 
+is for the method that should be ignored if the method specified in the second 
+column is invoked in the loop condition statement.
+
+    Method in condition statement (regex)         Method invoked in loop body (regex)
+    ------------------------------------         ------------------------------------
+    ^java.util.*#isEmpty$                        ^java.util.*#get*$
+                                                 ^java.util.*#remove$
+                                                 ^java.util.*#pop$
+    
+    ^java.lang.System.*#currentTimeMillis$       ^.*$
+
+    Format: 
+        list1_method_in_cond1&lt;\#&gt;list2_ivoked_method1\#list2_ivoked_method2;...
+
+    Examples:
+    * %5Ejava.util.*%23isEmpty%24&lt;\#&gt;%5Ejava.util.*%23get*%24\#%5Ejava.util.*%23remove%24\#%5Ejava.util.*%23pop%24
+
+This rule executes regular expressions from the left column on the qualified name 
+of the method that is called in the loop conditions on the variable. If regular a 
+expression matches the qualified name, then the rule locates references to this 
+variable in the loop block and executes the regular expression from right column on 
+the method that is called.
+
+Note that this rule only check methods used on variables from loop condition.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Unless the compiler optimizes it, the loop condition will be calculated for
+each iteration over the loop. If the condition value is not going to change,
+the code will execute faster if the method call is moved out of the loop.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.Vector;
+
+public class CEL {
+    void method (Vector vector) {
+        for (int i = 0; i &lt; vector.size (); i++)  // VIOLATION
+        {
+            System.out.println(i);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the method returns a value that will not change during the loop, store
+its value in a temporary variable before the loop.
+
+package examples.rules.opt;
+
+import java.util.Vector;
+
+public class CELFixed {
+    void method (Vector vector) {
+        int size = vector.size ();
+        for (int i = 0; i &lt; size; i++)  // FIXED
+        {
+            System.out.println(i);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

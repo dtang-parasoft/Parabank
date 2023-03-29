@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Catch all exceptions which may be thrown within Servlet methods [CWE.600.CETS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Catch all exceptions which may be thrown within Servlet methods [CWE.600.CETS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Servlet methods should catch all exceptions which may be thrown.  This rule will
+catch method calls from within Servlet code which are declared to throw an 
+exception that is thrown instead of being caught. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only check methods in Servlet classes (that is, classes which 
+directly or indirectly extend "javax.servlet.GenericServlet").
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+ 
+If a Servlet method fails to catch an exception and instead allows the exception
+to be thrown, the Servlet may reveal sensitive debugging information to the 
+user.  This sensitive information may be enough for an attacker to formulate an
+attack on the system.  To be safe, all declared exceptions should be caught and
+properly handled instead of being thrown.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.5.6: 
+"Information leakage and improper error handling".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See the SECURITY RELEVANCE section.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following class, a DNS lookup failure will cause the Servlet to throw an
+exception.  This exception may reveal sensitive information to the user. 
+
+package examples.rules.servlet;
+
+import java.io.IOException;
+import java.net.InetAddress;
+
+import javax.servlet.http.*;
+
+public class CETS extends HttpServlet {
+    protected void doPost (HttpServletRequest req, HttpServletResponse res) 
+            throws IOException {
+        String ip = req.getRemoteAddr();
+        InetAddress addr = InetAddress.getByName(ip);  //VIOLATION - may throw an 
+                                                       //UnknownHostException
+        System.out.println("hello " + addr.getHostName());
+    }    
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Catch the exception and handle it appropriately.  In a real application, you 
+should log the exception.
+
+package examples.rules.servlet;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.servlet.http.*;
+
+public class CETS_Fixed extends HttpServlet {
+    protected void doPost (HttpServletRequest req, HttpServletResponse res) 
+            throws IOException {
+        String ip = req.getRemoteAddr();
+        InetAddress addr = null;
+        try {
+            addr = InetAddress.getByName(ip);  
+        } catch(UnknownHostException uhe) {  //FIXED - Catch the exception
+            //In a real application, there would be some logging or other error
+            //handling code here.
+            return;
+        }
+        
+        System.out.println("hello " + addr.getHostName());
+    }    
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+CWE-600: Uncaught Exception in Servlet
+<A HREF="https://cwe.mitre.org/data/definitions/600.html">https://cwe.mitre.org/data/definitions/600.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR01-J. Do not allow exceptions to expose sensitive information
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information">https://wiki.sei.cmu.edu/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

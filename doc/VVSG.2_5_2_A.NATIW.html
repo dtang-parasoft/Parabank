@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use wrapper methods to secure native methods [VVSG.2_5_2_A.NATIW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use wrapper methods to secure native methods [VVSG.2_5_2_A.NATIW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag any native method that is called outside of a wrapper class.
+Native methods do not benefit from the security checks and buffer overflow
+protections that are standard in java methods.  Any native method not declared 
+private will be flagged, along with any private native method that is called 
+more than one time in the file.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Java code is subject to runtime checks for type, array bounds, and library 
+usage. Native code, on the other hand, is generally not. While pure Java code
+is effectively immune to traditional buffer overflow attacks, native methods
+are not. To offer some of these protections during the invocation of native
+code, do not declare a native method public. Instead, declare it private and
+expose the functionality through a public Java-based wrapper method. A wrapper
+can safely perform any necessary input validation prior to the invocation of the
+native method.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See Security Relevance.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.iba;
+
+final class NATIW_1 {  
+    native void method(byte[] input);//VIOLATION
+    void method1(){
+        byte[] b = new byte[5];
+        method(b);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure the native method is private, and the only call to it occurs in the 
+wrapper method, after validation.
+
+package examples.rules.security.iba;
+
+final class NATIW_1 {  
+    private native void method(byte[] input);//FIXED
+    void methodWrapper(byte[] input){
+        //validation
+        method(input);
+    }
+    void method1(){
+        byte[] b = new byte[5];
+        methodWrapper(b);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#5-3">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#5-3</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-111: Direct Use of Unsafe JNI
+<A HREF="https://cwe.mitre.org/data/definitions/111.html">https://cwe.mitre.org/data/definitions/111.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+JNI00-J. Define wrappers around native methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/JNI00-J.+Define+wrappers+around+native+methods">https://wiki.sei.cmu.edu/confluence/display/java/JNI00-J.+Define+wrappers+around+native+methods</A>
+
+</PRE>
+</BODY>
+</HTML>

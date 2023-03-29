@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not catch InterruptedException except in classes extending Thread [CWE.755.CIET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not catch InterruptedException except in classes extending Thread [CWE.755.CIET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where InterruptedException is caught in classes not
+extending Thread. An error is reported for each case, unless the "catch" block
+rethrows the exception or restores the interrupt (calls 'interrupt()').
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.5.6: 
+"Information leakage and improper error handling".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Allow rethrowing an exception of any type. (default false)
+    When activated this parameter will not flag cases where an exception of any
+    type is thrown in the catch block. In some cases the method definition or
+    the definitions of the method's callers may not make it possible to throw an
+    InterruptedException. In this case it may make sense to rethrow an unchecked
+    exception. 
+-Allow logging without rethrowing or resetting status. (default false)
+    When activated, this parameter will not flag cases where a logger is used.
+    If the exception is not rethrown or the interrupt restored (by calling the
+    'interrupt()' method), then it should be logged in some manner.  
+
+    -Specify loggers with fully qualified name.
+    (default "java.util.logging.Logger")
+    If using a custom logger class, this parameter allows it to be specified.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If an interrupted exception is caught and not propagated then the fact that the
+thread was interrupted becomes lost. The InterruptedException should not be lost
+so that code higher on the stack can properly deal with the exception. Also,
+if the exception is caught within a loop and unhandled, then there may be a
+possibility for an infinite loop.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CIET {
+    void method() {
+        try {
+            Thread.sleep(100);
+        }
+        catch(InterruptedException e) { //VIOLATION
+            System.err.println("InterruptedException");
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CIETFixed {
+    void method() {
+        try {
+            Thread.sleep(100);
+        }
+        catch(InterruptedException e) { //FIXED
+            System.err.println("InterruptedException");
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes,
+and Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 92-94.
+
+CWE-755: Improper Handling of Exceptional Conditions
+<A HREF="https://cwe.mitre.org/data/definitions/755.html">https://cwe.mitre.org/data/definitions/755.html</A>
+
+PCI Data Security Standard, Requirement 6.5.6
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+
+Tags: PCI-DSS, CWE
+
+</PRE>
+</BODY>
+</HTML>

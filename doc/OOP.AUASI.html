@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not implement or extend annotations [OOP.AUASI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not implement or extend annotations [OOP.AUASI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for any case where an annotation type is 
+implemented or extended by a class, interface, or enum type.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+While it is possible to use an annotation as a super interface for another type,
+it is considered bad practice to do so.  Using an annotation as a super 
+interface is usually meaningless.  Doing so may indicate a bug or a 
+misunderstanding of how annotations are supposed to be used.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+import java.lang.annotation.Annotation;
+
+public class AUASI implements Deprecated {                //VIOLATION
+    public Class&lt;? extends Annotation&gt; annotationType() {
+        return Deprecated.class;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Modify the code so that it does not use an annotation type as a super interface.
+
+package examples.rules.oop;
+
+@Deprecated
+public class AUASI_2 {  //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

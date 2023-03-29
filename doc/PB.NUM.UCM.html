@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing integer values to 'Math.round()' [PB.NUM.UCM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing integer values to 'Math.round()' [PB.NUM.UCM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code which passes integer values to 'Math.round()'. 
+Doing so is unnecessary because there is no need to round an integer value.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'Math.round()' is a no-op if the argument is an integer value.  This method 
+invocation either is a typo or is redundant code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class UCM {
+
+    public int myRound(int i) {
+        return Math.round(i);  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+'myRound()' does not do anything useful.  You should either remove this
+pointless method or change the parameter type to a floating point type.
+
+package examples.rules.pb.num;
+
+public class UCMFixed {
+ 
+    public int myRound(float f) {
+        return Math.round(f);  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

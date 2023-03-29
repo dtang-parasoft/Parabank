@@ -1,0 +1,296 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure EJB beans include necessary methods and EJB bean and interface classes follow the name format [EJB.STD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure EJB beans include necessary methods and EJB bean and interface classes follow the name format [EJB.STD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code where
+
+1. EJB Local or Remote Home interfaces do not follow the appropriate naming convention.
+2. EJB Local or Remote interfaces  do not follow the appropriate naming convention.
+3. EJB Beans do not follow the appropriate naming convention.
+4. EJB Beans do not contain all "create" and "finder" methods in the Home interface.
+5. EJB Beans do not contain all business methods in the Local or Remote interface.
+
+An error will be reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-EJB Home Interface
+  -EJB home interface naming convention table
+    -"remote/local" column
+      -either remote or local interface
+    -"prefix/postfix" column
+      -specify whether you want to place the string
+       at the beginning (prefix) or at the end (postfix)
+       of the EJB home interface
+    -"fully qualified name(in regular expression)" column
+      -specify which EJB home interface you want
+       to check
+    -"prefix/postfix value" column
+      -naming convention of EJB home interface
+
+-EJB Remote Interface
+  -EJB remote interface naming convention table
+    -"remote/local" column
+      -either remote or local interface
+    -"prefix/postfix" column
+      -specify whether you want to place the string
+       at the beginning (prefix) or at the end (postfix)
+       of the EJB remote interface
+    -"fully qualified name(in regular expression)" column
+      -specify which EJB remote interface you want
+       to check
+    -"prefix/postfix value" column
+      -naming convention of EJB remote interface
+
+-EJB Bean class
+  -EJB bean class naming convention table
+    -"prefix/postfix" column
+      -specify whether you want to place the string
+       at the beginning (prefix) or at the end (postfix)
+       of the EJB bean class
+    -"fully qualified name(in regular expression)" column
+      -specify which EJB bean class you want
+       to check
+    -"prefix/postfix value" column
+      -naming convention of EJB bean class
+
+-Check to make sure EJB bean contains all create and finder methods in the Home interface (default is true)
+  -the EJB naming convention is based on the table above.
+-Check to make sure EJB bean contains all the business methods. (default is true)
+  -the EJB naming convention is based on the table above.
+
+For example:
+
+In Home Interface tab:
+   remote/local	  |  prefix/postfix	 |	fully qualified name	 |	prefix/postfix value
+   ---------------------------------------------------------------------------------
+   remote            postfix            com.parasoft.ejb.*      RemoteHome
+
+   The result will be:
+      -com.parasoft.ejb.Account - flag an error in this class because it does not end with "RemoteHome"
+      -com.parasoft.ejb.StudentRemoteHome - this class is correct
+      -com.parasoft.login.Login - not flag because it does not match with the regular expression : "com.parasoft.ejb.*"
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this naming convention makes code easier to understand, which reduces
+the opportunity for errors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+STD.java
+--------
+
+packages examples.rules.ejb;
+
+import javax.ejb.*;
+import java.rmi.*;
+
+
+public class STD implements SessionBean { // VIOLATION
+
+    public void setSessionContext(SessionContext arg0)
+        throws EJBException, RemoteException {
+    }
+
+    public void ejbRemove() throws EJBException, RemoteException {
+    }
+
+    public void ejbActivate() throws EJBException, RemoteException {
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+    }
+}
+
+class STD2Bean implements SessionBean {
+
+    public void setSessionContext(SessionContext arg0)
+        throws EJBException, RemoteException {
+    }
+
+    public void ejbRemove() throws EJBException, RemoteException {
+    }
+
+    public void ejbActivate() throws EJBException, RemoteException {
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+    }
+
+    public String getCustomerName() throws RemoteException {
+        return null;
+    }
+
+    // VIOLATION : missing getCustomerId(String name)
+
+}
+
+
+STD2Remote.java
+---------------
+
+
+packages examples.rules.ejb;
+
+public interface STD2Remote extends EJBObject {
+
+    public String getCustomerName() throws RemoteException;
+
+    public int getCustomerId(String name) throws RemoteException;
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Modify the class name so that it ends with "Bean".
+Add all the missing methods.
+
+
+STD.java
+--------
+
+package examples.rules.ejb;
+
+import javax.ejb.*;
+import java.rmi.*;
+
+public class STDFixedBean implements SessionBean {  // FIXED
+
+    public void setSessionContext(SessionContext arg0)
+        throws EJBException, RemoteException {
+    }
+
+    public void ejbRemove() throws EJBException, RemoteException {
+    }
+
+    public void ejbActivate() throws EJBException, RemoteException {
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+    }
+}
+
+class STD2FixedBean implements SessionBean {
+
+    public void setSessionContext(SessionContext arg0)
+        throws EJBException, RemoteException {
+    }
+
+    public void ejbRemove() throws EJBException, RemoteException {
+    }
+
+    public void ejbActivate() throws EJBException, RemoteException {
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+    }
+
+    public String getCustomerName() throws RemoteException {
+        return null;
+    }
+
+    public int getCustomerId(String name) throws RemoteException { // FIXED
+        return 1;
+    }
+
+}
+
+STD2Remote.java
+---------------
+
+
+packages examples.rules.ejb;
+
+public interface STD2FixedRemote extends EJBObject {
+
+    public String getCustomerName() throws RemoteException;
+
+    public int getCustomerId(String name) throws RemoteException;
+
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html">http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html</A>
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated EJB.EBC
+@deprecated EJB.EHI
+@deprecated EJB.ERI
+@deprecated EJB.MHI
+@deprecated EJB.MRI
+
+</PRE>
+</BODY>
+</HTML>

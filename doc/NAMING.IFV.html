@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use all uppercase letters for the names of fields in an "interface" [NAMING.IFV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use all uppercase letters for the names of fields in an "interface" [NAMING.IFV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "interface" fields whose names are not in all
+uppercase letters. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Fields in an "interface" are always "static" and "final".  Therefore, they
+should follow the same naming convention as named constants.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public interface IFV {
+    int max = 1000;  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the field name all uppercase.
+
+package examples.rules.naming;
+
+public interface IFVFixed {
+    int MAX = 1000;  // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Ken Arnold, James Gosling: "The Java Programming Language Second Edition"
+Addison Wesley, 1997, pp.91-93
+
+</PRE>
+</BODY>
+</HTML>

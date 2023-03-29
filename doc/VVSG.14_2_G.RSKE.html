@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid redundant 'static' keywords in enum type declarations [VVSG.14_2_G.RSKE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid redundant 'static' keywords in enum type declarations [VVSG.14_2_G.RSKE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each enum type which is explicitly declared 
+as "static".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Enum types are automatically static, so there is no need to use the "static" 
+keyword when declaring an enum type.  Doing so will unnecessarily complicate the
+code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class RSKE {
+    public static enum Rank { DEUCE, THREE, FOUR, FIVE, SIX, //VIOLATION
+        SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class RSKEFixed {
+    public enum Rank { DEUCE, THREE, FOUR, FIVE, SIX,        //FIXED
+        SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
+}
+
+</PRE>
+</BODY>
+</HTML>

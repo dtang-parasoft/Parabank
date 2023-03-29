@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that certain Javadoc tags only span one line [OWASP2019.API9.TSOL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that certain Javadoc tags only span one line [OWASP2019.API9.TSOL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Some Javadoc tags usually are not intended to span more than one line; for instance,
+"@author" and "@since" tags usually should have values that are completely 
+contained within one line.  This rule will report a violation for each Javadoc 
+tag which matches one of the tag types specified in the parameter list and which
+spans more than one line.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Tags Which Should Not Span Multiple Lines
+    -These are the tag types which will be checked by this rule.
+    -By default, only "@author" and "@since" are in this list.
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When certain tags span multiple lines, it can indicate a mistake in the Javadoc.
+For instance, it can indicate a missing "@" sign in a subsequent tag or some
+Javadoc header text which was supposed to go before the tags but was accidentally
+placed after the tags.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Even for the tags which are checked by default, there are some cases where tags 
+need to span multiple lines.  For instance, "@author" tags may span several lines
+for files which have many authors.  If a Javadoc tag intentionally spans multiple
+lines, you should suppress the violation.  If the rule is flagging a lot of false
+positives for a certain tag type, you can also remove this tag type from the 
+parameter list.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+For the method "testMethod()", the author will be "Steve This is a test." since
+the Javadoc tag is taken to extend to the end of the comment unless another tag
+is encountered.  This is clearly not what was intended.  For "testMethod(int)", 
+the "@" sign in the "@param" tag was forgotten.
+
+package examples.rules.javadoc;
+
+public class TSOL {
+    /**
+     * @author Steve    //VIOLATION
+     * This is a test.
+     */
+    public void testMethod() {    
+    }
+    
+    /**
+     * @author Steve   //VIOLATION
+     * param i
+     */
+    public void testMethod(int i) {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that the tag which spans multiple lines does not indicate a problem with
+the Javadoc comment.  In this case, move the Javadoc header text to the beginning 
+of the Javadoc comment for the first violation and add the forgotten "@" sign for 
+the second violation.
+
+package examples.rules.javadoc;
+
+public class TSOLFixed {
+    /**
+     * This is a test.  //FIXED
+     * @author Steve
+     */
+    public void testMethod() {    
+    }
+ 
+    /**
+     * @author Steve
+     * @param i       //FIXED
+     */
+    public void testMethod(int i) {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

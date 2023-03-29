@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure "Export-Package" and "Provide-Package" match in MANIFEST.MF for Eclipse 3.0 compatibility [ECLIPSE.PCMF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure "Export-Package" and "Provide-Package" match in MANIFEST.MF for Eclipse 3.0 compatibility [ECLIPSE.PCMF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instances where the value of Provide-Package does not match the value of Export-Package in MANIFEST.MF.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The Export-Package manifest attribute in an Eclipse plug-in specifies which packages of code are
+accessible at runtime from other plug-ins.
+
+Eclipse 3.0 does not recognize the plugin manifest attribute Export-Package which was introduced in
+Eclipse 3.1.  Instead, it uses the Provide-Package manifest attribute.  Eclipse 3.1 and later will
+use information from Export-Package even when the same MANIFEST.MF file also contains
+Provide-Package.  When supporting both Eclipse 3.0 and 3.1 with the same plug-in, it is important
+to make sure that both sections of the manifest file are present and in sync with each other.
+
+Packages that are internal only to the containing plug-in will be marked with a ";x-internal:=true"
+suffix in the Export-Package section.  They do not need to be included in the Provide-Package
+section.  Packages that are accessed only by a select few other plug-ins will be marked with a
+";x-friends:=..." suffix.  Those packages need to be included in the older Provide-Package section.
+ Provide-Package does not support the concept of friends, so those packages will be accessible by
+all plug-ins under Eclipse 3.0.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Export-Package: com.acme.eclipse.plugin,
+ com.acme.eclipse.plugin.internal;x-internal:=true,
+ com.acme.eclipse.plugin.constants;x-friends:="com.acme.eclipse.friend.plugin"
+# VIOLATION No Provide-Package attribute
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Export-Package: com.acme.eclipse.plugin,
+ com.acme.eclipse.plugin.internal;x-internal:=true,
+ com.acme.eclipse.plugin.constants;x-friends:="com.acme.eclipse.friend.plugin"
+# FIXED : add Provide-Package
+Provide-Package: com.acme.eclipse.plugin,
+ com.acme.eclipse.plugin.constants
+
+</PRE>
+</BODY>
+</HTML>

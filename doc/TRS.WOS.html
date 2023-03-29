@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not make the "writeObject()" method synchronized if no other method is synchronized [TRS.WOS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not make the "writeObject()" method synchronized if no other method is synchronized [TRS.WOS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "writeObject()" method should not be the only synchronized method in a 
+class.  This rule will flag a violation for any "writeObject()" method declared
+as "synchronized" in a class in which there are no other synchronized methods 
+(or any inherited methods which are synchronized).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only flag a violation for "writeObject()" methods which match the 
+signature of the "writeObject()" method from the Javadoc of the "java.io.
+Serializable" interface.  That is, the "writeObject()" method must have "void" 
+as its return type and must take a single parameter of type "java.io.
+ObjectOutputStream".  Also, the rule will only flag a violation for classes
+which implement the "java.io.Serializable" interface.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a method is the only "synchronized" method within a class, that probably 
+means that you do not want two threads to be accessing this method 
+simultaneously.  This is usually because the threads are modifying the state of 
+the Object and you do not want the other threads to see an inconsistent state of 
+the Object.  However, since the "writeObject()" method should not be modifying 
+the state of the object (It should only be writing the object out to the 
+ObjectOutputStream.), there is no reason to make the "writeObject()" method the 
+only "synchronized" method in a class.  
+
+If you need to make the "writeObject()" method the only "synchronized" method 
+within a class, you should make sure that this method is implemented correctly.
+In particular, you should make sure that the "writeObject()" method is not 
+changing the state of the Object.  If correctly implemented, the "writeObject()"
+method should not need to be the only "synchronized" method in a class.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.io.*;
+
+public class WOS implements Serializable {
+    public synchronized void writeObject(ObjectOutputStream o)  //VIOLATION
+        throws IOException { 
+        o.defaultWriteObject();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the "synchronized" keyword.
+
+package examples.rules.trs;
+
+import java.io.*;
+
+public class WOSFixed implements Serializable {
+    public synchronized void writeObject(ObjectOutputStream o)  //FIXED
+        throws IOException { 
+        o.defaultWriteObject();
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

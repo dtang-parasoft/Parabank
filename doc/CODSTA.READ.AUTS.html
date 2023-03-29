@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary calls to 'toString()' [CODSTA.READ.AUTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary calls to 'toString()' [CODSTA.READ.AUTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a call to 'toString()' is unnecessary. The
+following cases are checked:
+    1) Object is concatenated to a String.
+           For example:
+           a) String s = "Error: " + errorObject.toString();
+           b) String s = "Error: ";
+              s += errorObject.toString();
+    2) Object is passed to a "print" method of 'java.io.PrintStream' or
+       'java.io.PrintWriter'.
+           For example:
+           a) System.err.println(errorObject.toString());
+    3) Object is already a String.
+           For example:
+           a) "Hello world".toString();
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Removing the unnecessary 'toString()' call can simplify code and improve
+readability.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class AUTS {
+    void printError(Object errorObject) {
+        System.err.println("Error: " + errorObject.toString()); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove unnecessary 'toString()'.
+
+package examples.rules.codsta.read;
+
+public class AUTSFixed {
+    void printError(Object errorObject) {
+        System.err.println("Error: " + errorObject); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

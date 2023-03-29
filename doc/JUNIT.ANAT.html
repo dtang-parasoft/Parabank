@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer assertNull and assertNotNull over assertTrue and assertFalse [JUNIT.ANAT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer assertNull and assertNotNull over assertTrue and assertFalse [JUNIT.ANAT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+It is recommended to use the assertNull() and assertNotNull() methods
+rather than assertTrue() and assertFalse() to assert equality to "null" in
+JUnit tests (see BENEFITS).
+
+This rule detects when the assertTrue() and assertFalse() methods are
+used with comparison to "null" in method parameters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve test code readability and obtain error
+messages that offer better insight into why a test failed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ANATTest {
+    @Test
+    public void testMethod() {
+        Object o = new Object();
+        assertFalse(o == null); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use assertNotNull() instead of assertFalse().
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ANATFixedTest {
+    @Test
+    public void testMethod() {
+        Object o = new Object();
+        assertNotNull(o); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

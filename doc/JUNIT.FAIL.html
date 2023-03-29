@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the fail() method instead of forcing a failed condition using the assertTrue(false) or assertFalse(true) method [JUNIT.FAIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the fail() method instead of forcing a failed condition using the assertTrue(false) or assertFalse(true) method [JUNIT.FAIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit test classes that force a failed condition using
+the assertTrue(false) or assertFalse(true) method instead of the fail() method. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that the fail() method is properly used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class FAILTest extends TestCase {
+
+    public void testMethod() {
+
+         assertFalse(true);  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Modify the code to use fail().
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class FAILFixedTest extends TestCase {
+
+    public void testMethod() {
+
+         fail("fail");  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Java Guides
+<A HREF="https://www.javaguides.net/2018/08/junit-assertfail-method-example.html">https://www.javaguides.net/2018/08/junit-assertfail-method-example.html</A>
+
+</PRE>
+</BODY>
+</HTML>

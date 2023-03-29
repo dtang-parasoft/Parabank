@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not include assertion statements in threads other than the main thread [JUNIT.AST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not include assertion statements in threads other than the main thread [JUNIT.AST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+JUnit does not support concurrency. For this reason, exceptions do not fail
+a JUnit test if they are thrown by calls to assert methods in a thread other
+than the main thread.
+To ensure that this kind of exceptions fail a test, store the exception in
+a field and rethrow this exception using the tearDown method (JUnit 3) or
+a custom method annotated with @After (JUnit 4) or @AfterEach (JUnit 5).
+
+This rule analyzes calls to assert methods from the junit.framework.Assert class
+(JUnit 3), the org.junit.Assert class (JUnit 4), and org.junit.jupiter.api.Assertions
+class (JUnit 5) that are made in one of the following:
+- a class that implements the Runnable interface
+- a class that extends the Thread class
+- an anonymous subclass of the Thread class
+- a lambda method
+
+The rule triggers if a call to one of the above methods is not in a try-catch
+block or when it is in a try-catch block but at least one of the exceptions
+that are caught is not stored in a field.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that JUnit tests for methods that create new threads
+will fail as expected.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the "assert" statement looks like it should cause
+the testMethod() to fail because "number" is other than 3 when the thread's
+run() method is called. However, the test method will always pass, because
+JUnit does not support concurrency.
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class AST extends TestCase {
+    int number;
+    
+    public void testMethod() throws InterruptedException {
+        number = 0;
+        Thread t= new Thread(new Runnable() {
+            public void run() {
+                // JUnit never sees any thrown exception
+                assertEquals(3, number);                  //VIOLATION
+            }
+        });
+        number = 1;
+        t.start();
+        number++;
+        t.join();
+    }    
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, store the exception in a field and rethrow it in
+the 'tearDown()' method to ensure the test will fail. 
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class ASTFixed extends TestCase {
+    int number;
+    volatile Exception exception;
+    volatile Error error;
+    
+    public void testMethod() throws InterruptedException {
+        number = 0;
+        Thread t= new Thread(new Runnable() {
+            public void run() {
+                try {
+                    assertEquals(3, number);
+                } catch (Error e) {
+                    error = e;           //FIXED
+                } catch (Exception e) {
+                    exception = e;       //FIXED
+                }
+            }
+        });
+        number = 1;
+        t.start();
+        number++;
+        t.join();
+    }
+    
+    public void tearDown() throws Exception {
+        if(error != null)
+            throw error;           //FIXED
+        if(exception != null)
+            throw exception;       //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JUnit 5 API
+Annotation Type AfterEach
+<A HREF="https://junit.org/junit5/docs/5.0.1/api/org/junit/jupiter/api/AfterEach.html">https://junit.org/junit5/docs/5.0.1/api/org/junit/jupiter/api/AfterEach.html</A>
+
+JUnit 4 API
+Annotation Type After
+<A HREF="https://junit.org/junit4/javadoc/4.12/index.html?org/junit/After.html">https://junit.org/junit4/javadoc/4.12/index.html?org/junit/After.html</A>
+
+Medium
+All About setUp() And tearDown()
+<A HREF="https://medium.com/@ani.sam2015/all-about-setup-and-teardown-fc5af6ac6f03">https://medium.com/@ani.sam2015/all-about-setup-and-teardown-fc5af6ac6f03</A>
+
+</PRE>
+</BODY>
+</HTML>

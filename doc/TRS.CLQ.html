@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use ConcurrentLinkedQueue instead of Vector and synchronizedList when possible [TRS.CLQ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use ConcurrentLinkedQueue instead of Vector and synchronizedList when possible [TRS.CLQ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where it may be possible to use a 
+ConcurrentLinkedQueue in place of a Vector or "synchronizedList" wrapped List.
+This rule checks variables that will not be accessed outside of the class, so 
+only private List and Vector fields, along with local variables are checked.
+A variable is not checked if it is returned from a non-private method or passed
+out of the file as a parameter.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+ConcurrentLinkedQueue was introduced in JDK 1.5, so this rule does not check files
+using an earlier version.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This queue implementation is thread-safe.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+ConcurrentLinkedQueue offers fewer methods, as it operates as a queue instead of
+a List.  If you want to obtain objects from the list that are not at the head or
+the tail, you must either iterate through the queue or create methods that
+iterate for you.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.util.Vector;
+
+public class CLQ {
+    void method(){
+        Vector&lt;Integer&gt; v = new Vector&lt;Integer&gt;();//VIOLATION
+        v.add(new Integer(5));
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure all access to the 'SimpleDataFormat' is synchronized or alternatively
+convert it to an instance field.
+
+package examples.rules.trs;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+public class CLQFixed {
+    void method(){
+        ConcurrentLinkedQueue&lt;Integer&gt; v = new ConcurrentLinkedQueue&lt;Integer&gt;();//FIXED
+        v.add(new Integer(5));
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

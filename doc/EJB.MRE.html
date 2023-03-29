@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Throw 'java.rmi.RemoteException' in the methods of remote interface and remote home interface [EJB.MRE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Throw 'java.rmi.RemoteException' in the methods of remote interface and remote home interface [EJB.MRE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods of remote interface and remote home interface that do not throw 
+'java.rmi.RemoteException'. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Error Handling
+
+Potential missed exception. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Session and entity bean methods must follow the rules for RMI/IIOP. This means
+that their argument and return values must be of valid types for RMI/IIOP,
+and their thrown exceptions must include "java.rmi.RemoteException".
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Sections 7.10.5 (p. 97) and 7.10.6 (p. 97) of the EJB specification (version 2.0). 
+The EJB specification is available online at 
+<A HREF="http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/">http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/</A>
+
+</PRE>
+</BODY>
+</HTML>

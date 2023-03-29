@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use an array length in a loop condition expression [MOBILE.J2ME.ARLL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use an array length in a loop condition expression [MOBILE.J2ME.ARLL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses an array length in a loop condition
+expression. An error is reported for each occurrence.
+
+When iterating over an array, the access of the array length inside the
+loop will result in an additional (potentially expensive) arraylength
+bytecode in the loop body. Instead of using &lt;array&gt;.length in the loop,
+calculate the array length before entering the loop and store it in a local
+variable.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Moving the array length access out of the loop can potentially increase
+performance and reduce code size.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code accesses arg.length inside the loop:
+
+package examples.rules.mobile.j2me;
+
+public class ARLL {
+     public static void main(String[] arg) {
+         for (int index = 0; index &lt; arg.length; index++) { // VIOLATION
+             System.out.println(arg[index]);
+         }
+     }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.mobile.j2me;
+
+public class ARLLFixed {
+     public static void main(String[] arg) {
+         int length = arg.length;
+         for (int index = 0; index &lt; length; index++) { // FIXED
+             System.out.println(arg[index]);
+         }
+     }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Qusay H. Mahmoud, Wireless Software Design Techniques,
+<A HREF="http://www.oracle.com/technetwork/systems/index-156913.html">http://www.oracle.com/technetwork/systems/index-156913.html</A>
+
+</PRE>
+</BODY>
+</HTML>

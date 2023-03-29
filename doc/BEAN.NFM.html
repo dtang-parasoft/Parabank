@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define get and set methods for each instance field [BEAN.NFM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define get and set methods for each instance field [BEAN.NFM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instance fields that do not have get and set methods 
+defined.  The bean container interacts with the bean mainly through reflection.  
+Beans must provide getter and setter methods for each of their properties to 
+make them accessible by the bean container.
+
+An error is reported if any of the following conditions are true:
+
+1. The JavaBean class doesn't have a getter and setter method for a field.
+2. The getter return type is different than the field type.
+3. The setter argument type is different than the field type.
+4. The setter return type is not void.
+5. The getter or setter method is not a public instance method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violations will not be flagged for "transient" fields.  These fields are not 
+part of a JavaBean class' persistent state, so they should not have a getter nor
+a setter method.
+ 
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Data Security
+
+Great care must be taken that no confidential information is exposed by fixing 
+violations of this rule. Certain private fields may contain sensitive data 
+(passwords, for example) that is not intended to be publicly accessible. In 
+those cases, the affected field should be added to the ignore list (see 
+PARAMETERS) or the violation should be suppressed.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore fields with names
+ This parameter is a list of field names for which no setter or getter methods 
+ should be provided. No violations will be flagged for fields whose names are on 
+ this list.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+JavaBean classes are supposed to have get and set methods for all of their 
+fields.  If a field in a JavaBean class does not have a proper get or set
+method, the code will probably not work correctly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.bean;
+
+public class NFM {
+
+    private String str;
+    private int index;
+
+    public void setStr(String s) {
+        str = s;
+    }
+
+    // VIOLATION : missing getStr()
+
+    // VIOLATION : missing setIndex()
+
+    public int getIndex() {
+        return index;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+    
+Add the missing getter and setter methods.
+
+package examples.rules.bean;
+
+public class NFMFixed {
+
+    private String str;
+    private int index;
+
+    public void setStr(String s) {
+        str = s;
+    }
+
+    public String getStr() {  // FIXED
+        return str;
+    }
+
+    public void setIndex(int i) {  // FIXED
+        index = i;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 30
+
+</PRE>
+</BODY>
+</HTML>

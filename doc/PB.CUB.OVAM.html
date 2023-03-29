@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overloading varargs methods [PB.CUB.OVAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overloading varargs methods [PB.CUB.OVAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags varargs methods which have been overloaded.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks projects with a compiler compliance of JDK 1.5 or later as
+varargs were introduced in JDK 1.5.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore overloaded methods with dissimilar parameters (default true)
+    Enabling this parameter will cause only overloaded methods with "similar"
+    parameter types to be counted. This parameter can be used to reduce
+    violations to the more confusing instances.
+
+    Types are considered similar in the following conditions:
+        1) The erasure of the types match
+        2) One type is a primitive wrapper of the other
+        3) Either type is a type variable
+        4) Either type is assignment compatible to the other
+    Varargs parameter types are checked against all subsequent parameters of the
+    other method. For example:
+        void method(int i, Object...args) {}
+        void method(int i, String s, Double d) {}
+    In this example, "String" and "Double" will be checked for similarity to
+    "Object" as they are in the corresponding positions represented by the
+    varargs.
+
+-Ignore overloaded methods with dissimilar return types (default false)
+    Enabling this parameter will cause only overloaded methods with "similar"
+    return types to be counted. This parameter is disabled by default as a
+    method's return type does not necessarily have to be used, and confusion
+    may still remain as to which method is being called.
+
+    Types are considered similar in the following conditions:
+        1) The erasure of the types match
+        2) One type is a primitive wrapper of the other
+        3) Either type is a type variable
+        4) Either type is assignment compatible to the other
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Overloading varargs methods can cause confusion as to which method is called and
+harm readability.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class OVAM {
+    void method(int i, Object... args) { //VIOLATION
+        ...
+    }
+
+    void method(int i, String s) {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class OVAMFixed {
+    void method(int i, Object... args) {
+        ...
+    }
+
+    void method2(int i, String s) { //FIXED
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Varargs
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/language/varargs.html">http://docs.oracle.com/javase/1.5.0/docs/guide/language/varargs.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+DCL57-J. Avoid ambiguous overloading of variable arity methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/DCL57-J.+Avoid+ambiguous+overloading+of+variable+arity+methods">https://wiki.sei.cmu.edu/confluence/display/java/DCL57-J.+Avoid+ambiguous+overloading+of+variable+arity+methods</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid redundant throw clauses [VVSG.14_2_G.ARTD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid redundant throw clauses [VVSG.14_2_G.ARTD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies redundant "throws" clauses in method declarations.
+An error is reported if a "throws" clause is a subclass of other exception types
+that are declared to be thrown by the same method or if an identical exception
+type is declared to be thrown before it.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There is a Quick Fix for this rule to remove the redundant "throws" declaration,
+but this may not be the best fix.  For instance, consider the case where an
+exception is thrown which is a subclass of another exception type which is also
+thrown.  The Quick Fix is to remove the subclass exception type, but it may
+actually be better to remove the superclass exception type.  Of course, it is
+only possible to remove the superclass exception type if all subclasses of that
+type which are thrown by the method (as well as all subclasses of the type which
+are thrown in overriding versions of the method) are specifically declared to be
+thrown.  If this is the case, it is probably better to remove the more general
+type so that the method declares the specific exception types which are thrown.
+The "Quick Fix All" feature is enabled for this rule for convenience, but you
+should review all of the violations individually if possible.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A redundant "throws" clause does not add any meaningful properties to the
+method declaration. Following this rule simplifies code and makes it less
+error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+import java.io.*;
+
+public class ARTD {
+    public void myMethod() throws IOException, FileNotFoundException {  //VIOLATION
+                                      //FileNotFoundException is a subclass of IOException
+        throw new FileNotFoundException();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove any unnecessary "throws" clauses so that there are no more redundant
+"throws" clauses.  Note that, in this case, you could choose to remove either
+the superclass type (IOException) or the subclass type (FileNotFoundException).
+See the "NOTES" section for more details about cases like this.
+
+package examples.rules.uc;
+
+import java.io.*;
+
+public class ARTDFixed {
+    public void myMethod () throws FileNotFoundException {  //FIXED
+        throw new FileNotFoundException();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+</PRE>
+</BODY>
+</HTML>

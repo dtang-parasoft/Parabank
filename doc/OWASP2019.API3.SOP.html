@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Minimize usage of System.out and System.err in Servlets [OWASP2019.API3.SOP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Minimize usage of System.out and System.err in Servlets [OWASP2019.API3.SOP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies Servlet classes that use System.out and System.err output
+methods. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+category: Error Handling
+
+These calls are normally used to print out detailed error 
+messages and debugging information. They should not be used 
+in production unless the outputs are redirected to a log 
+file. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class SOP extends HttpServlet {
+    public void service () {
+        System.out.println ("starting service");  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Try to minimize System.out and System.err output.
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class SOPFixed extends HttpServlet {
+    private final static boolean DEBUG_ON = false;
+    public void service () {
+        if (DEBUG_ON) {
+            System.out.println ("starting service");  // OK
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

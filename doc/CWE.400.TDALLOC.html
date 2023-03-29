@@ -1,0 +1,242 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate potentially tainted data before it is used to determine the size of memory allocation [CWE.400.TDALLOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate potentially tainted data before it is used to determine the size of memory allocation [CWE.400.TDALLOC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when potentially tainted data is used to determine the size
+of memory allocation.
+
+The rule triggers when:
+- potentially tainted data is used without validation to determine the size
+  of an array.
+- potentially tainted data is passed without validation to one of the following
+  methods as a constructor parameter that specifies the initial capacity:
+    * java.util.ArrayDeque
+    * java.util.ArrayList
+    * java.util.HashMap
+    * java.util.HashSet
+    * java.util.Hashtable
+    * java.util.IdentityHashMap
+    * java.util.LinkedHashMap
+    * java.util.LinkedHashSet
+    * java.util.PriorityQueue
+    * java.util.Vector
+    * java.util.WeakHashMap
+
+    * java.util.concurrent.ArrayBlockingQueue
+    * java.util.concurrent.ConcurrentHashMap
+    * java.util.concurrent.LinkedBlockingDeque
+    * java.util.concurrent.LinkedBlockingQueue
+    * java.util.concurrent.PriorityBlockingQueue
+
+    * javax.management.AttributeList
+    * javax.management.relation.RoleList
+    * javax.management.relation.RoleUnresolvedList
+
+    * javax.management.openmbean.TabularDataSupport
+
+    * javax.print.attribute.standard.JobStateReasons
+    * javax.print.attribute.standard.PrinterStateReasons
+
+    * javax.swing.UIDefaults
+
+The rule must be parameterized to specify the sources of potentially tainted
+data and the methods that validate the data (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When allocating resources without limits, an attacker could prevent other
+systems, applications, or processes from accessing the same type of resource".
+[CWE-770]
+
+"Not controlling memory allocation can result in a request for too much system
+memory, possibly leading to a crash of the application due to out-of-memory
+conditions, or the consumption of a large amount of memory on the system".
+[CWE-789]
+ 
+ 
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure safe memory allocation to prevent excess memory
+consumption and security attacks (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, potentially tainted data is used to determine
+the size of the array.
+
+import javax.servlet.http.HttpServletRequest;
+
+public class Example
+{
+    void example(HttpServletRequest request)
+    {
+        String sizeString = request.getParameter("size");
+        int size = Integer.valueOf(sizeString);
+        int[] array = new int[size]; // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use a validating method to validate the potentially tainted
+data.
+
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Repair
+{    
+    void example(HttpServletRequest request)
+    {
+        String sizeString = request.getParameter("size");
+        int size = Integer.valueOf(sizeString);
+        int validatedSize = validate(size);
+        int[] array = new int[validatedSize]; // NO VIOLATION
+    }
+    
+    abstract int validate(int size);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-400: Uncontrolled Resource Consumption
+<A HREF="https://cwe.mitre.org/data/definitions/400.html">https://cwe.mitre.org/data/definitions/400.html</A>
+
+2021 CWE Weaknesses On the Cusp
+CWE-770: Allocation of Resources Without Limits or Throttling
+<A HREF="https://cwe.mitre.org/data/definitions/770.html">https://cwe.mitre.org/data/definitions/770.html</A>
+
+CWE-789: Memory Allocation with Excessive Size Value
+<A HREF="https://cwe.mitre.org/data/definitions/789.html">https://cwe.mitre.org/data/definitions/789.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

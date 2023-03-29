@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare entity beans as remote [EJB.RR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare entity beans as remote [EJB.RR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if entity beans are declared remote in 'ejb-jar.xml'. 
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+When an application exposes a remote interface for an entity bean, it might also expose methods
+that get or set the bean's data. These methods could be leveraged to read sensitive information,
+or to change data in ways that violate the application's expectations, potentially leading to other
+vulnerabilities.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;ejb-jar&gt;
+    &lt;enterprise-beans&gt;
+        &lt;entity&gt;
+            &lt;ejb-name&gt;EmployeeRecord&lt;/ejb-name&gt;
+            &lt;home&gt;com.wombat.emp.EmployeeRecordHome&lt;/home&gt;
+            &lt;remote&gt;com.wombat.empl.EmployeeRecord&lt;/remote&gt; &lt;!-- // VIOLATION --&gt;
+        &lt;/entity&gt;
+    &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Try to declare entity beans "local" when possible. If the bean must be remotely accessible, make
+sure that sensitive information is not exposed and ensure that your application logic performs
+appropriate validation of any data that might be modified by an attacker.
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/9eedcd01-6cf9-4db1-8919-3ce3267bfce9">https://app.hackedu.com/link/9eedcd01-6cf9-4db1-8919-3ce3267bfce9</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-8: J2EE Misconfiguration: Entity Bean Declared Remote
+<A HREF="https://cwe.mitre.org/data/definitions/8.html">https://cwe.mitre.org/data/definitions/8.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

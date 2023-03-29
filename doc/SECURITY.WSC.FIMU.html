@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make immutable classes final [SECURITY.WSC.FIMU]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make immutable classes final [SECURITY.WSC.FIMU]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies immutable classes that are not declared final.  It can also
+identify fields of immutable classes that are not declared final.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Some fixes will require the initialization of the fields declared final.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If a class that was intended to be immutable could be changed, the security of
+any code using that class could be compromised. 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ensure fields are final (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An immutable class is one in which an object can not be changed once it is created.
+Declaring classes final prevents them from being subclassed, which prevents
+methods from being overridden and defined in ways that could change an object
+that was intended to be immutable.  Also, making fields final prevents them from
+being changed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class FIMU {   //VIOLATION
+    private int field1, field2;   //VIOLATION
+    private final int field3=9, field4=6;
+    
+    public FIMU(){  }
+    
+    private void method() {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public final class FIMUFixed {   //FIXED
+    private final int field1, field2;   //FIXED
+    private final int field3=9, field4=6;
+    
+    public FIMU(){
+        field1=3;
+        field2=3;
+    } 
+    
+    private void method() {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#6-1">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#6-1</A>
+
+</PRE>
+</BODY>
+</HTML>

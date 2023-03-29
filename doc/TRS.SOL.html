@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not perform synchronization using the "synchronized" keyword on implementations of "java.util.concurrent.locks.Lock" [TRS.SOL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not perform synchronization using the "synchronized" keyword on implementations of "java.util.concurrent.locks.Lock" [TRS.SOL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that performs synchronization on an implementation of 
+"java.util.concurrent.locks.Lock".  Instead of synchronization, the programmer
+should use the "lock()" and "unlock()" methods.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.util.concurrent.locks.*;
+import java.util.concurrent.*;
+
+public class SOL{
+    int i;
+    SOL(){
+        i= 0;
+    }
+
+    public void method(Lock l){
+        synchronized(l){        //VIOLATION
+            i++;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the "lock()" and "unlock()" methods instead of synchronization.
+
+package examples.rules.trs;
+
+import java.util.concurrent.locks.*;
+import java.util.concurrent.*;
+
+public class SOLFixed{
+    int i;
+    SOLFixed(){
+        i= 0;
+    }
+
+    public void method(Lock l){
+        l.lock();                //FIXED
+        i++;
+        l.unlock();                //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

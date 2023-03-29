@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused "private" fields [UC.PF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused "private" fields [UC.PF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused "private" fields. An error is reported for each 
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The variable's value is assigned but never used, making it a dead store. . .
+This weakness could be an indication of a bug in the program or a deprecated
+variable that was not removed and is an indication of poor quality. This could
+lead to further bugs and the introduction of weaknesses." [CWE-563]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "final" fields (default is true)
+ The "final" modifier could imply that the declared field is a constant
+ for later use. Such a constant should be ignored.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Each private field makes instances of the class larger.  Mobile platforms have 
+reduced resources, so optimizations are especially important.
+
+An unused field could indicate a logical flaw in the corresponding
+class, or it could be leftover from a previously-deleted section of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class PF {
+    private int _unusedField;  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either correct the logic to use the field or remove the field.
+
+package examples.rules.uc;
+
+public class PFFixed {
+      // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+CWE-563: Assignment to Variable without Use ('Unused Variable')
+<A HREF="https://cwe.mitre.org/data/definitions/563.html">https://cwe.mitre.org/data/definitions/563.html</A>
+
+</PRE>
+</BODY>
+</HTML>

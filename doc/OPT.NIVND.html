@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the 'nextInt()' method to generate a random integer [OPT.NIVND]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the 'nextInt()' method to generate a random integer [OPT.NIVND]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+One common way to generate a random integer is to use the "nextDouble()" method 
+from the "java.util.Random" class.  To do this, a programmer calls 
+"nextDouble()", multiplies the result by an integer, and casts the result to an 
+"int" (e.g., (int)(r.nextDouble() * 10) where "r" is a "Random" object).  
+However, the preferred method of generating a random integer is to use the 
+"Random.nextInt()" method.  
+
+This rule will flag a violation for any place where the "nextDouble()" method
+is used to generate a random integer (as shown in the example below).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+It is simpler and more efficient to use the "nextInt()" method to generate a
+random integer than it is to use "nextDouble()".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.*;
+
+public class NIVND{
+    public void method(){
+        Random r= new Random();
+        System.err.println("A random integer between 0 and 10: "+
+            (int)(r.nextDouble() * 10));                           //VIOLATION
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.*;
+
+public class NIVNDFixed{
+    public void method(){
+        Random r= new Random();
+        System.err.println("A random integer between 0 and 10: "+ 
+            r.nextInt(10));  //FIXED
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

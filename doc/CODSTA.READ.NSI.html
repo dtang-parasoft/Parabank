@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid non-static initializers [CODSTA.READ.NSI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid non-static initializers [CODSTA.READ.NSI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies nonstatic initializers. An error is 
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A nonstatic initializer would be executed before every constructor
+invocation. It makes more sense to integrate the code from any 
+nonstatic initializer into a constructor, which is a more
+organized and readable structure.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class NSI {
+    { //VIOLATION
+        System.out.println("Hi"); 
+    }
+    public NSI() {
+        System.out.println("Executing constructor");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class NSIFixed {
+    //FIXED
+    public NSI() {
+        System.out.println("Hi");
+        System.out.println("Executing constructor");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

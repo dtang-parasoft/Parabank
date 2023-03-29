@@ -1,0 +1,189 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not disable CSRF protection [OWASP2017.A6.DCSRFJAVA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not disable CSRF protection [OWASP2017.A6.DCSRFJAVA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Cross-Site Request Forgery (CSRF) is an attack that forces an end user to
+execute unwanted actions on a web application in which they're currently
+authenticated." [OWASP Cheat Sheets]
+
+"When a web server is designed to receive a request from a client without
+any mechanism for verifying that it was intentionally sent, then it might be
+possible for an attacker to trick a client into making an unintentional request
+to the web server which will be treated as an authentic request. This can be
+done via a URL, image load, XMLHttpRequest, etc. and can result in exposure of
+data or unintended code execution." [CWE-352]
+
+CSRF protection, which is enabled by default, should not be disabled in Spring
+applications.
+
+This rule detects when the disable() method is called on an object of
+the CsrfConfigurer&lt;HttpSecurity&gt; class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects when CSRF protection is disabled in Java code.
+To prevent disabling CSRF protection in Spring XML configuration files,
+see the SPRING.DCSRFXML rule 
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The consequences will vary depending on the nature of the functionality that
+is vulnerable to CSRF. An attacker could effectively perform any operations as
+the victim. If the victim is an administrator or privileged user,
+the consequences may include obtaining complete control over the web
+application - deleting or stealing data, uninstalling the product, or using it
+to launch other attacks against all of the product's users. Because
+the attacker has the identity of the victim, the scope of CSRF is limited only
+by the victim's privileges." [CWE-352]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code security by helping you ensure that CSRF protection is
+not disabled (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, CSRF protection is disabled by calling the disable()
+method on the object of the CsrfConfigurer&lt;HttpSecurity&gt; class.
+
+@EnableWebSecurity
+@Configuration
+public class CsrfSecurityConfig extends WebSecurityConfigurerAdapter
+{
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable(); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not call the disable() method on the object of
+the CsrfConfigurer&lt;HttpSecurity&gt; class.
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/d78fd1fd-2fc5-4403-829a-9cddf1a6d127">https://app.hackedu.com/link/d78fd1fd-2fc5-4403-829a-9cddf1a6d127</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-352: Cross-Site Request Forgery (CSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+OWASP Cheat Sheets
+Cross-Site Request Forgery (CSRF)
+<A HREF="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29">https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29</A>
+
+Spring Documentation
+<A HREF="https://docs.spring.io/spring-security/site/docs/5.0.x/reference/html/csrf.html#csrf-configure">https://docs.spring.io/spring-security/site/docs/5.0.x/reference/html/csrf.html#csrf-configure</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-002500: The application must protect from Cross-Site Request Forgery (CSRF) vulnerabilities
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

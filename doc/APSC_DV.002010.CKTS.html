@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using cryptographic keys which are too short [APSC_DV.002010.CKTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using cryptographic keys which are too short [APSC_DV.002010.CKTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In order to be secure, cryptographic keys should be sufficiently long.  This 
+rule will check for code which uses one of the cryptography methods provided by 
+Java but specifies a key length which is too short.  The recommended minimum key
+length differs for each algorithm.  By default, the rule will flag a violation
+for each case where the "AES" algorithm is used with a key shorter than 128 bits 
+or the "RSA" algorithm is used with a key shorter than 1024 bits.
+
+In order for this rule to find a violation, the code must use either the 'init()'
+method of "javax.crypto.KeyGenerator" or the 'initialize()' method of 
+"java.security.KeyPairGenerator" to set the size of the cryptographic key.  The 
+code must also use the 'getInstance()' method of either "javax.crypto.KeyGenerator" 
+or "java.security.KeyPairGenerator" to specify which algorithm is being used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+According to the NIST (the National Institute of Standards and Technology), 
+using a key size of at least 128 bits with the "AES" algorithm will guarantee 
+that the data remains secure until 2030.  Using a large key makes the data more 
+difficult to decrypt.
+
+For the "RSA" algorithm, experts recommend using a key that is at least 1024 
+bits long to ensure that data is secure.
+
+This rule helps to protect against the OWASP 2013 Top 10 application 
+vulnerability "A6-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Minimum Key Size for Each Algorithm
+    -In this table, you can specify the minimum key size in bits to be used with
+     different cryptography algorithms.  Algorithms not listed in the table will
+     not be checked.
+    -The default values in the table are:
+    
+Algorithm Name                         Minimum Key Size (in Bits)
+--------------                         --------------------------
+AES                                    128
+RSA                                    1024
+    
+    
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+public class CKTS {
+    public void testMethod() {
+        try {
+            KeyGenerator kg = KeyGenerator.getInstance("AES");
+            kg.init(96);  //VIOLATION - Key is only 96 bits
+            SecretKey key = kg.generateKey();
+        } catch(NoSuchAlgorithmException e) {
+            //Log the exception
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a cryptographic key that is at least 128 bits long with the "AES" algorithm.
+
+package examples.rules.security.wsc;
+
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+public class CKTS_Fixed {
+    public void testMethod() {
+        try {
+            KeyGenerator kg = KeyGenerator.getInstance("AES");
+            kg.init(128);  //FIXED
+            SecretKey key = kg.generateKey();
+        } catch(NoSuchAlgorithmException e) {
+            //Log the exception
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A6-Sensitive Data Exposure):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-261: Weak Cryptography for Passwords
+<A HREF="https://cwe.mitre.org/data/definitions/261.html">https://cwe.mitre.org/data/definitions/261.html</A>
+
+"Recommendation for Key Management - Part 1: General (Revised)" by NIST:
+<A HREF="http://csrc.nist.gov/publications/nistpubs/800-57/sp800-57-Part1-revised2_Mar08-2007.pdf">http://csrc.nist.gov/publications/nistpubs/800-57/sp800-57-Part1-revised2_Mar08-2007.pdf</A>
+    
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of
+Static Analysis Tools" by Michael Ware
+    
+Cigital Java Security Rulepack # 11 and # 59:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC61-J. Do not use insecure or weak cryptographic algorithms
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC61-J.+Do+not+use+insecure+or+weak+cryptographic+algorithms">https://wiki.sei.cmu.edu/confluence/display/java/MSC61-J.+Do+not+use+insecure+or+weak+cryptographic+algorithms</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001860: The application must use mechanisms meeting the requirements of applicable federal laws, Executive Orders, directives, policies, regulations, standards, and guidance for authentication to a cryptographic module
+APSC-DV-002010: The application must implement NSA-approved cryptography to protect classified information in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards
+
+</PRE>
+</BODY>
+</HTML>

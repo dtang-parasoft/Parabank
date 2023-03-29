@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not put code other than logging code inside logging blocks [PB.CUB.CILB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not put code other than logging code inside logging blocks [PB.CUB.CILB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A common mistake when logging information using either "java.util.logging.
+Logger" or "org.apache.log4j.Logger" is to accidentally include code unrelated 
+to logging inside the logging block.  For instance, in the logging block shown 
+below, an instance variable is set after the error message is logged.
+
+if (log.isDebugEnabled()) {
+    String test = "error";
+    log.debug(test);
+    this._classVariable = false;    
+} 
+
+This block is intended for logging only, so it should not contain any code
+unrelated to logging.  The assignment to the instance variable may have been
+intended to go outside the logging block.  
+
+This rule will flag a violation for any code inside an "if" statement that meets
+the following conditions:
+
+1.  The condition of the "if" statement is a call to check whether or not 
+logging is enabled at a certain level (e.g., a call to the 'isDebugEnabled()' 
+method of "org.apache.log4j.Logger" or the 'isLoggable()' method of "java.util.
+logging.Logger").
+
+2.  There is a call to a logging method inside the "if" block (e.g., a call
+to the 'warning()' method of "java.util.logging.Logger" or the 'debug()' method
+of "org.apache.log4j.Logger").
+
+3.  There is some extra code after the call to the logging method described in
+requirement #2.
+
+The extra code may be in the logging block accidentally, so it should be 
+inspected to make sure it is in the proper place.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps to identify "if" statements which were intended for logging but 
+contain code unrelated to logging.  This helps to identify misplaced code.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule may flag some false positives for code which was intentionally 
+included inside a logging block.  Although rare, there may be a reason to 
+include code not directly related to logging inside a logging block.  For 
+example, the last line of the following "if" block obviously belongs inside the 
+body of the "if" statement:
+
+if (log.isDebugEnabled()) {
+    String debugMsg = "message";
+    log.debug(debugMsg);
+    this._isDebugMessageLogged = false;  //Code will be flagged even though it
+                                         //belongs in the "if" block.
+} 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class CILB {
+    private static final Logger LOGGER = Logger.getLogger("examples.rules.pb.cub.CILB");
+    
+    public static void main(String[] args) {
+        if(LOGGER.isLoggable(Level.WARNING)) {
+            String warnMsg = "Warning message";
+            LOGGER.warning(warnMsg);
+            System.out.println("Inside 'main()' method");  //VIOLATION - code
+                                   //unrelated to logging included inside a 
+                                   //logging block                         
+        }      
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You should verify that the flagged code was supposed to go outside the logging
+block before fixing the violation.  If this is the case, you can simply move the
+code to after the logging block. 
+
+package examples.rules.pb.cub;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class CILB_Fixed {
+    private static final Logger LOGGER = Logger.getLogger("examples.rules.pb.cub.CILB_Fixed");
+    
+    public static void main(String[] args) {
+        if(LOGGER.isLoggable(Level.WARNING)) {
+            String warnMsg = "Warning message";
+            LOGGER.warning(warnMsg);
+        } 
+        System.err.println("Inside 'main()' method");
+    } 
+}
+
+</PRE>
+</BODY>
+</HTML>

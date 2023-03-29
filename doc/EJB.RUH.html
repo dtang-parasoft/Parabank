@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Reuse EJB homes [EJB.RUH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Reuse EJB homes [EJB.RUH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not reuse EJB homes. An error is reported 
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only applies to simple applications (see the REPAIR section
+for details).
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+EJB homes are obtained from the WebSphere Application Server through a JNDI 
+naming lookup.  This is an expensive operation that can be minimized by 
+caching and reusing EJB Home objects. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.rmi.*;
+import javax.naming.*;
+import javax.ejb.*;
+
+public class RUH extends HttpServlet {
+    public void transaction () throws ServletException {
+        Context ctx = null;
+        try {
+            ctx = new InitialContext (new java.util.Hashtable ());
+            Object homeObject = ctx.lookup ("EJB JNDI NAME");
+            //violation, Home interface should not be a local variable.
+            AccountHome aHome = (AccountHome)PortableRemoteObject.narrow (
+                    homeObject, AccountHome.class);
+        } catch (Exception e) {
+            throw new ServletException ("INIT ERROR" +e.getMessage (), e);
+        } finally {
+            try {
+                if (ctx != null) ctx.close ();
+            }  catch (Exception e) {}
+        }
+    }
+}
+
+interface AccountHome extends EJBHome {  }
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Caching EJB Home in the Servlet init method.
+
+package examples.rules.ejb;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.naming.*;
+import javax.ejb.*;
+
+public class RUHFixed extends HttpServlet {
+    private AccountHome aHome = null;  // cache Home interface.
+    public void init (ServletConfig config) throws ServletException {
+        super.init (config);
+        Context ctx = null;
+        try {
+            ctx = new InitialContext (new java.util.Hashtable ());
+            Object homeObject = ctx.lookup ("EJB JNDI NAME");
+            aHome = (AccountHome)javax.rmi.PortableRemoteObject.narrow (
+                    homeObject, AccountHome.class);
+        } catch (Exception e) {
+            throw new ServletException ("INIT ERROR" +e.getMessage (), e);
+        } finally {
+            try {
+                if (ctx != null) ctx.close ();
+            } catch (Exception e) {}
+        }
+    }
+}
+
+interface AccountHome extends EJBHome {}
+
+/*
+For simple applications, it might be enough to acquire the EJB home in the 
+servlet init() method.
+
+More complicated applications might require cached EJB homes in many servlets
+and EJBs.  One possibility for these applications is to create an EJB Home 
+Locator and Caching class.
+*/
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 315
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

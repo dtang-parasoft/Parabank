@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Disable XML external entity injection [CWE.611.DXXE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Disable XML external entity injection [CWE.611.DXXE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Java applications using XML libraries are particularly vulnerable to XXE
+because the default settings for most Java XML parsers is to have XXE enabled.
+To use these parsers safely, you have to explicitly disable XXE in the parser
+you use." [OWASP Cheet Sheets]
+
+This rule identifies XML parsers where XXE is not explicitly disabled by 
+configuring the required options. 
+The rule checks the following parsers:
+    - javax.xml.parsers.DocumentBuilderFactory
+    - javax.xml.stream.XMLInputFactory
+    - javax.xml.transform.TransformerFactory
+    - javax.xml.validation.Validator
+    - javax.xml.validation.SchemaFactory
+    - javax.xml.transform.sax.SAXTransformerFactory
+    - org.xml.sax.XMLReader
+    - org.dom4j.io.SAXReader
+    - org.jdom2.input.SAXBuilder
+    - javax.xml.parsers.SAXParserFactory
+    - org.apache.commons.digester3.Digester
+
+The rule triggers when one of the parsers fails to follow the guidelines on how
+to disable XXE specified in OWASP's XML External Entity Prevention Cheat Sheet.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+Line
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Attackers can exploit vulnerable XML processors if they can upload XML or
+include hostile content in an XML document, exploiting vulnerable code,
+dependencies or integrations." [OWASP Top 10-2017]
+
+"The software processes an XML document that can contain XML entities with
+URIs that resolve to documents outside of the intended sphere of control,
+causing the product to embed incorrect documents into its output. . . Many
+XML parsers and validators can be configured to disable external entity
+expansion." [CWE-611]
+
+Parsing an XML file without previously disabling XXE may expose an application
+to a wide range of security attacks, including disclosure of confidential data,
+denial of service, Server Side Request Forgery (SSRF), and more.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code security by helping you ensure that XML parsers are
+properly configured against XXE attacks (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the javax.xml.validation.SchemaFactory parser is not
+properly configured.
+
+public class DXXE {
+
+    void configureParser(Source source) throws SAXException {
+        // ...
+        SchemaFactory factory = SchemaFactory.newInstance("<A HREF="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</A>"); //VIOLATION
+        Schema schema = factory.newSchema(source);
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by properly configuring all the required options.
+
+public class DXXE {
+
+    void configureParserRepaired(Source source) throws SAXException {
+        // ...
+        SchemaFactory factory = SchemaFactory.newInstance("<A HREF="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</A>");
+        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, ""); //FIXED
+        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, ""); //FIXED
+        Schema schema = factory.newSchema(source);
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+XML Injection
+Video: <A HREF="https://vimeo.com/239480422">https://vimeo.com/239480422</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_4-XML-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_4-XML-Injections.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/02bef480-4db2-469a-bcc5-ce125ad57f00">https://app.hackedu.com/link/02bef480-4db2-469a-bcc5-ce125ad57f00</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-611: Improper Restriction of XML External Entity Reference
+<A HREF="https://cwe.mitre.org/data/definitions/611.html">https://cwe.mitre.org/data/definitions/611.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP Cheat Sheets
+XML External Entity (XXE) Prevention Cheat Sheet
+<A HREF="https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#java">https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#java</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

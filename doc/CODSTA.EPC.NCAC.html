@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call an "abstract" method from a constructor in an "abstract" class [CODSTA.EPC.NCAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call an "abstract" method from a constructor in an "abstract" class [CODSTA.EPC.NCAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "abstract" class constructors that call "abstract" methods.
+An error is reported if an "abstract" method is called from an "abstract" class's
+constructor.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Calling "abstract" methods from an "abstract" class's constructor causes 
+the object's methods to be used before the object has finished its
+constructors. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+public abstract class NCAC {
+    public NCAC () {
+        System.out.println("Constructor: ");
+        test ();  // VIOLATION: calls an abstract method from the constructor.
+    }
+    abstract public void test ();    
+}
+
+class MyClass extends NCAC {
+    MyClass (int size) {
+        super ();
+        System.out.println("setting size to : " + size);
+        _size = size;
+    }
+    public void test () {
+        _size++;
+        System.out.println("Increment : " + _size);
+    }
+    private int _size = 0;
+}
+
+/*
+The output from "MyClass mc = new MyClass (50);" is:
+ Constructor:
+ Increment : 1         // super class's constructor called test();
+ setting size to : 50  // finish executing MyClass' constructor.
+*/
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the implementation of the "abstract" method to the constructor and 
+remove the "abstract" method call.
+
+package examples.rules.codsta.epc;
+
+public abstract class NCACFixed {
+    public NCACFixed () {
+        System.out.println("Constructor: ");
+    }
+}
+
+class MyClass extends NCACFixed {
+    MyClass (int size) {
+        super ();
+        size++; // FIXED
+        System.out.println("setting size to : " + size);
+        _size = size;
+    }
+    private int _size = 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Nigel Warren, Philip Bishop: "Java in Practice - Design Styles and Idioms
+for Effective Java".  Addison-Wesley, 1999. pp.103-104.
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@severity-from 2(v6.0)
+
+</PRE>
+</BODY>
+</HTML>

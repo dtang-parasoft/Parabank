@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the '@author' Javadoc tag in declaration Javadoc comments [JAVADOC.MAJDT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the '@author' Javadoc tag in declaration Javadoc comments [JAVADOC.MAJDT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes, interfaces, methods, fields, enums, annotations that lack a '@author' Javadoc tag. 
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check type declarations (default is true)
+-Check method/annotation member type declarations (default is false)
+-Check field declarations (default is false)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+/** 
+  * @version:
+  * @see:
+  */  // VIOLATION
+public class MAJDT {
+    public void method() {}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide the '@author' tag in Javadoc comments.
+
+package examples.rules.javadoc;
+
+/** 
+  * @version:
+  * @see:
+  * @author Parasoft  // FIXED
+  */
+public class MAJDTFixed {
+    public void method() {}
+}
+
+</PRE>
+</BODY>
+</HTML>

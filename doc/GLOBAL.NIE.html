@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid interfaces which are never implemented and "abstract" classes which are never extended [GLOBAL.NIE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid interfaces which are never implemented and "abstract" classes which are never extended [GLOBAL.NIE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+All interfaces should be implemented by a concrete class, and all "abstract"
+classes should be extended by a concrete class.  This rule will flag a violation
+for each interface and "abstract" class which is never implemented or extended.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is similar to the rules GLOBAL.UPAC, GLOBAL.UPPC, and UC.UPC; however,
+it is not the same as these rules.  Interfaces and "abstract" classes can be
+"used" without ever being implemented or extended.  For instance, an unused
+local variable could be declared as having an interface type even though this
+interface is never implemented.  This would make the rules GLOBAL.UPAC,
+GLOBAL.UPPC, and UC.UPC not detect the interface as unused code.  This rule is
+designed to catch cases like this where an interface or "abstract" class is used
+trivially but is never meaningfully used.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore interfaces which only declare constants
+    -Interfaces which declare only constants and no inner types or methods
+     generally are not intended to be implemented.  They exist only to define
+     constants which are shared by multiple types, so they will not be flagged
+     by default.
+    -Default value is "true".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An interface which is never implemented or an "abstract" class which is never
+extended generally indicates one of two mistakes:
+
+1) The code that implements the interface or extends the "abstract" class was
+   removed, but the parent interface or "abstract" class was accidentally not
+   removed.  In this case, the interface or "abstract" class is no longer
+   needed.
+
+2) The interface or "abstract" class was supposed to be implemented, but it was
+   not.  This is the more serious mistake of the two.  You should provide an
+   implementation of the interface or provide a concrete class which extends
+   the "abstract" class.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.global;
+
+public interface NIE {  //VIOLATION
+    int getFoo();
+}
+
+class NIE_a {
+    public int example(NIE NIE_obj){  //There is no meaningful way to call this
+                                      //method because NIE is never implemented.
+        return NIE_obj.getFoo();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either implement the interface or remove it.
+
+package examples.rules.global;
+
+public interface NIEFixed {
+    int getFoo();
+}
+
+class NIE_a {
+    public int example(NIEFixed NIE_obj){
+        return NIE_obj.getFoo();
+    }
+}
+
+class ConcreteClass implements NIEFixed {  //FIXED- provided an implementation
+    public int getFoo() {
+        return 8;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

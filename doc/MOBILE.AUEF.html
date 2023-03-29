@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using enhanced "for" loop to walk through a "java.lang.Iterable" object [MOBILE.AUEF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using enhanced "for" loop to walk through a "java.lang.Iterable" object [MOBILE.AUEF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation if using enhanced "for" loop to walk through "java.lang.Iterable" object.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+JDK 1.5 Compiler will create additional object if walk through a "java.lang.Iterable" 
+object by enhanced "for" loop, which slower down the performance.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile;
+
+import java.util.*;
+
+public class AUEF {
+
+    public int getTotal(List array) {
+        int sum = 0;
+        for (Integer i : array) {  // VIOLATION
+            sum += i.intValue();
+        }
+        
+        return sum;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile;
+
+import java.util.*;
+
+public class AUEFFixed {
+
+    public int getTotal(List array) {
+        int sum = 0;
+        Iterator iter = array.iterator();
+        while (iter.hasNext() {  // FIXED
+            sum += ((Integer)iter.next()).intValue();
+        }
+        
+        return sum;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#foreach">http://developer.android.com/guide/practices/design/performance.html#foreach</A>
+
+</PRE>
+</BODY>
+</HTML>

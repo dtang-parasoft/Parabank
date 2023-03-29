@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not throw exceptions from the constructors of exception classes [EXCEPT.TEFEC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not throw exceptions from the constructors of exception classes [EXCEPT.TEFEC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the constructors for exception classes do not
+throw exceptions.  A violation will be flagged for each constructor
+in a class which extends from 'Exception' that is declared to throw
+at least one exception type.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Throwing an exception from an exception's constructor is unexpected 
+and confusing.  Doing so can easily lead to bugs.  See the EXAMPLE 
+section below.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code will throw an exception of the generic type 
+'Exception'.  This will hide the original exception, which is of type
+'MyException'.  This is probably a bug.  
+
+package examples.rules.except;
+
+public class TEFEC extends Exception {
+    public static void main(String[] args) throws MyException {
+        try {
+            throw new MyException();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class MyException extends Exception{
+    public MyException() throws Exception {  //VIOLATION
+        throw new Exception();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not throw any exceptions from the constructors of classes which
+are themselves constructors.
+
+package examples.rules.except;
+
+public class TEFECFixed extends Exception {
+    public static void main(String[] args) throws MyException {
+        throw new MyException();
+    }
+}
+
+class MyException extends Exception{
+    public MyException() {  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

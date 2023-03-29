@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include only getter and setter methods in form beans [STRUTS.FORM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include only getter and setter methods in form beans [STRUTS.FORM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any method that is declared in a form bean class and has 
+a name that does not begin with either "get" or "set".  Other methods can be 
+allowed by specifying them in the parameter list.  An error is reported for each 
+occurrence.
+
+For this rule, a form bean class is defined as any class that extends from 
+"org.apache.struts.action.ActionForm".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will ignore private methods, abstract methods, overriding methods, and
+methods which implement an interface method.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Allow methods with the following names
+    -This parameter allows you to specify the names of methods (in addition to
+     "getter" and "setter" methods) which should be allowed inside a form bean.
+     The default is an empty list (in other words, the default is that only methods
+     whose names begin with either "get" or "set" are allowed).
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+It is good programming practice to have only getter and setter methods 
+defined inside form bean classes. Following this rule helps achieve good 
+separation between the form bean and the action bean.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.STRUTS;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+
+public final class FORM_Form extends ActionForm {
+    
+    private String password = null;
+    private String username = null;
+
+    public String getPassword() {
+        return (this.password);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return (this.username);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public void otherMeth(){  //VIOLATION- method that is neither a getter nor setter
+    }
+
+} 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove all methods that are not getters/setters.
+
+package examples.rules.STRUTS;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+
+public final class FORM_FormFixed extends ActionForm {
+    
+    private String password = null;
+    private String username = null;
+
+    public String getPassword() {
+        return (this.password);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return (this.username);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    //FIXED- otherMeth removed
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 4.3 of <A HREF="http://struts.apache.org/userGuide/">http://struts.apache.org/userGuide/</A>
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@severity-from 3(v8.0)
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Wrap "privileged" method invocations in "private" methods [APSC_DV.000500.PCPM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Wrap "privileged" method invocations in "private" methods [APSC_DV.000500.PCPM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a call to a user-specified "privileged" method is
+made from a non-"private" method.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+
+"Privileged" method calls should be made only from "private" methods to limit
+exposure of privileged or sensitive information. Declaring a method "private"
+may also aid in preventing an attacker from attempting to override or bypass
+the code.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check the following method invocations:
+    Specify the method invocations which should be flagged for being called from
+    a non-"private" method. Specify type and method name using regular
+    expressions. Subclasses of a specified type will be checked as well.
+    Default values for the table are shown below:
+     _________________________________________________________________________
+    | Type (regular expression)            | Method name (regular expression) |
+    |--------------------------------------|----------------------------------|
+    | "^java\.security\.AccessController$" |  "^doPrivileged$"                |
+    |______________________________________|__________________________________|
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+public class PCPM {
+    public void method() {
+        AccessController.doPrivileged(new PAImplementation()); //VIOLATION
+    }
+}
+
+final class PAImplementation implements PrivilegedAction {
+    public Object run() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+public class PCPM_Fixed {
+    private void method() { //FIXED
+        AccessController.doPrivileged(new PAImplementation());
+    }
+}
+
+final class PAImplementation implements PrivilegedAction {
+    public Object run() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+    
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of
+Static Analysis Tools" by Michael Ware:
+<A HREF="http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf">http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf</A>
+
+Cigital Java Security Rulepack # 63:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling, circumventing, or altering implemented security safeguards/countermeasures
+APSC-DV-000510: The application must execute without excessive account permissions
+
+</PRE>
+</BODY>
+</HTML>

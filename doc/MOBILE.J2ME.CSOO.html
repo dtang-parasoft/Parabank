@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid classes that are subclassed only once and are not publicly used [MOBILE.J2ME.CSOO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid classes that are subclassed only once and are not publicly used [MOBILE.J2ME.CSOO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that are subclassed only once and are 
+not publicly used. An error is reported if a class serves solely
+as a superclass for another class and is used nowhere else in the project.
+
+The inheritance tree of a typical application often
+contains classes that are subclassed only once (i.e., they have exactly
+one subclass). If a class is not directly used in code and no additional
+subclasses are reasonable for this class, then the class can very likely be
+combined with its subclass. 
+
+The current version of this rule is implemented in a very simple way
+and checks the number of detected subclasses as its only criterion.
+It may flag occurrences that actually cannot be refactored. Currently,
+no Quick Fix is offered for this rule.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Reducing the number of classes will reduce the application's overall code size.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code uses an unnecessary abstract class:
+
+package examples.rules.mobile.j2me;
+
+public class CSOO extends MyObject {
+    private int myData;
+
+    public void setMyData(int data) {
+        myData = data;
+    }
+
+    public int getMyData() {
+        return myData;
+    }
+}
+
+abstract class MyObject { // VIOLATION
+    public int hashCode() {
+        return ~super.hashCode();
+    }
+}
+        
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If MyObject is not intended as a future extension point for other
+classes, it is not necessary to have the overridden hashCode() method
+in a class of its own. The method can be moved to the subclass and
+all references of MyObject can be safely replaced.
+
+package examples.rules.mobile.j2me;
+
+public class CSOO { // FIXED
+    private int myData;
+
+    public void setMyData(int data) {
+        myData = data;
+    }
+
+    public int getMyData() {
+        return myData;
+    }
+
+    public int hashCode() {
+        return ~super.hashCode();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Eric Giguere, Optimizing J2ME Application Size,
+<A HREF="http://sun.systemnews.com/fullsource?article=6028">http://sun.systemnews.com/fullsource?article=6028</A>
+
+</PRE>
+</BODY>
+</HTML>

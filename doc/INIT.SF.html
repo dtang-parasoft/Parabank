@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use explicit initializations/Do not initialize "static" fields to default values [INIT.SF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use explicit initializations/Do not initialize "static" fields to default values [INIT.SF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This is a parameterized rule that identifies either
+
+-- Code that does not explicitly initialize static fields.
+
+OR
+
+-- Code that explicitly initializes static fields to default values
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Enforce explicit initializations (enabled by default)
+-Disallow explicit initializations to default values
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoid explicit initialization of fields to default values:
+By default, if a static field is not explicitly assigned a value during
+initialization, it is assigned the default value. Explicitly
+initializing a field to its default value could be considered redundant.
+
+Enforce explicit initialization of all fields:
+Explicitly initializing all static fields could ensure that no fields are
+unintentionally left as the default value as a result of careless mistakes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class SF {
+    //AVOID explicit initializations to default values:
+    static int i1= 0; //VIOLATION
+    static Object o1= null; //VIOLATION
+    //ENFORCE explicit initializations:
+    static int i2; //VIOLATION
+    static Object o2; //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class SFFixed {
+    //AVOID explicit initializations to default values:
+    static int i1; //FIXED
+    static Object o1; //FIXED
+    //ENFORCE explicit initializations:
+    static int i2= 0;
+    static Object o2= null;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+</PRE>
+</BODY>
+</HTML>

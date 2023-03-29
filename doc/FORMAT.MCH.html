@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include a meaningful file header comment in every source file [FORMAT.MCH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include a meaningful file header comment in every source file [FORMAT.MCH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+It is a good practice to document code by adding comments to provide
+information that is not available in the code itself. For example,
+file header comments can provide general information about the file
+as a whole, such as the date of creation, the name of the author, 
+a brief description of the code the file includes, etc. 
+
+This rule detects source files that do not include appropriate file
+header comments.
+
+The rule must be parameterized to specify the comments the rule will assume
+to be acceptable (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The following parameters allow you to define acceptable file header comments.
+
+-File header location: - specifies the acceptable file header comment location.
+    - before package declaration (if any) (enabled by default)
+    - after package declaration (if any)
+
+-File header format: - specifies the pattern of comments the rule will enforce.
+	- Match the file header with the following template (defined in regular
+      expressions): (enabled by default) - if enabled, the rule triggers when
+         a file does not include a header comment that matches the template
+         specified in the field below (in regular expressions). When defining
+         the template, skip the comment characters (such as "//", "/**", etc.)
+         and mark empty lines in regular expressions (for example, with "\s*").
+    - Match case sensitive - if enabled, the rule checks case sensitivity when
+         comparing file header comments against the template.
+    - Trim header lines (enabled by default)- if enabled, the rule ignores
+         white spaces at the beginning and end of file header comments when
+         comparing the comments against the template.
+
+-Acceptable types of comments: - specifies acceptable types of comments.
+    - C-Style comments (enabled by default) - if enabled, C-style comments
+     are accepted. C-style comments, which begin with "/*" and end with "*/",
+     are the standard type of comments used in file headers. 
+    - Javadoc comments (enabled by default) - if enabled, Javadoc comments are
+     accepted. Javadoc comments begin with "/**" and end with "*/".
+    - Single-line comments  - if enabled, single-line comments, where each line
+	 begins with "//", are accepted.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule allows you to enforce a common convention of documenting code in
+file header comments. This can help you improve code readability and facilitate
+the code development process.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the file header comment is missing.
+
+package examples.rules.format; // VIOLATION
+
+public class MCH {  
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, add a file header comment before the package declaration.
+
+/*
+ * This comment provides general information about the class.  // FIXED
+ */
+
+package examples.rules.format;
+
+public class MCHFixed { 
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Java SE Documentation
+3.1.1 Beginning Comments
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141855.html#3441">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141855.html#3441</A>
+
+Writing Robust Java Code, Scott W. Ambler and Software Process Mentor
+1.4 Good Documentation
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

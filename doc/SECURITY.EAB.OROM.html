@@ -1,0 +1,210 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implement 'readObject()' and 'writeObject()' for all 'Serializable' classes [SECURITY.EAB.OROM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implement 'readObject()' and 'writeObject()' for all 'Serializable' classes [SECURITY.EAB.OROM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule can identify 'Serializable' classes that do not implement
+the 'readObject()' and 'writeObject()' methods.  
+By default, the rule detects when the 'readObject()' method fails to be
+implemented in classes that implement the 'java.io.Serializable' interface.
+The rule can be parameterized to check for the 'writeObject()' method
+(see PARAMETERS.)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will report violations for many of the same cases that the rules 
+SECURITY.SER and SECURITY.DSER will report.  If the "Check that the 
+'writeObject()' method is implemented in all serializable classes." parameter 
+for this rule is enabled, both this rule and SECURITY.SER will check that the
+'writeObject()' method is implemented.  Similarly, if the "Check that the 
+'readObject()' method is implemented in all serializable classes." parameter is
+enabled, both this rule and SECURITY.DSER will check that the 'readObject()' 
+method is implemented.  All three rules are included because the proposed fix
+for them is different.  SECURITY.OROM instructs you to provide actual 
+implementations of the missing methods while SECURITY.SER and SECURITY.DSER 
+just instruct you to provide stub implementations which throw an exception.  It 
+is not necessary to enable both this rule and SECURITY.SER/SECURITY.DSER.  You 
+should decide whether serializable classes should provide a working 
+implementation of 'readObject()' and 'writeObject()' or just stub implementations 
+and enable the appropriate rule(s).
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The impact of deserialization flaws cannot be overstated. These flaws can lead
+to remote code execution attacks, one of the most serious attacks possible."
+[OWASP Top 10-2017]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Make sure the 'readObject()' method is 'final'. (Default is "false".)
+-Check that the 'readObject()' method is implemented in all serializable 
+ classes. (Default is "true".)
+-Check that the 'writeObject()' method is implemented in all serializable 
+ classes. (Default is "false".)
+-Ignore types extending or implementing the following types (Specify fully 
+ qualified names):
+    -By default, the list is empty.
+    -The rule will ignore the subtypes of all types specified in this list. For
+     instance, the rule will normally check subclasses of "java.lang.Exception"
+     because "Exception" extends "Throwable", which implements "Serializable".  
+     To ignore all subclasses of "Exception", you should add "java.lang.Exception" 
+     to this list.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that the serialization and deserialization process 
+is secure.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import java.io.*;
+
+public class OROM implements Serializable {  // VIOLATION
+    /**
+     * Max should always be positive. (for the sake of the example)
+     */
+    public void setMax(int max) {
+        _max = max;
+    }
+    
+    public int getMax() {
+        return _max;
+    }
+    
+    private int _max;
+    private static final long serialVersionUID = 1;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Implement the 'readObject()' method and use it to verify the values being
+read.
+
+package examples.rules.security.eab;
+
+import java.io.*;
+
+public class OROMFixed implements Serializable {
+    private void readObject (ObjectInputStream in)  // FIXED
+        throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        if ( _max &lt; 0 )
+            throw new IOException ("Illegal max value read: " +  _max);
+    }
+    
+    /**
+     * Max should always be positive. (for the sake of the example)
+     */
+    public void setMax(int max) {
+        _max = max;
+    }
+    
+    public int getMax() {
+        return _max;
+    }
+    
+    private int _max;
+    private static final long serialVersionUID = 1;
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/0c5ba7f6-8914-4826-b36d-06706e626faf">https://app.hackedu.com/link/0c5ba7f6-8914-4826-b36d-06706e626faf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 218-219
+
+Cigital Java Security Rulepack # 10:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from PB.OROM(v5.1)
+
+</PRE>
+</BODY>
+</HTML>

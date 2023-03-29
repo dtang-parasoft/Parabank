@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for non-"final" "static" fields [NAMING.NSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for non-"final" "static" fields [NAMING.NSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-"final" "static" fields that do not follow the
+user-defined naming convention (as specified in a regular expression). 
+The rule does not enforce a default requirement. An error is reported for each 
+occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression
+    -Non-"final" "static" field names should match the listed regular expression.
+    -There is no default regular expression.
+-check public field. (default is true)
+-check protected field. (default is true)
+-check package-private field. (default is true)
+-check private field. (default is true)
+-Negate regular expression
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     non-"final" "static" field matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for non-"final" "static" field names which do not match the regular 
+     expression specified.
+-Ignore case
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of local 
+     non-"final" "static" fields must match the regular expression specified, 
+     including in case. 
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "PreparedStatements" correctly [OWASP2019.API3.UPSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "PreparedStatements" correctly [OWASP2019.API3.UPSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When using "java.sql.PreparedStatement", the "PreparedStatement" is first 
+created using one of the 'prepareStatement()' methods of "java.sql.Connection".  
+Then, various 'set...()' methods are called on the "PreparedStatement" to fill 
+in the arguments represented by ?'s in the original query String.  This rule 
+checks that these 'set' methods are called correctly and that they are called in
+the correct order.  This rule checks the following cases:
+
+1.  The number of calls to 'set' methods must match the number of ?'s in the 
+query String.  If the number of calls to 'set' methods does not match the number
+of ?'s, this is a bug.  
+
+2.  No ?'s in query string. If the query string in "PreparedStatement" didn't have
+?'s, it will be considered as a bug in the query string.
+
+3.  The first argument to each 'set' method call must be a valid index.  That 
+is, the argument must be greater than or equal to 1, and it must be less than or 
+equal to the number of ?'s in the query String for the 'PreparedStatement'.  If 
+the first argument to one of the 'set' methods is less than 1 or greater than 
+the number of ?'s, this is a bug.
+
+4.  The 'set' methods should be called in the correct order.  That is, the 'set'
+method with index 1 should be called first, the set method with index 2 should 
+be called next, and so on.  While it is not necessarily a bug to call the 'set' 
+methods in the incorrect order, it is poor coding practice and can easily lead 
+to bugs.
+
+This rule will flag a violation when any of the rules listed above is violated.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule only works when the query String used to create the "PreparedStatement"
+is a constant String that does not contain any non-"final" variables.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+This rule will catch several bugs related to the use of "PreparedStatements" 
+which can cause your application to fail.  Using "PreparedStatements" 
+incorrectly can also cause sensitive data to be accidentally exposed to the 
+user.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps to catch many common bugs when using "java.sql.
+PreparedStatement".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+There are 2 violations in the example shown below.  The first violation is that
+no 'set' method with index 2 is called on the first "PreparedStatement".  The 
+second violation is that the 'setString()' method is called with an invalid 
+index (4) on the second "PreparedStatement".  In the second "PreparedStatement",
+there are only 3 parameters, so 4 is not a valid index.
+
+package examples.rules.jdbc;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class UPSC {
+    public ResultSet preparedStatementTest(Connection connection) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(
+            "select * from A where id = ? and name = ? and choice = ?");  //VIOLATION - 
+                                //missing call to 'set' method with index 2
+        pstmt.setInt(1, 12);
+        pstmt.setString(3, "jtest");  
+        ResultSet rs = pstmt.executeQuery();
+        
+        pstmt = connection.prepareStatement(
+            "select name from A where id = ? and company = ? and choice = ?");
+        pstmt.setInt(1, 12);
+        pstmt.setString(2, "Parasoft");
+        pstmt.setString(4, "jtest");  //VIOLATION - index should be 3, not 4
+        return pstmt.executeQuery();
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add any missing calls to the 'set' methods, or fix the indices so that they are
+valid indices.
+
+package examples.rules.jdbc;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class UPSC_Fixed {
+    public ResultSet preparedStatementTest(Connection connection) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement("select * from A where id = ? and name = ? " +
+            "and choice = ?");  
+        pstmt.setInt(1, 12);
+        pstmt.setString(2, "Joe");  //FIXED - added a call to 'setString()' with
+                                    //index 2
+        pstmt.setString(3, "jtest");  
+        ResultSet rs = pstmt.executeQuery();
+        
+        pstmt = connection.prepareStatement("select name from A where id = ? and company = ? " +
+            "and choice = ?");
+        pstmt.setInt(1, 12);
+        pstmt.setString(2, "Parasoft");
+        pstmt.setString(3, "jtest");  //FIXED - changed the index to 3
+        return pstmt.executeQuery();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

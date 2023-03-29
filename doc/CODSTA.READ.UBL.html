@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid create integer values from binary notation using Integer.parseInt() methods [CODSTA.READ.UBL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid create integer values from binary notation using Integer.parseInt() methods [CODSTA.READ.UBL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule finds places where Integer.parseInt methods are used and checks the radix value 
+specified as a second parameter in this method. If the radix value equals 2 then an error is 
+reported because this statement is easy to replace with a binary literal.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Show errors only when the first parameter in Integer.parseInt() methods are string literals.
+    Limits the rule to find only expressions such as Integer.parseInt("111011", 2). 
+    Expressions with variables such as Integer.parseInt(var, 2) are ignored. 
+    Default is unchecked.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+In Java SE 7 and later, primitive types, such as byte, short, int, and long 
+can also be expressed using the binary number system. 
+This rule finds places where changing to binary literal is easy.
+
+NOTE
+This rule has one quickfix - "Change Integer.parseInt() expression to binary literal"
+which appears only when first the parameter Integer.parseInt is a string literal. 
+For example: Integer.parseInt("1001", 2) may be changed to 0b1001.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+If the first parameter parseInt method is a variable, 
+then statements may not be changed to binary literals.
+This happens if the variable was created dynamically, 
+for example, in a website.
+
+This does not happen when the "Show errors only when first parameter in methods 
+Integer.parseInt() is string literals" parameter is checked.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+public class UBL {
+    private int a = Integer.parseInt("101111", 2); // VIOLATION
+    
+    public UBL() {
+        int b = Integer.parseInt("101111", 2); // VIOLATION
+        int c = Integer.parseInt("101111", 10);
+        int d = Integer.parseInt("111", 16);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+public class UBL {
+    private int a = 0b101111; // FIXED
+    
+    public UBL() {
+        int b = 0b101111; // FIXED
+        int c = Integer.parseInt("101111", 10);
+        int d = Integer.parseInt("111", 16);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/language/binary-literals.html">http://docs.oracle.com/javase/7/docs/technotes/guides/language/binary-literals.html</A>
+
+</PRE>
+</BODY>
+</HTML>

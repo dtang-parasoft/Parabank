@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure get/set methods are accessing the correct variables [PB.LOGIC.SG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure get/set methods are accessing the correct variables [PB.LOGIC.SG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies 'set' and 'get' methods that do not access or set  
+the intended instance fields. An error is reported when a method
+is named "setX" or "getX", but does not actually access or set field "X".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Because there may be different naming conventions for fields, this rule
+will ignore any characters other than letters and digits when matching field 
+names.
+
+If a "set" method calls another method, this rule will search the called
+method to see if it sets the intended instance field.  It will search up
+to a depth of three method calls.  A special case is if the called method 
+is declared as "abstract" and the name of the method matches the 
+convention for a "set" method for the intended field (e.g., "setX()" for 
+field "x").  In this case, no violation will be reported since it cannot 
+be determined statically whether this method actually sets the intended 
+field.  
+
+It is also impossible to determine statically whether or not a "set" method 
+sets the intended field if the field is not primitive and the "set" method 
+passes that field as a parameter to another method.  For this reason, the 
+rule will not report any violations for "set" methods which pass the field
+as a parameter to another method.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check 'set' methods (default is true)
+    -Ignore 'set' methods which throw an exception (default is false)
+    Some methods may throw an exception, which may also represent a valid
+    behavior. For example, a method may throw UnsupportedOperationException
+    if it is not yet implemented or it is unintended for the field to be
+    accessed.
+-Check 'get' methods (default is true)
+    -Ignore 'get' methods which throw an exception (default is false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+By method naming convention, if a method is named "setX" or "getX", then it
+should set or get the value of instance field with name X. If the method is 
+actually setting or getting other instance fields, then it might indicate a
+possible bug.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class SG {
+    private String _str1;
+    private String _str2;
+    
+    public void setStr1(String str) { //VIOLATION, should set _str1 instead
+        _str2= str; 
+    }
+    public String getStr2() { //VIOLATION, should get _str2 instead
+        return _str1;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class SG {
+    private String _str1;
+    private String _str2;
+    
+    public void setStr1(String str) { //FIXED
+        _str1= str; 
+    }
+    public String getStr2() { //FIXED
+        return _str2;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

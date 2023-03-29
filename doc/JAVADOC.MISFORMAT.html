@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid misformatted Javadoc tags [JAVADOC.MISFORMAT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid misformatted Javadoc tags [JAVADOC.MISFORMAT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule verifies that block tags are placed in a new line after the header. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-check "public" methods/annotation member types (default as true)
+-check "protected" methods/annotation member types (default as true)
+-check "package-private" methods/annotation member types (default as true)
+-check "private" methods/annotation member types (default as false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The correct use of block tags ensures that:
+1) Java and other tools properly parses the tags and correctly displays them Eclipse.
+2) Tools for generating documentation from javadoc generates the correct documentation.
+
+
+
+Please see details:
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#format">http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#format</A>
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+/**Header @firstInncorrectBlocktag //VIOLATION, there is a "Header" string before "@"
+*
+* @blocktag @secondInncorrectBlocktag //VIOLATION, not in separate line
+*/
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Block tags must be place at the beginning of a new javadoc line using the following syntax:
+@blocktag. The first incorrect block tag is misplaced and treated as a part of a header. Second
+incorrect block tag is treated as a part of another block tag because it does not start on a new
+line.
+
+
+/**Header
+*
+* @firstInncorrectBlocktag //FIXED
+* @blocktag
+* @secondInncorrectBlocktag //FIXED
+*/
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid string literal duplication [CDD.DUPS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid string literal duplication [CDD.DUPS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code with duplicated string literals.  The rule will 
+find duplicated string literals across all tested code, whether or not the 
+duplicated literals appear in the same file.  An error is reported for each 
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Minimal number of duplicates (default value is 5)
+- Minimal length of duplicated string (default value is 3)
+- Ignore String literals
+   - ^\s*TODO\s*[:]?\s*$ (default value, ignore TODO string literal)
+   - ^[^\d\w\p{Han}]+$ (default value, ignore string literal which doesn't contain letter and digit)
+- Ignore String literals in invocations of the following methods
+    - Allows you to provide a list of methods to ignore. If a string literal exists in any
+      of the method invocations, it will be exempt from this rule.
+      For example setting type to: java.io.PrintStream and method to: println
+      will suppress all violations reported for the following method invocation: System.out.println("Hello")
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a string literal is used repeatedly, it should be stored in a constant. 
+It would be much easier for a developer to change the value of a repeated string by just 
+changing one single string constant instead of finding all the repeated string literals 
+and changing them one by one.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+For this example, assume that the minimum number of occurrences in the 
+parameters was changed to 2.
+
+package examples.rules.cdd;
+
+public class DUPS {
+    public static void main(String[] args){
+        System.out.println("Hello");  //VIOLATION
+    }
+}
+
+class DUPS_a {
+    public static void main(String[] args){
+        System.out.println("Hello");  //VIOLATION
+    }  
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the duplicated literals appear in the same type, a "static final" constant 
+can be created for these literals.  If they do not appear in the same type, the
+suggested way to fix the violations is to replace these literals with a constant
+defined in an interface.  Of course, you will have to make sure this interface
+is imported into each file that must use it.
+
+For the sake of this example, let's say that you want to refactor the 
+occurrences of "Hello" into a constant defined in an interface.
+
+package examples.rules.cdd;
+
+public class DUPSFixed {
+    public static void main(String[] args) {
+        System.out.println(IStringConstants.HELLO);  //FIXED
+    }
+}
+
+class DUPS_a {
+    public static void main(String[] args) {
+        System.out.println(IStringConstants.HELLO);  //FIXED
+    }
+}
+
+interface IStringConstants {
+    String HELLO = "Hello";
+}
+
+</PRE>
+</BODY>
+</HTML>

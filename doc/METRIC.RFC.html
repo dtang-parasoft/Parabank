@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Response for Class [METRIC.RFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Response for Class [METRIC.RFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric counts the number of methods in the class plus the number of methods
+called by the class. Calls to the methods of the same class or its base classes
+are not counted.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+1       class Corge
+        {
++1          protected void waldo()
+            { }
+        }
+ 
+4       class Foo extends Corge
+        {
++1          void bar(String s)
+            {
++1              Qux.garply();
++1              String k = s.substring(10);
+ 
+                this.waldo();
+            }
+ 
++1          void baz(String s)
+            {
+                this.bar(s);
+            }
+        }
+ 
+1       class Qux
+        {
+            public static void garply()
++1          { }
+        }
+
+</PRE>
+</BODY>
+</HTML>

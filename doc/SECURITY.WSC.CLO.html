@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not override any 'ClassLoader' method except 'findClass()' [SECURITY.WSC.CLO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not override any 'ClassLoader' method except 'findClass()' [SECURITY.WSC.CLO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any overridden methods of 'java.lang.ClassLoader'
+except 'findClass'. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule used to suggest overriding 'loadClass()'. However,
+since Java 1.2, the API specification has suggested instead
+overriding 'findClass'.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Malicious Code
+
+Prevent insecure class loader. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The specification provides the following method invocation
+order for calls to 'loadClass(String,boolean)'.
+    1) Invoke 'findLoadedClass()' to check if already loaded.
+    2) Invoke 'loadClass()' on the parent class loader.
+    3) Invoke 'findClass()'.
+The default implementation of 'findClass' is to throw a
+ClassNotFoundException. By overriding this method, the
+user is able to customize class loading without disturbing
+the delegation order used by ClassLoader.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class CustomClassLoader extends ClassLoader {
+    protected Class loadClass(String s) { //VIOLATION 
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not override any 'ClassLoader' method except 'findClass'.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+ClassLoader (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/">http://java.sun.com/j2se/1.5.0/docs/api/</A>
+
+</PRE>
+</BODY>
+</HTML>

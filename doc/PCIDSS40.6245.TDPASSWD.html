@@ -1,0 +1,288 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against using unprotected credentials [PCIDSS40.6245.TDPASSWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against using unprotected credentials [PCIDSS40.6245.TDPASSWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when tainted data is used as credentials.
+The rule triggers when possibly tainted data is passed to the following
+methods without being validated:
+
+   java.sql.DriverManager
+      * getConnection(String, String, String)
+
+   org.apache.http.auth.NTCredentials
+      * NTCredentials(String, String, String, String) 
+
+   java.net.PasswordAuthentication
+      * PasswordAuthentication(String, char[]) 
+
+The rule must be parameterized to specify data sources the rule will consider
+to be tainted and acceptable validation methods (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Using tainted data as credentials may enable an attacker to gain unauthorized
+access to a protected resource.
+
+"Password management issues occur when a password is stored in plaintext in 
+an application's properties or configuration file. Storing a plaintext password
+in a configuration file allows anyone who can read the file access to the 
+password-protected resource". [CWE-256] 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you ensure that the data you use as credentials is safe.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, an unvalidated password is passed to the getConnection
+method.
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
+
+public class Example
+{
+    private HttpServletRequest httpServletRequest;
+
+    public void example()
+        throws SQLException
+    {
+        String URL = "jdbc:oracle:thin:@amrood:1521:EMP";
+        String password = getData();
+        Connection conn = DriverManager.getConnection(URL, "user", password); // VIOLATION
+    }
+
+    private String getData()
+    {
+        return httpServletRequest.getParameter("string");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by validating the password with the validatePassword
+method before the password is passed to the getConnection method.
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Repair
+{
+    private HttpServletRequest httpServletRequest;
+
+    public void example()
+        throws SQLException
+    {
+        String URL = "jdbc:oracle:thin:@amrood:1521:EMP";
+        String password = getData();
+        String validPassword = validatePassword(password);
+        Connection conn = DriverManager.getConnection(URL, "user", validPassword); // NO VIOLATION
+    }
+
+    private String getData()
+    {
+        return httpServletRequest.getParameter("string");
+    }
+
+    abstract String validatePassword(String passwd);
+}
+
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Introduction to Injection Attacks
+Video: <A HREF="https://vimeo.com/262069083">https://vimeo.com/262069083</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/f891d151-8bb8-497e-b8f0-03cecb02417c">https://app.hackedu.com/link/f891d151-8bb8-497e-b8f0-03cecb02417c</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A07:2021 - Identification and Authentication Failures
+<A HREF="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/</A>
+
+OWASP Top 10 2017 (A2 - Broken_Authentication):
+<A HREF="https://owasp.org/www-project-top-ten/2017/A2_2017-Broken_Authentication.html">https://owasp.org/www-project-top-ten/2017/A2_2017-Broken_Authentication.html</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-256: Plaintext Storage of a Password
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted.
+
+Tags: OWASP, PCI-DSS, CWE
+
+</PRE>
+</BODY>
+</HTML>

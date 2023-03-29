@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid having more than one "getter" or "setter" method for the same field [PB.TYPO.RSK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid having more than one "getter" or "setter" method for the same field [PB.TYPO.RSK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is designed to detect duplicate "getter" or "setter" methods.  It 
+will flag a violation for any case where the programmer attempts to define a
+"getter" or "setter" method for a field which already has a "getter" or "setter"
+method.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For purposes of this rule, a "getter" method is defined to be a method whose 
+name starts with "get" which has a single statement.  This statement must be a
+"return" statement, and the returned value must be a field for the method to be 
+considered a "getter" method.  A "setter" method is defined to be a method whose 
+name starts with "set" which has a single statement.  This statement must be an
+assignment statement, and the return value must be void for the method to 
+be considered a "getter" method.  Also, the assignment must be made to a field.
+ 
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore overriding and implementing methods.
+    -Default value is false.
+    -If this box is checked, methods that override a method defined in a 
+     superclass or implement a method declared as abstract in an interface will
+     not be looked at when checking for duplicate "getter"/"setter" methods.
+-Allow multiple "setter" methods if the parameter types are different.  (Default 
+ value is false.)
+-Allow multiple "getter" methods if the return types are different.  (Default  
+ value is false.)
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If there is more than one method that gets or sets the same field, it is likely
+a bug.  It is likely that the programmer meant for one of the "getter" or 
+"setter" methods to access or set another field.  This can easily happen when
+copying and pasting code.    
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class RSK {
+    private Object _obj, _obj1;
+    
+    public Object getObj() { 
+        return _obj;
+    }
+    
+    public Object getObj1(int num) { //VIOLATION- two "getter" methods for 
+                                     //field "_obj"
+        return _obj;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class RSKFixed {
+    private Object _obj, _obj1;
+    
+    public Object getObj() { 
+        return _obj;
+    }
+    
+    public Object getObj1(int num) { 
+        return _obj1;			     //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

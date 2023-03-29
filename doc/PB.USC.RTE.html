@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not catch exceptions only to rethrow them [PB.USC.RTE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not catch exceptions only to rethrow them [PB.USC.RTE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "catch" clauses that only rethrow the exception.
+An error is reported for each "catch" block which contains no statements
+other than a statement rethrowing the original exception.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1.  This rule will not flag a violation for "catch" clauses which catch Errors
+of type "java.lang.ThreadDeath" because it is common practice to catch
+"java.lang.ThreadDeath" only to rethrow it.  According to its Javadoc, 
+"ThreadDeath" must be rethrown if it is caught.
+
+2.  This rule will also not catch cases where removing the "catch" clause may
+change the semantics of the code.  For instance, if a "catch" clause is followed
+by a "catch" clause which catches a more general type of exception, no violation
+will be flagged because removing the "catch" clause may change the semantics of
+the code.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"catch" clauses that only rethrow the exception are meaningless. Removing
+them improves code readability and makes code less error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class RTE {
+
+    public void method() throws Exception {
+
+        try {
+            // ... 
+        } catch (Exception e) {  // VIOLATION
+            throw e;  
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the "try-catch" statement, or do something meaningful with the
+exception (such as writing it to the logfile).
+
+package examples.rules.pb.usc;
+
+public RTEFixed {
+
+    public void method() throws Exception {
+	  // FIXED : try-catch statement is removed
+          // ... 
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

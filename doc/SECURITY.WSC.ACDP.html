@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using anonymous "privileged" classes when invoking "AccessController.doPrivileged()" [SECURITY.WSC.ACDP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using anonymous "privileged" classes when invoking "AccessController.doPrivileged()" [SECURITY.WSC.ACDP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a call to "AccessController.doPrivileged()" is
+made using an anonymous subclass of either "PrivilegedAction" or
+"PrivilegedExceptionAction".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Use of anonymous classes often increases complexity and lowers readability.
+Furthermore, security related code should be isolated when possible. Creating an
+external subclass and using it instead of an anonymous one allows for the code
+to be kept with other security related code. If a security policy or
+implementation is then changed, the code can be more easily updated in one
+location and there are less chances for "old" code to be left behind.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+public class ACDP {
+    public void method() {
+        AccessController.doPrivileged(new PrivilegedAction() { //VIOLATION
+            public Object run() {
+                ...
+            }
+        });
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare a separate class for the "PrivilegedAction".
+
+package examples.rules.security.wsc;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+public class ACDPFixed {
+    public void method() {
+        //FIXED
+        AccessController.doPrivileged(new PrivilegedActionImplementation());
+    }
+}
+
+final class PrivilegedActionImplementation implements PrivilegedAction {
+    public Object run() {
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+    
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling, circumventing, or altering implemented security safeguards/countermeasures
+APSC-DV-000510: The application must execute without excessive account permissions
+
+</PRE>
+</BODY>
+</HTML>

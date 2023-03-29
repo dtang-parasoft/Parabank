@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define constants in interfaces [CODSTA.POD.ISACF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define constants in interfaces [CODSTA.POD.ISACF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies constants in an "interface". An error is reported for each
+occurrence. This rule ignores empty array instances of the interface, as it is
+a common practice for memory optimization to reuse the same instance.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest provides another rule, CODSTA.ORG.DCI, which conflicts with this 
+rule.  Some experts recommend constants in an "interface", and others
+recommend avoiding them. In response, Parasoft added rules that check both 
+conventions. You should decide which convention to use, then enable the
+appropriate rule.
+
+There is also another rule, CODSTA.POD.ACIAP, which is similar in intent to 
+CODSTA.POD.ISACF.  CODSTA.POD.ACIAP checks for the constant interface anti-
+pattern.  CODSTA.POD.ACIAP will allow for some constants to be defined in an
+interface as long as there is at least one method or inner type defined in the
+interface.  On the other hand, CODSTA.POD.ISACF will flag a violation for any
+constant which is defined in an interface.  If you are enforcing a strict 
+standard which does not allow any constants to be defined within an interface,
+you should enable this rule (CODSTA.POD.ISACF).  Otherwise, you should enable
+CODSTA.POD.ACIAP.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The use of constants is an implementation detail.  Implementing an interface 
+which contains constants causes this implementation detail to leak into the 
+class's exported API and the Javadoc for the class.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public interface ISACF {
+    int NUM = 1234;  // VIOLATION
+}
+         
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place constants in a utility class instead of an "interface".
+
+package examples.rules.codsta.pod;
+       
+public class ISACFFixed {
+    private ISACFFixed () {}  // prevents instantiation
+    
+    public static final int NUM = 1234;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison Wesley, 2001, pp 89 - 90.
+
+</PRE>
+</BODY>
+</HTML>

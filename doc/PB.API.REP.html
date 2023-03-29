@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using "." as a regular expression in 'String.replaceAll()' and 'String.replaceFirst()' [PB.API.REP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using "." as a regular expression in 'String.replaceAll()' and 'String.replaceFirst()' [PB.API.REP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies when using "." as a regular expression in
+String.replaceAll() and String.replaceFirst() because "." is a
+wild card expression which will match all string characters. 
+An error is reported for each occurrence.
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The software specifies a regular expression in a way that causes data to be
+improperly matched or compared." [CWE-185]
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+We consider it is a typo if users use "." regular expression in
+the String.replaceAll() or String.replaceFirst(). This rule can 
+help you to detect this typo.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class REP {
+ 
+    public String removeDotInString(String s) {
+        return s.replaceAll(".", "");  // VIOLATION
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use "\." instead
+
+package examples.rules.pb.api;
+
+public class REPFixed {
+
+    public String removeDotInString(String s) {
+        return s.replaceAll("\.", ""); // FIXED
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-185: Incorrect Regular Expression
+<A HREF="https://cwe.mitre.org/data/definitions/185.html">https://cwe.mitre.org/data/definitions/185.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'stack' variables whenever possible [OPT.USV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'stack' variables whenever possible [OPT.USV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not use 'stack' variables whenever possible.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Fields which are declared "static" "final" and are of a primitive or String
+type are excluded. This is due to the fact that these values are inlined at
+compile-time and do not have the overhead of a normal field access.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Static and instance variables take about two to three times longer to
+access than local variables. When variables are accessed frequently, consider
+where these variables are accessed from.  Is the variable "static", local, or
+an instance variable?  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class USV {
+    void addSum (int[] values) {
+        for (int i=0; i &lt; values.length; i++)  
+            _sum += values[i];  // VIOLATION   
+    }
+    private int _sum;
+}     
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If possible, use local variables when accessing variables frequently.
+For example you could use a local temporary variable as in:
+
+package examples.rules.opt;
+
+public class USVFixed {
+    void addSum (int[] values) {
+        int sum = _sum;  // FIXED: temporary local variable.
+        for (int i=0; i &lt; values.length; i++)
+            sum += values[i];
+        _sum = sum;
+    }
+    private int _sum;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.122 - 125
+
+</PRE>
+</BODY>
+</HTML>

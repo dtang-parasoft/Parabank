@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid constant interface anti-pattern [CODSTA.POD.ACIAP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid constant interface anti-pattern [CODSTA.POD.ACIAP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the constant interface anti-pattern.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is similar to CODSTA.POD.ISACF, which also flags interfaces containing
+constants. However, CODSTA.POD.ACIAP specifically checks for interfaces with 
+constants and no methods or inner types. CODSTA.POD.ACIAP is less strict than
+CODSTA.POD.ISACF because CODSTA.POD.ACIAP allows some constants to be defined in 
+an interface as long as there is at least one method or type in the interface. 
+They were made separate rules in case the user has a preference for one or the 
+other.  
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Use of interfaces for constants can lead to confusion, as they may be visible in
+a class' public API or visible in the Javadoc.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+interface ACIAP {
+    Integer _zero = new Integer(0);
+    Integer _one = new Integer(1);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add additional functionality to the class, such as methods, or use a class with
+a private constructor to prevent instantiation of the class.
+
+package examples.rules.codsta.pod;
+
+public class ACIAPFixed {
+    private ACIAPFixed() {}
+    
+    public static final Integer _zero = new Integer(0);
+    public static final Integer _one = new Integer(1);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/javaqa/2001-06/01-qa-0608-constants.html">http://www.javaworld.com/javaworld/javaqa/2001-06/01-qa-0608-constants.html</A>
+
+</PRE>
+</BODY>
+</HTML>

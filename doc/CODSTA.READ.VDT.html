@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare multiple variables of different types in one statement [CODSTA.READ.VDT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare multiple variables of different types in one statement [CODSTA.READ.VDT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies single statements that declare multiple variables of 
+different types. An error is reported if a variable declaration statement 
+declares variables that are not of a single type.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Declaring multiple variables of different types in a single declaration
+statement is confusing and can make code error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class VDT {
+
+    private int index, index1[]; // VIOLATION
+
+    public void method () {
+        int aaa, bbb[];  // VIOLATION
+        int ccc;
+        int ddd;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use separate declaration statements for variables of different types.
+
+package examples.rules.codsta.read;
+
+public class VDTFixed {
+
+    private int index;  // FIXED
+    private int index1[]; // FIXED
+
+    public void method () {
+        int aaa;  // FIXED
+        int bbb[];  // FIXED
+        int ccc;
+        int ddd;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 6.1 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#2992">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#2992</A>
+
+</PRE>
+</BODY>
+</HTML>

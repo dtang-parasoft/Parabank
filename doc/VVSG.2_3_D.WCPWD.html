@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unencrypted passwords in WebSphere 'ibm-webservicesclient-ext.xmi' files [VVSG.2_3_D.WCPWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unencrypted passwords in WebSphere 'ibm-webservicesclient-ext.xmi' files [VVSG.2_3_D.WCPWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if the password in a &lt;securityToken&gt; tag is not encrypted
+in WebSphere 'ibm-webservicesclient-ext.xmi' files.  An unencrypted password 
+will be exposed to attackers if the message is sent over an insecure channel.  
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If passwords are not encrypted, they may be stolen by attackers if the message 
+is sent over an insecure channel.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+This rule also helps to enforce the PCI DSS Requirement #8: "Assign a unique ID 
+to each person with computer access."  Specifically, this rule helps to test for 
+Issue 8.4: "Render all passwords unreadable during transmission and storage on 
+all system components using strong cryptography" and Issue 8.5.11: "Use 
+passwords containing both numeric and alphabetic characters.".
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A6-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+ibm-webservicesclient-ext.xmi:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;com.ibm.etools.webservice.wscext:WsClientExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wscext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wscext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wscext.xmi</A>" xmi:id="WsClientExtension_1151349988084"&gt;
+    .....
+      &lt;clientServiceConfig xmi:id="ClientServiceConfig_1154318832968"&gt;
+        &lt;securityRequestGeneratorServiceConfig xmi:id="SecurityRequestGeneratorServiceConfig_1154318832968"&gt;
+          &lt;integrity xmi:id="Integrity_1154369374968" name="int_req1" order="1"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369374968" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369374969" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="securitytoken"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369374970" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="timestamp"/&gt;
+          &lt;/integrity&gt;
+          &lt;!-- VIOLATION : missing encryption --&gt;
+          &lt;confidentiality xmi:id="Confidentiality_1154366456701" name="conf_gen" order="2"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366456703" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+          &lt;/confidentiality&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154365978864" expires="P0Y0M0DT0H0M5.0S"/&gt;          
+          &lt;securityToken xmi:id="SecurityToken_1154365978864" name="basicauth" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+        &lt;/securityRequestGeneratorServiceConfig&gt;
+        &lt;securityResponseConsumerServiceConfig xmi:id="SecurityResponseConsumerServiceConfig_1154318832968"&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154318832968" name="int_con1" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318832970" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="int_con_body" keyword="body"/&gt;
+          &lt;/requiredIntegrity&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154318832968" name="conf_con" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318832971" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="conf_con_body" keyword="bodycontent"/&gt;
+          &lt;/requiredConfidentiality&gt;
+        &lt;/securityResponseConsumerServiceConfig&gt;
+      &lt;/clientServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wscext:WsClientExtension&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+add encryption for &lt;secutityToken&gt; tag
+
+ibm-webservicesclient-ext.xmi:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;com.ibm.etools.webservice.wscext:WsClientExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wscext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wscext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wscext.xmi</A>" xmi:id="WsClientExtension_1151349988084"&gt;
+    .....
+      &lt;clientServiceConfig xmi:id="ClientServiceConfig_1154318832968"&gt;
+        &lt;securityRequestGeneratorServiceConfig xmi:id="SecurityRequestGeneratorServiceConfig_1154318832968"&gt;
+          &lt;integrity xmi:id="Integrity_1154369374968" name="int_req1" order="1"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369374968" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369374969" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="securitytoken"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369374970" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="timestamp"/&gt;
+          &lt;/integrity&gt;
+          &lt;confidentiality xmi:id="Confidentiality_1154366456701" name="conf_gen" order="2"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366456703" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+            
+            &lt;!-- FIXED : add encryption --&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366456704" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="usernametoken"/&gt;
+          &lt;/confidentiality&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154365978864" expires="P0Y0M0DT0H0M5.0S"/&gt;
+          
+          &lt;securityToken xmi:id="SecurityToken_1154365978864" name="basicauth" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+        &lt;/securityRequestGeneratorServiceConfig&gt;
+        &lt;securityResponseConsumerServiceConfig xmi:id="SecurityResponseConsumerServiceConfig_1154318832968"&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154318832968" name="int_con1" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318832970" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="int_con_body" keyword="body"/&gt;
+          &lt;/requiredIntegrity&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154318832968" name="conf_con" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318832971" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="conf_con_body" keyword="bodycontent"/&gt;
+          &lt;/requiredConfidentiality&gt;
+        &lt;/securityResponseConsumerServiceConfig&gt;
+      &lt;/clientServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wscext:WsClientExtension&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A6-Sensitive Data Exposure):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-256: Unprotected Storage of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+<A HREF="http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf">http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC62-J. Store passwords using a hash function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function">https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001740: The application must only store cryptographic representations of passwords
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

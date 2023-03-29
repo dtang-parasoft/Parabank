@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect usage of 'getName()' from 'java.lang.Class' object [CWE.486.AUG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect usage of 'getName()' from 'java.lang.Class' object [CWE.486.AUG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code where 'getName()' gets 
+the name of a class. A message is reported for each
+occurrence. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+category: Malicious Code
+
+Use of the 'getName()' method of "java.lang.Class" often 
+indicates logic which relies on comparing classes by name.
+Code logic should not rely on comparing classes by name. If 
+classes are compared by name, it may be possible for an
+attacker to add a malicious class with the same package name 
+and class name as the expected class.  This may allow for the
+execution of code in the malicious class instead of the 
+execution of code in the expected class.  
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore calls passed to logging methods (default false)
+    Logging methods are not usually used to determine program flow. Enabling
+    this parameter will ignore calls to "getName()" which are passed directly to
+    a logging method. A method is considered a logging method if it belongs to
+    one of the following common logging classes: "java.util.logging.Logger",
+    "org.apache.log4j.Logger"
+    
+-Ignore calls passed to "print" methods (default false)
+    Print methods are not usually used to determine program flow. Enabling this
+    parameter will ignore calls to "getName()" which are directly passed to a
+    "print" method. A method is considered a "print" method if its name contains
+    the word "print" (case insensitive)
+
+-Ignore calls passed to throw statements (default false)
+    Throw statements are not usually used to determine program flow. Enabling
+    this parameter will ignore calls to "getName()" which are passed directly to
+    a throw statement.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The class name obtained from 'getName()' gives only a loose
+description of the class. Consequently, it is risky to compare
+class identities using only the name.  If possible, you should
+compare classes using the ".class" objects instead of the names.
+
+Moreover, class names could also be sensitive information, and 
+should be handled carefully. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+public class AUG {
+    public static void vectorMethod(Object obj) {
+        if(obj.getClass().getName().equals("java.util.Vector")) {  //VIOLATION
+            //Execute some code in the "Vector" class.
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Inspect how the String derived from 'getName()' is used and ensure 
+that it would not cause security vulnerabilities.  In this case, you
+can avoid the possible security vulnerability by comparing the ".class"
+objects of the parameter and of "java.util.Vector" instead of just 
+comparing the names.  This may prevent an attacker from adding a class
+called "java.util.Vector" with malicious code that will then be executed.
+
+package examples.rules.security.bv;
+
+import java.util.Vector;
+
+public class AUG_Fixed {
+    public static void vectorMethod(Object obj) {
+        if(obj.getClass().equals(Vector.class)) {  //FIXED
+            //Execute some code in the "Vector" class.
+        }
+    }
+}
+
+CWE-486: Comparison of Classes by Name
+<A HREF="https://cwe.mitre.org/data/definitions/486.html">https://cwe.mitre.org/data/definitions/486.html</A>
+
+</PRE>
+</BODY>
+</HTML>

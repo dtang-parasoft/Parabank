@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing members which will require synthetic accessor methods [OPT.ICGA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing members which will require synthetic accessor methods [OPT.ICGA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag accesses to inaccessible members.  While not necessarily a
+compile error, such accesses should be avoided because they require generation
+of a synthetic accessor method.  The Java compiler might actually create one
+more accessor class file just to give the nested class access to the private
+member of the outer class.
+
+By default, an error is reported when a nested class tries to access a private
+constructor, field, or method of the outer class, or vice versa. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The Quick Fix for this rule will change the accessibility of the method,
+constructor, or field being accessed to "package-private".  For methods,
+constructors, and fields defined in inner types, it will also change the
+accessibility of the type declaration to "package-private" if accessing this
+type would require a generated accessor method.  Also, the Quick Fix will be
+applied to any other types of which the accessed type is a member and which must
+be changed to "package-private" to avoid generation of a synthetic accessor
+method.  In this way, multiple levels of nested "private" types may be changed
+to "package-private".
+
+This rule and its Quick Fix may conflict with the rules GLOBAL.DPAC and
+SECURITY.INNER for the case of inner "private" types.  The Quick Fix for OPT.ICGA
+may change the accessibility of an inner type from "private" to "package-
+private".  This may cause GLOBAL.DPAC and/or SECURITY.INNER to instruct you to
+change the inner class back from "package-private" to "private" to limit the
+accessibility as much as possible.
+
+OPT.ICGA should not be enabled at the same time as either GLOBAL.DPAC or
+SECURITY.INNER.  Which rule should be followed depends on which is a higher
+priority: efficiency or limiting accessibility.  If efficiency is a priority,
+enable this rule.  If limiting accessibility is more of a priority, enable
+GLOBAL.DPAC and/or SECURITY.INNER.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check Method Invocations (Default is true)
+-Check Field Accesses (Default is true)
+-Check Constructor Invocations (Default is true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+When resources are scarce, it's not good to have an extra accessor class
+generated.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class ICGA {
+    private ICGA () {}  //private constructor
+    class innerClass {
+        ICGA obj= new ICGA(); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class ICGAFixed {
+    ICGAFixed() {}          //changed accessibility to package-private
+    class innerClass {
+        ICGAFixed obj= new ICGAFixed(); //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

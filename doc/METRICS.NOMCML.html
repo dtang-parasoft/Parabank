@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Number of comment lines in a method [METRICS.NOMCML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Number of comment lines in a method [METRICS.NOMCML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+The number of comments in a method indicates whether or not the code is
+documented.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest will report an error if the value is greater or equal 30.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Every class, interface, method and field should have a Javadoc comment
+associated with it. Documentation helps users of your code to understand it
+better. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.metrics;
+
+public class CNLM {
+    public void example (boolean isDone) {
+        if (isDone) {  /* comment 1*/
+            System.out.println ("this is a statement");
+            someMethod ();
+        } // end of if : comment 2
+    }  // end of example: comment 3
+
+    public void someMethod() { }
+}
+
+//example method's comments: 3
+//example method's statements: 3
+//example method's total lines: 6
+
+</PRE>
+</BODY>
+</HTML>

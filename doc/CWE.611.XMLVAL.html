@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate untrusted XML using schema or DTD before reading [CWE.611.XMLVAL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate untrusted XML using schema or DTD before reading [CWE.611.XMLVAL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when an XML document which is parsed has not been validated.
+
+Validation is required before the following methods are used:
+    * javax.xml.parsers.SAXParser.parse(...)
+    * org.xml.sax.XMLReader.parse(...)
+    * javax.xml.parsers.DocumentBuilder.parse(...)
+    * javax.xml.bind.Unmarshaller.unmarshal(...)
+    * org.jdom.input.SAXBuilder.build(...)
+    * org.jdom2.input.SAXBuilder.build(...)
+    * javax.xml.stream.XMLStreamReader.next(...)
+
+Validation can be done in the following way:
+1. javax.xml.parsers.SAXParserFactory
+    * void setValidating(boolean validating) where value of "validating" is true
+    * void setSchema(Schema schema) where value of "schema" is not null
+    * void setFeature(String name, boolean value)
+	
+2. javax.xml.parsers.DocumentBuilderFactory
+    * void setValidating(boolean validating) where value of "validating" is true
+    * void setSchema(Schema schema) where value of "schema" is not null
+    * void setFeature(String name, boolean value)
+	
+3. org.dom4j.io.SAXReader
+    * void setValidation(boolean validation) where value of "validation" is true
+    * void setFeature(String name, boolean value)
+    * using constructor which sets the SaxReader to be validating
+	
+4. javax.xml.bind.Unmarshaller
+    * void setValidating(boolean validating) where value of "validating" is true
+    * void setSchema(Schema schema) where value of "schema" is not null
+    * void setProperty(String name, Object value)
+    * void setEventHandler(ValidationEventHandler handler) where value of "handler" is not null
+	
+5. org.jdom2.input.SAXBuilder / org.jdom.input.SAXBuilder
+    * void setValidation(boolean validate) where value of "validate" is true
+    * void setXMLReaderFactory(XMLReaderJDOMFactory rfac)
+    * void setDTDHandler(org.xml.sax.DTDHandler dtdHandler) where value of "dtdHandler" is not null
+    * void setFeature(String name, boolean value)
+    * using constructor which sets the SAXBuilder to be validating
+	
+6. javax.xml.stream.XMLInputFactory
+    * void setProperty(String name, Object value)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Failure to sanitize user input before processing or storing it can result in injection attacks.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents XML injections attacks.
+If XML tags are injected by an attacker, they are recognized and interpreted by the XML parser, which may cause
+some data to be overridden.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example of unsafe code:
+
+import java.net.Socket;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+public class Example
+{
+    public void example(Socket sock)
+        throws Exception
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.parse(sock.getInputStream()); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+import java.net.Socket;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+public class Repair
+{
+    public void example(Socket sock)
+        throws Exception
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("<A HREF="http://apache.org/xml/features/disallow-doctype-decl">http://apache.org/xml/features/disallow-doctype-decl</A>", true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.parse(sock.getInputStream()); // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+XML Injection
+Video: <A HREF="https://vimeo.com/239480422">https://vimeo.com/239480422</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_4-XML-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_4-XML-Injections.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-611: Improper Restriction of XML External Entity Reference
+<A HREF="https://cwe.mitre.org/data/definitions/611.html">https://cwe.mitre.org/data/definitions/611.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS16-J. Prevent XML Injection
+<A HREF="https://www.securecoding.cert.org/confluence/display/java/IDS16-J.+Prevent+XML+Injection">https://www.securecoding.cert.org/confluence/display/java/IDS16-J.+Prevent+XML+Injection</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

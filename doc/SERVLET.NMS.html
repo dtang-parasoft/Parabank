@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow a limit for the number of mappings for each servlet in a 'web.xml' file [SERVLET.NMS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow a limit for the number of mappings for each servlet in a 'web.xml' file [SERVLET.NMS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Servlets should not be mapped to multiple URL patterns in a 'web.xml' file.  By 
+default, this rule will flag a violation for each servlet name in a 'web.xml' 
+file which has more than one mapping.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If you map multiple URL patterns to a single servlet name, it may be a mistake.  
+You may have intended to specify a different servlet for at least one of those 
+'&lt;servlet-mapping&gt;' elements.  This mistake is common when carelessly copying 
+and pasting code.  This mistake can lead to a denial of access to the servlet 
+you intended to specify in the mapping or other problems.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum number of mappings for each servlet
+    -The default value is "1".
+    -With the default value of "1", the rule will flag a violation if there are 
+     more than 1 '&lt;servlet-mapping&gt;' elements for the same servlet in a 
+     'web.xml' file.  If you would like to allow multiple mappings for a single
+     servlet, you should increase the value of this parameter.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mapping a single servlet to multiple URL patterns is confusing and unnecessary.  
+You should try to only have one mapping defined for each servlet. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The servlet named "ExampleServlet" is mapped to 5 different URL patterns in this
+example 'web.xml' file.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;       
+                     
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- VIOLATION: The servlet 
+                             "ExampleServlet" is mapped to 5 different URL patterns. --&gt;
+        &lt;url-pattern&gt;/ExampleServlet&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- VIOLATION: The servlet 
+                             "ExampleServlet" is mapped to 5 different URL patterns. --&gt;
+        &lt;url-pattern&gt;/Foo*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- VIOLATION: The servlet 
+                             "ExampleServlet" is mapped to 5 different URL patterns. --&gt;
+        &lt;url-pattern&gt;/Bar&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- VIOLATION: The servlet 
+                             "ExampleServlet" is mapped to 5 different URL patterns. --&gt;
+        &lt;url-pattern&gt;/Baz&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- VIOLATION: The servlet 
+                             "ExampleServlet" is mapped to 5 different URL patterns. --&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Map each servlet to a single URL pattern.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;       
+                     
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- FIXED: Map the servlet 
+                                          "ExampleServlet" to only 1 URL pattern. --&gt;
+        &lt;url-pattern&gt;/ExampleServlet&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 28:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not initialize array dimensions with negative numbers [CERT.NUM51.NIA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not initialize array dimensions with negative numbers [CERT.NUM51.NIA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports an error when a negative value is found in
+array dimension declaration.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When an array is declared with a negative dimension, a NegativeArraySizeException
+would be thrown. Such an exception should be avoided no matter what.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class NIA {
+    private static final A_SIZE= 10;
+    private static final B_SIZE= 15;
+    private static int[] diffSet= new int[A_SIZE- BSIZE]; //VIOLATION
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class NIAFixed {
+    private static final A_SIZE= 10;
+    private static final B_SIZE= 15;
+    private static int[] diffSet= new int[A_SIZE- BSIZE&gt;= 0 ? A_SIZE- B_SIZE : 0]; //VIOLATION
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+NUM51-J. Do not assume that the remainder operator always returns a nonnegative result for integral operands
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM51-J.+Do+not+assume+that+the+remainder+operator+always+returns+a+nonnegative+result+for+integral+operands">https://wiki.sei.cmu.edu/confluence/display/java/NUM51-J.+Do+not+assume+that+the+remainder+operator+always+returns+a+nonnegative+result+for+integral+operands</A>
+
+</PRE>
+</BODY>
+</HTML>

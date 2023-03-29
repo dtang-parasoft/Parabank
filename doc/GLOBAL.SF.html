@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare non-private fields "final" if they are read-only [GLOBAL.SF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare non-private fields "final" if they are read-only [GLOBAL.SF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies read-only non-private fields that are not declared "final". 
+An error is reported for each occurrence.
+
+Global analysis is required in this rule.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A non-private field is considered read-only if the field has no write accesses
+in the application.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Code Quality
+
+Declaring a field "final" helps to prevent its value from being unexpectedly
+changed.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check fields with the following accessibilities:
+    -public (Default value is "true")
+    -protected (Default value is "true")
+    -package-private (Default value is "true")
+-Check "static" fields only (Default value is "false")
+-Check unused fields (Default value is "false")
+-Ignore the following classes: (specify with Glob expressions)
+    -Default "org.eclipse.osgi.util.NLS" "*"
+    
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.global;
+
+public class SF {
+
+    public static boolean FLAG = true;  // VIOLATION
+    
+    public void run() {
+        if (FLAG) {
+            // ....
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the non-private field "final".
+
+public class SFFixed {
+
+    public static final boolean FLAG = true; // FIXED
+    
+    public void run() {
+        if (FLAG) {
+            // ....
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

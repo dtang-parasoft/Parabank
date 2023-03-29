@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that keys used in comparison operations are immutable [PB.IKICO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that keys used in comparison operations are immutable [PB.IKICO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Objects that serve as keys in ordered sets and maps should be immutable. When some fields must be mutable, 
+the equals(), hashCode(), and compareTo() methods must consider only immutable state when comparing objects. 
+Violations of this rule can produce inconsistent orderings in collections."
+[SEI CERT Oracle Coding Standard for Java; MET11-J. Ensure that keys used in comparison operations are immutable]
+
+This rule detects mutable fields used in the methods equals(), hashCode(), and compareTo().  
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent inconsistent ordering in collections and avoid nondeterministic behavior. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code triggers the rule:
+
+// Mutable class Employee
+class Employee {
+  private String name;
+  private double salary;
+ 
+  Employee(String empName, double empSalary) {
+    this.name = empName;
+    this.salary = empSalary;
+  }
+ 
+  public void setEmployeeName(String empName) {
+    this.name = empName;
+  }
+ 
+  public void setSalary(double empSalary) {
+    this.salary = empSalary;
+  }
+ 
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Employee)) {
+      return false;
+    }
+ 
+    Employee emp = (Employee)o;
+    return emp.name.equals(name);	//VIOLATION: a mutable field 'name' used in the equals() method
+  }
+ 
+  public int hashCode() {/* ... */}
+ 
+}
+ 
+// Client code
+Map&lt;Employee, Calendar&gt; map =
+  new ConcurrentHashMap&lt;Employee, Calendar&gt;();
+// ...
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Mutable class Employee
+class Employee {
+  private String name;
+  private double salary;
+  private final long employeeID;  // Unique for each Employee
+ 
+  Employee(String name, double salary, long empID) {
+    this.name = name;
+    this.salary = salary;
+    this.employeeID = empID;
+  }
+ 
+  // ...
+ 
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Employee)) {
+      return false;
+    }
+ 
+    Employee emp = (Employee)o;
+    return emp.employeeID == employeeID;	//FIXED: an immutable field is now used to compare objects
+  }
+}
+ 
+// Client code remains same
+Map&lt;Employee, Calendar&gt; map =
+  new ConcurrentHashMap&lt;Employee, Calendar&gt;();
+// ...
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+MET11-J. Ensure that keys used in comparison operations are immutable
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET11-J.+Ensure+that+keys+used+in+comparison+operations+are+immutable">https://wiki.sei.cmu.edu/confluence/display/java/MET11-J.+Ensure+that+keys+used+in+comparison+operations+are+immutable</A> 
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid misusing the line continuation character '\' [PROPS.IVCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid misusing the line continuation character '\' [PROPS.IVCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will identify the following potential mistakes in using the 
+line continuation character '\':
+
+   1. The next line is empty
+   2. The content on the next line is another property entry
+   3. There is no next line (at the end of the property file)
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore property file name (regular expression)
+    -Allows you to provide a list of property files to ignore. If a property file 
+     matches any of the regular expressions, it will be exempt from this rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the line continuation character '\' occurs at the end of a line, it implies 
+that the property value will be continuing on the next line. However, if the 
+next line matches any of the cases in the DESCRIPTION section, it often 
+indicates that the line continuation character is misused.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+a=A\    // VIOLATION : case #1
+
+b=B\    // VIOLATION : case #2
+c=C
+
+d=D\    // VIOLATION : case #3
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+a=A\
+\n     // FIXED : add missing characters
+
+b=B    // FIXED : remove '\'
+c=C
+
+d=D    // FIXED : remove '\'
+
+</PRE>
+</BODY>
+</HTML>

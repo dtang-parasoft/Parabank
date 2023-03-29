@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the objects used within a loop's condition are properly accessed within the loop's body [PB.LOGIC.OAMC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the objects used within a loop's condition are properly accessed within the loop's body [PB.LOGIC.OAMC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When a call to the 'size()' method of 'java.util.List' or the 'hasNext()' method
+of 'java.util.Iterator' appears in the condition of a loop, that loop usually 
+is designed to iterate through a 'List' using the 'get()' method or to iterate
+through an 'Iterator' using the 'next()' method.  If the corresponding call to 
+'get()' or 'next()' is missing, it likely indicates a bug.  This rule will flag
+a violation for loops where all of the following conditions hold:
+
+1.  The loop's condition contains a call to the 'size()' method of 'java.util.List' 
+or the 'hasNext()' method of 'java.util.Iterator'.  
+
+2.  The variable used to call 'size()' or 'hasNext()' in Condition #1 is never
+used to call 'get()' (for Lists) or 'next()' (for Iterators) within the body of
+the loop.
+
+3.  The variable used to call 'size()' or 'hasNext()' in Condition #1 is never
+passed into another method, and it is not reassigned into another variable within
+the body of the loop.  If the variable is passed into another method or reassigned
+into another variable within the body of the loop, flow analysis would be 
+required to determine whether or not 'get()' or 'next()' is called on the
+variable's reference.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule can prevent infinite loops and other bugs which can arise
+from forgetting to call the 'hasNext()' or 'get()' method or from calling the 
+tested methods using the wrong variables as calling objects.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+If you try running the "main()" method in this class, you will get an 
+"IndexOutOfBoundsException" because "listA" was accidentally used instead of
+"listB" in the condition of the inner loop in "testMethod()"
+
+package examples.rules.pb.logic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class OAMC {
+    public static void main(String[] args){
+        List listA= new ArrayList();
+        listA.add("A");
+        listA.add("B");
+        testMethod(listA, new ArrayList());
+    }
+    
+    public static void testMethod(List listA, List listB) {
+        for(int i= 0; i&lt; listA.size(); i++){
+            listB.add(listA.get(i));
+            for(int j= 0; j&lt; listA.size(); j++){  //VIOLATION- The condition should
+                                                  //be "j&lt; listB.size()"
+                System.err.println(listB.get(j));
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that you did not forget any method calls and that all the methods are
+being called on the correct variables.
+
+package examples.rules.pb.logic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class OAMCFixed {
+    public static void main(String[] args){
+        List listA= new ArrayList();
+        listA.add("A");
+        listA.add("B");
+        testMethod(listA, new ArrayList());
+    }
+    
+    public static void testMethod(List listA, List listB) {
+        for(int i= 0; i&lt; listA.size(); i++){
+            listB.add(listA.get(i));
+            for(int j= 0; j&lt; listB.size(); j++){  //FIXED- changed "listA" to "listB"
+                System.err.println(listB.get(j));
+            }
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

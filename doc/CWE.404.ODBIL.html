@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not open or close JDBC connections in loops [CWE.404.ODBIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not open or close JDBC connections in loops [CWE.404.ODBIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that database connections are opened or closed inside loop
+bodies.  By default, the connection opening method is "getConnection()" in "java.
+sql.DriverManager", and the connection closing method is "close()" in "java.sql.
+Connection".  More opening and closing methods can be specified in the parameters.
+A violation is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Most unreleased resource issues result in general software reliability
+problems, but if an attacker can intentionally trigger a resource leak,
+the attacker might be able to launch a denial of service attack by depleting
+the resource pool.
+When a resource containing sensitive information is not correctly shutdown,
+it may expose the sensitive data in a subsequent allocation." [CWE-404]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum level of checking allowed (default is 1)
+   This parameter controls the maximum depth of testing. The default of 1
+   is usually sufficient; this will prompt Jtest to check for opening and closing
+   connections within a depth of 1 function calls. However, you may need to customize
+   this parameter if you are testing custom "close()" methods that you have created. If
+   you use a custom myOwnCloseResources() method instead of directly calling close(),
+   Jtest needs to trace into that method to check the closing. If the close is behind
+   more than 1 function calls, the code should be redesigned to reduce complexity, or
+   this parameter should be modified.
+
+-Additional JDBC connection opening methods (in regular expression) (Default is empty list.)
+   Methods in this list would be considered as valid JDBC connection opening
+   methods for the arguments they receive. Methods should only be added to
+   this list when their source code is not available.
+
+-Additional JDBC connection closing methods (in regular expression) (Default is empty list.)
+   Methods in this list would be considered as valid JDBC connection closing
+   methods for the arguments they receive. Methods should only be added to
+   this list when their source code is not available.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is inefficient to continually open and close a connection within a loop.
+Instead of doing this, the connection should be opened and closed outside of
+any loops so that it only has to be opened and closed once.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.DriverManager;
+
+public class ODBIL{
+    private void performQuery() {
+        try {
+            for(int i=0; i&lt;10; i++){
+                Connection conn= DriverManager.getConnection("some URL");
+                Statement stmt= conn.createStatement();
+                stmt.executeQuery("some SQL query");
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.DriverManager;
+
+public class ODBILFixed{
+    private void performQuery() {
+        try {
+            Connection conn= DriverManager.getConnection("some URL");
+            for(int i=0; i&lt;10; i++){
+                Statement stmt= conn.createStatement();
+                stmt.executeQuery("some SQL query");
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-404: Improper Resource Shutdown or Release
+<A HREF="https://cwe.mitre.org/data/definitions/404.html">https://cwe.mitre.org/data/definitions/404.html</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+</PRE>
+</BODY>
+</HTML>

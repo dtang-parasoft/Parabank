@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused parameters [CWE.563.UP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused parameters [CWE.563.UP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The variable's value is assigned but never used, making it a dead store."
+[CWE-563]
+
+This rule identifies method parameters that are never used.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+By default, the rule considers primitive type parameters that are assigned
+with a value but are never read to be used and does not trigger when such 
+parameters are detected. The rule can be parameterized to report primitive
+type parameters that are assigned with a value but are never read
+(see PARAMETERS).
+
+Non-primitive type parameters that are assigned with a value are considered
+to be used and are never reported. 
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"This weakness could be an indication of a bug in the program or a deprecated
+variable that was not removed and is an indication of poor quality. This could
+lead to further bugs and the introduction of weaknesses." [CWE-563]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "public" methods. (enabled by default)
+-Check "protected" methods. (disabled by default)
+-Check package-private methods. (enabled by default)
+-Check "private" methods. (enabled by default)
+-Check that the parameter is read for parameters with primitive types (disabled
+ by default)
+    -If this parameter is enabled, the rule will trigger when a primitive type
+     parameter of is assigned with a value but is never read. 
+-Check "empty" methods (disabled by default)
+    -If this parameter is enabled, the rule will trigger if a method is empty,
+     contains only a return statement, or contains only a throw statement.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you remove unused method parameters from your code to
+avoid confusion and improve code security (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule may report false positives for recursively called methods when
+the argument is directly passed to that method invocation.
+
+In the following example, the 'test' method is called on an object of
+the 'ChildNode' class that extends the 'BaseNode' class. 
+
+public class BaseNode {
+    public void test(boolean bCompactView) { 		//VIOLATION
+        ChildNode child = getChild();
+        child.test(bCompactView); 
+    } 
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'userId' parameter of the 'addProduct' method
+is never used.
+
+public class UP {
+    
+    public void addProduct(int userId, Product product) { // VIOLATION the 'userId' parameter is never used
+        addProduct(product);
+    }
+} 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the unused parameter or modifying the code
+so that the parameter is used.
+
+public class UP {
+    
+    public void addProductFixed(int userId, Product product) throws UnsupportedUserOperationException {
+        if (!hasUserPrivileges(userId)) { // FIXED the 'userId' parameter is used
+            throw new UnsupportedUserOperationException();
+        }
+        addProduct(product);
+    }
+} 
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-563: Assignment to Variable without Use
+<A HREF="https://cwe.mitre.org/data/definitions/563.html">https://cwe.mitre.org/data/definitions/563.html</A>
+
+</PRE>
+</BODY>
+</HTML>

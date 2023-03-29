@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use threads in web components [SECURITY.DRC.THR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use threads in web components [SECURITY.DRC.THR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should not use threads.  This rule  will flag a violation for
+each instantiation of "java.lang.Thread" (or any  class extending "Thread") in a
+Web component. A class or interface is considered a web component if it extends
+or implements a type from the "javax.servlet" package.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Using threads in a web component is likely to lead to confusion and unintended 
+consequences, as the web component is already being used in a web server which 
+itself is a threaded environment.  Avoid using threads in web components to
+prevent errors related to concurrency between the web application and the web 
+server.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for Thread usage (default "2")
+    This parameter allows for indirect checking of Thread usage. Specifying a
+    value of "1" will check only for direct usage of a Thread. A value of "2"
+    will check if any of the methods called from the web component use a Thread,
+    and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Web container providers may limit the creation of threads. Therefore, Web 
+component developers must not use java.lang.Thread objects, and thus 
+multithreading, within their Web applications.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import javax.servlet.*;
+
+public class THR implements Servlet {
+    public void testMethodOne() {
+        Thread t = new Thread(); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not instantiate threads in a Web component.
+
+package examples.rules.security.bv;
+
+import javax.servlet.Servlet;
+
+public class THRFixed implements Servlet {
+    public void testMethodOne() {
+        //FIXED
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-383: J2EE Bad Practices: Direct Use of Threads
+<A HREF="https://cwe.mitre.org/data/definitions/383.html">https://cwe.mitre.org/data/definitions/383.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid use before explicit initialization [BD.PB.NOTEXPLINIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid use before explicit initialization [BD.PB.NOTEXPLINIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a member variable is used prior to its explicit 
+initialization. Despite the fact all member variables are initialized implicitly 
+in Java, such cases may cause bugs.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+public class Example
+{
+    void test()
+    {
+        SomeClass myObject = new SomeClass(5);
+        myObject.compute();
+    }
+
+    class SomeClass
+    {
+        int _i, _j;
+
+        SomeClass(int i)
+        {
+            _i = i * 2;
+        }
+
+        int compute()
+        {
+            return _i * _j; // VIOLATION (_j is not initialized)
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code excerpt won't trigger a violation because both fields of myObject are 
+initialized by the point when they are accessed:
+
+public class Repair
+{
+    void test()
+    {
+        SomeClass myObject = new SomeClass(5);
+        myObject._j = 3;
+        myObject.compute();
+    }
+
+    class SomeClass
+    {
+        int _i, _j;
+
+        SomeClass(int i)
+        {
+            _i = i * 2;
+        }
+
+        int compute()
+        {
+            return _i * _j; // NO VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-457: Use of Uninitialized Variable
+<A HREF="https://cwe.mitre.org/data/definitions/457.html">https://cwe.mitre.org/data/definitions/457.html</A>
+
+CWE-665: Improper Initialization
+<A HREF="https://cwe.mitre.org/data/definitions/665.html">https://cwe.mitre.org/data/definitions/665.html</A>
+
+
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

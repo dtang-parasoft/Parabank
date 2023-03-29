@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hide fields and local variables declared in enclosing scopes [OOP.HIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hide fields and local variables declared in enclosing scopes [OOP.HIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A field, local variable, or parameter that is defined in the nested scope
+should not have the same name as a field, variable, or parameter defined
+in the outer scope. Using identical names makes them easy to confuse and may 
+prevent access to to the field, variable, or parameter defined in the outer
+scope.  
+
+This rule identifies declarations of fields, local variables, and parameters
+that hide or shadow fields, variables, and parameters defined in the outer
+scope.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent confusion of fields, variables, and parameters 
+from the nested and outer scopes, as well as ensure that variables in 
+the outer scope can be accessed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In below example method setName() doesn't works as expected because Java overwrites parameter value instead of field 'name'
+
+public class HIFExample {
+    private String name = "test";
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) { // VIOLATION
+        name = name;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class HIFExample {
+    private String name = "test";
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String sName) { // VIOLATION
+        name = sName;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

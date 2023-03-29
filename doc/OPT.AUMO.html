@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary Map operations [OPT.AUMO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary Map operations [OPT.AUMO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unnecessary java.util.Map operations. The following
+operations are considered unnecessary:
+    1) Call to 'map.containsKey(key)' followed by 'map.get(key)'.
+       Instead call 'map.get(key)' and check for a "null" return value.
+    2) Call to 'map.get(key)' followed by 'map.remove(key)'.
+       Instead use the return value from 'map.remove(key)'.
+See BENEFITS 
+
+Mobile platforms have reduced resources, optimizations are especially important. and DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Unnecessary Map operations may lead to the map being searched twice instead of
+once. Elimination of unnecessary Map operations can improve performance,
+especially if the Map is large.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If a Map is used that can hold "null" values then a "null" return value can mean
+two different things:
+    1) The key was present but the value was "null"
+    2) The key was not present
+In some cases it is necessary to know whether a key is present or not.
+
+To catch more cases, this rule does not require the 'get()' to immediately
+follow the 'containsKey()' call or the 'remove()' to immediately follow the
+'get()' call. In some situations, it may not make sense to refactor or eliminate
+one of the Map operations.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class AUMO {
+    public void method(Map map, String key) {
+        Object value = null;
+        if (map.containsKey(key)) { //VIOLATION
+            value = map.get(key);
+        }
+
+        if (value != null) {
+            ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary operation.
+
+package examples.rules.opt;
+
+public class AUMOFixed {
+    public void method(Map map, String key) {
+        Object value = map.get(key); //FIXED
+        if (value != null) {
+            ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

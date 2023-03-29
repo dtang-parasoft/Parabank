@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Throw 'javax.ejb.FinderException' in finder methods of remote home or local home interfaces [EJB.TFE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Throw 'javax.ejb.FinderException' in finder methods of remote home or local home interfaces [EJB.TFE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any find&lt;Method&gt; method that is in a remote home or local
+home interface but does not have a throws clause which includes 
+"javax.ejb.FinderException". An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 9.5.2 (p. 113) and 9.6.2 (p. 116) of the EJB specification (version 2.0).  
+The EJB specification is available online at 
+<A HREF="http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/">http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/</A>
+
+</PRE>
+</BODY>
+</HTML>

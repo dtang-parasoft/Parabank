@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid nested assignments or assignments embedded in other expressions [CODSTA.READ.NEA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid nested assignments or assignments embedded in other expressions [CODSTA.READ.NEA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is an extended version of the previous implementation of rule 
+CODSTA.NEA. It identifies nested assignments or assignments embedded in 
+other expressions. An error is reported if code matches the "confusing
+assignment statement" criteria specified in the filter. Note that only
+one violation is flagged per assignment if an assignment violates
+more than one of the parameters.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is parameterized to extend the functionality of the old rule 
+which only checks for nested assignments.
+
+You can set the filter level by modifying the corresponding parameters.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check nested assignments (default true)
+-Check assignments embedded in other expression statements (default false)
+-Check assignments embedded in non-simple statements (default false)
+
+Below are some examples of what would be flagged by each parameter. Note that
+only one violation is flagged per assignment if multiple parameters are
+violated.
+
+Boolean b= (b2= true);           //VIOLATION, nested
+i= j+ (k= 2);                    //VIOLATION, nested and embedded expression
+j= i== 8 ? (k= 1) : (k= 0)       //VIOLATION, nested and embedded expression 
+if (i&lt; (j= k))                   //VIOLATION, embedded expression and non-simple
+obj1.equals(obj2= new Object()); //VIOLATION, embedded non-simple
+b= (i &lt; j);                      //NO VIOLATION
+i+= i+ j- k + getInt();          //NO VIOLATION
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Splitting up confusing assignment statements into multiple simple
+and clear assignment statements would make code less error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class NEA {
+   int i;
+   int j;
+   public boolean myMethod() {
+       i= j= 1; //VIOLATION
+       //
+       if (i&lt; (j=2)) //VIOLATION
+           return 0;
+       //
+       return i= 1; //VIOLATION
+   }
+} 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Split up each confusing assignment statement into multiple simple and clear
+assignment statements.
+
+package examples.rules.codsta.read;
+
+public class NEAFixed {
+   int i;
+   int j;
+   public boolean myMethod() {
+       j= 1; //FIXED
+       i= 1; //FIXED
+       //
+       j= 2; //FIXED
+       if (i&lt; j) //FIXED
+           return 0;
+       //
+       i= 1; //FIXED
+       return i; //FIXED
+   }
+} 
+
+</PRE>
+</BODY>
+</HTML>

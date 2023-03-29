@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicated property values [PROPS.DUPV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicated property values [PROPS.DUPV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any property value that appears more than once in the same property file. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore property file name (regular expression)
+    -Allows you to provide a list of property files to ignore. If a property file 
+     matches any of the regular expressions, it will be exempt from this rule.
+-Ignore property values(regular expression)
+    -Allows you to provide a list of property values to ignore. If a property value 
+     matches any of the regular expressions, it will be exempt from this rule.
+-Only consider violations in same class, use regular expression in property name to group classes
+    - By default, all property names are in the same class. However, user can use regular expression
+      to group property names into different classes. For example, using regular expression "(.+)_.+" can
+      group property names into two classes, "ClassA" and "ClassB" in the following property file:
+          ClassA_A1=A
+          ClassA_A2=B
+          ClassA_A3=A
+          ClassA_A4=A
+          ClassB_B1=A
+          ClassB_B2=B
+          ClassB_B3=B          
+      ** The '( )' symbol in the regular expression is used to specify the class name. **
+      
+-Minimum number of occurrences to be considered a violation (default is 3)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If multiple property names have the same value, they can be combined into one property name in order 
+to reduce the size of the property file and save time on translating the property values into another locale.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+a=A
+b=A  // VIOLATION
+c=A  // VIOLATION
+d=D
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+a=A
+b=B  // FIXED
+c=C  // FIXED
+d=D
+
+</PRE>
+</BODY>
+</HTML>

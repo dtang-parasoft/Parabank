@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not invoke overridable methods from the readObject() method [BD.PB.VREADOBJ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not invoke overridable methods from the readObject() method [BD.PB.VREADOBJ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when an overridable method is invoked from the readObject() method
+on "this" object.
+"Invoking overridable methods from the readObject() method can provide the overriding 
+method with access to the object's state before it is fully initialized. This premature 
+access is possible because, in deserialization, readObject plays the role of object 
+constructor and therefore object initialization is not complete until readObject exits".
+[SEI CERT Oracle Coding Standard for Java; SER09-J. Do not invoke overridable methods 
+from the readObject() method]
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A 
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Invoking overridable methods from the readObject() method can lead to initialization 
+errors." [SEI CERT Oracle Coding Standard for Java; SER09-J. Do not invoke overridable 
+methods from the readObject() method]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Report only calls to abstract methods" parameter is enabled, the rule will trigger
+only when an abstract function is called from the readObject() method, and other function
+calls will be ignored.
+
+If the "Report calls to overridable methods that follow invocations of defaultReadObject()" 
+parameter is enabled, the rule will trigger when an overridable method is called after
+a call to the defaultReadObject() method. If disabled, rule violation will not be reported
+for such cases.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you to avoid initialization errors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation.
+
+public class Example
+{
+    private void readObject(final ObjectInputStream stream)
+        throws IOException, ClassNotFoundException
+    {
+        stream.defaultReadObject();
+        overridableMethod(); // VIOLATION
+    }
+
+    public void overridableMethod()
+    {}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+This compliant solution removes the call to the overridable method. 
+When removing such calls is not feasible, declare the method private or final.
+
+public class Repair
+{
+    private void readObject(final ObjectInputStream stream)
+        throws IOException, ClassNotFoundException
+    {
+        stream.defaultReadObject();
+    } // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+SER09-J. Do not invoke overridable methods from the readObject() method
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER09-J.+Do+not+invoke+overridable+methods+from+the+readObject%28%29+method">https://wiki.sei.cmu.edu/confluence/display/java/SER09-J.+Do+not+invoke+overridable+methods+from+the+readObject%28%29+method</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

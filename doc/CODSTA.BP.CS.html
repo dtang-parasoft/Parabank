@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place constants on the appropriate side of comparisons [CODSTA.BP.CS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place constants on the appropriate side of comparisons [CODSTA.BP.CS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies constants that are not on the appropriate side of comparisons
+(as defined in the rule parameters). With the default parameters, an error is
+reported if a constant is not on the right-hand side of a comparison expression.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Placement of constants:
+   -Left-hand side 
+   -Right-hand side (default option)
+   
+-Allow the constant "null" on either side of a comparison.
+   -The default is off.  If this box is checked, the rule will ignore the 
+    constant "null".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is a good practice to place constants on the same side of
+comparison expressions. 
+
+Moreover, there is an added benefit to placing constants on the left-hand side 
+of a comparison expression. A common typo while writing code is to use "=" 
+instead of "==" in equality comparisons. If you have placed the constant on the 
+left-hand side of the expression, the compiler will report an error message for 
+this typo. For example, the javac compiler will report an error message for:
+
+    if (false = var)
+
+but not for:
+
+    if (var = false)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class CS {
+    public void testMethod (int something) {
+        if (something == 5) {}  // VIOLATION (as default setting)
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class CSFixed {
+    public void testMethod (int something) {
+        if (5 == something) {}  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 2.5.2 of
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated CODSTA.CLS
+@deprecated CODSTA.CRS
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place "try/catch/finally" blocks outside of loops [EXCEPT.TRY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place "try/catch/finally" blocks outside of loops [EXCEPT.TRY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "try" statements inside loops.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violations are only flagged if it appears that the program behavior is
+intended to stop iteration of the loop after an exception occurs. This is
+determined by whether or not the "catch" block has a "break", "return", or
+"throw" statement in its body.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Placing "try/catch/finally" blocks inside loops can slow down the execution 
+of code. In most modern VMs this benefit is usually negligible. The reduction
+in bytecode generally amounts to one "goto" statement.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Moving the "try/catch/finally" block outside the loop can change program
+behavior. An exception will cause the loop to terminate early, whereas
+with the "try/catch/finally" block inside the loop it is possible to
+continue iterating over the loop after an exception has occurred.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+import java.io.FileInputStream;
+
+public class TRY {
+    void method (FileInputStream fis) {
+        for (int i = 0; i &lt; 10; i++) {
+            try {  // VIOLATION
+                _sum += fis.read ();
+            } catch (Exception e) {}
+        }
+    }
+    private int _sum;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place the "try/catch/finally" block outside of the loop.
+
+package examples.rules.except;
+
+import java.io.FileInputStream;
+
+public class TRYFixed {
+    void method (FileInputStream fis) {
+        try {  // FIXED
+            for (int i = 0; i &lt; 10; i++) {
+                _sum += fis.read ();
+            }
+        } catch (Exception e) {}
+    }
+    private int _sum;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.81 - 83
+
+</PRE>
+</BODY>
+</HTML>

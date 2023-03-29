@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer assertEquals and assertNotEquals over assertTrue and assertFalse [JUNIT.AEAT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer assertEquals and assertNotEquals over assertTrue and assertFalse [JUNIT.AEAT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+It is recommended to use the assertEquals() and assertNotEquals() methods
+rather than assertTrue() and assertFalse() to assert equality in JUnit tests
+(see BENEFITS).
+
+This rule detects when the assertTrue() and assertFalse() methods are
+used with "==" or "!=" in method parameters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not trigger if method parameters contain comparison
+to "null". See the JUNIT.ANAT rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve test code readability and obtain error
+messages that offer better insight into why a test failed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class AEATTest {
+    @Test
+    public void testMethod() {
+        int o = 5;
+        assertFalse(o == 1); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use assertNotEquals() instead of assertFalse().
+
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class AEATFixedTest {
+    @Test
+    public void testMethod() {
+        int o = 5;
+        assertNotEquals(o,1); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

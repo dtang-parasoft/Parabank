@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not perform synchronization nor call semaphore methods on an Object's 'this' reference [TRS.STR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not perform synchronization nor call semaphore methods on an Object's 'this' reference [TRS.STR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "this" reference should not be used as the synchronizing expression in a 
+"synchronized" statement.  Also, the semaphore methods "wait()", "notify()", and 
+"notifyAll()" should not be called on a class' "this" reference.  This rule will 
+flag a violation for any place where the "this" reference is used in either of 
+these situations.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Each thread of execution will "hang" and prevent tasks from completing. In
+some cases, CPU consumption may occur if a lock check occurs in a tight loop."
+[CWE-833]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check synchronize on 'this' (default on)
+-Check 'wait()', 'notify()', and 'notifyAll()' calls on 'this' (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Client classes that use a class may also use an instance of the class as a 
+synchronizing object.  If this happens, two classes are using the same object
+for synchronization.  This makes multithreaded correctness suspect.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class STR{
+    public void method(){
+        synchronized(this){  //VIOLATION
+            try{
+                this.wait();  //VIOLATION
+            }
+            catch(Exception e){
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a private member variable instead of the "this" reference to control 
+synchronization.
+
+package examples.rules.trs;
+
+public class STRFixed{
+    STRFixed syncObj;
+    
+    public void method(){
+        synchronized(syncObj){  //FIXED
+            try{
+                syncObj.wait();  //FIXED
+            }
+            catch(Exception e){
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-833: Deadlock
+<A HREF="https://cwe.mitre.org/data/definitions/833.html">https://cwe.mitre.org/data/definitions/833.html</A>
+
+</PRE>
+</BODY>
+</HTML>

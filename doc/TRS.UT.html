@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not start a thread without specifying a 'run()' method [TRS.UT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not start a thread without specifying a 'run()' method [TRS.UT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code which starts a "Thread" object using the default 
+empty 'run()' method.  When starting a "Thread" object, you must specify a 
+'run()' method by doing one of the following:
+
+1. Derive from the "Thread" class, and override the default implementation of 
+the 'run()' method.
+2. Pass a "Runnable" object into the method call to start the "Thread".  
+
+This rule will flag a violation for all calls to the 'start()' method of 
+"java.lang.Thread" which will invoke the default empty implementation of the 
+'run()' method.  The default implementation of the 'run()' method is defined in
+"java.lang.Thread".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A "Thread" which is started without specifying a 'run()' method does nothing but 
+waste time.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class UT {
+    public void method() throws Exception{
+        new Thread().start();  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either derive from the "Thread" class or pass in a "Runnable" object.
+
+package examples.rules.trs;
+
+public class UT_Fixed {
+    public void method(Runnable r) throws Exception{
+        new Thread(r).start();  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

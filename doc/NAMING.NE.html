@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for exceptions [NAMING.NE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for exceptions [NAMING.NE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies exceptions that do not follow the user-defined
+naming convention (as specified in a regular expression). By default, the
+rule requires that the exception name end with 'Exception'. An 
+error is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression
+    -Exception class names should match the listed regular expression.
+    -The default is "Exception$".  This enforces that the names of exception
+     classes end with "Exception".
+-check public class. (default is true)
+-check protected class. (default is true)
+-check package-private class. (default is true)
+-check private class. (default is true)
+-Negate regular expression
+    -If this parameter is enabled, a violation will be flagged if the name of an
+     exception class matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for exception class names which do not match the regular expression
+     specified.
+-Ignore case
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of exception
+     classes must match the regular expression specified, including in case. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class NE {  
+
+    class NEInvalidFormat extends Exception {  // VIOLATION
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the identifier to follow the convention.
+
+package examples.rules.naming;
+
+public class NEFixed {  
+
+    class NEInvalidFormatException extends Exception {  // FIXED 
+
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

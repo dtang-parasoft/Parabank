@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make sure that methods are invoked on the correct object [PB.LOGIC.ROM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make sure that methods are invoked on the correct object [PB.LOGIC.ROM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports an error for variables for which no methods are invoked on 
+them.  The rule only checks local variables and parameters of non-primitive 
+types which are initialized to a value other than the constant "null".  Also, 
+the rule only checks variables of mutable types.
+
+To reduce noise, the rule only reports an error on a variable by default if 
+there is more than one invocation of a compatible method on some other object 
+within the same method.  A compatible method is any method defined in a 
+variable's type or somewhere in the hierarchy of that variable's type.  In the 
+case where there is more than one call to a compatible method within a method 
+declaration, it is much more likely that one of the calls was meant to be on the 
+object on which a method is never invoked.  This is why this is the only case 
+that is flagged by default.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Report only if a compatible method is invoked on another object at least twice.
+    -Default is "true".
+    -If this parameter is enabled, a violation will only be flagged on a 
+     variable or parameter if a compatible method (that is, a method defined in 
+     that variable's type or somewhere in the hierarchy of that variable's type) 
+     is called using a different calling object at least twice in the same 
+     method.  See the "DESCRIPTION" section for a more detailed discussion of 
+     this. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a local variable or parameter is declared but a method is never called on 
+that variable, there is a good chance that this is a bug.  Either a method call 
+was accidentally omitted, or the wrong variable was used as the calling object 
+for one of the method calls in the declaring method.  The declaring method 
+should be inspected to see if there is a bug.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule may produce some false positives.  There are some cases where 
+declaring a local variable or parameter and not calling a method on it is the
+correct behavior.  In these cases, the violation should be suppressed.  There 
+should be very few of these false positives. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+import java.util.*;
+
+public class ROM {
+    List collectPositive(List input) {
+        List output = new ArrayList();
+        for (int i = 0; i &lt; input.size(); i++) {
+            Integer element = (Integer) input.get(i);
+            if (element.intValue() &gt; 0)
+                input.add(element);  // VIOLATION: added to the wrong list
+        }
+        return output;
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that the wrong object was not accidentally used as the calling object
+for one of the method calls in the declaring method and that no method calls 
+were omitted.
+
+package examples.rules.pb.logic;
+
+import java.util.*;
+
+public class ROMFixed {
+    List collectPositive(List input) {
+        List output = new ArrayList();
+        for (int i = 0; i &lt; input.size(); i++) {
+            Integer element = (Integer) input.get(i);
+            if (element.intValue() &gt; 0)
+                output.add(element); // FIXED
+        }
+        return output;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

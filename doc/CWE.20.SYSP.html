@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not access or set System properties [CWE.20.SYSP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not access or set System properties [CWE.20.SYSP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that attempts to access or set 
+System properties through "java.lang.System". An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+category: Malicious Code
+
+Code which accesses or sets System properties may be malicious. See BENEFITS for
+more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Accessing and setting System properties is not a trivial 
+operation. Usage of System properties should be restricted 
+because information and access to the System could be used 
+by a malicious programmer.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+public class SYSP {
+    public void setClassPath(String clpath){
+        System.setProperty("CLASSPATH", clpath); //VIOLATION
+        reloadLibraries();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not access or set System properties.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+CWE-15: External Control of System or Configuration Setting
+<A HREF="https://cwe.mitre.org/data/definitions/15.html">https://cwe.mitre.org/data/definitions/15.html</A>
+
+</PRE>
+</BODY>
+</HTML>

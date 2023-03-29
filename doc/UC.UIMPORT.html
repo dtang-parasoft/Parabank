@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused "import" statements [UC.UIMPORT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused "import" statements [UC.UIMPORT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused import statements. An error is reported for all unused import
+statements-- even when types are declared using the fully qualified name.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+FILE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore unused "import" statements if the fully-qualified type name is used. (default is false)
+    If enabled, this rule would act like the former Jtest rule UC.UIMPORT2, which is deprecated.
+-Ignore "import" statements if the "import" statement is used in the Javadoc. (default is true)
+    If enabled, the rule will count usages of "import" statements in the Javadoc
+    comments of a file as valid usages of the "import" statement.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you do not follow this rule and are not precise about what you are importing,
+readers will have a difficult time understanding your classes' context and dependencies.
+This makes code more difficult to read and more error prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+import java.io.*;  // VIOLATION
+import java.util.Vector;  // VIOLATION
+
+public class UIMPORT {
+
+    private java.util.Vector v;
+
+}  
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the import statement.
+
+package examples.rules.uc;
+
+// FIXED : remove the java.io.* statement
+// FIXED : remove the java.util.Vector statement
+
+public class UIMPORTFixed {
+
+    private java.util.Vector v;
+
+}
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated UC.UIMPORT2
+
+</PRE>
+</BODY>
+</HTML>

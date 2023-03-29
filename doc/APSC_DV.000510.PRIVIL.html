@@ -1,0 +1,234 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid operating on tainted data in privileged blocks [APSC_DV.000510.PRIVIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid operating on tainted data in privileged blocks [APSC_DV.000510.PRIVIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when unvalidated or untrusted data, also known as tainted data, is used
+in a privileged block.
+
+ This rule triggers when tainted data is used in the following methods from the AccessController class 
+(java.security.AccessController):
+
+	* static &lt;T&gt; T  doPrivileged(PrivilegedAction&lt;T&gt; action)
+	* static &lt;T&gt; T 	doPrivileged(PrivilegedAction&lt;T&gt; action, AccessControlContext context)
+	* static &lt;T&gt; T 	doPrivileged(PrivilegedAction&lt;T&gt; action, AccessControlContext context, 
+								 Permission... perms)
+	* static &lt;T&gt; T 	doPrivileged(PrivilegedExceptionAction&lt;T&gt; action)
+	* static &lt;T&gt; T 	doPrivileged(PrivilegedExceptionAction&lt;T&gt; action, AccessControlContext context)
+	* static &lt;T&gt; T 	doPrivileged(PrivilegedExceptionAction&lt;T&gt; action, AccessControlContext context, 
+								 Permission... perms)
+	* static &lt;T&gt; T 	doPrivilegedWithCombiner(PrivilegedAction&lt;T&gt; action)
+	* static &lt;T&gt; T 	doPrivilegedWithCombiner(PrivilegedAction&lt;T&gt; action, AccessControlContext context, 
+											 Permission... perms)
+	* static &lt;T&gt; T 	doPrivilegedWithCombiner(PrivilegedExceptionAction&lt;T&gt; action)
+	* static &lt;T&gt; T 	doPrivilegedWithCombiner(PrivilegedExceptionAction&lt;T&gt; action, 
+											 AccessControlContext context, Permission... perms)
+											 
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Allowing tainted inputs in privileged operations may result in privilege escalation attacks.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Protects against privilege escalation attacks by preventing an attacker from supplying malicious input.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example of unsafe code:
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Example
+{
+    public void privilegedMethod(HttpServletRequest request)
+    {
+        String fileName = request.getParameter("filename");
+        FileInputStream fis = (FileInputStream)AccessController.doPrivileged(new PrivilegedAction()
+        {
+            public FileInputStream run()
+            {
+                try {
+                    return new FileInputStream(fileName); // VIOLATION
+                } catch (FileNotFoundException e) {
+                    return null;
+                }
+            }
+        });
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Repair
+{
+    public void privilegedMethodGood(HttpServletRequest request)
+    {
+        String fileName = validate(request.getParameter("filename"));
+        FileInputStream fis = (FileInputStream)AccessController.doPrivileged(new PrivilegedAction()
+        {
+            public FileInputStream run()
+            {
+                try {
+                    return new FileInputStream(fileName); // NO VIOLATION
+                } catch (FileNotFoundException e) {
+                    return null;
+                }
+            }
+        });
+    }
+
+    public abstract String validate(Object obj);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+SEC01-J. Do not allow tainted variables in privileged blocks 
+<A HREF="https://www.securecoding.cert.org/confluence/display/java/SEC01-J.+Do+not+allow+tainted+variables+in+privileged+blocks">https://www.securecoding.cert.org/confluence/display/java/SEC01-J.+Do+not+allow+tainted+variables+in+privileged+blocks</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling, circumventing, or altering implemented security safeguards/countermeasures.
+APSC-DV-000510: The application must execute without excessive account permissions.
+
+Java Platform, Standard Edition (Java SE) 8, Class AccessController
+<A HREF="https://docs.oracle.com/javase/8/docs/api/java/security/AccessController.html">https://docs.oracle.com/javase/8/docs/api/java/security/AccessController.html</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

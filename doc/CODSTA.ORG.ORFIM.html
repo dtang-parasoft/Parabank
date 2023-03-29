@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place 'finalize()' methods between "public" and "protected" methods [CODSTA.ORG.ORFIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place 'finalize()' methods between "public" and "protected" methods [CODSTA.ORG.ORFIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies inappropriately-placed "finalize" methods.
+An error is reported if a "finalize" method is not placed between
+the "public" and "protected" methods of the class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes code easier to read and less error-prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+public class ORFIM {
+    public void method () {}
+    protected void method2 () {}
+    protected void finalize () {}  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the "finalize"  method.
+
+package examples.rules.codsta.org;
+
+public class ORFIMFixed {
+    public void method () {}
+    protected void finalize () {}  // FIXED
+    protected void method2 () {}
+}
+
+</PRE>
+</BODY>
+</HTML>

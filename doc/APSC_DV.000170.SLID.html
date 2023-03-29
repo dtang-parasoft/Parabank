@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure Session-ID Length is sufficient [APSC_DV.000170.SLID]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure Session-ID Length is sufficient [APSC_DV.000170.SLID]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Session identifiers should be at least 128 bits long to prevent brute-force attacks.
+This rule check deployment descriptor files and identifies uses of Session-ID 
+with a width less than that set in the parameters.
+
+A violation is reported for each xml file that contains the following structure:
+
+...
+&lt;session-config&gt;
+        &lt;session-properties&gt;
+            &lt;property name="idLengthBytes" value="..." /&gt;
+            ... 
+        &lt;/session-properties&gt;
+    &lt;/session-config&gt;
+...
+
+where "value" is less than that defined in the parameters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+see BENEFITS
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Recommended Session-ID length
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Protects against brute force attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;sun-web-app&gt;
+    &lt;session-config&gt;
+        &lt;session-properties&gt;
+            &lt;property name="idLengthBytes" value="8"/&gt; // BAD
+        &lt;/session-properties&gt;
+    &lt;/session-config&gt;
+&lt;/sun-web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+&lt;sun-web-app&gt;
+    &lt;session-config&gt;
+        &lt;session-properties&gt;
+            &lt;property name="idLengthBytes" value="16"/&gt; // OK
+        &lt;/session-properties&gt;
+    &lt;/session-config&gt;
+&lt;/sun-web-app&gt;
+ 
+In some cases, it is better to remove this property. The default value is set by the 
+server, and in most cases it is higher than (or equal to) 16.
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/2206ab8f-cac4-4a0e-84a5-45220229ffaa">https://app.hackedu.com/link/2206ab8f-cac4-4a0e-84a5-45220229ffaa</A>
+
+ 
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-6: J2EE Misconfiguration: Insufficient Session-ID Length
+<A HREF="https://cwe.mitre.org/data/definitions/6.html">https://cwe.mitre.org/data/definitions/6.html</A>
+
+Sun Java System Application Server Platform Edition 8 Developer's Guide.
+Chapter 5 Deployment Descriptor Files
+<A HREF="http://download.oracle.com/docs/cd/E19518-01/817-6087/dgdesc.html">http://download.oracle.com/docs/cd/E19518-01/817-6087/dgdesc.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP Brute force attack
+<A HREF="https://www.owasp.org/index.php/Brute_force_attack">https://www.owasp.org/index.php/Brute_force_attack</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+ASDR TOC Vulnerabilities OWASP Insufficient Session-ID Length
+<A HREF="https://www.owasp.org/index.php/Insufficient_Session-ID_Length">https://www.owasp.org/index.php/Insufficient_Session-ID_Length</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

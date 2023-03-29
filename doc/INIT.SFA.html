@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not initialize "static" "final" variables with non "final" "static" variables [INIT.SFA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not initialize "static" "final" variables with non "final" "static" variables [INIT.SFA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies initializations of static final fields with 
+static non-final fields. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Even if a non-final field is passed into a method invocation which
+returns and assigns value to the final field, it would still be reported
+as an error because the return value is likely to be based on a non-
+final field.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore fields of type "String" in initializations. (Default is true.)
+    -If this parameter is enabled, a violation will not be flagged for any 
+     "String" variables used in the initialization.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It could be confusing to assign a non-constant (non-final)
+field to a constant (final) field. Constant (final) fields
+are supposed to be fed by constant literals to avoid 
+confusion.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class SFA {
+    static int a = 0;
+    static final int b = a + 1; //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class SFAFixed {
+    static int a = 0;
+    static final int b = 1; //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

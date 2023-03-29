@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare instance variables in Struts Action classes [STRUTS.INST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare instance variables in Struts Action classes [STRUTS.INST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instance variables in Action classes.
+By default, an error is reported for any non-static member
+variable of any class derived from Action. Select instance
+variables can be allowed by specifying them in the parameter
+list. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Allow instance variables with the following names
+     -This parameter allows you to specify the names of instance variables
+     which should be allowed in Action classes. The default is an empty list 
+     (in other words, the default is that no instance variables
+     are allowed).
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoiding instance variables in Action classes helps to make code 
+thread-safe. Action classes are singletons, and there may be several 
+threads executing an Action class instance.  For this reason, there
+should be no instance variables in Action classes. It is important
+to use only local variables (rather than instance variables) in Action
+classes.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.STRUTS;
+
+import org.apache.struts.action.Action;
+
+public final class INST extends Action {
+    int foo;  //VIOLATION- instance variable in an Action class
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove all instance variables, and implement the code using local variables instead.
+
+package examples.rules.STRUTS;
+
+import org.apache.struts.action.Action;
+
+public final class INST extends Action {
+    //FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+The Struts User's Guide:
+<A HREF="http://struts.apache.org/userGuide/">http://struts.apache.org/userGuide/</A> (See Section 4.4.1)
+
+</PRE>
+</BODY>
+</HTML>

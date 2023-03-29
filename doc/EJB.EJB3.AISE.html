@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid IllegalStateException when using transactions [EJB.EJB3.AISE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid IllegalStateException when using transactions [EJB.EJB3.AISE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an IllegalStateException may be thrown when using
+transactions.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks the following situations:
+    1) "setRollbackOnly()" or "getRollbackOnly()" is called in a bean managed
+           transaction or in a container managed transaction with a "SUPPORTS",
+           "NOT_SUPPORTED", or "NEVER" transaction attribute.
+    2) "getUserTransaction()" is called in a container managed transaction.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+public class AISE {
+    @Resource
+    private SessionContext sc;
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public void update() {
+        try {
+            ...
+        } 
+        catch (Exception e) {
+            sc.setRollbackOnly(); //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use methods only in an appropriate context.
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+public class AISEFixed {
+    @Resource
+    private SessionContext sc;
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED) //FIXED
+    public void update() {
+        try {
+            ...
+        } 
+        catch (Exception e) {
+            sc.setRollbackOnly();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 191-193, 198-199.
+
+EJBContext (Java EE 5)
+<A HREF="http://java.sun.com/javaee/5/docs/api/javax/ejb/EJBContext.html">http://java.sun.com/javaee/5/docs/api/javax/ejb/EJBContext.html</A>
+
+</PRE>
+</BODY>
+</HTML>

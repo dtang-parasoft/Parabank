@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not place statements on the same line as the '{' opening brace [FORMAT.NSAB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not place statements on the same line as the '{' opening brace [FORMAT.NSAB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies statements that follow '{' opening braces on the same line.
+An error is reported for each occurrence. No error is reported if the matching
+closing brace also appears on the same line.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Allow statements on the same line as the opening brace if the opening and closing 
+  braces appear on the same line. (default is true)
+  
+  If enabled, this rule would not flag this special case:
+  
+  if (...) {  statement;  }
+  
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class NSAB {
+    void foo () { int i = 0;  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place the statement on the next line.
+
+package examples.rules.format;
+
+public class NSABFixed {
+    void foo () {   
+    int i = 0;  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

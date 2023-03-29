@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure @MessageDriven beans specify a MessageListener [EJB.EJB3.MDML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure @MessageDriven beans specify a MessageListener [EJB.EJB3.MDML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies MessageDriven beans which do not specify a message
+listener.
+The following locations are checked:
+    1) @MessageDriven annotation member "messageListenerInterface"
+    2) "implements" keyword of MessageDriven bean class
+    3) "messaging-type" in the deployment descriptor
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+Specify message listeners using qualified names:
+    -"javax.jms.MessageListener" (default)
+    Message listeners specified using this parameter are used to verify
+    those implemented by the "implements" keyword or specified in the
+    annotation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@MessageDriven
+public class MDML { //VIOLATION
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify a message listener for the MessageDriven bean.
+
+package examples.rules.ejb.ejb3;
+
+@MessageDriven(
+    messageListenerInterface="javax.jms.MessageListener")
+public class MDMLFixed { //FIXED
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 127-128.
+
+</PRE>
+</BODY>
+</HTML>

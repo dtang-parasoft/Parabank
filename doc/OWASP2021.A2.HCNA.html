@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hard-code IP addresses and port numbers [OWASP2021.A2.HCNA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hard-code IP addresses and port numbers [OWASP2021.A2.HCNA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies hard-coded IP addresses and port numbers.  An error is reported for 
+each occurrence.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will check IP addresses and port numbers that are used in the following classes:
+    java.net.DatagramPacket
+    java.net.DatagramSocket
+    java.net.InetAddress
+    java.net.InetSocketAddress
+    java.net.MulticastSocket
+    java.net.ServerSocket
+    java.net.SocketPermission
+    java.net.Socket
+    
+  
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The software transmits sensitive or security-critical data in cleartext in
+a communication channel that can be sniffed by unauthorized actors. . . Anyone
+can read the information by gaining access to the channel being used for
+communication." [CWE-319]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Do not hard-code IP addresses (enabled by default)
+- Do not hard-code port numbers (enabled by default)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If an IP address and port number are hard-coded in an application, it will 
+cause a deployment problem if the IP address or port number is changed because
+the application will need to be rebuilt with the changed IP address and port number.
+Therefore, it is better to store the IP address and port number in a configuration
+file.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+import java.net.*;
+
+public class HCNA {
+
+    public void connect() throws Exception {
+        Socket socket = new Socket("127.0.0.1", 8080);  // VIOLATION
+        // scocket connection ....
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+import java.net.*;
+
+public class HCNAFixed {
+
+    public void connect(String host, port) throws Exception {
+        Socket socket = new Socket(host, port);  // FIXED
+        // scocket connection ....
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/719297b1-a031-490e-8fcc-18b1b77dcfd2">https://app.hackedu.com/link/719297b1-a031-490e-8fcc-18b1b77dcfd2</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2021 CWE Weaknesses On the Cusp
+CWE-319: Cleartext Transmission of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/319.html">https://cwe.mitre.org/data/definitions/319.html</A>
+
+CWE-605: Multiple Binds to the Same Port
+<A HREF="https://cwe.mitre.org/data/definitions/605.html">https://cwe.mitre.org/data/definitions/605.html</A>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-002440: The application must protect the confidentiality and integrity of transmitted information
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close resources as early as possible [CERT.FIO14.CRWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close resources as early as possible [CERT.FIO14.CRWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases where the programmer could possibly improve the efficiency
+of code by moving a call to a "close" method on a resource earlier in the method.
+The rule checks for complete loops ("for", "while", or "do" loops) between the last
+use of an object and the call to "close" on that object. A violation will be reported
+for each occurrence. This rule will check all resources in the "java.io.*" package,
+the "java.net.*" package, as well as "java.sql.Connection" objects.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not report a violation for any calls to "close" that are nested
+within a "finally" block since it is a common practice to close all resources in
+a "finally" block.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Most unreleased resource issues result in general software reliability
+problems, but if an attacker can intentionally trigger a resource leak,
+the attacker might be able to launch a denial of service attack by depleting
+the resource pool.
+When a resource containing sensitive information is not correctly shutdown,
+it may expose the sensitive data in a subsequent allocation." [CWE-404]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, therefore optimizations are especially
+important.
+
+Since loops can take a long time to execute, it is advisable to close all
+resources that are not necessary within or after a loop before you enter that loop.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.io.*;
+
+public class CRWD {
+    public void myMethod(){
+        File a = new File("");
+        File b = new File("");
+        FileInputStream ai= null, bi= null;
+
+        try{
+            ai = new FileInputStream(a);
+            bi = new FileInputStream(b);
+            boolean condition= true;
+
+            while (condition) {
+                ai.read();
+                // spend 20 minutes processing File a; File b was never used here.
+            }
+
+            while (condition) {
+                bi.read();
+                // spend 20 minutes processing File b; File a was never used here.
+            }
+            ai.close();  // VIOLATION
+            bi.close();
+        }
+        catch(Exception e){
+        }
+        finally{
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class CRWDFixed {
+    public void myMethod(){
+        File a = new File("");
+        File b = new File("");
+        FileInputStream ai= null, bi= null;
+
+        try{
+            ai = new FileInputStream(a);
+            bi = new FileInputStream(b);
+            boolean condition= true;
+
+            while (condition) {
+                ai.read();
+                // spend 20 minutes processing File a; File b was never used here.
+            }
+            ai.close();  // FIXED
+
+            while (condition) {
+                bi.read();
+                // spend 20 minutes processing File b; File a was never used here.
+            }
+            bi.close();
+        }
+        catch(Exception e){
+        }
+        finally{
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-404: Improper Resource Shutdown or Release
+<A HREF="https://cwe.mitre.org/data/definitions/404.html">https://cwe.mitre.org/data/definitions/404.html</A>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO14-J. Perform proper cleanup at program termination
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination">https://wiki.sei.cmu.edu/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+</PRE>
+</BODY>
+</HTML>

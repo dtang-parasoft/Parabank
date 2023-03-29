@@ -1,0 +1,359 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Encapsulate constructor arguments with a validation function [OWASP2019.API8.EDPM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Encapsulate constructor arguments with a validation function [OWASP2019.API8.EDPM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when data which is passed to dangerous constructors
+has not been validated. 
+By default, the rule checks a pre-defined list of dangerous types, but it can be
+parameterized with additional dangerous types (see the PARAMETERS section for details).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+category: Code Quality
+
+Input validation needs to be performed on all dangerous data in order to prevent
+security vulnerabilities.
+
+Enforcing this rule will help to protect against many of the OWASP Top 10 
+application vulnerabilities, including:
+
+A1-Injection
+A3-Cross-Site Scripting (XSS)
+A4-Insecure Direct Object Reference
+A7-Missing Function Level Access Control
+A8-Cross-Site Request Forgery (CSRF) 
+
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and applications".
+Specifically, this rule helps to test for Issue 6.5.1: "Unvalidated input".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The rule can be parametrized with a list of additional dangerous types and
+validating methods.
+- "Additional dangerous types" can be used to list additional constructors.
+Use regular expressions to specify a fully-qualified name of type for each constructor.
+
+- "Validation Methods" can be used to list validation methods. Use regular
+expressions to specify the fully-qualified name of the type and the validation method name.
+
+The following dangerous types are always checked by the rule:
+java.lang.reflect.ReflectPermission
+java.lang.ProcessBuilder
+org.springframework.jdbc.datasource.DriverManagerDataSource
+org.springframework.jdbc.datasource.SimpleDriverDataSource
+org.springframework.jdbc.datasource.SingleConnectionDataSource
+org.springframework.jdbc.core.CallableStatementCreatorFactory
+org.springframework.jdbc.object.BatchSqlUpdate
+org.springframework.jdbc.object.MappingSqlQuery
+org.springframework.jdbc.object.MappingSqlQueryWithParameters
+org.springframework.jdbc.object.SqlCall
+org.springframework.jdbc.object.SqlFunction
+org.springframework.jdbc.object.SqlQuery
+org.springframework.jdbc.object.SqlUpdate
+org.springframework.jdbc.object.UpdatableSqlQuery
+org.hibernate.impl.QueryImpl
+org.hibernate.impl.CollectionFilterImpl
+java.io.FileOutputStream
+java.io.FileInputStream
+java.io.FileWriter
+java.io.FileReader
+java.io.File
+java.io.RandomAccessFile
+java.util.Formatter
+java.util.jar.JarFile
+java.util.zip.ZipFile
+javax.activation.FileDataSource
+com.sun.org.apache.xpath.internal.Arg
+com.sun.org.apache.xpath.internal.SourceTree
+org.apache.xpath.Arg
+org.apache.xpath.SourceTree
+org.jaxen.dom4j.Dom4jXPath
+org.jaxen.dom.DOMXPath
+org.jaxen.javabean.JavaBeanXPath
+org.jaxen.jdom.JDOMXPath
+org.jaxen.xom.XOMXPath
+java.net.DatagramPacket
+java.net.DatagramSocket
+java.net.InetSocketAddress
+java.net.MulticastSocket
+java.net.ServerSocket
+java.net.Socket
+java.net.URI
+java.net.URL
+java.rmi.activation.Activatable
+java.util.logging.SocketHandler
+javax.net.ssl.SSLSocket
+javax.net.ssl.SSLServerSocket
+org.apache.commons.digester.BeanPropertySetterRule
+org.apache.commons.digester.CallMethodRule
+org.apache.commons.digester.CallParamRule
+org.apache.commons.digester.FactoryCreateRule
+org.apache.commons.digester.ObjectCreateRule
+org.apache.commons.digester.ObjectParamRule
+org.apache.commons.digester.PathCallParamRule
+org.apache.commons.digester.SetNestedPropertiesRule
+org.apache.commons.digester.SetNextRule
+org.apache.commons.digester.SetPropertiesRule
+org.apache.commons.digester.SetPropertyRule
+org.apache.commons.digester.SetRootRule
+org.apache.commons.digester.SetTopRule
+java.awt.Button
+java.awt.Checkbox
+java.awt.Label
+java.awt.TextArea
+java.awt.TextField
+java.awt.MenuItem
+java.awt.Menu
+java.awt.PopupMenu
+java.awt.CheckboxMenuItem
+java.awt.Dialog
+java.awt.FileDialog
+java.awt.Frame
+javax.swing.JButton
+javax.swing.JLabel
+javax.swing.JList
+javax.swing.JMenuItem
+javax.swing.JCheckBoxMenuItem
+javax.swing.JMenu
+javax.swing.JRadioButtonMenuItem
+javax.swing.JToggleButton
+javax.swing.JCheckBox
+javax.swing.JRadioButton
+javax.swing.JComboBox
+javax.swing.JEditorPane
+javax.swing.JTextArea
+javax.swing.JTextField
+javax.swing.JFormattedTextField
+javax.swing.JPasswordField
+javax.swing.JTable
+javax.swing.JTree
+javax.swing.JFrame
+javax.swing.JInternalFrame
+javax.swing.JDialog
+javax.swing.JOptionPane
+org.eclipse.jface.dialogs.InputDialog
+org.eclipse.jface.dialogs.PopupDialog
+org.eclipse.jface.dialogs.ErrorDialog
+org.eclipse.jface.dialogs.MessageDialog
+org.eclipse.jface.dialogs.MessageDialogWithToggle
+com.google.gwt.user.client.ui.Anchor
+com.google.gwt.user.client.ui.Button
+com.google.gwt.user.client.ui.CaptionPanel
+com.google.gwt.user.client.ui.CheckBox
+com.google.gwt.user.client.ui.Frame
+com.google.gwt.user.client.ui.HTML
+com.google.gwt.user.client.ui.HTMLPanel
+com.google.gwt.user.client.ui.Hyperlink
+com.google.gwt.user.client.ui.Image
+com.google.gwt.user.client.ui.InlineHTML
+com.google.gwt.user.client.ui.InlineHyperlink
+com.google.gwt.user.client.ui.MenuItem
+com.google.gwt.user.client.ui.RadioButton
+com.google.gwt.user.client.ui.RenderablePanel
+com.google.gwt.user.client.ui.ResetButton
+com.google.gwt.user.client.ui.SubmitButton
+com.google.gwt.user.client.ui.TreeItem
+org.apache.ecs.html.A
+org.apache.ecs.html.Area
+org.apache.ecs.html.BaseFont
+org.apache.ecs.html.Font
+org.apache.ecs.html.Frame
+org.apache.ecs.html.HR
+org.apache.ecs.html.IFrame
+org.apache.ecs.html.Option
+org.apache.ecs.html.Script
+org.apache.ecs.html.Select
+org.apache.ecs.html.TextArea
+org.apache.ecs.jsp.jsp_page
+org.apache.ecs.jsp.jsp_setProperty
+org.apache.ecs.jsp.jsp_useBean
+org.apache.ecs.jsp.tsx_dbconnect
+org.apache.ecs.jsp.tsx_dbquery
+org.apache.ecs.jsp.tsx_repeat
+org.apache.ecs.jsp.tsx_setProperty
+org.apache.ecs.xhtml.a
+org.apache.ecs.xhtml.area
+org.apache.ecs.xhtml.font
+org.apache.ecs.xhtml.form
+org.apache.ecs.xhtml.frame
+org.apache.ecs.xhtml.frameset
+org.apache.ecs.xhtml.hr
+org.apache.ecs.xhtml.iframe
+org.apache.ecs.xhtml.input
+org.apache.ecs.xhtml.script
+org.apache.ecs.xhtml.select
+org.apache.ecs.xhtml.textarea
+org.apache.ecs.vxml.Audio
+org.apache.ecs.vxml.Block
+org.apache.ecs.vxml.Catch
+org.apache.ecs.vxml.Choice
+org.apache.ecs.vxml.Dtmf
+org.apache.ecs.vxml.Field
+org.apache.ecs.vxml.Grammar
+org.apache.ecs.vxml.Initial
+org.apache.ecs.vxml.Menu
+org.apache.ecs.vxml.Object
+org.apache.ecs.vxml.Prompt
+org.apache.ecs.vxml.Pros
+org.apache.ecs.vxml.Script
+org.apache.ecs.vxml.Subdialog
+org.apache.ecs.vxml.Submit
+org.apache.ecs.vxml.Transfer
+org.apache.ecs.vxml.Value
+org.apache.ecs.vxml.Vxml
+org.apache.ecs.wml.Anchor
+org.apache.ecs.wml.Do
+org.apache.ecs.wml.Input
+org.apache.ecs.wml.Option
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A validation rule can be used to enforce expected behavior and prevent tainted 
+data from being passed to backend systems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package nightly.original.SECURITY.IBA;
+
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.io.File;
+
+public class EDPM
+{
+    public void process(String filename)
+    {
+        try {
+            FileInputStream fInput = new FileInputStream(filename); // VIOLATION
+            FileChannel channel = fInput.getChannel();
+            ByteBuffer dst = ByteBuffer.allocate(512);
+            int read = channel.read(dst);
+            // ... 
+        } catch (Exception ioe) {
+            System.out.println("Exception occured: " + ioe);
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add validation method
+
+package nightly.original.SECURITY.IBA;
+
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.io.File;
+
+public class EDPM_Fixed
+{
+    public void process(String filename)
+    {
+        try {
+            FileInputStream fInput = new FileInputStream(validate(filename)); // FIXED
+            FileChannel channel = fInput.getChannel();
+            ByteBuffer dst = ByteBuffer.allocate(512);
+            int read = channel.read(dst);
+            // ... 
+        } catch (Exception ioe) {
+            System.out.println("Exception occured: " + ioe);
+        }
+    }
+    
+    String validate(String file)
+    {
+        // ...
+        return file;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013:
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+PCI Data Security Standard:
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+</PRE>
+</BODY>
+</HTML>

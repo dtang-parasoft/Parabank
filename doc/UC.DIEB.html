@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicate code in 'if' branches [UC.DIEB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicate code in 'if' branches [UC.DIEB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies duplicated code in 'if' branches. See BENEFITS
+and DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks nested 'if' statements which do not have dangling code. This is
+to help the rule identify only the cases which can more easily be reorganized
+into a single branch.
+
+A branch is considered duplicated if it contains the same conditional as well as
+the same statements. This rule uses a basic method of identifying duplicate
+code. For more in depth results, CDD.DUPC should be used.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check empty branches (default false)
+
+-Check nested branches (default true)
+    -Enabling this parameter will cause branches which are similar but nested to
+    be flagged. For example:
+        int method(int i) {
+            if (i == 0) {
+                if (i == 5) {
+                    i++;
+                }
+            }
+            else if (i == 5) { //VIOLATION 1
+                i++;
+            }
+            else if (i == 10) {
+                i++;
+            }
+            else if (i == 10) { //VIOLATION 2
+                i++;
+            }
+            return i;
+        }
+    Enabling this parameter will cause the first violation to flag as the first
+    'if' statement has a nested 'if' statement which is equivalent. Note that
+    the second violation will always be flagged regardless of parameter
+    settings.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Combining branches with duplicated code can reduce complexity and prevent future
+errors. This is especially true if the code in two or more branches is intended
+to always be the same. If the code is later updated in only one of the branches,
+then unexpected behavior may occur as two branches which are supposed to perform
+the same action are now performing different actions.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+In some cases, combining branches may yield a boolean expression that is
+complicated. This may be considered less readable than the multiple-branch
+counterpart.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class DIEB {
+    void method(int i) {
+        if (i &gt; 0) {
+            if (i == 5) {
+                update();
+            }
+        }
+        else if (i == 5) {
+            update(); //VIOLATION
+        }
+    }
+
+    void update() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Combine the branches to eliminate duplicate code.
+
+package examples.rules.uc;
+
+public class DIEBFixed {
+    void method(int i) {
+        if (i == 5) {
+            update(); //FIXED
+        }
+    }
+
+    void update() {
+        ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

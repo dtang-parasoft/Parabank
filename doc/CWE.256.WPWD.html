@@ -1,0 +1,202 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unencrypted passwords in WebSphere 'ibm-webservices-ext.xmi' files [CWE.256.WPWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unencrypted passwords in WebSphere 'ibm-webservices-ext.xmi' files [CWE.256.WPWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if passwords in &lt;securityToken&gt; tags are not encrypted in 
+WebSphere 'ibm-webservices-ext.xmi' files. Unencrypted passwords will be exposed 
+to attackers if messages are sent over an insecure channel. An error is reported 
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If passwords are not encrypted, they may be stolen by attackers if the message
+is sent over an insecure channel.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+This rule also helps to enforce the PCI DSS Requirement #8: "Assign a unique ID 
+to each person with computer access."  Specifically, this rule helps to test for 
+Issue 8.4: "Render all passwords unreadable during transmission and storage on 
+all system components using strong cryptography" and Issue 8.5.11: "Use 
+passwords containing both numeric and alphabetic characters."
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A6-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+ibm-webservices-ext.xmi:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;com.ibm.etools.webservice.wsext:WsExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wsext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi</A>" xmi:id="WsExtension_1151349893397"&gt;
+    .....
+      &lt;serverServiceConfig xmi:id="ServerServiceConfig_1154318793611"&gt;
+        &lt;securityRequestConsumerServiceConfig xmi:id="SecurityRequestConsumerServiceConfig_1154318793611"&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154366255282"/&gt;
+          &lt;caller xmi:id="Caller_1154366255282" name="basicAuth" part="" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+          &lt;requiredSecurityToken xmi:id="RequiredSecurityToken_1154366255282" name="requntoken" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>" usage="Required"/&gt;
+          
+          &lt;!-- VIOLATION : missing encryption --&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154366569664" name="conf_con" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569664" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+          &lt;/requiredConfidentiality&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154369393184" name="int_con1" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393184" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393185" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="securitytoken"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393186" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="timestamp"/&gt;
+          &lt;/requiredIntegrity&gt;
+        &lt;/securityRequestConsumerServiceConfig&gt;
+        &lt;securityResponseGeneratorServiceConfig xmi:id="SecurityResponseGeneratorServiceConfig_1154318793611"&gt;
+          &lt;confidentiality xmi:id="Confidentiality_1154318793611" name="conf_gen" order="2"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793613" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="conf_gen_body" keyword="bodycontent"/&gt;
+          &lt;/confidentiality&gt;
+          &lt;integrity xmi:id="Integrity_1154318793611" name="int_req1" order="1"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793614" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="int_req_body" keyword="body"/&gt;
+          &lt;/integrity&gt;
+        &lt;/securityResponseGeneratorServiceConfig&gt;
+      &lt;/serverServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wsext:WsExtension&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add encryption for the &lt;securityToken&gt; tag
+
+ibm-webservices-ext.xmi:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;com.ibm.etools.webservice.wsext:WsExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wsext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi</A>" xmi:id="WsExtension_1151349893397"&gt;
+    .....
+      &lt;serverServiceConfig xmi:id="ServerServiceConfig_1154318793611"&gt;
+        &lt;securityRequestConsumerServiceConfig xmi:id="SecurityRequestConsumerServiceConfig_1154318793611"&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154366255282"/&gt;
+          &lt;caller xmi:id="Caller_1154366255282" name="basicAuth" part="" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+          &lt;requiredSecurityToken xmi:id="RequiredSecurityToken_1154366255282" name="requntoken" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>" usage="Required"/&gt;
+          
+          &lt;!-- FIXED : add encryption --&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154366569664" name="conf_con" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569664" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569665" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="usernametoken"/&gt;
+          &lt;/requiredConfidentiality&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154369393184" name="int_con1" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393184" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393185" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="securitytoken"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393186" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="timestamp"/&gt;
+          &lt;/requiredIntegrity&gt;
+        &lt;/securityRequestConsumerServiceConfig&gt;
+        &lt;securityResponseGeneratorServiceConfig xmi:id="SecurityResponseGeneratorServiceConfig_1154318793611"&gt;
+          &lt;confidentiality xmi:id="Confidentiality_1154318793611" name="conf_gen" order="2"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793613" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="conf_gen_body" keyword="bodycontent"/&gt;
+          &lt;/confidentiality&gt;
+          &lt;integrity xmi:id="Integrity_1154318793611" name="int_req1" order="1"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793614" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="int_req_body" keyword="body"/&gt;
+          &lt;/integrity&gt;
+        &lt;/securityResponseGeneratorServiceConfig&gt;
+      &lt;/serverServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wsext:WsExtension&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+CWE-256: Unprotected Storage of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+<A HREF="http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf">http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC62-J. Store passwords using a hash function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function">https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

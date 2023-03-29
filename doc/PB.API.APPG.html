@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid 'put, 'putAll' and 'get' methods of 'java.util.Properties' objects [PB.API.APPG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid 'put, 'putAll' and 'get' methods of 'java.util.Properties' objects [PB.API.APPG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of the 'get', 'putAll' and 'put' 
+methods of 'java.util.Properties' objects. Properties inherits these
+methods from HashTable, however they may allow the insertion of a
+non-String key or value. This may compromise the Properties object and
+cause calls to 'store' or 'save' to fail. An error is reported for each 
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There is a quickfix for this rule, but the quickfix is not available in
+all cases.  The quickfix is to replace calls to 'get' with calls to
+'getProperty' and calls to 'put' with calls to 'setProperty'.  Violations 
+for calls to 'putAll' cannot be quickfixed.  Also, any call to 'put' or 
+'get' which has an argument that is not of type "String" cannot be 
+quickfixed because the 'getProperty' and 'setProperty' methods only accept 
+arguments of type "String".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'setProperty' should be used to appropriately set the values of
+'Properties' objects. Using 'put' and 'putAll' might allow non-String
+entries, which should be avoided.
+
+'getProperty' is preferred over the 'get' method. Since values in
+'Properties' are expected to be strings, it makes more sense
+to invoke 'getProperty', which directly returns a String as a 
+return value.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class API_APPG {
+    public static void main(String[] args) throws FileNotFoundException,
+        IOException {
+        File properties_file = new File("tmp.properties");
+        Properties properties = new Properties();
+        // VIOLATION: storing non-String in Properties object
+        properties.put("five", new Integer(5));
+        properties.store(new FileOutputStream(properties_file), null);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class API_APPGFixed {
+    public static void main(String[] args) throws FileNotFoundException,
+        IOException {
+        File properties_file = new File("tmp.properties");
+        Properties properties = new Properties();
+        properties.setProperty("five", "5"); //FIXED
+        properties.store(new FileOutputStream(properties_file), null);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+docs/api/java/util/Properties.html (from 1.4.2 java docs available for download at
+<A HREF="http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-142docs-2045554.html">http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-142docs-2045554.html</A>
+
+</PRE>
+</BODY>
+</HTML>

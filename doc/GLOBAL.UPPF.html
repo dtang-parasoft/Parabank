@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid globally unused "public/protected" fields [GLOBAL.UPPF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid globally unused "public/protected" fields [GLOBAL.UPPF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused "public" and "protected" fields.
+An error is reported for each occurrence.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Unused public code might be triggered /accessed by attackers. The code may
+implement features that bypass security.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "final" fields (default is true)
+ "final" modifier could imply the declared field is a constant
+ for later use. Such a constant should be ignored.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+These unused entities usually point to either:
+
+1) Old code that is no longer needed.  This makes the class more
+   difficult to understand.
+
+2) A logical flaw (if the entity needs to be used, but other classes
+   incorrectly avoid using it).
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unused field or document the reason for its existence.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-563: Assignment to Variable without Use ('Unused Variable')
+<A HREF="https://cwe.mitre.org/data/definitions/563.html">https://cwe.mitre.org/data/definitions/563.html</A>
+
+</PRE>
+</BODY>
+</HTML>

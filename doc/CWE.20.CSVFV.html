@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always call 'super.validate()' from validation methods in 'ActionForm' classes [CWE.20.CSVFV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always call 'super.validate()' from validation methods in 'ActionForm' classes [CWE.20.CSVFV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule checks to make sure that overridden validation methods in classes extending
+from "org.apache.struts.action.ActionForm" call "super.validate()".  This enforces usage 
+of the validation mechanism.  A violation will be flagged for each "validate" method in a 
+class extending from "ActionForm" which does not call "super.validate()".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+See BENEFITS section.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Enforcing this rule makes sure that validation is performed within the validation methods.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.iba;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.ValidatorForm;
+
+public class CSVFV extends ValidatorForm {
+    public CSVFV() {
+        super();
+    }
+
+    public ActionErrors validate(ActionMapping map, HttpServletRequest req) {
+        return new ActionErrors();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Call "super.validate()" from the validate method.
+
+package examples.rules.security.iba;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.ValidatorForm;
+
+public class CSVFVFixed extends ValidatorForm {
+    public CSVFVFixed() {
+        super();
+    }
+
+    public ActionErrors validate(ActionMapping map, HttpServletRequest req) {
+        return super.validate(map, req);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-103: Struts: Incomplete validate() Method Definition
+<A HREF="https://cwe.mitre.org/data/definitions/103.html">https://cwe.mitre.org/data/definitions/103.html</A>
+
+</PRE>
+</BODY>
+</HTML>

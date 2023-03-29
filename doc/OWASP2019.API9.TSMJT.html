@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide a Javadoc comment for 'toString()' methods [OWASP2019.API9.TSMJT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide a Javadoc comment for 'toString()' methods [OWASP2019.API9.TSMJT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies 'toString ()' methods that lack a Javadoc comment.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quickfix All" feature is not always available for this rule because some
+of the quickfixes require user input.  These cases must be quickfixed 
+individually.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The documentation of a 'toString ()' method should tell the user how the
+data will be formatted.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class TSMJT {
+    public TSMJT () {
+        _name = "ParaSoft";
+        _product = "Jtest";
+    }
+    public String toString () {  // VIOLATION
+        return "name=" + _name + ", product=" + _product;
+    }
+    private String _name;
+    private String _product;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Give the 'toString ()' method a Javadoc comment.
+
+package examples.rules.javadoc;
+
+public class TSMJTFixed {
+    public TSMJTFixed () {
+        _name = "ParaSoft";
+        _product = "Jtest";
+    }
+    // FIXED
+    /**
+     * The string representation is "name=NAME, product=PRODUCT"
+     * Where NAME is the company name and PRODUCT is the product name.
+     */
+    public String toString () {
+        return "name=" + _name + ", product=" + _product;
+    }
+    private String _name;
+    private String _product;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+         
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 42-44
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

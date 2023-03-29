@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include a 'case' statement for each constant of an 'enum' type in 'switch' statements [PB.NAECS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include a 'case' statement for each constant of an 'enum' type in 'switch' statements [PB.NAECS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each 'switch' statement where the type of 
+the 'switch' expression is an 'enum' type and there is not a 'case' statement 
+for each possible value of the 'enum' type.  If a 'switch' statement uses an
+'enum' type, there should be a case for each possible value of the 'enum' type.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is often a bug if one or more of the possible values of an 'enum' type are 
+missing a case in a 'switch' statement.  'switch' statements should take care of
+every possible value that an expression can have.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class NAECS {
+    enum Color {
+        RED, GREEN
+    };
+
+    public void printColor(Color c) {
+        switch (c) {  // VIOLATION- no 'case' for the value 'GREEN'
+        case RED:
+            System.err.println("Red");
+            break;
+        default:
+            System.err.println("Error");
+            break;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Include a 'case' statement for each possible value of the 'enum'.
+
+package examples.rules.pb;
+
+public class NAECSFixed {
+    enum Color {
+        RED, GREEN
+    };
+
+    public void printColor(Color c) {
+        switch (c) {  
+        case RED:
+            System.err.println("Red");
+            break;
+        case GREEN:                       //FIXED- added 'case' for 'GREEN'
+            System.err.println("Green");
+            break;    
+        default:
+            System.err.println("Error");
+            break;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

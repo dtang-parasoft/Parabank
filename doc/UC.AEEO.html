@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that classes do not explicitly extend 'java.lang.Object' [UC.AEEO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that classes do not explicitly extend 'java.lang.Object' [UC.AEEO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+With the default setting of its parameter, this rule identifies classes that 
+explicitly extend 'java.lang.Object'.  An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Avoid or enforce explicitly extending 'Object'?
+    -Default is "Avoid".
+    -If "Avoid" is selected, a violation will be flagged for each class which
+     explicitly extends 'java.lang.Object'.  
+    -If "Enforce" is selected, a violation will be flagged for each class which 
+     implicitly extends 'java.lang.Object' but does not explicitly extend 
+     'java.lang.Object'.
+     
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+By design, Java implicitly extends 'java.lang.Object', so explicitly extending
+'java.lang.Object' is redundant.  This is why we recommended using this rule 
+with the parameter set to "Avoid".
+
+However, some people prefer to make all superclasses explicit, meaning that even
+classes which have 'java.lang.Object' as a superclass should be declared to 
+explicitly extend their superclass.  This is why you might want to use this 
+rule with the parameter set to "Enforce".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class AEEO extends Object {  // VIOLATION
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove 'java.lang.Object'.
+
+package examples.rules.uc;
+
+public class AEEOFixed {  // FIXED
+
+}
+
+</PRE>
+</BODY>
+</HTML>

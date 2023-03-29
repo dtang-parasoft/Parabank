@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not implement the 'suite()' method in JUnit test classes [JUNIT.ISMTC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not implement the 'suite()' method in JUnit test classes [JUNIT.ISMTC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each JUnit test class which implements
+the "static" "suite()" method.  The signature of the "suite()" methods which 
+will be flagged by this rule is "static junit.framework.Test suite()".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only test classes which meet one of the following conditions:
+
+1. The class extends "junit.framework.TestCase".
+2. The class has at least one method with the "org.junit.Test" annotation.  
+This only applies to JUnit 4.0 and later.
+
+There are some cases where implementing a custom "suite()" method is 
+necessary.  For instance, when writing test classes in JUnit 4.0 and 
+later, you must define a "suite()" method which returns an instance of
+"junit.framework.JUnit4TestAdapter" if you plan on running the tests using 
+an older version of the JUnit runner.  The rule will not flag this case.
+
+Another situation where it is common to define the "suite()" method is if 
+you need to create a test suite which groups together several different 
+JUnit test classes.  The rule will also not flag this case.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Implementing the "suite()" method in a JUnit test class is generally not 
+necessary.  JUnit will automatically extract the test suite based on the 
+names of the test methods or (for JUnit 4.0 and later) the annotations of
+the test methods.  The only time you need to implement the "suite()" 
+method is when you need it to have some customized behavior; however, 
+this situation is rare.  
+
+Implementing the "suite()" method can also lead to bugs.  Doing so means 
+that you must remember to add any new test methods to the suite whenever 
+you add new test methods.  This is easy to forget.
+
+If "suite()" functionality is needed in JUnit 4.0 or later, then it is
+preferred to use the @RunWith and @Suite.SuiteClasses method instead.
+See REFERENCES for more information.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+public class ISMTC extends TestCase {
+    public ISMTC(String s) {
+        super(s);
+    }
+
+    public static Test suite() {  //VIOLATION
+        TestSuite suite = new TestSuite(ISMTC.class);
+        suite.addTest(new ISMTC("testAdd"));
+        return suite;
+    }
+
+    public void testAdd() {
+        // some test method
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the "suite()" method unless you perform some custom operations in
+that method which will not be done automatically by JUnit.
+
+package examples.rules.junit;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+public class ISMTCFixed extends TestCase {
+    public ISMTCFixed(String s) {
+        super(s);
+    }
+
+    //FIXED- removed "suite()" method
+
+    public void testAdd() {
+        // some test method
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Suite (JUnit API)
+<A HREF="http://junit.sourceforge.net/javadoc/org/junit/runners/JUnit4.html">http://junit.sourceforge.net/javadoc/org/junit/runners/JUnit4.html</A>
+
+</PRE>
+</BODY>
+</HTML>

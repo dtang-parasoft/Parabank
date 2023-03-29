@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid more than two levels of nested inner classes [OOP.LEVEL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid more than two levels of nested inner classes [OOP.LEVEL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Requires that no more than two levels of nested inner classes be used.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Code Quality
+
+Complicated code is error-prone and hard to maintain, 
+therefore increases the likelihood of security problems.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Nesting more than two levels deep can be hard to follow.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class LEVEL {
+    class Level1 {
+        class Level2 {
+            class Level3 {  // VIOLATION
+                private boolean _isClosed = false;
+            }
+            private int _count = 0;
+        }
+        private int _size = 0;
+    }
+    private int _length = 0;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the code from the nested classes into separate classes in their own files.
+
+First file 'LEVELFixed.java':
+
+package examples.rules.oop;
+
+public class LEVELFixed {
+    class Level1 {
+        class Level2 {
+            private int _count = 0;
+        }
+        private int _size = 0;
+    }
+    private int _length = 0;
+}
+
+class Level3Fixed {
+    private boolean _isClosed = false;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Ken Arnold, James Gosling: "The Java Programming Language Second Edition".
+Addison-Wesley, 1997. pp.53
+
+</PRE>
+</BODY>
+</HTML>

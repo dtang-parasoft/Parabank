@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare loggers as "static final" fields [CODSTA.BP.DLSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare loggers as "static final" fields [CODSTA.BP.DLSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+By convention, logger objects should be declared as "static" and "final" fields.
+This rule will flag a violation for fields which are declared as having a logger
+type but which are non-"final" and/or non-"static".  The rule will also flag a 
+violation for local variables which have a logger type.  By convention, loggers
+should be fields and not local variables.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Logger Types to Check:
+    -Default values are:
+     java.util.logging.Logger
+     org.apache.log4j.Logger
+     
+By default, this rule will only check the types "java.util.logging.Logger" and 
+"org.apache.log4j.Logger".  These are two of the most commonly used loggers.  If
+you use a logger other than these two, you should add the fully qualified name 
+of that logger to the parameter list. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The conventions of logger usage dictate that each class should have no more than 
+one logger and that this logger should never be reassigned once it is created.  
+The best way to ensure this is to declare all loggers as "static final" fields.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, each instance of the class 'DLSF' will have its own copy of the
+logger since the logger field is not declared "static".  This goes against the
+conventions of logger usage.
+
+package examples.rules.codsta.bp;
+
+import java.util.logging.Logger;
+
+public class DLSF {
+    private final Logger LOGGER = Logger.getLogger("DLSF");  //VIOLATION - 'LOGGER' is not "static"
+    
+    public void testMethod() {
+        LOGGER.info("In 'testMethod()'");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the logger as both "static" and "final".  If it is a local variable,
+change it to a "static final" field.
+
+package examples.rules.codsta.bp;
+
+import java.util.logging.Logger;
+
+public class DLSF_Fixed {
+    private static final Logger LOGGER = Logger.getLogger("DLSF_Fixed");  //FIXED
+    
+    public void testMethod() {
+        LOGGER.info("In 'testMethod()'");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

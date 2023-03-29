@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid bugs in the usage of loop variables [PB.LOGIC.INDEX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid bugs in the usage of loop variables [PB.LOGIC.INDEX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule searches for possible incorrect usage of loop control variables.  It
+will flag two cases.  
+
+1.  	The rule will flag errors like the following:
+
+Array1[] array1 = getArray1();
+for (int i = 0; i &lt; array1.length; i++) {
+    System.out.println("array 1:" + array1[i]);
+    Array2[] array2 = array1[i].getArray2();
+    for (int j = 0; j &lt; array2.length; j++) {
+        System.out.println("array 2:" + array2[i]);  // should be j
+    }
+}
+
+In the body of the inner "for" loop, the wrong control variable is used.  This
+rule will flag any instance where the innermost loop control variable is not
+used in the body of a "for"loop and a control variable from one of the outer
+nested loops is used in the body of the loop.  Thus, the case presented above
+is a violation because the variable "j" is not used in the innermost loop and
+the variable "i" is.
+
+2.  	The rule will also flag a violation for cases where a different variable 
+is used in the update portion of a "for" statement than is used in the 
+initialization and condition of the statement.  For instance, the following loop
+likely contains a bug in its update statement:
+
+for (int j = 0; j &lt; array2.length; i++) {  // should be "j++" instead of "i++"
+    System.out.println("The index is:" + j);  
+}
+
+Since "i" is not used in either the initialization or condition of the loop, it
+is likely a mistake that it appears in the update.
+
+A violation will be flagged for each occurrence of either of the errors 
+described above. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Enforcing this rule will help prevent bugs because, in cases like those 
+described above, there is a high probability that the wrong variable was used 
+in the loop.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+class INDEX{
+    public void myMethod(){
+        int[] a= new int[5];
+      
+        for(int i=0; i&lt;a.length; i++){
+            int[] b= new int[5];
+            for(int j=0; j&lt;b.length; j++){
+                b[i]= 1;   //VIOLATION: should be j
+            }
+        } 
+        for (int j = 0; j &lt; a.length; i++) {  // VIOLATION: should be "j++" instead of "i++"
+            System.out.println("The index is:" + j);  
+        }   
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Check the use of variables to make sure that the correct variable is used in
+each place.
+
+package examples.rules.pb.logic;
+
+class INDEXFixed{
+    public void myMethod(){
+        int[] a= new int[5];
+      
+        for(int i=0; i&lt;a.length; i++){
+            int[] b= new int[5];
+            for(int j=0; j&lt;b.length; j++){
+                b[j]= 1;   //FIXED
+            }
+        } 
+        for (int j = 0; j &lt; a.length; j++) {  // FIXED
+            System.out.println("The index is:" + j);  
+        }      
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

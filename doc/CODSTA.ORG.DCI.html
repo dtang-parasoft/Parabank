@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define constants in an "interface" [CODSTA.ORG.DCI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define constants in an "interface" [CODSTA.ORG.DCI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies constants that are not defined in "interface"s. 
+An error is reported when a non-private named constant is not defined in an
+"interface".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest provides another rule, CODSTA.ISACF, which conflicts with this rule.  
+Some experts recommend constants in an "interface", and others
+recommend avoiding them. In response, Parasoft added rules that check both 
+conventions. You should decide which convention to use, then enable the
+appropriate rule.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+public class DCI {
+    public int getMax () {
+        return MAX;
+    }
+    static final int MAX = 1000;  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the constant in an "interface":
+
+package examples.rules.codsta.org;
+
+public class DCIFixed {
+    public int getMax () {
+        return Constants.MAX;
+    }
+}
+
+interface Constants {
+    int MAX = 1000;
+}
+
+</PRE>
+</BODY>
+</HTML>

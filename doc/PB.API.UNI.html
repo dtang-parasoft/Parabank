@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid improper casting of the results of the 'next' methods in the 'java.util.Random' class [PB.API.UNI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid improper casting of the results of the 'next' methods in the 'java.util.Random' class [PB.API.UNI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'nextFloat()' and 'nextDouble()' methods of 'java.util.Random' return a 
+floating point value between 0 and 1.  A common mistake when using these methods
+is to cast the return value of the call to an "int".  This will not produce a   
+random integer.  Instead, it will just coerce the return value to an "int".  
+This will always coerce the return value to "0" since the returned value is
+always between 0 and 1.  This rule will flag any place where the return value
+of a call to 'Random.nextDouble()' or 'Random.nextFloat()' is cast to an "int".
+
+Instead of casting the return value to an "int", you should use the 'nextInt()'
+method.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Casting the return value of a call to 'nextFloat()' or 'nextDouble()' to an 
+"int" is probably a bug since this cast operation will always produce the 
+integer "0".  Since it is easy to forget that 'nextFloat()' and 'nextDouble()' 
+produce a value between 0 and 1, it is a good idea to use this rule.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class UNI{
+    public void method(){
+        Random r= new Random();
+        System.err.println("A random integer: "+(int)r.nextDouble());  //VIOLATION
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the 'nextInt()' method instead of casting the return value to an "int".
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class UNIFixed{
+    public void method(){
+        Random r= new Random();
+        System.err.println("A random integer: "+r.nextInt());  //FIXED
+    } 
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make your classes nondeserializeable [SECURITY.WSC.DSER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make your classes nondeserializeable [SECURITY.WSC.DSER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that do not have a "final" readObject()
+method. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will report violations for many of the same cases that the rule 
+SECURITY.OROM will report if the "Check that the 'readObject()' method is 
+implemented in all serializable classes." parameter for SECURITY.OROM is 
+enabled.  Both rules check that the 'readObject()' method is implemented; 
+however, they are both included in Jtest because the proposed fix for them is 
+different.  SECURITY.OROM instructs you to provide an actual implementation of 
+the 'readObject()' method while this rule just instructs you to provide a stub 
+implementation of 'readObject()' which throws an exception.  It is not 
+necessary to enable both this rule and SECURITY.OROM with the "'readObject()'"
+parameter enabled.  You should decide whether serializable classes should 
+provide a working implementation of 'readObject()' or just a stub implementation
+and enable the appropriate rule.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Enforce code access control. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to McGraw and Felten, 
+"Even if your class is not serializeable, it may still be deserializeable.
+An adversary can create a sequence of bytes that happens to deserialize to
+an instance of your class. This is dangerous, since you do not have control
+over what state the deserialized object is in. You can think of deserialization
+as another kind of public constructor for your object; unfortunately it is a kind
+of constructor that is difficult for you to control."
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class DSER {
+    public void setValue(int value) {
+        _value = value;
+    }
+    private int _value;
+
+    // VIOLATION : missing readObject()
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a "final" readObject() method.
+
+package examples.rules.security.wsc;
+
+import java.io.*;
+
+public class DSERFixed {
+    public void setValue(int value) {
+        _value = value;
+    }
+    private int _value;
+
+    private final void readObject(ObjectInputStream out)
+        throws IOException {  // FIXED
+            throw new IOException("Object cannot be deserialized");
+    }
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+</PRE>
+</BODY>
+</HTML>

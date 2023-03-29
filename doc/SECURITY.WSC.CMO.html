@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass mutable objects to 'ObjectOutputStream' in the 'writeObject()' method [SECURITY.WSC.CMO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass mutable objects to 'ObjectOutputStream' in the 'writeObject()' method [SECURITY.WSC.CMO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that directly passes mutable fields to 
+ObjectOutputStream in the 'writeObject()' method. An error is reported if these 
+fields are passed to 'ObjectOutputStream.writeObject(Object)' in a custom 
+serialization method (writeObject). Certain types of fields should be cloned 
+before being passed to the serialization output stream.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Data Security
+
+The class ObjectOutputStream may be subclassed by a malicious class that tries 
+to modify object-internal data. When a direct reference to a mutable field is 
+passed to the ObjectOutputStream, this reference can be used to access and 
+modify the field's content. Passing a copy of the field to the 'writeObject(Object)'
+method makes this kind of attack impossible.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flags 'writeObject(obj)' invocation when 'obj' is:
+    -Field which declared type is mutable. (default option)
+        Any field with a declared type that is a mutable class makes code vulnerable to the attacks 
+        described above. Fixing the code is necessary to ensure the security of the data.
+    -Field which declared type is mutable or declared type is an interface.
+        A field with a declared type that is interface could be tricky because the immutability of the
+        runtime type is irrelevant to the declared type (interface). In other words, the fields could
+        either be immutable or mutable solely based on the runtime execution. Inspection is suggested
+        under such situation.
+    -Any field.
+        Even a field with a declared type that is immutable could have runtime a type as a 
+        mutable subclass. To ensure a completely secured serialization, it's necessary to
+        make copies of fields before invoking 'writeObject(Object)'.
+    
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Set;
+
+public class CMO implements Serializable {
+    protected Set data;
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(data); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Set;
+import java.util.HashSet;
+
+public class CMOFixed implements Serializable {
+    protected Set data;
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(new HashSet(data)); // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

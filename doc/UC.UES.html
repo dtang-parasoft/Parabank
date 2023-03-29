@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary "else" statements [UC.UES]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary "else" statements [UC.UES]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that unnecessary "else" statements are not used.  An "else" 
+statement is unnecessary if every path of execution through the body of the 
+corresponding "if" block ends with either a "return" statement which causes a
+return from the enclosing method or a "break" or "continue" statement which 
+causes an exit from the enclosing loop.  In this case, the only way for the 
+"else" block to be executed is if the corresponding "if" condition is false 
+(even without the "else" statement).  Thus, it is not necessary to use an 
+explicit "else" statement.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Ignore "else if" statements (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In the case described in the "DESCRIPTION" section, the "else" statement is 
+unnecessary.  Leaving unnecessary code in a file will clutter up the file and is
+potentially confusing.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UES {
+    public boolean isLessThanZero(int i){
+        if(i&lt;0){
+            return true;
+        }
+        else{  //VIOLATION- unnecessary "else" statement
+            return false;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UESFixed {
+    public boolean isLessThanZero(int i){
+        if(i&lt;0){
+            return true;
+        }
+        return false;  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

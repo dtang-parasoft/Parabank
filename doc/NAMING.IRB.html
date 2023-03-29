@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'is...'  only for naming methods that return a "boolean" [NAMING.IRB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'is...'  only for naming methods that return a "boolean" [NAMING.IRB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+Requires that only methods that return "boolean" values have names beginning
+with 'is'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class IRB {
+    public int isOK () {  // VIOLATION
+        return _value;
+    }
+    private int _value;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use standard naming conventions for legibility.
+
+package examples.rules.naming;
+
+public class IRBFixed {
+    public int getValue () {  // FIXED
+        return _value;
+    }
+    private int _value;
+}
+
+</PRE>
+</BODY>
+</HTML>

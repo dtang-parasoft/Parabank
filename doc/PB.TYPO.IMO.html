@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure the overriding method name does not have a typo [PB.TYPO.IMO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure the overriding method name does not have a typo [PB.TYPO.IMO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies possible typos in overriding method names.
+Only differences in one character would be recognized
+as possible typos. However, method names that have the same spelling but
+differ in lowercase/uppercase will be flagged (even if they are off by
+more than one character). For example, method 'testRHS' would be flagged
+if there's a method 'testRhs' in the parent class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule may report the same violation as PB.CUB.EOOM, if the method being
+overridden belongs to java.lang.Object.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Method name pairs to be ignored (Regular Expressions)
+  Some method names are similar but should not be considered as
+  typo variants of each other.
+  By default, the list contains:
+  print(),paint()
+  clone(),close()
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the overriding method is incorrectly spelled, it will not
+be called; instead, the method from the superclass will be called.
+In the example below, the 'finalize' method for this subclass is
+misspelled, so the cleanup code will not be executed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class IMO {
+    // VIOLATION: should be 'finalize'
+    protected void finallize () throws Throwable {
+        // important cleanup code
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Fix the typo, or suppress the error message.
+
+package examples.rules.pb.typo;
+
+public class IMOFixed {
+    protected void finalize () throws Throwable { // FIXED
+        // important cleanup code
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

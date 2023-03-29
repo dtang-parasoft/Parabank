@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid anonymous inner classes [CODSTA.READ.AIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid anonymous inner classes [CODSTA.READ.AIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation for anonymous inner classes.  A violation will be 
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore classes with number of methods less than _ (default off, 5)
+-Ignore classes containing the following methods: (default on)
+    (default readResolve(); actionPerformed(ActionEvent))
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using anonymous classes makes code difficult to read.  In most cases, the readability 
+of the code will be greatly improved by changing the anonymous class to a regular 
+class.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.codsta.read;
+
+import java.awt.AWTEvent;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class AIC extends Frame{
+    public static void main(String [] args){
+        new AIC();
+    }   
+    
+    public AIC(){
+        this.setLayout(new FlowLayout());
+        this.setSize(150,75);
+        this.setTitle("GUI Title");
+        add(new Button("1") { //VIOLATION
+            {
+                enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+                System.out.println("Anonymous class example");
+            }
+            public void processMouseEvent(MouseEvent e){
+                if (e.getID() == MouseEvent.MOUSE_CLICKED){
+                    System.out.println("Button B clicked");
+                }
+                super.processMouseEvent(e);
+            }
+        });
+        addWindowListener(new WindowAdapter(){ //VIOLATION
+            {
+                System.out.println("Anonymous window listener class " + "name: " + getClass().getName());
+            }
+        public void windowClosing(WindowEvent e){
+                System.out.println("Close button clicked");
+                System.exit(0);
+            }
+        });
+        this.setVisible(true);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.codsta.read;
+
+import java.awt.AWTEvent;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class AIC_Fixed extends Frame{
+    MyButton button1 = new MyButton("button1");
+
+    public static void main(String[] args) {
+        new AIC_Fixed();
+    }
+
+    public class MyButton extends Button{ //FIXED
+        MyButton(String s){
+            super(s);
+            this.enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+        }
+        public void processMouseEvent(MouseEvent e){
+            if (e.getID() == MouseEvent.MOUSE_CLICKED){
+                System.out.println("Button B clicked");
+            }
+            super.processMouseEvent(e);
+        }
+    }
+
+    public class MyWindowAdapter extends WindowAdapter{ //FIXED
+        public void windowClosing(WindowEvent e){
+            System.out.println("Close button clicked");
+            System.exit(0);
+        }
+    }
+
+    public AIC_Fixed(){
+        this.setLayout(new FlowLayout());
+        this.setSize(150,75);
+        this.setTitle("GUI Title");
+        add(button1);
+        this.setVisible(true);
+        addWindowListener(new MyWindowAdapter());
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

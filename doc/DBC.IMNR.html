@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not invoke a method on a reference that is not guaranteed to be non-null [DBC.IMNR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not invoke a method on a reference that is not guaranteed to be non-null [DBC.IMNR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Statements of the form "methodA(...).methodB(...)" are common and are based on 
+the assumption that "methodA(...)" returns a non-null result.  If "methodA()" is 
+guaranteed to return a non-null result, it should have the DbC annotation "@post 
+$result != null" to indicate this.  This rule will flag a violation for each
+method invocation of the form "methodA(...).methodB(...)" where "methodA()" is
+not guaranteed by a DbC annotation to return a non-null result.  A violation 
+will be flagged for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Enforcing this rule will prevent unexpected "NullPointerExceptions" from 
+occurring at runtime.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class IMNR {
+
+    public void example() {
+        method1().method0(); // VIOLATION
+    }
+    
+    public void method0() {
+        return;
+    }
+    
+    public IMNR method1() {
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure the offending method cannot return "null", and add the DbC annotation
+"@post $result != null" to the method. 
+
+package examples.rules.dbc;
+
+public class IMNRFixed {
+
+    public void example() {
+        method1().method0(); // FIXED
+    }
+    
+    public void method0() {
+        return;
+    }
+    
+    /**
+     * @post $result != null
+     **/
+    public IMNRFixed method1() {
+        return new IMNRFixed();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+See the "Design by Contract" topic in the Reference section
+of the Jtest User's Guide.
+
+</PRE>
+</BODY>
+</HTML>

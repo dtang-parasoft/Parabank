@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid ignored or invalid annotations [EJB.EJB3.AIA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid ignored or invalid annotations [EJB.EJB3.AIA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an annotation is used which is either ignored or
+invalid in the context in which it is used.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks the following situations:
+    1) @PrePassivate used with Stateless or MessageDriven bean
+           -Only Stateful beans are passivated
+
+    2) @PostActivate used with Stateless or MessageDriven bean
+           -Only Stateful beans are passivated
+
+    3) @WebService used with Stateful bean
+           -SOAP-based services are stateless in nature
+
+    4) @TransactionAttribute used with TransactionManagementType.BEAN
+           -@TransactionAttribute is only for container managed transactions
+
+    5) @TransactionAttribute used without TransactionAttributeType.REQUIRED or
+       TransactionAttributeType.NOT_SUPPORTED for MessageDriven bean
+           -Clients do not invoke MessageDriven beans directly, so there are no
+           transactions to suspend or join.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class AIA {
+    @PrePassivate //VIOLATION
+    @PostActivate //VIOLATION
+    public void update() {
+        ...
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the annotation or replace with the intended one.
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class AIAFixed {
+    public void update() { //FIXED
+        ...
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 81-82, 98, 191, 197.
+
+</PRE>
+</BODY>
+</HTML>

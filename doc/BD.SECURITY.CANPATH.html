@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Path should be standardized before validation [BD.SECURITY.CANPATH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Path should be standardized before validation [BD.SECURITY.CANPATH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when validation is done on absolute file paths, not on canonical paths.
+
+A violation will be triggered when a file path returned by one of the following methods
+is passed to a validation method:
+1. A method of the java.io.File class:
+	* String getAbsolutePath()
+
+2. Methods of the java.io.File class obtained from the java.io.File class with the 'File getAbsoluteFile()' method:
+	* String getPath()
+	* String getAbsolutePath()
+	
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Absolute path names or relative path names may include file links, such as symbolic (soft) links, 
+hard links, shortcuts, shadows, aliases and junctions, which may enable attackers to launch a directory traversal
+attack or exploit a path equivalence vulnerability. Directory traversal loopholes allow I/O operations in directories
+other than the specified operating directory. A path equivalence vulnerability allows an attacker to provide
+a different but equivalent name for a resource with restricted access.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Protects access restricted resources against unauthorized access by enforcing canonicalization of file paths.
+Canonicalization helps you ensure that there is only one representation of a given file path.
+The File.getCanonicalPath() method can parse aliases, symbolic (soft) links, shortcuts on all platforms. 
+Special file names, such as ".." are removed and the input is simplified into the corresponding standard form
+before validation to prevent an attacker from using "../" sequence to jump out of the specified directory.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example of unsafe code:
+
+import java.io.File;
+
+public abstract class Example
+{
+    public void processArg(String arg)
+    {
+        File f = new File(System.getProperty("user.home") + System.getProperty("file.separator") + arg);
+        String absPath = f.getAbsolutePath();
+        if (!validate(absPath)) { // VIOLATION
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public abstract boolean validate(String path);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+import java.io.File;
+import java.io.IOException;
+
+public abstract class Repair
+{
+    public void processArg(String arg)
+        throws IOException
+    {
+        File f = new File(System.getProperty("user.home") + System.getProperty("file.separator") + arg);
+        String canonicalPath = f.getCanonicalPath();
+        if (!validate(canonicalPath)) { // NO VIOLATION
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public abstract boolean validate(String path);
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Directory Traversal
+Video: <A HREF="https://vimeo.com/303808203">https://vimeo.com/303808203</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_3-Directory-Traversal.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_3-Directory-Traversal.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+FIO16-J. Canonicalize path names before validating them 
+<A HREF="https://www.securecoding.cert.org/confluence/display/java/FIO16-J.+Canonicalize+path+names+before+validating+them">https://www.securecoding.cert.org/confluence/display/java/FIO16-J.+Canonicalize+path+names+before+validating+them</A>
+
+Java Platform, Standard Edition (Java SE) 8, Class File
+<A HREF="https://docs.oracle.com/javase/7/docs/api/java/io/File.html#getAbsolutePath%28%29">https://docs.oracle.com/javase/7/docs/api/java/io/File.html#getAbsolutePath%28%29</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

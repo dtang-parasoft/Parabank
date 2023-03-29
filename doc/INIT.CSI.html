@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Explicitly initialize all fields [INIT.CSI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Explicitly initialize all fields [INIT.CSI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each non-"static" field should always be explicitly initialized.  This rule 
+identifies fields that are not explicitly initialized.  Fields can be explicitly 
+initialized in one of two places: either in their declarations or in each one of 
+the constructors.  You should make sure that each field is initialized in one of 
+these two places.  If the initialization depends on which constructor is called, 
+you should put the initializations in the constructors.  If the initialization 
+does not depend on which constructor is called or if there is no explicit 
+constructor, you can initialize the field in its declaration. 
+
+This rule identifies fields that are not explicitly initialized.  By default, 
+the rule will flag a violation for each constructor which fails to initialize a 
+non-"static" field that is also not initialized in its declaration.  An error is 
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum level of checking allowed (default is 4)
+    -Note that constructors could call other setter methods to initialize 
+     field values. However, the ones that are called might actually call other
+     methods.  Consequently, the total number of methods involved might be very
+     large. By setting the number of levels, you can determine the extent of the 
+     algorithm's checking. If you set the level to a high number, fewer false
+     positive errors will be reported, but the time to run the rule will 
+     increase.  False positives are generally unlikely when the level is set at 
+     '3' or higher.
+  
+-Check non-static fields (default is true)
+    -Allow initialization in each constructor (default is true)
+        -If this parameter is enabled, the rule will not flag a violation if 
+         there is at least one explicit constructor and each non-static field is 
+         initialized in each of the class' constructors.
+    -Allow initialization in the declaration (default is true)
+        -If this parameter is enabled, the rule will not flag a violation for 
+         non-static fields which are explicitly initialized in their 
+         declarations.
+-Check static fields (default is false)
+    -Allow initialization in each constructor (default is true)
+        -If this parameter is enabled, the rule will not flag a violation if 
+         there is at least one explicit constructor and each static field is 
+         initialized in each of a class' constructors.
+    -Allow initialization in the declaration (default is true)
+        -If this parameter is enabled, the rule will not flag a violation for 
+         static fields which are explicitly initialized in their declarations.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Uninitialized fields are a potential source of bugs. By ensuring that all fields 
+are initialized before constructor execution is completed, you can prevent some 
+fields from unintentionally being left uninitialized.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class CSI {
+    public CSI () {
+        this (12);
+        k = 0;
+    }
+
+    public CSI (int val) {  // VIOLATION: 'k' will not be initialized
+        j = val;
+    }
+
+    private int i = 5;
+    private int j;
+    private int k;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In some cases, these errors can be corrected by initializing the appropriate 
+fields. In other cases, these fields have been assigned values from other 
+uninitialized fields. If so, these errors can be corrected by initializing the 
+other uninitialized fields.
+
+package examples.rules.init;
+
+public class CSIFixed {
+    public CSIFixed () {
+        this (12);
+    }
+
+    public CSIFixed (int val) {
+        j = val;
+        k = 0;  // FIXED
+    }
+
+    private int i = 5;
+    private int j;
+    private int k;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+CHANGE
+
+@severity-from 2(v6.0)
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,187 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the 'printStackTrace()' method of "Throwable" objects [OWASP2021.A5.ACPST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the 'printStackTrace()' method of "Throwable" objects [OWASP2021.A5.ACPST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+An error message may reveal an application's internal information to
+a user. For this reason, you should avoid using the 'printStackTrace'
+method in production code unless the output is redirected to a log file.
+
+This rule detects when the no-argument 'printStackTrace()' method is called
+on "Throwable" objects.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+By default, the rule does not report calls to overridden or overloaded 
+'printStackTrace' methods defined in "java.lang.Throwable". For example,
+calls to 'printStackTrace(PrintStream)' and  'printStackTrace(PrintWriter)'
+are not detected by default.
+
+The rule can be parameterized to trigger when an overridden or overloaded
+'printStackTrace' method is called on "Throwable" objects (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+A stack trace may reveal potentially sensitive information to an attacker.
+
+"The software generates an error message that includes sensitive information
+about its environment, users, or associated data. . . The sensitive information
+may be valuable information on its own (such as a password), or it may be
+useful for launching other, more deadly attacks. If an attack fails,
+an attacker may use error information provided by the server to launch
+another more focused attack." [CWE-209]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore overridden methods - if enabled, the rule does not report calls to
+    overridden 'printStackTrace' methods defined in "java.lang.Throwable" 
+    (enabled by default)
+-Ignore overloaded methods - if enabled, the rule will not report calls to
+    overloaded 'printStackTrace' methods defined in "java.lang.Throwable";
+    (enabled by default)
+    
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent revealing sensitive information in error messages
+(see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class ACPST {
+   public static void printFile(String name) {
+        try {
+            InputStream in= new FileInputStream(name);
+            //...
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(); //VIOLATION            
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class ACPSTFixed {
+    public static void printFile(String name) {
+        try {
+            InputStream in= new FileInputStream(name);
+            //...
+        } catch (FileNotFoundException e) {
+            Messages.log(e); //FIXED
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/8ce33e2f-9cfe-48fe-a65c-da0449f0d457">https://app.hackedu.com/link/8ce33e2f-9cfe-48fe-a65c-da0449f0d457</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-200: Information Exposure
+<A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+CWE-209: Information Exposure Through an Error Message
+<A HREF="https://cwe.mitre.org/data/definitions/209.html">https://cwe.mitre.org/data/definitions/209.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR01-J. Do not allow exceptions to expose sensitive information
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information">https://wiki.sei.cmu.edu/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

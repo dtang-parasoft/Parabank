@@ -1,0 +1,239 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use Value Objects to reduce the granularity of calls to the server [EJB.UVO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use Value Objects to reduce the granularity of calls to the server [EJB.UVO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that should use Value Objects to reduce the 
+granularity of calls to the server. By default, an error is reported if the 
+EJB bean class has more than 3 private instance fields -- of either primitive type
+or String type or StringBuffer type -- which have corresponding setter methods. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Max number of "private" fields" in EJB bean class (default is 3)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Method calls to Enterprise Java Beans can be expensive. For Beans that
+run under transaction control, the cost of calling a method not only 
+involves transmitting data, but also the starting and ending 
+of a transaction. By using Value Objects, you can reduce the number
+of calls to the server.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.ejb.*;
+import java.util.*;
+
+public class UVOBean implements SessionBean {  // VIOLATION
+
+    private String str;
+    private int index;
+    private double double;
+    private StringBuffer buf;
+    private Vector vec;
+    private List list;
+    private Hashtable table;
+
+    public void setStr(String s) {
+         str = s;
+    }
+
+    public void setIndex(int i) {
+         index = i;
+    }
+
+    public void setDouble(double d) { 
+         double = d;
+    }
+
+    public void setBuf(StringBuffer b) {
+     buf = b;
+    }
+
+    public void setList(List l) {
+         list = l;
+    }
+   
+    public void setTable(Hashtable t) {
+    table = t;
+    }
+
+    public void setV(Vector v) {
+         vec = v;
+    }
+         
+    public void setSessionContext(SessionContext arg0)
+         throws EJBException, RemoteException
+    {
+
+    }
+    public void ejbRemove() throws EJBException, RemoteException {
+    }
+
+    public void ejbActivate() throws EJBException, RemoteException {
+
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.ejb.*;
+import java.util.*;
+
+public class UVOFixedBean implements SessionBean {  // VIOLATION
+
+    private ValueObject vo;
+    private Vector vec;
+    private List list;
+    private Hashtable table;
+
+    public void setVO(ValueObject o) {
+     vo = o;
+    }
+
+    public void setList(List l) {
+         list = l;
+    }
+   
+    public void setTable(Hashtable t) {
+    table = t;
+    }
+
+    public void setV(Vector v) {
+         vec = v;
+    }
+         
+    public void setSessionContext(SessionContext arg0)
+         throws EJBException, RemoteException
+    {
+
+    }
+    public void ejbRemove() throws EJBException, RemoteException {
+    }
+
+    public void ejbActivate() throws EJBException, RemoteException {
+
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+    }
+}
+
+class ValueObject {
+
+    private String str;
+    private int index;
+    private double double;
+    private StringBuffer buf;
+
+    public void setStr(String s) {
+         str = s;
+    }
+
+    public Strin getStr() {
+         return str;
+
+    public void setIndex(int i) {
+         index = i;
+    }
+
+    public int getIndex() {
+         return index;
+    }
+
+    public void setDouble(double d) { 
+         double = d;
+    }
+
+    public double getDouble() {
+         return double;
+    }
+
+    public void setBuf(StringBuffer b) {
+     buf = b;
+    }
+
+    public StringBuffer getBuf() {
+     return buf;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 415
+
+<A HREF="http://www.precisejava.com/javaperf/j2ee/EJB.htm">http://www.precisejava.com/javaperf/j2ee/EJB.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

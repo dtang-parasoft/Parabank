@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare methods in "abstract" classes with empty bodies "abstract" [OOP.NOMA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare methods in "abstract" classes with empty bodies "abstract" [OOP.NOMA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation for all methods which meet all of the following 
+conditions:
+
+1. The method is declared within an "abstract" class.
+2. The method does not contain any Java statements. That is, the method has an
+empty body (except for possibly some comments).
+3. The method is not declared "abstract".
+4. The method is not declared "final". "final" methods are not intended to be
+implemented by a child class.
+5. The method is not declared "private". "private" methods are not intended to
+be implemented by a child class.
+
+Such methods could be declared "abstract" since they do not perform any
+operations.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Methods in "abstract" classes which do not have any Java statements in their
+bodies should be declared "abstract" so that extending classes will have to
+provide their own implementations of these methods.  Since these methods do not
+have a meaningful implementation, it is likely that they were intended to be
+overridden anyway. Declaring them "abstract" will force child classes to
+override these methods.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package example.rules.oop;
+
+public abstract class NOMA {
+
+    public void foo() { //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package example.rules.oop;
+
+public abstract class NOMA_Fixed {
+
+    public abstract void foo(); //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

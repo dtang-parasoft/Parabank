@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid casts to types which are more specific than necessary [OOP.ACST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid casts to types which are more specific than necessary [OOP.ACST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for casts which are stronger than necessary.  A 
+cast is considered by this rule to be stronger than necessary when a cast to a 
+subtype is used unnecessarily instead of a cast to a parent class or interface 
+that is higher in the type hierarchy.  For instance, the rule will flag a 
+violation when an object is cast to a "HashSet" in a place where a cast to a 
+"Set" would also work.  The rule will flag a violation for all overly strong 
+casts in the context of method arguments as well as in assignments and 
+initializations.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoiding overly strong type casts helps to make code more flexible.  Doing so
+may make it easier to change the concrete implementation of an interface or 
+"abstract" class used.  This is especially true for interfaces like "java.util.
+List" and "java.util.Set" and their corresponding concrete implementations.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Overly strong type casts are sometimes used intentionally to generate 
+ClassCastExceptions.  We do not recommend doing this because it violates the 
+general rule that you should not use exceptions as flow control statements (This 
+is similar to what our rule EXCEPT.AEFC checks).  However, you must be careful 
+when fixing violations of this rule to not eliminate any exceptions that are
+intentionally generated.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ACST {
+    public static void main(String[] args) {
+        List al = new ArrayList();
+        al.add("a");
+        print(al);
+    }
+    
+    private static void print(Object o) {
+        if(o instanceof ArrayList) {
+            printList((ArrayList) o);  //VIOLATION- cast to an "ArrayList", only
+                                       //needs to be cast to a "List"
+        } else {
+            System.out.println(o);
+        }
+    }
+    
+    private static void printList(List l) {
+        for(int i = 0; i &lt; l.size(); i++) {
+            System.out.println(l.get(i));
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the cast to the least specific type possible.
+
+package examples.rules.oop;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ACSTFixed {
+    public static void main(String[] args) {
+        List al = new ArrayList();
+        al.add("a");
+        print(al);
+    }
+    
+    private static void print(Object o) {
+        if(o instanceof List) {
+            printList((List) o);  //FIXED
+        } else {
+            System.out.println(o);
+        }
+    }
+    
+    private static void printList(List l) {
+        for(int i = 0; i &lt; l.size(); i++) {
+            System.out.println(l.get(i));
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

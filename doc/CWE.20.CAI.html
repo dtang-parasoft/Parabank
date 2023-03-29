@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always check parameters before use in array access [CWE.20.CAI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always check parameters before use in array access [CWE.20.CAI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies parameters which are used to index into an array without
+first comparing the index against the array's length. A violation is reported
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+If the method which fails to check array length is exposed to an outside source
+then an attacker may be able to purposefully supply invalid array indices to
+disrupt the application.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore private methods (default true)
+    Methods which are 'private' are generally less vulnerable as they may be
+    helper functions which have their error conditions checked before being
+    called.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Failure to check an index against array length before use may result in an
+ArrayIndexOutOfBoundsException at runtime.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class CAI {
+    private int[] _array = { 1, 2, 3, 5, 7 };
+
+    public int getPrime(int index) {
+        return _array[index]; //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class CAIFixed {
+    private int[] _array = { 1, 2, 3, 5, 7 };
+
+    public int getPrime(int index) {
+        if (index &lt; _array.length) { //FIXED
+            return _array[index];
+        }
+        return -1;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-129: Unchecked Array Indexing (1.5)
+<A HREF="https://cwe.mitre.org/data/definitions/129.html">https://cwe.mitre.org/data/definitions/129.html</A>
+
+</PRE>
+</BODY>
+</HTML>

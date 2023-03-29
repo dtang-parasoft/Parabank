@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid interfaces with no fields or methods (marker interfaces) [OOP.MI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid interfaces with no fields or methods (marker interfaces) [OOP.MI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies interfaces with no fields or methods (marker interfaces).  
+An error is reported for each occurrence.  By default, the rule will not report 
+any violations for interfaces which extend two or more other interfaces.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore interfaces which extend at least this many other interfaces:
+    -Default is "true", and default value is 2.
+    -If this parameter is enabled, the rule will not flag a violation if an
+     interface extends at least the specified number of other interface types. 
+     Such interfaces are not really marker interfaces even if they do not define
+     any methods or fields of their own.  Instead, they are combinations of 
+     different interfaces.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Interfaces should include at least one method because implementing an interface 
+generally implies that you are providing a concrete implementation of some type.  
+Marker interfaces can be confusing since they are only used to provide type 
+information.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public interface MI {  //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a field or method to the interface, or delete the interface altogether and 
+provide some other way to get the type information that the interface provides.
+
+package examples.rules.oop;
+
+public interface MI_Fixed {  //FIXED
+    void foo();
+}
+
+</PRE>
+</BODY>
+</HTML>

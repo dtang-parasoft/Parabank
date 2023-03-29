@@ -1,0 +1,190 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not check for null after dereferencing [CWE.476.DEREF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not check for null after dereferencing [CWE.476.DEREF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases where a reference checked for being null gets dereferenced
+on any path leading to this check.
+
+In some cases, the checks for null might have become redundant in the course of
+refactorings. In other cases, it is possible that the dereference got introduced
+into the code that already had the null check, but the developer mistakenly added
+the dereference before the null check. This usually results in a null reference
+exception. In any case, such a condition usually identifies some inconsistency in
+the code and deserves to be reviewed for correctness.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+When both the dereference and the null check are within the same method,
+this almost always indicates a problem with the logic. When one of these
+is in a different method, a more careful review is needed before 
+proceeding to fix the reported violation. This is because, even though,
+an obvious solution may be to remove the null check, it is possible that
+the null check is a protection against future changes.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+To understand the parameters for this rule, we need to first
+understand how this rule works.
+
+This rule works by examining the null checks present in the code
+and determining whether they are redundant or not. For this,
+it examines all the code paths that lead to the null check (say
+of variable "foo"). If along all these paths, it finds a dereferencing 
+of the variable "foo", then it reports a violation.
+
+Because of this, if Flow Analysis assumes that calls to all the methods
+are present in the current code base, it can report violations
+aggressively. If on the other hand it assumes that methods can 
+get arbitrary values passed into them, it will report the least
+number of violations, but you can expect the reported violations
+to be lot more accurate.
+
+Flow Analysis can be configured to assume that the following methods
+can be passed arbitrary values:
+
+   * none (i.e. all the method calls are assumed to be present in the
+           current code base - most aggressive)
+   * public 
+   * public, protected  
+   * public, protected, package-private
+   * methods of any visibility (least aggressive, most accurate) [DEFAULT]
+
+Choosing the default option will result in fewer
+violations being reported, and a very low number of false
+positives. Choosing "public, protected, package-private"
+also usually produces good results. You may want
+to try different options and pick the one best suited to your
+code base.
+
+   
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Helps you detect code that is fraught with the danger of null dereferencing and find
+fragments of dead code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+The code excerpt below triggers a violation.
+
+import java.util.Collection;
+import java.util.Iterator;
+
+public class Example
+{
+    public void doStuff(Collection&lt;Integer&gt; collection)
+    {
+        Iterator&lt;Integer&gt; it = collection.iterator(); // DEREFERENCE POINT
+        // perform some actions
+        if (null != collection) { // VIOLATION
+            collection.notifyAll();
+        }
+    }
+}
+
+Here, the parameter "c" is used to call the "iterator()" method. It
+is later checked for being null.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, the developer must decide whether it is possible that at 
+the point where a call to "c.iterator()" is made, the variable "c" holds a null 
+reference. If that is not the case (because the method "doStuff()" can never be
+called with a null parameter), it is sufficient to just remove the useless null
+check noted by the violation. However, if it is possible that a null parameter value
+can be passed to the "doStuff()" method, the developer must rearrange the code
+so that the null check with appropriate actions is performed before the call
+to "c.iterator()", not after it.
+
+Here is an example of repaired code for the case when null can be passed into "doStuff()":
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
+public class Repair
+{
+    public void doStuff(Collection&lt;Integer&gt; collection)
+    {
+        if (null == collection) {
+            collection = new Vector&lt;Integer&gt;();
+            // initialize collection
+        }
+        Iterator&lt;Integer&gt; it = collection.iterator();
+        // perform some actions
+        collection.notifyAll();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-476: NULL Pointer Dereference
+<A HREF="https://cwe.mitre.org/data/definitions/476.html">https://cwe.mitre.org/data/definitions/476.html</A>
+
+CWE-561: Dead Code
+<A HREF="https://cwe.mitre.org/data/definitions/561.html">https://cwe.mitre.org/data/definitions/561.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

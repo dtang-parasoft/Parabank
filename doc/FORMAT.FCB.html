@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce the position of '{' brace [FORMAT.FCB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce the position of '{' brace [FORMAT.FCB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is a parameterized rule that identifies code that lacks:
+1) '{' braces at the end of the line or
+2) '{' braces on their own line or
+3) '{' braces on their own line with an indentation or
+4) '{' braces at the end of the line when no parentheses are present, or parentheses 
+         only span one line
+   '{' braces on their own line with an indentation when parentheses span multiple
+         lines
+The requirement enforced depends on the rule parameters. An error is
+reported for each occurrence.  A user can also choose to selectively ignore constructs.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Braces preceded by comments are not considered a violation (default is true)
+-Open and close braces on the same line are not considered a violation (default is true)
+-Class declaration (default is 'same line')
+-Anonymous class declaration (default is 'same line')
+-Constructor declaration (default is 'same line')
+-Enum declaration (default is 'same line')
+-Enum constant body (default is 'same line')
+-Annotation type declaration (default is 'same line') 
+-Method declaration (default is 'same line')
+-Static initializer (default is 'same line')
+-Array initializer (default is 'same line')
+-Block (default is 'same line')
+-"if" statement (default is 'same line')
+-"else" statement (default is 'same line')
+-"for" statement (default is 'same line')
+-"while" statement (default is 'same line')
+-"do-while" statement (default is 'same line')
+-"try" statement (default is 'same line')
+-"synchronized" statement (default is 'same line')
+-"catch" clause (default is 'same line')
+-"finally" block (default is 'same line')
+-"switch" statement (default is 'same line')
+-Block in "switch-case" (default is 'same line')
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+    
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class FCB 
+{  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the '{' opening brace to the previous line.
+
+package examples.rules.format;
+
+public class FCBFixed {  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 6.4 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#381">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#381</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

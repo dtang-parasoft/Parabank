@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicate calls to the "get" methods of "ResultSet" [OPT.CRSG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicate calls to the "get" methods of "ResultSet" [OPT.CRSG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "get" methods of the "java.sql.ResultSet" interface can be slow, so it is
+best to call these methods as few times as possible.  Instead of calling one of
+these "get" methods more than once with the same arguments on the same 
+"ResultSet" object, you should store the results of the method call in a local 
+variable and use these stored results.
+
+This rule will flag a violation for each case where a "get" method of the 
+"java.sql.ResultSet" interface is called more than once with the same calling 
+object and the same argument(s) within a method.  In such cases, it may be 
+possible to store the results of the first call to the "get" method and use 
+stored results instead of calling the "get" method again.   
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important. 
+
+The "get" methods of "java.sql.ResultSet" can be very slow, so they should be 
+called only when necessary.  This rule will help you to identify calls to these
+methods which can be eliminated to help optimize your code.    
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class CRSG { 
+    
+    public static void printNames(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            if(resultSet.getString("NAME").startsWith("S")) {
+                System.out.println(resultSet.getString("NAME"));  //VIOLATION
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Store the result of the call to the "get" method in a local variable, and use 
+that local variable instead of calling the "get" method a second time.
+
+package examples.rules.opt;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class CRSG_Fixed {
+
+    public static void printNames(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            String name = resultSet.getString("NAME");  //FIXED
+            if(name.startsWith("S")) {
+                System.out.println(name);  //FIXED
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

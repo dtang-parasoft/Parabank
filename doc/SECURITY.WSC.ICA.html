@@ -1,0 +1,258 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using insecure algorithms for cryptography [SECURITY.WSC.ICA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using insecure algorithms for cryptography [SECURITY.WSC.ICA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of a broken or risky cryptographic algorithm is an unnecessary risk
+that may result in the exposure of sensitive information." [CWE-327]
+
+This rule identifies insecure algorithms that are used for data encryption.
+It triggers when the 'getInstance' method called on an object of a specified
+class takes an insecure algorithm as the first parameter.
+
+The rule must be parameterized to specify classes that will be checked and
+their corresponding cryptographic algorithms the rule will consider to be secure.
+
+The rule is pre-configured with a default list of classes and algorithms
+(see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule only detects when an insecure algorithm is directly passed as
+a parameter of the 'getInstance' method. The rule does not trigger if
+an insecure algorithm is passed indirectly, for example, when an insecure
+algorithm is passed as a method argument and then this argument is passed
+to the 'getInstance' method. For example:
+
+    public byte[] digest(String algorithm, String input) throws Throwable
+    {
+        MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+        messageDigest.update(input.getBytes("UTF-8"));
+        return messageDigest.digest();
+    }
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The confidentiality of sensitive data may be compromised by the use of
+a broken or risky cryptographic algorithm.
+The integrity of sensitive data may be compromised by the use of a broken
+or risky cryptographic algorithm.
+If the cryptographic algorithm is used to ensure the identity of the source
+of the data. . . then a broken algorithm will compromise this scheme and
+the source of the data cannot be proven." [CWE-327]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Secure Cryptographic Algorithms
+   This parameter allows you to specify classes the rule will check and their
+   corresponding algorithms the rule will consider to be secure.
+    - Specify the class name in the 'Fully Qualified Class Name' column.
+    - Specify the algorithm names (in regular expressions) in the 'Algorithm
+      Names' column
+    - The following are configured by default:
+
+    Fully Qualified Class Name             Name of Secure Algorithm (in regular expressions)            
+    -------------------------              --------------------------------------------------
+    java.security.KeyPairGenerator         RSA
+    
+    java.security.MessageDigest            SHA-256
+                                           SHA-384
+                                           SHA-512
+                                       
+    javax.crypto.KeyGenerator              AES
+                                           ARCFOUR/RC4
+                                           Blowfish
+                                           HmacSHA256
+                                           HmacSHA384
+                                           HmacSHA512
+                                           RC2
+                                           DESede
+                                       
+    javax.crypto.Cipher                    3DES
+                                           AES/(.*)/PKCS5Padding
+                                           ARCFOUR/RC4
+                                           Blowfish
+                                           ECIES
+                                           RC4
+                                           RC5
+                                           RSA(.*)OAEPWith(.*)And(.*)Padding
+                                           DESEDE/(.*)/PKCS5Padding
+
+    javax.net.ssl.SSLContext               TLSv1.2
+                                           
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you comply with some coding standards and ensure that
+the algorithms you use for data encryption are safe.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example:
+a) 'DES' is not an acceptable cryptographic algorithm to be used with
+   the 'Cipher' class.
+b) 'AES' is an acceptable cryptographic algorithm to be used with
+   the 'Cipher' class, but it is used without padding.
+
+public class ICA {	
+    
+    public Cipher createCipher(SecretKey key, String data) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES"); //VIOLATION - 'DES' is not on the list
+                                                   // of acceptable algorithms for 'javax.crypto.Cipher'
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher;
+    }
+    
+    public Cipher encodeDataAES(SecretKey key, String data) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES"); //VIOLATION - 'AES' is used without padding
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code:
+a) replace the 'DES' algorithm with a cryptographic algorithm that is specified
+   on the 'Safe Cryptography Algorithms' list.
+b) use the 'AES' algorithm with padding.
+   
+
+public class ICA {	
+
+    public Cipher encodeDataFixed(SecretKey key, String data) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/CBC/OAEPWithMD5AndMGF1Padding"); //FIXED 'RSA(.*)OAEPWith(.*)And(.*)Padding' is on the list
+                                                                                 //of acceptable algorithms for 'javax.crypto.Cipher'
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher;
+    }
+    
+    public Cipher encodeDataAESFixed(SecretKey key, String data) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); //FIXED 'AES' is used with padding
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher;
+    }
+} 
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/1cd68de0-cdb5-4c40-866f-102cb9eded1f">https://app.hackedu.com/link/1cd68de0-cdb5-4c40-866f-102cb9eded1f</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-328: Use of Weak Hash
+<A HREF="https://cwe.mitre.org/data/definitions/328.html">https://cwe.mitre.org/data/definitions/328.html</A>
+
+OWASP "Guide to Cryptography":
+<A HREF="https://www.owasp.org/index.php/Guide_to_Cryptography">https://www.owasp.org/index.php/Guide_to_Cryptography</A>
+    
+OWASP Using the Java Cryptographic Extensions
+<A HREF="https://www.owasp.org/index.php/Using_the_Java_Cryptographic_Extensions">https://www.owasp.org/index.php/Using_the_Java_Cryptographic_Extensions</A>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of
+Static Analysis Tools" by Michael Ware
+    
+JavaTM Cryptography Architecture API Specification &amp; Reference
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/security/CryptoSpec.html">http://docs.oracle.com/javase/1.5.0/docs/guide/security/CryptoSpec.html</A>
+    
+Cigital Java Security Rule Pack # 12 &amp; # 13
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC61-J. Do not use insecure or weak cryptographic algorithms
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC61-J.+Do+not+use+insecure+or+weak+cryptographic+algorithms">https://wiki.sei.cmu.edu/confluence/display/java/MSC61-J.+Do+not+use+insecure+or+weak+cryptographic+algorithms</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001860: The application must use mechanisms meeting the requirements of applicable federal laws, Executive Orders, directives, policies, regulations, standards, and guidance for authentication to a cryptographic module
+APSC-DV-002010: The application must implement NSA-approved cryptography to protect classified information in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards
+
+</PRE>
+</BODY>
+</HTML>

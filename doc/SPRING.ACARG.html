@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid constructor injection [SPRING.ACARG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid constructor injection [SPRING.ACARG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags each use of the &lt;constructor-arg&gt; tag in Spring XML configuration files.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Referring to constructors in Spring XML configurations may lead to ambiguity when the class
+declares multiple constructors. Property injection is recommended instead of constructor injection.
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Setter injection is more flexible and manageable, especially when the class has multiple
+properties and some of them are optional. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;bean id="myBean"
+        class="examples.MyClass0"
+        &lt;constructor-arg value="123"/&gt;
+    &lt;/bean&gt;
+    
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+&lt;bean id="myBean"
+         class="examples.MyClass0"
+        &lt;property name="maxCapacity"
+            value="123"&gt;
+    &lt;/bean&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Twelve Best Practices For Spring XML Configurations by Jason Zhicheng Li (O'Reilly ONJava.com)
+<A HREF="http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html">http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html</A>
+
+</PRE>
+</BODY>
+</HTML>

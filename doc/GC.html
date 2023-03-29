@@ -1,0 +1,35 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Garbage Collection [GC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Garbage Collection [GC]
+</STRONG>
+<p>
+<PRE>
+Rules related to Garbage Collection.
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="GC.AUTP.html">Do not use unnecessary temporaries when converting primitive types to String [GC.AUTP]</a></code><br>
+<code><a href="GC.DUD.html">Avoid using 'Date[]', use 'long[]' instead [GC.DUD]</a></code><br>
+<code><a href="GC.FCF.html">Call 'super.finalize()' from 'finalize()' [GC.FCF]</a></code><br>
+<code><a href="GC.FM.html">Do not use 'finalize()' methods to unregister listeners [GC.FM]</a></code><br>
+<code><a href="GC.GC.html">Do not explicitly call 'System.gc()' or 'Runtime.gc()' [GC.GC]</a></code><br>
+<code><a href="GC.GCB.html">Reuse calls to 'getClipBounds()' [GC.GCB]</a></code><br>
+<code><a href="GC.IFF.html">Call 'super.finalize()' in the "finally" block of 'finalize()' methods [GC.IFF]</a></code><br>
+<code><a href="GC.MML.html">Be cautious when calling methods which may cause memory leaks [GC.MML]</a></code><br>
+<code><a href="GC.NCF.html">Do not call 'finalize()' explicitly [GC.NCF]</a></code><br>
+<code><a href="GC.OSTM.html">Prevent potential memory leaks in ObjectOutputStreams by calling 'reset()' [GC.OSTM]</a></code><br>
+<code><a href="GC.RCO.html">Reuse immutable constant objects to conserve memory [GC.RCO]</a></code><br>
+<code><a href="GC.STV.html">Avoid "static" collections or maps; they can grow without bounds [GC.STV]</a></code><br>
+</BODY>
+</HTML>

@@ -1,0 +1,63 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use JDBC code in Servlet classes [SERVLET.AJDBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use JDBC code in Servlet classes [SERVLET.AJDBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Servlet classes that use JDBC code. An
+error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoiding JDBC code in Servlet classes creates cleaner abstractions, increases
+cohesion, and reduces coupling, thus improving modularity and reusability.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 102
+
+</PRE>
+</BODY>
+</HTML>

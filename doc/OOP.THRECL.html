@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use getContextClassLoader() instead of getClassLoader() [OOP.THRECL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use getContextClassLoader() instead of getClassLoader() [OOP.THRECL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when the class.getClassLoader method of the 
+java.lang.Class class is called, and is recommended for JavaEE where classes
+are loaded over the network. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Calling MyClass.class.getClassloader() means that only other framework classes 
+at that level can be loaded.  Framework classes in a parent class
+loader won't be able to load implementation classes in child class loaders.  
+To solve this problem, use Thread.currentThread().getContextClassLoader().
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.OOP;
+
+public class THRECL {
+    void method(){
+        THRECL.class.getClassLoader();  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change THRECL.class.getClassLoader() to Thread.currentThread().getContextClassLoader()
+
+package examples.rules.OOP;
+
+public class THRECLFixed{
+    void method(){
+        Thread.currentThread().getContextClassLoader();  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technology/tech/java/oc4j/pdf/ClassLoadingInOC4J_WP.pdf">http://www.oracle.com/technology/tech/java/oc4j/pdf/ClassLoadingInOC4J_WP.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

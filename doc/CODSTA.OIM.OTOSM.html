@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Override 'toString()' [CODSTA.OIM.OTOSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Override 'toString()' [CODSTA.OIM.OTOSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that do not override the 'toString()' method.  An 
+error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag utility classes which only have "static" fields, 
+"static" methods, and "private" constructors.
+
+The rule will also not flag classes which inherit a "final" 'toString()' method 
+from a superclass.  In these cases, the 'toString()' method cannot be 
+overridden. 
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Classes to Flag:
+    -Flag all classes which do not override the 'toString()' method (default 
+     setting)
+        -When this setting of the parameter is used, the rule will require that
+         each class override 'toString()' (regardless of whether or not the 
+         'toString()' method is ever used for that class).  
+        -The rule will flag at the point of the class declaration when this 
+         setting is used.
+    -Flag only classes for which the 'toString()' method is used
+        -When this setting of the parameter is used, the rule will only require 
+         that the 'toString()' method be overridden for classes on which the
+         'toString()' method is actually called (either explicitly or implicitly).
+         This will help to cut down on noise flagged by the rule for classes on
+         which the 'toString()' method is never called.
+        -When this setting of the parameter is used, the rule will flag at the 
+         point of the implicit or explicit call to 'toString()'.  Note that 
+         'toString()' can be called implicitly in many ways.  For instance, 
+         'toString()' will be called when you perform concatenation with a 
+         String or pass an object as an argument to 'System.out.println()'.
+         
+-Flag classes which only provide a stub implementation of the 'toString()' 
+ method
+    -Default is "false".
+    -When this parameter is enabled, the rule will flag a violation not only for
+     classes which do not override the default implementation of 'toString()' 
+     but also for classes which override 'toString()' with a method stub.  A
+     method stub is defined in this case as a method which has a "return null;"
+     statement and no other statements.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The default 'toString()' method in "java.lang.Object" returns a string
+representation of the object that has nothing to do with the actual contents
+of the object.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public class OTOSM {  // VIOLATION
+    public OTOSM() {
+        company = "ParaSoft";
+        product = "Jtest";
+    }   
+    public void display() {
+        System.out.println (toString());
+    }
+    private String company;
+    private String product;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Implement your own 'toString()' method that returns a meaningful string
+representation of the object.
+
+package examples.rules.codsta.oim;
+
+public class OTOSMFixed {
+    public OTOSMFixed() {
+        company = "ParaSoft";
+        product = "Jtest";
+    }
+    public String toString() {  // FIXED
+        return company + ' ' + product;
+    }
+    public void display() {
+        System.out.println (toString());
+    }
+    private String company;
+    private String product;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 42-44
+
+</PRE>
+</BODY>
+</HTML>

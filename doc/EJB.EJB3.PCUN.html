@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always specify "unitName" with @PersistenceContext [EJB.EJB3.PCUN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always specify "unitName" with @PersistenceContext [EJB.EJB3.PCUN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a @PersistenceContext annotation does not specify
+a "unitName".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Persistence units can usually be resolved if only one is used. However,
+different implementations of the EJB3 specification may behave differently if no
+"unitName" is given. It is good practice to specify a "unitName" both for
+clarity and portability.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+public class PCUN {
+    @PersistenceContext
+    EntityManager em;
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify a unitName.
+
+package examples.rules.ejb.ejb3;
+
+public class PCUNFixed {
+    @PersistenceContext(unitName="unitName")
+    EntityManager em;
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 305-306.
+
+</PRE>
+</BODY>
+</HTML>

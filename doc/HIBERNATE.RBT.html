@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Roll back any active transactions in 'catch' blocks [HIBERNATE.RBT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Roll back any active transactions in 'catch' blocks [HIBERNATE.RBT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If you start a Hibernate transaction in a "try" block, you should make sure to 
+roll back that transaction if there is an exception.  This rule will flag any
+"catch" block where not all transactions which were started in the corresponding 
+"try" block are rolled back.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Explicitly rolling back all transactions in each "catch" block will make sure 
+that the database does not get into an unpredictable state.  The database may
+get into an unpredictable state if a transaction is started using the 
+"beginTransaction()" and an exception occurs before the call to "commit()".  
+This may result in only part of the transaction happening, which will break the
+property of atomicity.
+
+This rule was created for use with Hibernate 3.1.  It is not guaranteed to apply
+to all versions of Hibernate.  You should not enable this rule if it does not
+apply to the version of Hibernate you are using.
+      
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+         
+package examples.rules.hibernate;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+public class RBT {
+    public static void main(String[] args) {
+        Session session = null;
+        SessionFactory sessionFactory = new Configuration().configure()
+                .buildSessionFactory();
+        Transaction tx = null;
+
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+
+            //Perform the actions for the transaction
+
+            tx.commit();
+        } catch (HibernateException e) {         //VIOLATION- "tx" is not rolled back
+            System.out.println(e.getMessage());
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+}
+
+         
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Call "rollback()" to roll back the transaction in the "catch" block.
+
+package examples.rules.hibernate;
+         
+public class RBTFixed {
+    public static void main(String[] args) {
+        Session session = null;
+        SessionFactory sessionFactory = new Configuration().configure()
+                .buildSessionFactory();
+        Transaction tx = null;
+
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+
+            //Perform the actions for the transaction
+
+            tx.commit();
+        } catch (HibernateException e) {        
+            if (tx!= null) {
+                tx.rollback();             //FIXED
+            }
+            System.out.println(e.getMessage());
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  <A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html</A>
+2.  "Hibernate: A Developer's Notebook" by James Elliott. 2004,  pp. 39-40. 
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always specify absolute paths to execute commands [CWE.426.PBRTE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always specify absolute paths to execute commands [CWE.426.PBRTE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Using relative paths to execute commands in Java may enable an external party
+to modify or override the path in order to execute arbitrary code or intercept
+the output of unauthorized files. For this reason, ensuring code security
+involves using absolute paths to execute commands. 
+
+This rule identifies when the Runtime.getRuntime().exec() method or an instance
+of the ProcessBuilder class fail to specify the absolute path of the command
+they execute.
+The rule triggers when the first String argument of Runtime.getRuntime().exec()
+or a ProcessBuilder instance does not include a slash or backslash.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"This might allow attackers to execute their own programs, access unauthorized
+data files, or modify configuration in unexpected ways. If the application uses
+a search path to locate critical resources such as programs, then an attacker
+could modify that search path to point to a malicious program, which
+the targeted application would then execute." [CWE-426]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent arbitrary code execution and unauthorized access to 
+sensitive data (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following example, the first Sting argument of
+the Runtime.getRuntime().exec() method does not specify the absolute path
+to the process it executes.
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CmdUtil {
+
+    public static List&lt;String&gt; getFiles() throws InterruptedException, IOException {
+        Process process = Runtime.getRuntime().exec("basename -a *"); // VIOLATION
+        BufferedReader processOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String line = "";
+
+        List&lt;String&gt; outputs = new ArrayList&lt;&gt;();
+
+        while ((line = processOutput.readLine()) != null) {
+            outputs.add(line);
+        }
+
+        process.waitFor();
+        return outputs;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, provide the absolute path using slashes.
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CmdUtil {
+
+    public static List&lt;String&gt; getFiles() throws InterruptedException, IOException {
+        Process process = Runtime.getRuntime().exec("/usr/bin/basename -a *"); // NO VIOLATION
+        BufferedReader processOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String line = "";
+
+        List&lt;String&gt; outputs = new ArrayList&lt;&gt;();
+
+        while ((line = processOutput.readLine()) != null) {
+            outputs.add(line);
+        }
+
+        process.waitFor();
+        return outputs;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2020 CWE Weaknesses On the Cusp
+CWE-426: Untrusted Search Path
+<A HREF="https://cwe.mitre.org/data/definitions/426.html">https://cwe.mitre.org/data/definitions/426.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-427: Uncontrolled Search Path Element
+<A HREF="https://cwe.mitre.org/data/definitions/427.html">https://cwe.mitre.org/data/definitions/427.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+OWASP Top 10-2021
+A08:2021 - Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

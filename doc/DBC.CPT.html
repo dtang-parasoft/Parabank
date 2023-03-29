@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not include a postcondition saying that "$result!=null" in methods which can return null [DBC.CPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not include a postcondition saying that "$result!=null" in methods which can return null [DBC.CPT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that, if there is a postcondition in a method saying that 
+"$result != null", there is no "return null;" statement in the method's body.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is incorrect to have a postcondition stating "$result != null" if there is
+a "return null;" statement in its body.  Fixing this may avoid a lot of 
+confusion.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class CPT {
+    /**
+    * @post $result != null
+    **/
+    public CPT method() {
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the misleading postcondition, or change it so that it is correct.
+
+package examples.rules.dbc;
+
+public class CPTFixed {
+    /**
+    * @post $result == null
+    **/
+    public CPTFixed method() {
+        return null;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

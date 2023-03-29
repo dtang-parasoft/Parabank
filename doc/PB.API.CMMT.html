@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the types passed to "Collection" and "Map" methods match the types in those data structures [PB.API.CMMT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the types passed to "Collection" and "Map" methods match the types in those data structures [PB.API.CMMT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+ 
+Certain methods for generic types are declared to take arguments of type "java.
+lang.Object" even though the actual types passed to these methods should match 
+the type parameter that is passed to the generic type in the corresponding 
+variable declaration.  For instance, the interface declaration "java.util.
+Collection&lt;E&gt;" declares the method 'remove()' to take a parameter of type 
+"Object" even though the actual type passed to this method should match "E".
+If a type which does not match the generic type "E" is passed to this method, 
+the method will have no effect.  This rule will flag all cases where the following 
+methods are called and the type passed to these methods does not match the 
+corresponding type parameter for the parameterized type:
+
+-java.util.List
+    -indexOf(Object)
+    -lastIndexOf(Object)
+-java.util.Collection
+    -remove(Object)
+    -contains(Object)
+-java.util.Map
+    -get(Object)
+    -containsKey(Object)
+    -containsValue(Object)
+    -remove(Object)
+
+An error will be flagged for each violation.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the type of an argument that is passed to one of the methods of "java.util.List"
+, "java.util.Collection" or "java.util.Map" listed above does not match the types 
+contained within the "List", "Collection" or "Map", the method call will not have 
+the desired effect.  The "remove()" method will have no effect, the "contains()" method will
+always return "false", and the "get()" method will always return "null" etc.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example was first presented in the Google Tech Talk shown in the 
+"REFERENCES" section.  The example looks like it should print "1", but it 
+actually prints "100".  The problem is that the result of the calculation "i-1"
+is silently converted to an "int" even though "i" is of type "short".  Since the
+elements of the "Set" are of type "Short" and the elements you attempt to remove 
+are of type "int", nothing ever gets removed from the "Set".
+
+package examples.rules.pb.api;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class CMMT {
+    public static void main(String args[]) {
+        Set&lt;Short&gt; s = new HashSet&lt;Short&gt;();
+        for(short i = 0; i &lt; 100; i++) {
+            s.add(i);
+            s.remove(i-1);  //VIOLATION- passing an "int" to the 'remove()' 
+                            //method even though the "Set" is declared to hold
+                            //"Shorts"
+        }
+        System.out.println(s.size());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the code so that the "Set" holds "Integer" objects instead of "Short"
+objects, or cast the argument to the 'remove()' method to a "short".
+
+package examples.rules.pb.api;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class CMMTFixed {
+    public static void main(String args[]) {
+        Set&lt;Short&gt; s = new HashSet&lt;Short&gt;();
+        for(short i = 0; i &lt; 100; i++) {
+            s.add(i);
+            s.remove((short)(i-1));  //FIXED
+        }
+        System.out.println(s.size());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Google Tech Talk, "Java Puzzlers, Episode VI: The Phantom-Reference Menace/
+Attack of the Clone/Revenge of the Shift" by Josh Bloch and William Pugh. July 
+23, 2007.
+
+<A HREF="http://www.youtube.com/watch?v=yGFok5AJAyc">http://www.youtube.com/watch?v=yGFok5AJAyc</A>
+
+</PRE>
+</BODY>
+</HTML>

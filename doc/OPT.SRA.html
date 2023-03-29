@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using 'String.replaceAll()' with literal values [OPT.SRA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using 'String.replaceAll()' with literal values [OPT.SRA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The method "String.replaceAll()" takes a regular expression as an argument. If
+the type of replacement being performed does not require a regular expression,
+then it may beneficial to use an alternative.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The quickfix for this rule will allow replacing "String.replaceAll()" with
+"StringUtils.replace()" assuming the two following conditions are met:
+    1) "org.apache.commons.lang.StringUtils" is found on the classpath
+    2) The regular expression argument is a literal value and not a variable
+
+This optimization is more beneficial for cases where a lot of matches are
+expected to occur. The following experimental data utilized random alphanumeric
+strings for the source string, literal value, and replacement string. The method
+"org.apache.commons.lang.StringUtils#replace()" was also used for comparison.
+In practice, data is generally not random and running tests more representative
+of the context will yield more accurate performance metrics.
+
+The test data showed an approximate 500% performance improvement for short
+literal values. As the literal value size increased the performance improvement
+decreased. This is to be expected as the expected number of matches decreases
+as the search string increases.
+
+Processor: Intel Core 2 Duo E8500 3.16GHz
+Source String: 10,000 chars
+Iterations: 100,000
+
++---------+-------------+---------------------+-----------------------+
+| Literal | Replacement | String.replaceAll() | StringUtils.replace() |
+| (chars) |   (chars)   |        (ms)         |         (ms)          |
++---------+-------------+---------------------+-----------------------+
+|    1    |      1      |        22169        |         3466          |
+|    1    |      5      |        28757        |         6760          |
+|    1    |      10     |        24448        |         4699          |
+|    1    |      50     |        59153        |         11615         |
+|    1    |      100    |        46836        |         9164          |
++---------+-------------+---------------------+-----------------------+
+|    2    |      1      |        17907        |         2701          |
+|    2    |      5      |        15924        |         2889          |
+|    2    |      10     |        16376        |         2920          |
+|    2    |      50     |        19484        |         2872          |
+|    2    |      100    |        19156        |         2950          |
++---------+-------------+---------------------+-----------------------+
+|    5    |      1      |        2357         |         1187          |
+|    5    |      5      |        2388         |         1499          |
+|    5    |      10     |        2373         |         1452          |
+|    5    |      50     |        2326         |         1186          |
+|    5    |      100    |        2405         |         1217          |
++---------+-------------+---------------------+-----------------------+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Use of "String.replaceAll()" requires compiling of the regular expression, which
+may slow execution of the code. For replacements which do not require use of any
+special regular expression characters, an alternative should be used. One such
+alternative is "org.apache.commons.lang.StringUtils#replace()". See EXAMPLE and
+REPAIR for more information.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SRA {
+    String removeUnderscore(String s) {
+        return s.replaceAll("_", " ");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+As "_" does not require regular expression capabilities, use of
+"org.apache.commons.lang.StringUtils#replace()" may improve performance.
+
+package examples.rules.opt;
+
+public class SRA_Fixed {
+    String removeUnderscore(String s) {
+        return StringUtils.replace(s, "_", " ");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

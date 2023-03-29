@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the 'Encrypt' directive is specified for each 'items' tag in Axis2 configuration files [APSC_DV.000160.EDAR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the 'Encrypt' directive is specified for each 'items' tag in Axis2 configuration files [APSC_DV.000160.EDAR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the actions defined within the "InflowSecurity" and 
+"OutflowSecurity" parameters of Apache Axis2 'services.xml' and 'axis2.xml' 
+files specify the "Encrypt" directive.  For each "action" defined within an 
+"InflowSecurity" or "OutflowSecurity" parameter, the rule will check that the 
+'&lt;items&gt;' tag specifies the "Encrypt" directive so that messages will be 
+properly encrypted.  The rule will flag a violation for each '&lt;items&gt;' tag which 
+is missing the "Encrypt" directive.  
+
+'services.xml' and 'axis2.xml' files which do not use the Rampart security 
+module (i.e., those which do not contain a '&lt;module ref="rampart" /&gt;' tag) will be 
+ignored.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+For "items" tags contained within "InflowSecurity" and "OutflowSecurity" 
+parameters, it is recommended that the "Encrypt" directive always be specified.  
+Without this directive, messages will not have any encryption, and message 
+security will rely on the security of the transport mechanism.
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A5-Security Misconfiguration".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+services.xml:
+
+&lt;service&gt;
+    &lt;operation name="echo"&gt;
+        &lt;messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" /&gt;
+    &lt;/operation&gt;
+    &lt;parameter name="ServiceClass" locked="false"&gt;
+        org.apache.rampart.samples.sample09.SimpleService&lt;/parameter&gt;
+    &lt;module ref="rampart" /&gt;
+
+    &lt;parameter name="InflowSecurity"&gt;
+        &lt;action&gt;
+            &lt;items&gt;Timestamp Signature&lt;/items&gt;  &lt;!-- VIOLATION: Missing "Encrypt" directive --&gt;
+            &lt;passwordCallbackClass&gt;
+                org.apache.rampart.samples.sample09.PWCBHandler
+            &lt;/passwordCallbackClass&gt;
+            &lt;decryptionPropFile&gt;service.properties
+            &lt;/decryptionPropFile&gt;
+        &lt;/action&gt;
+    &lt;/parameter&gt;
+    
+    &lt;parameter name="OutflowSecurity"&gt;
+        ...
+    &lt;/parameter&gt;
+&lt;/service&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+services.xml:
+
+&lt;service&gt;
+    &lt;operation name="echo"&gt;
+        &lt;messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" /&gt;
+    &lt;/operation&gt;
+    &lt;parameter name="ServiceClass" locked="false"&gt;
+        org.apache.rampart.samples.sample09.SimpleService&lt;/parameter&gt;
+    &lt;module ref="rampart" /&gt;
+
+    &lt;parameter name="InflowSecurity"&gt;
+        &lt;action&gt;
+            &lt;items&gt;Encrypt Timestamp Signature&lt;/items&gt;  &lt;!-- FIXED: Added "Encrypt" directive --&gt;
+            &lt;passwordCallbackClass&gt;
+                org.apache.rampart.samples.sample09.PWCBHandler
+            &lt;/passwordCallbackClass&gt;
+            &lt;decryptionPropFile&gt;service.properties
+            &lt;/decryptionPropFile&gt;
+        &lt;/action&gt;
+    &lt;/parameter&gt;
+    
+    &lt;parameter name="OutflowSecurity"&gt;
+        ...
+    &lt;/parameter&gt;
+&lt;/service&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Securing SOAP Messages with Rampart":
+<A HREF="http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html">http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html</A>
+
+OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

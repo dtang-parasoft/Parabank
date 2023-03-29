@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that nested locks are ordered correctly [CERT.VNA00.LORD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that nested locks are ordered correctly [CERT.VNA00.LORD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where explicit locks may have been used out of order.
+If an order has been established for the use of certain locks, multithreaded 
+systems can have issues with deadlock when the locks are used out of order.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Locks must always use the lock() and unlock() methods in order to be flagged by
+this rule.  If a lock never explicitly calls the lock() and unlock() methods, 
+it will not be taken into account.  If it calls the lock() and unlock() methods
+part of the time, the entire method will have nothing flagged.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When a resource is not properly locked, an attacker could modify the resource
+while it is being operated on by the software. This might violate
+the software's assumption that the resource will not change, potentially
+leading to unexpected behaviors." [CWE-413]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule can help prevent deadlocking in multithreaded programs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class LORD { 
+    void method2(){
+        Lock lockA= new ReentrantLock();
+        Lock lockC = new ReentrantLock();
+        lockA.lock();
+        lockC.lock();//VIOLATION
+        lockC.unlock();
+        lockA.unlock();
+        
+        lockC.lock();
+        lockA.lock();//VIOLATION
+        lockA.unlock();
+        lockC.unlock();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Order the locks correctly
+
+package examples.rules.trs;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class LORDFixed { 
+    void method2(){
+        Lock lockA= new ReentrantLock();
+        Lock lockC = new ReentrantLock();
+        lockA.lock();
+        lockC.lock();//FIXED
+        lockC.unlock();
+        lockA.unlock();
+        
+        lockA.lock();
+        lockC.lock();//FIXED
+        lockC.unlock();
+        lockA.unlock();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-413: Improper Resource Locking
+<A HREF="https://cwe.mitre.org/data/definitions/413.html">https://cwe.mitre.org/data/definitions/413.html</A>
+
+CWE-832: Unlock of a Resource that is not Locked
+<A HREF="https://cwe.mitre.org/data/definitions/832.html">https://cwe.mitre.org/data/definitions/832.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+VNA00-J. Ensure visibility when accessing shared primitive variables
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/VNA00-J.+Ensure+visibility+when+accessing+shared+primitive+variables">https://wiki.sei.cmu.edu/confluence/display/java/VNA00-J.+Ensure+visibility+when+accessing+shared+primitive+variables</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK07-J. Avoid deadlock by requesting and releasing locks in the same order
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK07-J.+Avoid+deadlock+by+requesting+and+releasing+locks+in+the+same+order">https://wiki.sei.cmu.edu/confluence/display/java/LCK07-J.+Avoid+deadlock+by+requesting+and+releasing+locks+in+the+same+order</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the conditional operator with mismatched numeric types [CERT.EXP55.COMT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the conditional operator with mismatched numeric types [CERT.EXP55.COMT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The conditional operator should not be used with mismatched numeric types since 
+the semantics of this operator are confusing when it is applied with two 
+different numeric types.  This rule will report a violation for conditional
+expressions which have different numeric types (for example, "java.lang.Integer" 
+and "java.lang.Float") for their second and third operands.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For purposes of this rule, "java.lang.Character" and "char" are considered 
+numeric types since values of type "Character" or "char" can be converted to 
+values of type "Integer" or "int".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Java expert Joshua Bloch recommends against using the conditional operator when
+selecting between expressions of two different numeric types.  The semantics of 
+this operator can be counterintuitive in this situation, and this can lead to 
+unexpected behavior in certain cases.  Joshua Bloch recommends using "if"-"else" 
+instead of a conditional expression when selecting between expressions of two 
+different numeric types.  This helps to avoid confusion.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example was first presented in the Google Tech Talk shown in the 
+"REFERENCES" section.  The example looks like it should print "3", but it
+actually prints "3.0".  When a conditional expression is used to select between
+an "Integer" and a "Float", the result is promoted to a "Float" (even if the
+"Integer" branch is selected) because of the semantics of the conditional 
+operator, as specified in the Java Language Specification.  Binary numeric 
+promotion is applied, and the result of the conditional expression is promoted
+to a "Float".
+
+package examples.rules.codsta.epc;
+
+import java.util.Random;
+
+public class COMT {
+    public static void main(String[] args) {
+        Random rnd = new Random();
+        boolean toBe= rnd.nextBoolean();
+        Number result = (toBe || !toBe) ? 
+            new Integer(3) : new Float(1);  //VIOLATION
+        System.out.println(result);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use an "if"-"else" statement instead of the shorthand conditional expression.
+This will prevent any confusion which can arise from how the conditional 
+operator behaves when selecting between two different numeric types.
+
+package examples.rules.codsta.epc;
+
+import java.util.Random;
+
+public class COMTFixed {
+    public static void main(String[] args) {
+        Random rnd = new Random();
+        boolean toBe= rnd.nextBoolean();
+        Number result;
+        if (toBe || !toBe) {
+            result = new Integer(3);
+        } else {
+            result = new Float(1);
+        }
+        System.out.println(result);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Google Tech Talk, "Java Puzzlers, Episode VI: The Phantom-Reference Menace/
+Attack of the Clone/Revenge of the Shift" by Josh Bloch and William Pugh. July 
+23, 2007.
+<A HREF="http://www.youtube.com/watch?v=yGFok5AJAyc">http://www.youtube.com/watch?v=yGFok5AJAyc</A>
+
+Java Language Specification, Third Edition, Section 15.25:
+<A HREF="http://docs.oracle.com/javase/specs/jls/se5.0/html/expressions.html">http://docs.oracle.com/javase/specs/jls/se5.0/html/expressions.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP55-J. Use the same type for the second and third operands in conditional expressions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP55-J.+Use+the+same+type+for+the+second+and+third+operands+in+conditional+expressions">https://wiki.sei.cmu.edu/confluence/display/java/EXP55-J.+Use+the+same+type+for+the+second+and+third+operands+in+conditional+expressions</A>
+
+</PRE>
+</BODY>
+</HTML>

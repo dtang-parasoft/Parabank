@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for interfaces [NAMING.NITF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for interfaces [NAMING.NITF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies interfaces that do not follow the user-defined
+naming convention (as specified in a regular expression). By default, the
+rule requires that each interface name starts with a capital letter. An error
+is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Top-level interface
+    -regular expression of top-level interface
+     (Interface names should match the listed regular expression.
+      Default is not set.)
+    -check public top-level interface. (default is true)
+    -check package-private top-level interface. (default is true)
+
+-Member interface
+    -regular expression of member interface
+     (Interface names should match the listed regular expression.
+      Default is not set.)
+    -check public member interface. (default is true)
+    -check protected member interface. (default is true)
+    -check package-private member interface. (default is true)
+    -check private member interface. (default is true)
+
+-Negate regular expression (Option is available on both tabs.)
+    -If this parameter is enabled, a violation will be flagged if the name of an
+     interface matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for interface names which do not match the regular expression
+     specified.
+-Ignore case (Option is available on both tabs.)
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of interfaces 
+     must match the regular expression specified, including in case. 
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public interface NITF {  
+ 
+}
+
+interface nitf2 extends NITF {  // VIOLATION
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the identifier to follow the convention.
+
+package examples.rules.naming;
+
+public interface NITFFixed {  
+
+}
+
+interface NITF2Fixed extends NITFFixed {
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Section 9 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that XML files are well-formatted [XML.WF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that XML files are well-formatted [XML.WF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the following illegal XML format problems:
+   - Byte-order mark(BOM) character in the XML prolog
+   - Content in the XML prolog
+   - Missing end tag of XML elements
+   - Missing quotes in attribute
+   - Missing end quote in attribute
+   - Unknown attribute
+   
+An error is reported for each occurrence.
+
+XML prolog consists of two parts: the XML declaration and the Document Type 
+Declaration (DTD). The DTD is an optional component of the XML document which 
+appears before the root element.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check xHTML files (default false) 
+    -When enabled rule is triggering errors on xHTML files
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Illegal XML formats will cause SAXParseExceptions when parsing the XML file. 
+Fixing all the illegal XML formats can avoid this problem.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+&lt;?xml version="1.0" ?&gt;
+&lt;xml&gt;
+  &lt;body&gt;
+    &lt;rules&gt;
+        &lt;!-- VIOLATION : missing end tag --&gt;
+        &lt;rule id="XML.WF"&gt;
+    &lt;/rules&gt;
+  &lt;/body&gt;
+&lt;/xml&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+&lt;?xml version="1.0" ?&gt;
+&lt;xml&gt;
+  &lt;body&gt;
+    &lt;rules&gt;
+        &lt;!-- FIXED : add a "/" to close the tag --&gt;
+        &lt;rule id="XML.WF" /&gt;
+    &lt;/rules&gt;
+  &lt;/body&gt;
+&lt;/xml&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Extensible Markup Language (XML) 1.1 (Second Edition)
+<A HREF="https://www.w3.org/TR/xml11/">https://www.w3.org/TR/xml11/</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that 'InflowSecurity' and 'OutflowSecurity' parameters are specified in Axis2 configuration files [APSC_DV.001750.ISOS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that 'InflowSecurity' and 'OutflowSecurity' parameters are specified in Axis2 configuration files [APSC_DV.001750.ISOS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that an "InflowSecurity" and "OutflowSecurity" parameter is
+specified for each &lt;service&gt; or &lt;axisconfig&gt; tag defined in an Apache Axis2 
+'services.xml' file or 'axis2.xml' file.  By default, a violation will be 
+flagged for each &lt;service&gt; or &lt;axisconfig&gt; tag defined within an Apache 
+Axis2 'services.xml' or 'axis2.xml' file which does not contain either an 
+"InflowSecurity" or an "OutflowSecurity" child tag.  
+
+'services.xml' and 'axis2.xml' files which do not use the Rampart security 
+module (those which do not contain a '&lt;module ref="rampart" /&gt;' tag) will be 
+ignored.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If the "InflowSecurity" or "OutflowSecurity" parameter is missing, messages are
+not guaranteed to be secure.  Their security will depend on the security of the
+mechanism used to transport the messages.  You should always specify these 
+parameters for each &lt;service&gt; and &lt;axisconfig&gt; tag to make sure that the 
+messages are secure. 
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A5-Security Misconfiguration".
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Check for 'InflowSecurity' (Default is "true")
+- Check for 'OutflowSecurity' (Default is "true")
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+services.xml:
+
+&lt;service&gt;  &lt;!-- 2 VIOLATIONS: No "InflowSecurity" parameter and no "OutflowSecurity"
+                parameter --&gt;
+    &lt;operation name="echo"&gt;
+        &lt;messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" /&gt;
+    &lt;/operation&gt;
+    &lt;parameter name="ServiceClass" locked="false"&gt;
+        org.apache.rampart.samples.sample09.SimpleService&lt;/parameter&gt;
+    &lt;module ref="rampart" /&gt;
+&lt;/service&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+services.xml:
+
+&lt;service&gt;
+    &lt;operation name="echo"&gt;
+        &lt;messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" /&gt;
+    &lt;/operation&gt;
+    &lt;parameter name="ServiceClass" locked="false"&gt;
+        org.apache.rampart.samples.sample09.SimpleService&lt;/parameter&gt;
+    &lt;module ref="rampart" /&gt;
+
+    &lt;parameter name="InflowSecurity"&gt;  &lt;!-- FIXED: Added an "InflowSecurity" parameter --&gt;
+        &lt;action&gt;
+            &lt;items&gt;Encrypt Signature Timestamp&lt;/items&gt;
+            &lt;passwordCallbackClass&gt;
+                org.apache.rampart.samples.sample09.PWCBHandler
+            &lt;/passwordCallbackClass&gt;
+            &lt;decryptionPropFile&gt;service.properties
+            &lt;/decryptionPropFile&gt;
+        &lt;/action&gt;
+    &lt;/parameter&gt;
+    
+    &lt;parameter name="OutflowSecurity"&gt;  &lt;!-- FIXED: Added an "OutflowSecurity" parameter --&gt;
+        &lt;action&gt;
+            &lt;items&gt;Encrypt Signature Timestamp&lt;/items&gt;
+            &lt;user&gt;service&lt;/user&gt;
+            &lt;encryptionKeyIdentifier&gt;EmbeddedKeyName
+            &lt;/encryptionKeyIdentifier&gt;
+            &lt;encryptionPropFile&gt;service.properties
+            &lt;/encryptionPropFile&gt;
+            &lt;EmbeddedKeyCallbackClass&gt;
+                org.apache.rampart.samples.sample09.PWCBHandler
+            &lt;/EmbeddedKeyCallbackClass&gt;
+            &lt;EmbeddedKeyName&gt;SessionKey&lt;/EmbeddedKeyName&gt;
+        &lt;/action&gt;
+    &lt;/parameter&gt;
+&lt;/service&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Securing SOAP Messages with Rampart":
+<A HREF="http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html">http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html</A>
+
+OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that all fields are assigned by the 'readObject()' method and written out by the 'writeObject()' method [SERIAL.RWAF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that all fields are assigned by the 'readObject()' method and written out by the 'writeObject()' method [SERIAL.RWAF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In classes that implement custom serialization ("java.io.Serializable"), all 
+non-transient, non-static, and non-final fields should be handled by 
+the 'readObject' and 'writeObject' methods to ensure that serialization is
+complete. All such fields should be assigned in the 'readObject' method and
+written out in the 'writeObject' method.
+
+This rule detects when:
+- the 'readObject' method fails to include at least one read access to each
+non-transient, non-static, and non-final field 
+- the 'writeObject' method fails to include at least one write access to each
+non-transient, non-static, and non-final field 
+
+This rule assumes that read access involves passing the field as an argument
+of a method.
+
+By default, the rule checks the 'readObject' and 'writeObject' methods, but
+it can be parameterized to exclude one of the methods from analysis,
+see PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"[D]eserialized data or code can often be modified without using the provided
+accessor functions if it does not use cryptography to protect itself.
+Furthermore, any cryptography would still be client-side security -- which is
+a dangerous security assumption. Data that is untrusted can not be trusted
+to be well-formed." [CWE-502]
+
+"The impact of deserialization flaws cannot be overstated. These flaws can lead
+to remote code execution attacks, one of the most serious attacks possible."
+[OWASP Top 10-2017, A8]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum level of checking allowed - allows you to specify the number of nested methods
+   the rule will analyze when checking for the read and write access. The default depth is 5.
+-Check 'writeObject' method - if enabled, the rule analyzes the 'writeObject' method (enabled by default)
+-Check 'readObject' method - if enabled, the rule analyzes the 'readObject' method (enabled by default)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure proper and secure serialization.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class RWAF implements Serializable {
+    int foo, bar;        //must be serialized
+    transient Object a;  //'transient' fields aren't serialized
+    static int[] b;      //'static' fields aren't serialized
+    final int c= 5;      //'final' fields aren't serialized
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {      
+        out.writeInt(foo);   //VIOLATION- "bar" is never written out
+    }
+    
+    private void readObject(java.io.ObjectInputStream s)
+        throws ClassNotFoundException, IOException {
+        foo= s.readInt();   //VIOLATION- "bar" is never read
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class RWAFFixed implements Serializable {
+    int foo, bar;        //must be serialized
+    transient Object a;  //'transient' fields aren't serialized
+    static int[] b;      //'static' fields aren't serialized
+    final int c= 5;      //'final' fields aren't serialized
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {      
+        out.writeInt(foo); 
+        out.writeInt(bar);  //FIXED
+    }
+    
+    private void readObject(java.io.ObjectInputStream s)
+        throws ClassNotFoundException, IOException {
+        foo= s.readInt();  
+        bar= s.readInt();  //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Serialization
+Video: <A HREF="https://vimeo.com/205101080">https://vimeo.com/205101080</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/6b07ab5c-aa55-4659-be8e-41996c806ac3">https://app.hackedu.com/link/6b07ab5c-aa55-4659-be8e-41996c806ac3</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-502: Deserialization of Untrusted Data
+<A HREF="https://cwe.mitre.org/data/definitions/502.html">https://cwe.mitre.org/data/definitions/502.html</A>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

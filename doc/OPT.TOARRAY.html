@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use collection size for target array in 'toArray()' [OPT.TOARRAY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use collection size for target array in 'toArray()' [OPT.TOARRAY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any 'toArray()' method invocations that 
+takes an empty array as argument; each of these method invocations should
+take an array of the same size as the collection as a parameter. An 
+error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Passing in an array with the collection size could
+make the 'toArray()' call more efficient.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class TOARRAY {
+    Vector v= new Vector();
+    Integer[] i;
+    public void myMethod() {
+        v.add(new Integer(1));
+        i= (Integer[])v.toArray(new Integer[0]); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class TOARRAYFixed {
+    Vector v= new Vector();
+    Integer[] i;
+    public void myMethod() {
+        v.add(new Integer(1));
+        i= (Integer[])v.toArray(new Integer[v.size()]); 
+        //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

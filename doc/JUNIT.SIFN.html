@@ -1,0 +1,187 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Set all fields which are initialized in the 'setUp()' method to "null" in the 'tearDown()' method [JUNIT.SIFN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Set all fields which are initialized in the 'setUp()' method to "null" in the 'tearDown()' method [JUNIT.SIFN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Non-primitive fields of a JUnit test class that are initialized in
+a method that sets up the initial state for all test methods should
+be set to 'null' in the corresponding method that performs the cleanup.
+
+This rule detects the following cases:
+- In JUnit 3, a field of a test class initialized to a non-null value in
+  the setUp() method is not set to 'null' in the tearDown() method.
+- In JUnit 4, a field of a test class initialized to a non-null value in
+  a method annotated with @Before is not set to 'null' in a method annotated
+  with @After.
+- In JUnit 5, a field of a test class initialized to a non-null value in
+  a method annotated with @BeforeEach is not set to 'null' in a method
+  annotated with @AfterEach.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth of checking allowed (default is 5)
+    -Note that the 'setUp()' or 'tearDown()' methods could call other methods 
+     which, in turn, might call other methods and so on.  This parameter 
+     specifies the maximum depth of nested method calls which will be inspected 
+     to see which fields are initialized in the 'setUp()' method and which 
+     fields are set to "null" in the 'tearDown()' method.
+    -The default value is '5'.  False positives are generally unlikely when the 
+     level is set at '5', but you should increase this level if you are getting
+     false positives because the default depth is not enough.  
+    -Increasing the value of this parameter may cut down on the number of false
+     positives reported by this rule, but it will also increase the computation
+     time.  You should only increase the value if you are getting false 
+     positives. 
+
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you optimize memory usage.
+ 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class SIFN extends TestCase {
+    private byte [] _array;
+
+    public SIFN(String name) {
+        super(name);
+    }
+    
+    public void test01() throws Throwable {
+        System.out.println(getName());
+    }
+    
+    public void setUp() throws Exception {
+        super.setUp();
+        _array = new byte [100000000];  //VIOLATION- The field "_array" is 
+                                        //initialized here but is never set to
+                                        //"null" in the "tearDown()" method.
+    }
+    
+    public void tearDown() throws Exception {
+        super.tearDown();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Set the field which is initialized in the 'setUp()' method to "null" in the
+'tearDown()' method.
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class SIFNFixed extends TestCase {
+    private byte [] _array;
+
+    public SIFNFixed(String name) {
+        super(name);
+    }
+    
+    public void test01() throws Throwable {
+        System.out.println(getName());
+    }
+    
+    public void setUp() throws Exception {
+        super.setUp();
+        _array = new byte [100000000];  
+    }
+    
+    public void tearDown() throws Exception {
+        super.tearDown();
+        _array = null;  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://blogs.atlassian.com/developer/2005/12/reducing_junit_memory_usage.html">http://blogs.atlassian.com/developer/2005/12/reducing_junit_memory_usage.html</A>
+
+</PRE>
+</BODY>
+</HTML>

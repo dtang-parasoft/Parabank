@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Number of "return" statements [METRICS.TRET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Number of "return" statements [METRICS.TRET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+Counts the number of "return" statements in a method.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks explicit "return" statements (the implicit return
+at the end of a "void" method is not counted).
+
+This rule does not test "abstract", "native", or any methods that are
+declared in the interface.
+
+Jtest will report an error if the value is greater or equal 6.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Methods with multiple return points are easy to program but they are harder
+to debug and maintain.
+
+</PRE>
+</BODY>
+</HTML>

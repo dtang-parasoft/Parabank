@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that "REST" is disabled in 'axis2.xml' configuration files [APSC_DV.001750.REST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that "REST" is disabled in 'axis2.xml' configuration files [APSC_DV.001750.REST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that "REST" is disabled in Apache Axis 2 'axis2.xml' 
+configuration files.  A violation will be flagged for each 'axis2.xml' file 
+which sets the "disableREST" parameter to "false". 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+"REST" does not have any message security standards, so it is dangerous to use 
+"REST".  Some people prefer to always have "REST" disabled.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+axis2.xml:
+
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;!-- Following parameter will completely disable REST handling in Axis2--&gt;
+    &lt;parameter name="disableREST" locked="false"&gt;false&lt;/parameter&gt;
+    ...
+&lt;/axisconfig&gt;     
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Disable "REST" in the 'axis2.xml' file.
+
+axis2.xml:
+
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;!-- Following parameter will completely disable REST handling in Axis2--&gt;
+    &lt;parameter name="disableREST" locked="false"&gt;true&lt;/parameter&gt;  &lt;!-- FIXED --&gt;
+    ...
+&lt;/axisconfig&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

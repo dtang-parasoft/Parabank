@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define a "static" 'valueOf()' method for "enum" types which override 'toString()' [CODSTA.OIM.DVOM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define a "static" 'valueOf()' method for "enum" types which override 'toString()' [CODSTA.OIM.DVOM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+For "enum" types, if you override the "toString()" method to 
+provide some customized behavior that is different from the 
+default implementation of "toString()", you should also provide a 
+customized implementation of the "static" "valueOf()" method.  
+
+Unfortunately, all "enum" types implicitly define a "static"
+"valueOf()" method which takes a single "String" as a 
+parameter and returns a value of the "enum" type.  The signature
+of this method is
+
+static E valueOf(String);
+
+where "E" is the "enum" type.  This means that you cannot define
+a "static" method called "valueOf()" which takes only a single 
+"String" as a parameter (since this method is implicitly defined).
+You must give your customized implementation of "valueOf()" a
+different name (such as "myValueOf").
+
+This rule will flag a violation for each "enum" type which 
+overrides "toString()" but does not have a "static" method which
+takes a single "String" as a parameter and has a return type 
+matching the "enum" type.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If possible, it is best to avoid overriding the 'toString()' 
+method altogether for "enum" types.  The default implementation
+of 'toString()' is good enough for most purposes, and using it 
+means that you do not have to worry about defining a 'valueOf()'
+method.  The rule "CODSTA.OVOTS" enforces that the 'toString()'
+method is not overridden for "enum" types.  However, if you need
+to provide a custom implementation of 'toString()', you should
+follow this rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'valueOf()' method should be the mirror image of the 
+'toString()' method.  That is, calling 'valueOf()' on the value 
+returned by 'toString()' should return the original value and vice 
+versa.  By default, Java will ensure that this is true.  However, 
+overriding the 'toString()' method to provide a customized 
+implementation will break this contract.  Because 'valueOf()' is
+implicitly defined, its behavior cannot be changed.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public class DVOM {
+    public static void main(String[] args) {
+        String strRep = EnumTest.F.toString();
+        System.err.println(EnumTest.valueOf(strRep));
+    }
+    
+    private enum EnumTest {  //VIOLATION- "EnumTest" overrides 'toString()' 
+                             //but does not provide a 'valueOf()' method
+        A, B, C, D, F;
+        
+        public String toString() {
+            if(this == F){  //Change F to "G".
+                return "G";
+            }
+            return super.toString();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Be sure to provide a customized 'valueOf()' method if you override
+'toString()'.  The method can be called anything but should be
+"static", take a single "String" parameter, and have a return type 
+matching the "enum" type in which it is defined.
+
+package examples.rules.codsta.oim;
+
+public enum DVOMFixed {
+    public static void main(String[] args) {
+        String strRep = EnumTest.F.toString();
+        System.err.println(EnumTest.myValueOf(strRep));
+    }
+    
+    private enum EnumTest {  
+        A, B, C, D, F;
+        
+        public String toString() {
+            if(this == F){  //Change F to "G".
+                return "G";
+            }
+            return super.toString();
+        }
+        
+        public static EnumTest myValueOf(String s) {  //FIXED
+            if("G".equals(s)){
+                return F;
+            }
+            return valueOf(s);
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

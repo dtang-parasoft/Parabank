@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure index is valid in JDBC method invocation [JDBC.BRSA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure index is valid in JDBC method invocation [JDBC.BRSA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each call to the "getXXX" or "updateXXX" 
+methods of "java.sql.ResultSet" and each call to the "setXXX" methods of 
+"java.sql.PreparedStatement" where "0" is passed in as the index. This is 
+because the index for these methods is 1-based, not 0-based (meaning the first 
+element is at index "1", not index "0").
+      
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Code will not work correctly if you try to pass in "0" as an index to the 
+"getXXX" or "updateXXX" methods of "ResultSet" and "setXXX" methods of 
+"PreparedStatement". This rule will catch this error before runtime.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+public class BRSA{
+    void test0 () {  
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DriverManager.getConnection ("some url");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery ("some query");
+            int foo= rs.getInt(0); //VIOLATION
+        } catch (Exception e) {}
+        finally {
+            try { 
+              conn.close();
+              stmt.close();
+              rs.close()
+            } catch (Exception e) {}
+        }
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Access the fields of a ResultSet starting at index "1" instead of "0".
+
+package examples.rules.jdbc;
+
+public class BRSAFixed{
+    void test0 () {  
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DriverManager.getConnection ("some url");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery ("some query");
+            int foo= rs.getInt(1); //FIXED
+        } catch (Exception e) {}
+        finally {
+            try { 
+              conn.close();
+              stmt.close();
+              rs.close()
+            } catch (Exception e) {}
+        }
+    } 
+}
+    
+
+</PRE>
+</BODY>
+</HTML>

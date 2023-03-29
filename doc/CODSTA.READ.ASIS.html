@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid static import statements [CODSTA.READ.ASIS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid static import statements [CODSTA.READ.ASIS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Static imports are a new feature in JDK 5.0, but it is recommended that they be 
+used very sparingly (if at all).  This rule will flag a violation for each 
+static import.  Classes to allow static imports from can be specified in the
+parameter list.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check explicit static imports (default true)
+    -Only check imports from the same type if there are more than (default 3,
+     false)
+     Enabling this parameter will flag explicit imports only if there are more
+     than a certain number from any given type. This allows for identification
+     of types which have multiple members being accessed.
+
+-Check wildcard static imports (default true)
+
+-Classes/interfaces to allow static imports from (Specify fully qualified names 
+ using regular expressions):
+    -Default is empty list.
+    -Example: To allow static imports from "java.lang.Math", specify 
+     "^java\.lang\.Math$"
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improper usage of static imports can make code difficult to read.  It makes it
+very difficult for the reader of the code to tell which class a static member
+was defined in.  This is especially true when the "*" form of import is used to
+import all the static members of a class or interface. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Static imports can be useful if used sparingly.  Without static imports, it is 
+necessary to specify a class qualification each time a static member is 
+accessed.  This can make the code more difficult to write and less compact.  
+This is why the rule allows the user to specify certain classes to allow static
+imports from.  Static imports should be used only to import one static member at 
+a time (instead of all static members using the "*" form of import), and they 
+should be used only for members which require frequent access.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+import static java.lang.Math.PI; //VIOLATION
+
+public class ASIS{
+    public double calculateArea(double radius){
+        double area= PI*Math.pow(radius, 2);
+        return area;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a class name qualifier to access a static field instead of relying on a
+static import.
+
+package examples.rules.codsta.read;
+
+public class ASISFixed {
+    public double calculateArea(double radius){
+        double area= Math.PI*Math.pow(radius, 2); //FIXED
+        return area;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html">http://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html</A>
+
+</PRE>
+</BODY>
+</HTML>

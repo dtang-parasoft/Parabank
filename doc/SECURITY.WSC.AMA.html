@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid constructors and overriding methods which are more accessible than those of their super classes [SECURITY.WSC.AMA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid constructors and overriding methods which are more accessible than those of their super classes [SECURITY.WSC.AMA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies constructors and overriding methods that are more
+accessible than the constructors and overridden methods in their superclasses.
+A finding is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Category: Weak Security Controls
+
+Constructors and overriding methods that are more accessible than the constructors
+and overridden methods in their superclasses may enable an attacker to override
+the methods and gain access to the superclass methods.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The following parameters allow you to specify the accessibility level of analyzed
+constructors and overriding methods:
+-Check constructors with access specifier
+   -public (enabled by default)
+   -protected
+-Check overriding methods with access specifier
+   -public (enabled by default)
+   -protected
+   -static
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+class SuperAMA {
+
+   private int _id;
+
+   SuperAMA(int id) {
+       _id = id;
+   }
+
+   public SuperAMA() {
+       this(-1);
+   }
+
+   void run() {
+      // ....
+   }
+}
+
+public class AMA extends SuperAMA {
+
+   private String _name;
+   public AMA(int id) {   // VIOLATION
+       super(id);
+   }
+
+   public AMA(String name) {
+       super();    // OK
+       _name = name;
+   }
+
+   public void run() {  // VIOLATION
+       super.run();
+       // extra run....
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the access specifier of the constructor and the method.
+
+package examples.rules.security.wsc;
+
+class SuperAMA {
+
+   private int _id;
+   
+   SuperAMA(int id) {
+       _id = id;
+   }
+   
+   public SuperAMA() {
+       this(-1);
+   }
+   
+   void run() {
+      // ....
+   }
+}
+
+public class AMAFixed extends SuperAMA {
+
+   private String _name;
+   
+   AMAFixed(int id) {   // FIXED
+       super(id);
+   }
+   
+   public AMAFixed(String name) {
+       super();    // OK
+       _name = name;
+   }
+   
+   void run() {  // FIXED
+       super.run();
+       // extra run....
+}
+
+</PRE>
+</BODY>
+</HTML>

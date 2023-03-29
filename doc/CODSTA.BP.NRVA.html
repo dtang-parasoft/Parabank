@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing non-reifiable types to varargs methods [CODSTA.BP.NRVA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing non-reifiable types to varargs methods [CODSTA.BP.NRVA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a non-reifiable type is passed to a type variable
+varargs parameter (e.g. &lt;E&gt; void method(E...args)). Violations of this rule can
+lead to type safety issues. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks projects with a compiler compliance level of JDK 1.5 and
+later.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Arrays can only be created of reifiable types. At compile time, any varargs
+parameters are translated to an array. If the varargs parameter is a type
+variable (e.g. &lt;T&gt; void method(T...args) then it may be possible to have a
+a situation where the compiler creates an array of a non-refiable type. See
+EXAMPLE for more information.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example contains two varargs methods:
+    1) 'getFirstElementArray()' - returns an array containing only the first
+           parameter to the method
+    2) 'getArray()' - returns an array containing the parameters to the method.
+           Note that the compiler translates "T..." to "T[]".
+
+In this example, the "T" in 'getFirstElementArray()' is translated to "Object"
+during type erasure at compile time. This causes an "Object[]" to be returned.
+In the 'main()' method the result is stored to a "String[]" which yields a
+ClassCastException at runtime.
+
+package examples.rules.codsta.bp;
+
+public class NRVA {
+    public static void main(String[] args) {
+        String[] first = getFirstElementArray("testing", "123");
+    }
+
+    &lt;T&gt; T[] getFirstElementArray(T...args) {
+        return (args.length &gt; 0) ? getArray(args[0]) : null; //VIOLATION
+    }
+
+    &lt;T&gt; T[] getArray(T...args) {
+        return args;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Only pass reifiable types to a varargs method. If the method is only being used
+for certain types, specify the type in the varargs parameter.
+
+package examples.rules.codsta.bp;
+
+public class NRVAFixed {
+    public static void main(String[] args) {
+        String[] first = getFirstElementArray("testing", "123");
+    }
+
+    String[] getFirstElementArray(String...args) {
+        return (args.length &gt; 0) ? getArray(args[0]) : null; //FIXED
+    }
+
+    &lt;T&gt; T[] getArray(T...args) {
+        return args;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Types, Values, and Variables
+<A HREF="http://docs.oracle.com/javase/specs/jls/se5.0/html/typesValues.html">http://docs.oracle.com/javase/specs/jls/se5.0/html/typesValues.html</A>
+
+Java Generics FAQs - Programming With Java Generics by Angelika Langer
+<A HREF="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ300">http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ300</A>
+
+</PRE>
+</BODY>
+</HTML>

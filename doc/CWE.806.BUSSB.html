@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent external processes from blocking on output or error streams [CWE.806.BUSSB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent external processes from blocking on output or error streams [CWE.806.BUSSB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The exec() method of the java.lang.Runtime class and the related
+ProcessBuilder.start() method can be used to invoke external programs. While
+running, these programs are represented by a java.lang.Process object. This
+process contains an input stream, output stream, and error stream. . . Output
+from an external process can exhaust the available buffer reserved for its
+output or error stream. . . Consequently, when invoking an external process,
+if the process sends any data to its output stream, the output stream must be
+emptied. Similarly, if the process sends any data to its error stream,
+the error stream must also be emptied." [SEI CERT, FIO07-J]
+
+This rule identifies external processes whose output or error streams are
+neither emptied nor redirected.
+
+The rule detects when the following methods are not called on an external
+process before the waitFor() method is called:
+- getInputStream(), redirectInput(), or redirectOutput()
+- getErrorStream(), redirectError(), or redirectErrorStream()
+
+The rule assumes that external processes are processes that are invoked with
+one of the following methods:
+- the exec() method from the java.lang.Runtime
+- the start() method from the java.lang.ProcessBuilder class
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not trigger if the inheritIO() method is called on an external
+process.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Failure to properly manage the I/O streams of external processes can result
+in runtime exceptions and in DoS vulnerabilities." [SEI CERT, FIO07-J]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that output or error streams of external processes
+are emptied to prevent them from blocking the I/O buffers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the output and error streams of the external process
+invoked with the exec() method are not emptied. 
+
+    Runtime rt = Runtime.getRuntime();
+    Process proc = rt.exec("program"); // VIOLATION 
+    int exitVal = proc.waitFor();
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by calling the getInputStream() and getErrorStream()
+methods.
+
+    Runtime rt = Runtime.getRuntime();
+    Process proc = rt.exec("program"); //FIXED
+ 
+    BufferedReader output = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+    while ((output.readLine()) != null) {}
+  
+    BufferedReader errorstream = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+    while ((errorstream.readLine()) != null) {}
+ 
+
+    int exitVal = proc.waitFor();
+	
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="https://cwe.mitre.org/data/definitions/119.html">https://cwe.mitre.org/data/definitions/119.html</A>
+
+CWE-806: Buffer Access Using Size of Source Buffer
+<A HREF="https://cwe.mitre.org/data/definitions/806.html">https://cwe.mitre.org/data/definitions/806.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO07-J. Do not let external processes block on IO buffers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO07-J.+Do+not+let+external+processes+block+on+IO+buffers">https://wiki.sei.cmu.edu/confluence/display/java/FIO07-J.+Do+not+let+external+processes+block+on+IO+buffers</A>
+
+</PRE>
+</BODY>
+</HTML>

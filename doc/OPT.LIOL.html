@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Move invariants outside of loops wherever possible [OPT.LIOL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Move invariants outside of loops wherever possible [OPT.LIOL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A loop invariant variable is a variable which will evaluate to the same value 
+every time a loop body is executed. If a loop invariant variable is assigned or
+initialized within a loop, it is more optimal to move the assignment/initialization 
+outside of the loop body so that resources will not be wasted evaluating the 
+constant value multiple times. 
+
+This rule suggests invariant variable assignments and initializations that can 
+potentially be moved outside of their enclosing loop(s). It is only possible to
+move variable assignments outside of a loop when the variable is not assigned 
+multiple times within the loop. The rule will also not flag a violation for 
+variables on which methods with side effects are called since it is difficult to 
+determine whether or not these side effects are intended to be preserved across 
+all executions of the loop body.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will detect cases where moving an assignment outside of a loop body 
+would also require moving other possible invariant assignments outside of the 
+loop body. In other words, if variable "b" depends on variable "a", which is
+possibly a loop invariant, a violation will be flagged for both variable "a" and
+variable "b".
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Specify method calls which should be considered constant.
+    "^java\.util\.Map\.Entry$"   "get*" (default)
+    -This parameter allows specification of methods which return a constant
+    value for a constant input. These method calls can often be extracted from
+    the loop to prevent being called each iteration. Methods which are passed
+    a loop variable as a parameter will be treated as non-constant regardless
+    of whether they are specified in this table or not.
+    -Types and methods should be specified using a regular expression. Types are
+    specified in the form of fully qualified name. Methods are specified as the
+    method name (no parenthesis or parameters).
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Evaluating expressions which remain constant throughout the iterations of a loop
+body is a waste of CPU cycles. If possible, the variable assignment should be
+moved outside of the loop body so that the expression only needs to be evaluated
+once.
+   
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+It is possible that some violations of this rule will be false positives. The 
+rule is designed to run in a reasonably small amount of time, so it does not 
+perform a very thorough analysis of the code. In particular, it may flag some
+cases where a method with side effects is called on a variable or where the 
+value of a variable depends on some other variable which changes during the loop 
+iterations.
+
+You should review each violation before fixing it to make sure it is safe to 
+fix.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The variable "result" in this example always evaluates to the same value, so
+there is no sense in having it initialized within a loop. 
+
+package examples.rules.opt;
+
+public class LIOL {
+    public static void main(String[] args) {
+        for(int i = 0; i &lt; 100; i++) {
+            int result = performAddition();  //VIOLATION
+            System.err.println("Result: " + result);
+        }
+    }
+    
+    public static int performAddition() {
+        return 5 + 5;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the variable declaration outside of the loop. To emphasize that the value 
+of the variable will never change, you can declare it "final".
+
+package examples.rules.opt;
+
+public class LIOL_Fixed {
+    public static void main(String[] args) {
+        final int result = performAddition();  //FIXED
+        for(int i = 0; i &lt; 100; i++) {
+            System.err.println("Result: " + result);
+        }
+    }
+    
+    public static int performAddition() {
+        return 5 + 5;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

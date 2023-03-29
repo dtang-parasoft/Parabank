@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not override 'toString()' in enum types [CODSTA.OIM.OVOTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not override 'toString()' in enum types [CODSTA.OIM.OVOTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In an "enum" type, it is generally not advised that you override "toString()".  
+This rule will flag a violation for each case where the "toString()" method is
+overridden in an "enum" type.  See the "BENEFITS" section for an explanation of
+this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In an "enum" type, the "toString()" method is supposed to be the opposite of 
+the "valueOf(String)" method.  That is, if you pass the result of calling 
+"toString()" into the "valueOf()" method, you should get back the original 
+"enum" constant.  If you override the "toString()" method, it will break this 
+contract.  
+
+The implementation of "valueOf(String)" cannot be changed by the programmer 
+since this method is implicitly defined for all "enum" types.  This means that
+overriding "toString()" can easily lead to bugs like the one described above.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public enum OVOTS {
+    PLUS, MINUS;
+
+    public String toString() {   //VIOLATION
+        switch (this) {
+            case PLUS:
+                return "+";
+            case MINUS:
+                return "-";
+        }
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If you must provide a custom implementation of the "toString()" method, you 
+should use a different name to avoid breaking the rule that the "toString()" 
+method is the opposite of "valueOf(String)".  
+
+package examples.rules.codsta.oim;
+
+public enum OVOTSFixed {
+    PLUS, MINUS;
+
+    public String toStringSpecial() {  //FIXED
+        switch (this) {
+            case PLUS:
+                return "+";
+            case MINUS:
+                return "-";
+        }
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  See the Javadoc for the "Enum" class
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Enum.html">http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Enum.html</A>
+
+For the "toString()" method it says "This method may be overridden, though it 
+typically isn't necessary or desirable."
+
+2.  Brett McLaughlin, David Flanagan: "Java 1.5 Tiger: A Developer's Notebook".
+O'Reilly, 2004, pg. 38
+
+</PRE>
+</BODY>
+</HTML>

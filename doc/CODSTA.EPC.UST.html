@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'StringTokenizer' instead of 'indexOf()' and 'substring()' for String parsing [CODSTA.EPC.UST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'StringTokenizer' instead of 'indexOf()' and 'substring()' for String parsing [CODSTA.EPC.UST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses 'String.indexOf ()' with 'String.substring ()'.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If the algorithm implemented by the method is not String parsing, then
+StringTokenizer cannot be used and this rule's error message should be ignored.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+String parsing is commonly performed in many applications.  Using 'indexOf ()'
+and 'substring ()' to parse a String makes the code error prone, difficult to
+understand, and can cause StringIndexOutOfBoundsExceptions.  'StringTokenizer'
+is clearer and safer.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+import java.util.*;
+
+public class UST {
+    static void parseString (String string) {
+        int index = 0;
+        int next_index = 0;
+        while ((next_index = string.indexOf ('.', index)) != -1) {
+            System.out.println (string.substring (index, next_index));
+            index = next_index + 1;
+        }
+    }
+    // NOTE: the above method parses the String incorrectly: it doesn't
+    // print the last token in the String
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use StringTokenizer to parse strings:
+
+package examples.rules.codsta.epc;
+
+import java.util.*;
+
+public class USTFixed {
+    static void parseString (String string) {
+        StringTokenizer tokenizer = new StringTokenizer (string, ".");
+        while (tokenizer.hasMoreTokens ())
+            System.out.println (tokenizer.nextToken ());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Craig Larman, Rhett Guthrie: "Java 2 Performance and Idiom Guide"
+Prentice Hall PTR, ISBN: 0-13-014260-3 pp. 282 - 283
+
+</PRE>
+</BODY>
+</HTML>

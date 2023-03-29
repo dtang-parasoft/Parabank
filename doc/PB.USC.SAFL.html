@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid self assignments/initializations to fields and/or local variables [PB.USC.SAFL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid self assignments/initializations to fields and/or local variables [PB.USC.SAFL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies self assignments/initializations to fields and/or local 
+variables. An error is reported if a field and/or local variable is assigned
+to itself.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+You can choose to enable or disable the option of checking:
+-fields
+-local variables and parameters
+
+Both options are enabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An assignment with no effect should be removed since it is meaningless
+to the code. However, such a self-assignment could also be an 
+indication of a misspelled parameter.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class SAFL {
+    int num;
+    public SAFL(int mum) { //misspelled parameter
+        this.num= num; //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class SAFL_Fixed {
+    int num;
+    public SAFL(int num) { //FIXED
+       this.num= num; //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated PB.NSE
+    
+   
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid possible ArrayStoreExceptions [PB.RE.ASE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid possible ArrayStoreExceptions [PB.RE.ASE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that may cause an ArrayStoreException.
+If an array is initialized to a subclass of the type as which it is declared,
+then it may be possible to attempt to store a different subclass in the array,
+which would yield an ArrayStoreException.
+This rule does not attempt to infer which possible subclasses of a method
+return type may be returned at runtime. See NOTES for details.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule may flag cases where a method return type is declared as a superclass
+of an allowable type. If the method always returns an allowable subclass then
+an ArrayStoreException would never be thrown during runtime. For example:
+    Object[] getIntegerArray(int count, String number) {
+        Object[] array = new Integer[count];
+        for (int i = 0; i &lt; count; i++) {
+            array[i] = getInteger(i); //VIOLATION
+        }
+        return array;
+    }
+
+    Object getInteger(int num) {
+        return Integer.valueOf(num);
+    }
+
+Here the method "getInteger" always returns the type "Integer". At runtime, no
+ArrayStoreException is thrown because "array" is initialized to "Integer[]".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class ASE {
+    Number[] getNumberArray(int count, String number) {
+        Number[] array = new Float[count];
+        for (int i = 0; i &lt; count; i++) {
+            array[i] = Double.valueOf(number); //VIOLATION
+        }
+        return array;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class ASEFixed {
+    Number[] getNumberArray(int count, String number) {
+        Number[] array = new Float[count];
+        for (int i = 0; i &lt; count; i++) {
+            array[i] = Float.valueOf(number); //FIXED
+        }
+        return array;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

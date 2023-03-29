@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using multiple '!' or '~' unary operators [PB.CUB.AMCO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using multiple '!' or '~' unary operators [PB.CUB.AMCO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of more than one unary complement operator.
+The following unary operators are checked:
+1) '!' --- logical complement (not)
+2) '~' --- binary complement (inversion)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Use of multiple complement operators may be due to a typo, which could cause
+unintended behavior. Not using multiple complement operators can also clarify
+the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The double '!' operators have no net effect in the following code.  However,
+the intent was for single '!' negative logic, so that the method will return
+before multiplying twice if the 'twice' boolean parameter is false.
+
+package examples.rules.pb.cub;
+
+public class AMCO {
+    int squareInt(int i, boolean twice) {
+        int square = i * i;
+        if (!!twice) //VIOLATION
+            return square;
+
+        return square * square;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Fix the typo or remove unnecessary additional operators.
+
+package examples.rules.pb.cub;
+
+public class AMCOFixed {
+    int squareInt(int i, boolean twice) {
+        int square = i * i;
+        if (!twice) //FIXED
+            return square;
+
+        return square * square;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

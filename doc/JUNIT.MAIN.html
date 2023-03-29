@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that JUnit classes have a main() allowing them to be executed in isolation [JUNIT.MAIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that JUnit classes have a main() allowing them to be executed in isolation [JUNIT.MAIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any JUnit test class that does not have a main() method
+that allows it to be executed in isolation. An error
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only test classes which meet one of the following conditions:
+
+1. The class extends "junit.framework.TestCase".
+2. The class has at least one method with the "org.junit.Test" annotation.  This
+only applies to JUnit 4.0 and later.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Although unit tests are often grouped into a suite of tests,
+developers should be allowed to run individual tests in isolation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class MAINTest extends TestCase {
+  
+   // VIOLATION : missing main method
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a main () method.
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class MAINFixedTest extends TestCase {
+  
+    public static void main(String[] args) {  // FIXED
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://java.sys-con.com/node/36842">http://java.sys-con.com/node/36842</A>
+
+</PRE>
+</BODY>
+</HTML>

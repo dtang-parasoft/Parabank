@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for "final" local variables [NAMING.NFL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for "final" local variables [NAMING.NFL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "final" local variables that do not follow the user-defined
+naming convention (as specified in a regular expression). By default, the
+rule requires that each "final" local variable name starts with a lowercase 
+letter and has no symbols other than letters and numbers. An error is reported 
+for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression
+    -"Final" local variable names should match the listed regular expression.
+    -The default is "^[a-z][a-zA-Z0-9]*$".  This enforces that the names of 
+     "final" local variables begin with a lower case letter and consist of only 
+     letters and numbers.
+-Negate regular expression
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     "final" local variable matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for "final" local variable names which do not match the regular 
+     expression specified.
+-Ignore case
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of "final"
+     local variables must match the regular expression specified, including in 
+     case.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class NFL {  
+    public static void main(String[] args){
+        final int MyInteger1= 1; //VIOLATION
+        final int my_Integer_2= 2; //VIOLATION 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class NFLFixed {  
+    public static void main(String[] args){
+        final int myInteger1= 1; //FIXED
+        final int myInteger2= 2; //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

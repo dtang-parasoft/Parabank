@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of space(s) for indentation [APSC_DV.003215.IND]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of space(s) for indentation [APSC_DV.003215.IND]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies lines that are not indented by the correct number of
+spaces.  An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule enforces the following aspects of indentation:
+
+- Spaces or tabs must be used for indentation
+- One indentation level is exactly one tab, the number of spaces specified in
+  the "Indentation size" parameter
+- Indentation must correctly reflect the nesting structure of the source file
+
+Generally, braces and parentheses will determine the nesting level and, 
+therefore, the expected indentation.  This means that, each time an open 
+parenthesis ("(") or open brace ("{") is encountered, the rule will require an 
+extra level of indentation for each proceeding line until the corresponding 
+close parenthesis (")") or close brace ("}") is encountered.  This algorithm can 
+be changed by customizing the parameter settings.
+
+There are a number of exceptions for some commonly used indentation patterns:
+
+- Javadoc comments may contain an additional space before a star/asterisk
+- Non-Javadoc comments are excluded from indentation checking
+- 'if/else', 'for', 'while', and 'do/while' may also be used without braces
+  (correct indentation will still be enforced)
+- 'else if' requires only one indentation, even though the 'if' is
+  technically nested inside the 'else'
+- In a 'switch' statement, all enclosed code is indented by one level; only
+  'case' and 'default' statements appear at the same indentation level as
+  the enclosing 'switch'
+- Lines that contain only whitespace are excluded from indentation checking
+- Continuations of expression statements, variable declaration statements,
+  field declarations, and type declaration headers that had to be split
+  across two or more lines may have an additional indentation.  By default,
+  this additional indentation is optional.
+  
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Indentation size (default value is 4)
+-Additional levels of indentation for wrapped line continuations (default value
+ is 2)
+    -For statements which span multiple lines, it is common practice to indent
+     every line except for the first by an extra level of indentation (or more).
+     The rule will not flag a violation if the extra indentation for lines after
+     the first line matches the level specified in this parameter.  This extra
+     indentation is optional by default.
+    -The default value of the parameter is 2, meaning one extra level of
+     indentation (8 spaces by default) is allowed for each line after the first.
+-Require additional level(s) of indentation for wrapped line continuations
+ (default is false)
+   -By default, this parameter is disabled.  This means that additional level(s)
+    of indentation for each line after the first line in a statement that is
+    split across multiple lines is optional.
+   -When this parameter is enabled, the additional level(s) of indentation for
+    each line after the first line in a statement that is split across multiple
+    lines is mandatory.
+-Require an additional level of indentation for each "(" encountered in a
+ wrapped line continuation (default is true)
+   -By default, the rule will require an extra level of indentation for each "("
+    encountered until the corresponding ")" is encountered in multi-line
+    statements (See the "NOTES" section for a more detailed explanation).
+    However, many people prefer to have each line after the first line in a
+    multi-line statement indented at the same level regardless of how many open
+    parentheses there are.  This style is better if your code has a lot of
+    multi-line statements with a lot of open parentheses in it (meaning
+    indenting an extra level for each open parenthesis is impractical).  If you
+    prefer to have every line of a multi-line statement after the first line
+    indented at the same level, you should turn this parameter off.
+-Ignore additional indentation caused by array declaration brackets (the default is true)
+   -by default, the rule requires one indentation per each pair of curly brackets. This may
+    significantly increase the number of indentations per line if array declarations are split
+    into several lines. If array dimensions are assigned with values in separate lines,
+    the number of indentations in each line must equal the number of dimensions.
+    This parameter allows you to limit the number of indentations. If it is set to 'false',
+    the rule will ignore brackets in array declarations. 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class IND {
+ private int index;  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Indent the line by the proper amount of spaces. 
+
+package examples.rules.format;
+
+public class INDFixed {
+    private int index;  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

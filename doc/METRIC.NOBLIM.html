@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Blank Lines in Methods [METRIC.NOBLIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Blank Lines in Methods [METRIC.NOBLIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Number of Blank Lines metrics count how many lines do not have code or comments.
+A blank line is an empty line or line that has only whitespaces.
+This metric counts number of blank lines that belong to methods.
+It includes comments that precede the methods.
+
+See METRIC.NOPLIM for details on how lines of Anonymous Methods are measured.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+        
+        import java.io.Serializable;
+        
+        public class Foo
+        {
+            // comment
+            
+            /**
+             * comment
+             */
+            public void bar()
+            {   
++1
+            }
+        }
+
+Total: 1
+
+</PRE>
+</BODY>
+</HTML>

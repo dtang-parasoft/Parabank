@@ -1,0 +1,62 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow the limit for number of property entries [PROPS.FM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow the limit for number of property entries [PROPS.FM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any property file that does not satisfy the user-defined
+requirement for number of property entries. By default, an error is reported if
+property files do not have between 1 and 500 property entries.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore property file name (regular expression)
+    -Allows you to provide a list of property files to ignore. If a property file 
+     matches any of the regular expressions, it will be exempt from this rule.
+-Upper threshold (default as 500)
+-Lower threshold (default as 1)
+
+An error will be reported if the number of property entries is 
+beyond the specified thresholds.
+
+
+
+</PRE>
+</BODY>
+</HTML>

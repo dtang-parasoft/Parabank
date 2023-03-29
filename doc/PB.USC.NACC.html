@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid classes with no accessible members [PB.USC.NACC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid classes with no accessible members [PB.USC.NACC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If the class constructor is not publicly available and the class does not have
+any non-private static methods or fields, the methods in the class are not
+usable, because the class object cannot be instantiated from outside the class.
+
+This rule detects classes that meet the following conditions:
+- the class is defined as a top level class.
+- the class does not have any non-private constructors.
+- the class does not have any non-private static member fields, methods,
+or types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not analyze interfaces.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure classes are usable and prevent programmer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the class does not have any non-private constructors
+or non-private static methods, fields, or types.  
+
+package examples.rules.pb.usc;
+
+public class NACC {  // VIOLATION
+
+    private static NACC _nacc;
+
+    private NACC() {
+    }
+
+    public NACC getInstance() {
+        if (_nacc == null) {
+            _nacc = new NACC();
+        }
+        return _nacc;
+   }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, declare the method as "static".
+
+package examples.rules.pb.usc;
+
+public class NACCFixed {  // FIXED
+
+    private NACCFixed _nacc;
+
+    private NACCFixed() {
+    }
+
+    public static NACCFixed getInstance() {
+        if (_nacc == null) {
+            _nacc = new NACCFixed();
+        }
+        return _nacc;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

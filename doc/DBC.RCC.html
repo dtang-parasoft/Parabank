@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid rechecking @pre and @post conditions [DBC.RCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid rechecking @pre and @post conditions [DBC.RCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation when a parameter is checked for null and the method
+has a @pre condition that states it will not be null. This rule also flags
+a violation when the return value of an invoked method is checked for null and
+the invoked method has a @post condition that states it will not be null. See
+BENEFITS and DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Methods with no javadoc comments are ignored, as they are assumed to be not
+designed according to the DBC methodology.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check @pre conditions (default true)
+-Check @post conditions (default true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Removal of unnecessary null checks can simplify code and reduce complexity.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If the condition in the contract was erroneous, then removal of the null check
+may cause a null pointer exception to be thrown.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class RCC {
+    /**
+     * @pre o != null
+     **/
+    void print(Object o) {
+        if (o != null) { //VIOLATION
+            System.out.println(o.toString());
+        }
+    }
+
+    /**
+     *
+     */
+    void printField() {
+        String value = getValue();
+        if (value != null) { //VIOLATION
+            System.out.println(value);
+        }
+    }
+
+    String _value = "Hello";
+    /**
+     * @post $result != null
+     */
+    String getValue() {
+        return _value;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the DBC conditions are correct, then remove the unnecessary code.
+
+package examples.rules.dbc;
+
+public class RCCFixed {
+    /**
+     * @pre o != null
+     **/
+    void print(Object o) {
+        System.out.println(o.toString()); //FIXED
+    }
+
+    /**
+     *
+     */
+    void printField() {
+        String value = getValue();
+        System.out.println(value); //FIXED
+    }
+
+    String _value = "Hello";
+    /**
+     * @post $result != null
+     */
+    String getValue() {
+        return _value;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

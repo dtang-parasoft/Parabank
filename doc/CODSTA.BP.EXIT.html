@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call methods which terminates Java Virtual Machine [CODSTA.BP.EXIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call methods which terminates Java Virtual Machine [CODSTA.BP.EXIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects calls to the following methods:
+- the 'halt()' method in java.lang.Runtime
+- the 'exit()' method in java.lang.Runtime or java.lang.System
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"It is never a good idea for a web application to attempt to shut down
+the application container. Access to a function that can shut down
+the application is an avenue for Denial of Service (DoS) attacks. . . 
+The shutdown function should be a privileged function available only to
+a properly authorized administrative user." [CWE-382]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore in the 'main()' method
+(enabled by default)
+
+-Ignore if the method call is followed by a comment on the same line
+ (disabled by default)
+
+-Ignore if the line above the method call contains a comment
+ (disabled by default)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected shutdowns of the Java virtual machine.
+Calling 'System.exit()', 'Runtime.getRuntime().exit()' or
+'Runtime.getRuntime().halt()' terminates the entire Java virtual machine.
+Generally, throwing a runtime exception is preferred rather than calling
+the above methods.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code triggers a violation:
+
+package examples.rules.codsta.bp;
+
+public class EXIT {
+    void myMethod() {
+        System.exit(0); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class EXITFixed {
+    void myMethod() {
+        throw new RuntimeException(); // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-382: J2EE Bad Practices: Use of System.exit()
+<A HREF="https://cwe.mitre.org/data/definitions/382.html">https://cwe.mitre.org/data/definitions/382.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR09-J. Do not allow untrusted code to terminate the JVM
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR09-J.+Do+not+allow+untrusted+code+to+terminate+the+JVM">https://wiki.sei.cmu.edu/confluence/display/java/ERR09-J.+Do+not+allow+untrusted+code+to+terminate+the+JVM</A>
+
+</PRE>
+</BODY>
+</HTML>

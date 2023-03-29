@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Override the 'equals' and 'hashCode' methods for mapped Hibernate objects [HIBERNATE.OHCE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Override the 'equals' and 'hashCode' methods for mapped Hibernate objects [HIBERNATE.OHCE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that all Objects which are mapped to a database table in a 
+Hibernate mapping document override the default implementation of the 'equals()'
+and 'hashCode()' methods.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks Objects which are mapped in a "Hibernate-mapping"
+document.  It looks for these mappings in all files in the tested project whose
+names end in the ".hbm.xml" extension.
+
+This rule was created for use with Hibernate 3.1.  It is not guaranteed to apply
+to all versions of Hibernate.  You should not enable this rule if it does not
+apply to the version of Hibernate you are using.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is only meaningful to compare persistent Objects based on their fields.  
+Since this is not what the default inherited implementation does, all classes 
+for persistent Objects should override 'equals()' and 'hashCode()'.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example assumes there is a ".hbm.xml" file in the project with a mapping
+such as the following:
+
+&lt;hibernate-mapping&gt;
+   &lt;class name="examples.rules.hibernate.OHCE" table="PERSON"&gt;
+        &lt;id name="id" column="PERSON_ID"&gt;
+            &lt;generator class="native"/&gt;
+        &lt;/id&gt;
+        &lt;property name="age"/&gt;
+    &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+         
+package examples.rules.hibernate;
+         
+public class OHCE {  //VIOLATION- 'hashCode()' and 'equals()' not overridden
+    private Long id;
+    private int age;
+
+    public OHCE() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+         
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+       
+package examples.rules.hibernate;
+         
+public class OHCEFixed {
+    private Long id;
+    private int age;
+
+    public OHCE() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    public int hashCode(){
+        return new Integer(age).hashCode();
+    }
+    
+    public boolean equals(Object o){
+        if(!(o instanceof OHCEFixed)){
+            return false;
+        }
+        OHCEFixed cast= (OHCEFixed)o;
+        return cast.age == this.age;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/mapping.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/mapping.html</A>
+
+</PRE>
+</BODY>
+</HTML>

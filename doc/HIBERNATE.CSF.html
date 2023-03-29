@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close all 'SessionFactory' objects [HIBERNATE.CSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close all 'SessionFactory' objects [HIBERNATE.CSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for local objects of the type 'org.hibernate.SessionFactory'
+that are created in the method body, but are not closed in that method. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.RES.LEAKS.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule would not identify an unused SessionFactory object.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is important to close 'SessionFactories' after you have finished using them so
+that the system can reclaim resources which are not being used. Additionally,
+if resources are not closed, an application may not exit when you expect it to exit.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class CSF {
+    public static void main(String[] args) {
+        Session session = null;
+        SessionFactory sessionFactory = new Configuration().configure()
+            .buildSessionFactory();
+
+        try {
+            session = sessionFactory.openSession();
+            //Do some work using the session object
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.flush();
+            session.close();
+        }
+        //VIOLATION- "sessionFactory" never closed.
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Close the 'SessionFactory' before the end of the method.
+
+package examples.rules.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class CSFFixed {
+    public static void main(String[] args) {
+    public static void main(String[] args) {
+        Session session = null;
+        SessionFactory sessionFactory = new Configuration().configure()
+            .buildSessionFactory();
+
+        try {
+            session = sessionFactory.openSession();
+            //Do some work using the session object
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.flush();
+            session.close();
+        }
+        sessionFactory.close();  //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html</A>
+"Hibernate: A Developer's Notebook" by James Elliott. 2004,  pp. 46.
+
+</PRE>
+</BODY>
+</HTML>

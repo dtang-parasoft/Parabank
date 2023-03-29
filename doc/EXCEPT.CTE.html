@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always chain thrown exceptions [EXCEPT.CTE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always chain thrown exceptions [EXCEPT.CTE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies exceptions thrown from a catch block that do not chain the
+caught exception. A violation is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check only thrown exceptions with a chain constructor (default true)
+    In some cases the new exception type being thrown does not provide a
+    constructor that allows the old exception to be passed along. Enabling this
+    parameter will cause these cases to not be flagged.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Ensuring that exceptions are chained properly can help with debugging.
+Otherwise, the cause exception may be lost. See REFERENCES
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class CTE {
+    public int get(int[] array, int index) throws Exception {
+        try {        
+            return array[index];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new Exception(); //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class CTEFixed {
+    public int get(int[] array, int index) throws Exception {
+        try {        
+            return array[index];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new Exception(e); //FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Chained Exception Facility
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/lang/chained-exceptions.html">http://docs.oracle.com/javase/1.5.0/docs/guide/lang/chained-exceptions.html</A>
+
+</PRE>
+</BODY>
+</HTML>

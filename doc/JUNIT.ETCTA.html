@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid extending 'TestCase' in test classes which contain the '@Test' annotation [JUNIT.ETCTA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid extending 'TestCase' in test classes which contain the '@Test' annotation [JUNIT.ETCTA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+JUnit 3 and JUnit 4 use different ways of specifying test methods.  In JUnit 3, 
+test classes were required to extend 'junit.framework.TestCase' and test methods
+were required to have names beginning with "test".  In JUnit 4, test classes are 
+not required to extend 'junit.framework.TestCase'.  Instead, test methods are 
+specified in JUnit 4 using the 'org.junit.Test' annotation (i.e., by adding 
+'@Test' in front of the declaration of the test method).  
+
+If you mix the JUnit 3 and the JUnit 4 ways of specifying test methods, the 
+JUnit runner will not run the test methods which use the '@Test' annotation but 
+do not have names beginning with "test".  Test classes which extend 
+'junit.framework.TestCase' should not also contain methods with the '@Test' 
+annotation.  This rule will flag a violation for each class which extends 
+'junit.framework.TestCase' and contains at least one method which uses the 
+'@Test' annotation.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you extend 'junit.framework.TestCase' and use the '@Test' annotation in the 
+same class, test methods which specify the '@Test' annotation but do not have
+names beginning with "test" will not be run.  This is probably not what you 
+would expect.  People generally expect that all test methods which have the 
+'@Test' annotation will be run when they run their JUnit tests.
+
+You should decide whether you want to use JUnit 3 or JUnit 4 to run your tests 
+and stay consistent.  If you decide to use JUnit 3, you should make sure that
+your test classes extend 'junit.framework.TestCase' and that all the test 
+methods have names beginning with "test".  If you decide to use JUnit 4, you 
+should make sure that your test classes do not extend 'junit.framework.TestCase'
+and that all of your test methods specify the 'org.junit.Test' annotation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This test case mixes the JUnit 3 and JUnit 4 ways of specifying test cases.  
+This means that the JUnit runner will not be able to run the two test methods 
+(regardless of whether you use JUnit 3 or JUnit 4 to run your tests).
+
+package examples.rules.junit;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import junit.framework.TestCase;
+
+public class ETCTA extends TestCase {  //VIOLATION - The class 'ETCTA' extends 
+                                       //'TestCase' and uses the '@Test' 
+                                       //annotation.  This means that no test
+                                       //methods will be run by the JUnit runner.
+
+    /**
+     * Test something simple that passes.
+     */
+    @Test
+    public void assert1() {
+        Assert.assertTrue(true);
+    }
+    
+    /**
+     * Test something simple that fails.
+     */    
+    @Test
+    public void assert2() {
+        Assert.assertTrue(false);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use JUnit 4 to run the test methods.  This means that you should not extend 
+'junit.framework.TestCase'.  Instead, you should use the '@Test' annotation on 
+the declarations of each of the test methods.
+
+package examples.rules.junit;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ETCTA_Fixed {  //FIXED - Do not extend 'TestCase' in classes which
+                            //use the '@Test' annotation.
+
+    /**
+     * Test something simple that passes.
+     */
+    @Test
+    public void assert1() {
+        Assert.assertTrue(true);
+    }
+    
+    /**
+     * Test something simple that fails.
+     */	
+    @Test
+    public void assert2() {
+        Assert.assertTrue(false);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

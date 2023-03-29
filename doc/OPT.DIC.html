@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define initial capacities for 'ArrayList', 'HashMap', 'HashSet', 'Hashtable', 'Vector' and 'WeakHashMap' [OPT.DIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define initial capacities for 'ArrayList', 'HashMap', 'HashSet', 'Hashtable', 'Vector' and 'WeakHashMap' [OPT.DIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not specify an initial
+capacity when creating any 'ArrayList', 'HashMap', 'HashSet',
+'Hashtable', 'Vector', or 'WeakHashMap'. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not check "java.util.Properties".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Expansion of array capacity involves allocating a larger array and copying
+the contents of the old array to a new one. Eventually, the old array
+object gets reclaimed by the garbage collector.  Array expansion is an 
+expensive operation.
+         
+If you can make an educated guess at the expected size, you should use that 
+instead of the default.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.Vector;
+
+public class DIC {
+    public void addObjects (Object[] o) {
+        // if length &gt; default capacity, Vector needs to expand
+        for (int i = 0; i &lt; o.length; i++) {
+            v.add(o[i]);
+        }
+    }
+    public Vector v = new Vector();  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Define an initial capacity when you can make an educated guess.
+
+package examples.rules.opt;
+
+import java.util.Vector;
+
+public class DICFixed {
+    public void addObjects (Object[] o) {
+        for (int i = 0; i &lt; o.length; i++) {
+            v.add(o[i]);
+        }
+    }
+    public Vector v = new Vector(20);  // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Dov Bulka, "Java Performance and Scalability Volume 1: Server-Side Programming 
+Techniques" Addison Wesley, ISBN: 0-201-70429-3 pp.55 - 57
+
+Neal Ford, "Performance Tuning With Java Technology"
+JavaOne 2001 Conference
+
+</PRE>
+</BODY>
+</HTML>

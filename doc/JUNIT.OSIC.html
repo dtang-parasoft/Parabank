@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the constructor to set up test cases [JUNIT.OSIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the constructor to set up test cases [JUNIT.OSIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit test cases that use the constructor to 
+set up test cases. An error is reported if a JUnit test case constructor
+contains anything other than a call to the super class' constructor.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only test classes which meet one of the following conditions:
+
+1. The class extends "junit.framework.TestCase".
+2. The class has at least one method with the "org.junit.Test" annotation.  This
+only applies to JUnit 4.0 and later.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the constructor throws an IllegalStateException, JUnit will
+throw an AssertionFailedError to indicate that the test case could not be
+instantiated.  The resulting stack trace would show only the location of the
+AssertionFailedError, not the location of the original error. This would make
+debugging difficult.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class OSIC extends TestCase {
+    private String _name;
+    public OSIC () {
+        super ();
+        _name = "Test string";  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Instead of setting up the data in the constructor, perform test setup by
+overriding the 'setUp ()' method.  Any exception thrown within 'setUp ()' is
+reported correctly by JUnit.
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class OSICFixed extends TestCase {
+
+    private String _name;
+    public OSICFixed () {
+        super ();
+    }
+    public void setUp () {
+        _name = "Test string";  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit.html">http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use floating point variables as loop indices [PB.NUM.FPLI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use floating point variables as loop indices [PB.NUM.FPLI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+ 
+Using floating-point loop indices can lead to unexpected results.  This rule 
+will flag a violation for each case where a floating-point variable (a variable 
+of type "double" or "float") is used as the index for a loop.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore variables which are compared using "&lt;" or "&gt;" in the conditional 
+ expression 
+    -Default is "false"
+    -It is not recommended to use floating-point variables as loop indices 
+     because of potential overflow problems, but there are many cases where you 
+     know that overflow will not be a problem.  In these cases, it may be OK to
+     use a floating-point loop index as long as the index variable is being 
+     compared in the conditional expression using "&lt;" or "&gt;" (not "&gt;=", "&lt;=", 
+     "==", or "!=").  It is never recommended to test for equality using 
+     floating-point quantities because these quantities are imprecise.  If you 
+     are getting too many false positives for cases where overflow is not a 
+     problem and no equality comparison is made, try enabling this parameter.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using floating-point loop indices can lead to unexpected results, especially
+when the value of the index is so large that it causes overflow.  For instance, 
+the "float" datatype only has 24 bits of precision, which may not be enough to
+accurately represent all possible values of the loop index.  This can lead to
+unexpected results.  
+
+Even if the values of the index are sufficiently small to represent using a 
+"float" or "double", it is still not a good idea to use these types for loop
+index variables.  This is because operations on these datatypes are imprecise.
+Instead of using a floating-point variable to index a loop, a "long" or "int" 
+variable should be used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The method "foo()" below looks like it should print "Hello" 50 times.  Instead,
+it prints nothing.  The reason is that the values of the index are too large to
+be stored accurately in a "float" variable.
+
+package examples.rules.pb.num;
+
+public class FPLI {
+    static void foo() {
+        final int START_INDEX = 1900000000;
+        for (float f = START_INDEX; f &gt; START_INDEX - 50; f--) {  //VIOLATION
+            System.out.println("Hello");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use an integer datatype (such as "long") for the loop index variable. 
+
+package examples.rules.pb.num;
+
+public class FPLIFixed {
+    static void foo() {
+        final int START_INDEX = 1900000000;
+        for (long l = START_INDEX; l &gt; START_INDEX - 50; l--) {  //FIXED
+            System.out.println("Hello");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+    Addison-Wesley, 2005, pp. 73-75
+
+SEI CERT Oracle Coding Standard for Java
+NUM09-J. Do not use floating-point variables as loop counters
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM09-J.+Do+not+use+floating-point+variables+as+loop+counters">https://wiki.sei.cmu.edu/confluence/display/java/NUM09-J.+Do+not+use+floating-point+variables+as+loop+counters</A>
+
+</PRE>
+</BODY>
+</HTML>

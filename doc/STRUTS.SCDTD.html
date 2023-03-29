@@ -1,0 +1,196 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a Struts DTD for validation in 'struts-config.xml' files [STRUTS.SCDTD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a Struts DTD for validation in 'struts-config.xml' files [STRUTS.SCDTD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks to make sure that you use a DTD for validation in 
+'struts-config.xml' files.  If you use the Struts DTD, the XML validator will
+catch many common mistakes in 'struts-config.xml' files.  Without using a DTD, 
+it is very easy to make a careless mistake in a 'struts-config.xml' file.  In 
+each 'struts-config.xml' file, you should have an element like the following:
+
+&lt;!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+    "<A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;
+
+The "DOCTYPE" element specifies the DTD to be used to validate the XML file.  
+This rule will flag a violation for each 'struts-config.xml' file which does not
+contain a "DOCTYPE" element. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+An incorrect 'struts-config.xml' file can cause a denial of access to your 
+Struts application.  Using a DTD file will help to protect against such 
+problems.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Without using a DTD, it is easy to make a careless mistake in a 
+'struts-config.xml' file.  If the 'struts-config.xml' file is incorrect, it may 
+cause the Struts application to not work correctly.  When using a DTD, the 
+validator will find many common mistakes for you.  The DTD file enforces basic 
+syntactic requirements for a 'struts-config.xml' file.  An example of a common 
+mistakes which will be caught by the Struts DTD is a missing "name" attribute in
+a '&lt;form-bean&gt;' element.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The sample 'struts-config.xml' file shown below does not use a DTD file for
+validation.  The '&lt;form-bean&gt;' element is missing a "name" attribute.  This 
+mistake would have been caught by the XML validator if you were using a DTD file
+for validation.
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+
+&lt;struts-config&gt;  &lt;!-- VIOLATION: No DTD specified --&gt;
+    &lt;form-beans&gt;
+        &lt;form-bean
+            type="examples.rules.struts.LogonForm"/&gt;  &lt;!-- Missing "name" attribute 
+                                    (would be caught by the XML validator if you 
+                                     were using the Struts DTD file) --&gt;
+    &lt;/form-beans&gt;
+    &lt;action-mappings&gt;
+        &lt;action
+            path="/Welcome"
+            forward="/pages/Welcome.jsp"/&gt;
+        &lt;action
+            path="/Logon"
+            forward="/pages/Logon.jsp"/&gt;
+        &lt;action
+            path="/LogonSubmit"
+            type="examples.rules.struts.LogonAction"
+            name="logonForm"
+            scope="request"
+            validate="true"
+            input="/pages/Logon.jsp"&gt;
+            &lt;forward
+                name="success"
+                path="/pages/Welcome.jsp"/&gt;
+            &lt;forward
+                name="failure"
+                path="/pages/Logon.jsp"/&gt;
+        &lt;/action&gt;
+        &lt;action
+            path="/Logoff"
+            type="examples.rules.struts.LogoffAction"&gt;
+            &lt;forward
+                name="success"
+                path="/pages/Logoff.jsp"/&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+    &lt;message-resources parameter="resources.application"/&gt;
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use one of the Struts DTD files to perform validation.  In this case, we chose
+to use the DTD for Struts version 1.3.  This will help you to find and correct
+many mistakes, such as the missing "name" attribute in the example above.
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE struts-config PUBLIC 
+    "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" 
+    "<A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;  &lt;!-- FIXED: Use the 
+                                               Struts DTD to perform validation --&gt;
+
+&lt;struts-config&gt;  
+    &lt;form-beans&gt;
+        &lt;form-bean
+            name="logonForm"
+            type="examples.rules.struts.LogonForm"/&gt;  &lt;!-- FIXED: Added the missing
+                                                           "name" attribute --&gt;
+    &lt;/form-beans&gt;
+    &lt;action-mappings&gt;
+        &lt;action
+            path="/Welcome"
+            forward="/pages/Welcome.jsp"/&gt;
+        &lt;action
+            path="/Logon"
+            forward="/pages/Logon.jsp"/&gt;
+        &lt;action
+            path="/LogonSubmit"
+            type="examples.rules.struts.LogonAction"
+            name="logonForm"
+            scope="request"
+            validate="true"
+            input="/pages/Logon.jsp"&gt;
+            &lt;forward
+                name="success"
+                path="/pages/Welcome.jsp"/&gt;
+            &lt;forward
+                name="failure"
+                path="/pages/Logon.jsp"/&gt;
+        &lt;/action&gt;
+        &lt;action
+            path="/Logoff"
+            type="examples.rules.struts.LogoffAction"&gt;
+            &lt;forward
+                name="success"
+                path="/pages/Logoff.jsp"/&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+    &lt;message-resources parameter="resources.application"/&gt;
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 36 and # 37:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

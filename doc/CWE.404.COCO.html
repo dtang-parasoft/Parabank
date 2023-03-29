@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close JDBC objects in the correct order [CWE.404.COCO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close JDBC objects in the correct order [CWE.404.COCO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The program does not release or incorrectly releases a resource before it is
+made available for re-use." [CWE-404]
+
+This rule checks that JDBC Objects are closed in the correct order.  Statements
+should be closed only after all ResultSets created from that Statement are 
+closed.  Connections should be closed only after all Statements created from 
+that Connection are closed.  Thus, the standard order in which JDBC Objects are 
+closed (when the Objects depend on each other) is as follows:
+
+1.  ResultSets
+2.  Statements
+3.  Connections
+
+A violation will be flagged for each case where a Statement is closed after a
+Connection that was used to create that Statement or where a ResultSet is closed 
+after a Statement that was used to create that ResultSet.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Most unreleased resource issues result in general software reliability
+problems, but if an attacker can intentionally trigger a resource leak,
+the attacker might be able to launch a denial of service attack by depleting
+the resource pool.
+When a resource containing sensitive information is not correctly shutdown,
+it may expose the sensitive data in a subsequent allocation." [CWE-404]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If JDBC objects are closed in a different order than the order given above, it 
+is likely a bug.  It doesn't make sense to close a Connection before all the 
+Statements created from that Connection are closed.  It also doesn't make sense 
+to close a Statement before all the ResultSets created from that Statement are 
+closed. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+    
+public class COCO {
+    public void method() {
+        try {
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            Connection conn = DriverManager.getConnection("jdbc:odbc:Database");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Cust");
+
+            // Close the result set, statement and the connection
+            conn.close();
+            stmt.close();  //VIOLATION- Statement closed after Connection
+            rs.close();    //VIOLATION- ResultSet closed after Statement
+        } catch (Exception e) {
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Close JDBC Objects in the order shown above: ResultSets then Statements then
+Connections.
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+    
+public class COCOFixed {
+    public void method() {
+        try {
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            Connection conn = DriverManager.getConnection("jdbc:odbc:Database");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Cust");
+
+            // Close the result set, statement and the connection
+            rs.close();    //FIXED
+            stmt.close();  //FIXED   
+            conn.close();   
+        } catch (Exception e) {
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-404: Improper Resource Shutdown or Release
+<A HREF="https://cwe.mitre.org/data/definitions/404.html">https://cwe.mitre.org/data/definitions/404.html</A>
+
+</PRE>
+</BODY>
+</HTML>

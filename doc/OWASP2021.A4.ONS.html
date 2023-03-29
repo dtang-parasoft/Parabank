@@ -1,0 +1,202 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure method arguments are serializable [OWASP2021.A4.ONS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure method arguments are serializable [OWASP2021.A4.ONS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method arguments that should be serializable, but are not.
+An error is reported if an object calls one of the methods in the parameter
+table, but is not serializable.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are some cases where the compile-time type of an Object is not a 
+serializable type, but the runtime type of that Object is a subclass of the
+compile-time type that is serializable.  For instance, it is common to pass
+objects of type "java.lang.Object" to the methods in this rule.  Although 
+"java.lang.Object" is not serializable, many of its subclasses are.  Since this
+rule can only determine the compile-time type of objects, some of the violations 
+may be false positives.  You should inspect the code and suppress the violation 
+if it is impossible for the runtime type of the object to be non-serializable.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The application stores a non-serializable object as an HttpSession attribute,
+which can hurt reliability." [CWE-579]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check implementations of interface method arguments (slow) (default off)
+  Turning on this parameter may slow execution of the rule.
+  This parameter will perform further analysis on method arguments which are
+  interfaces. All subtypes which directly implement the interface will be
+  checked if they are serializable. If any of the subtypes is non-serializable,
+  the interface will be treated as non-serializable and an error will be
+  reported.
+
+-Ignore Collections or Maps with Serializable type arguments (default on)
+  Collections or Maps with Serializable type arguments (e.g. Collection&lt;String&gt;
+  or List&lt;String&gt;) can generally be assumed to be Serializable. However, some
+  Collection or Map implementations may not be Serializable. Enabling this
+  parameter will assume that only Serializable Collection or Map implementations
+  are used and not flag these instances.
+
+-List of methods to be checked
+  The default list is
+    -HttpSession.setAttribute()
+    -ObjectOutputStream.writeObject()
+    -ObjectOutputStream.writeObjectOverride()
+    -ObjectOutputStream.writerUnshared()  
+
+-Ignore method arguments of the following types (specify as regular expression):
+  There are several types that are not declared as Serializable yet almost all
+  of their subclasses are. Most likely, these method arguments are not wished to
+  be flagged. 
+
+  By default the list contains:
+    ^java\.util\.Collection$
+    ^java\.util.\Map$ 
+    ^java\.lang\.Object$
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Some methods require serializable objects as method arguments. Failure to comply
+with this requirement might result in serialization exceptions or loss of object
+states.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import javax.servlet.http.*;
+
+public class ONS extends HttpServlet {
+
+    public void doGet(
+        HttpServletRequest request, 
+        HttpServletResponse response
+    ) {
+        HttpSession session = request.getSession();
+        session.setAttribute("OBJ", new MyObject());  // VIOLATION
+    }
+}
+
+class MyObject {
+
+    private String s;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the object serializable.
+
+package examples.rules.pb;
+
+import javax.servlet.http.*;
+import java.io.*;
+
+public class ONSFixed extends HttpServlet {
+
+    public void doGet(
+        HttpServletRequest request, 
+        HttpServletResponse response
+    ) {
+        HttpSession session = request.getSession();
+        session.setAttribute("OBJ", new MyObject());  // FIXED
+    }
+}
+
+class MyObject implements Serializable {
+
+    private String s;
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+CWE-579: J2EE Bad Practices: Non-serializable Object Stored in Session
+<A HREF="https://cwe.mitre.org/data/definitions/579.html">https://cwe.mitre.org/data/definitions/579.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

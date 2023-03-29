@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid importing specific classes or packages [CODSTA.ORG.IMP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid importing specific classes or packages [CODSTA.ORG.IMP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule can be used to enforce package isolation policies. It can control
+restrictions on class and package imports into particular packages and their
+sub-packages. For example, it is common policy to disallow use of classes
+from 'java.lang.reflect' package.  It can be also used to enforce package
+isolation policies and prevent architectural dependencies. For example, 
+common or core packages should not have dependencies for domain-specific
+or specialized packages, while the reverse relation may usually be allowed
+where specialized package uses classes from core packages. Package isolation
+policy restrictions specified for a package are also active for all
+sub-packages, and are applied in the top-down manner. This means that
+general restrictions specified on top-level packages can be further
+specialized by further restricting or relaxing the isolation policy on 
+sub-package levels.  For example, it is possible to forbid imports from
+'java.lang.reflect' for all packages, and only allow it in one sub-package,
+thus imposing better control over use of Java reflection features.
+Regular expressions can be used to specify range of allowed or disallowed
+packages on any level of package hierarchy.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+There is a related rule CODSTA.ORG.DINT, however it examines all function
+calls.  Therefore, this CODSTA.ORG.IMP rule is much faster than CODSTA.ORG.DINT.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+Appropriate configuration of allowed and disallowed packages should be 
+specified in rule parameters before the rule can be used.
+
+Table "List of import restrictions" has three columns:
+- "Allow" column
+For package in the second column, the check box determines whether imports
+matching regular expression in third column are allowed (check box enabled)
+or disallowed (check box disabled).
+
+- "Package" column
+Name of the package in which this rule will be applied.  Package name can be
+repeated in multiple rows, if multiple patterns of (dis)allowed packages are
+to be specified for the same package.
+
+- "Import declaration fully qualified name (RegExp)" column
+Regular expression to be matched against arguments of the import statements
+in .java files of the Package.
+
+To prevent noise, if a package, or any of its direct or indirect parent packages
+is not listed in the Package column, the rule does not report any violations
+for such package.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps enforcing on source code level architectural composition
+of applications into layers and modules, and control and prevent unwanted
+dependencies between modules.  With appropriate parameters this rule increases
+maintainability and security of applications.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+For the following three classes:
+
+A) TestClass1 in x.y package:
+
+package x.y;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Date;
+
+public class TestClass1 {
+  public Reader test() {
+    Date date = new Date();
+    return new StringReader("Example string date: "+date.toString());
+  }
+}
+
+B) TestClass2 in x.y.z package:
+
+package x.y.z;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Date;
+
+public class TestClass2 {
+  public Reader test() {
+    Date date = new Date();
+    return new StringReader("Example string date: "+date.toString());
+  }
+}
+
+C) TestClass3 in x.y.q package:
+
+package x.y.q;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Date;
+
+public class TestClass3 {
+  public Reader test() {
+    Date date = new Date();
+    return new StringReader("Example string date: "+date.toString());
+  }
+}
+
+and for the following row entered in rule parameters
+      Allow | Package |  Import
+    checked |  x.y.z  | java.io.*
+which allow importing of java.io.* for x.y.z package only, this rule will report
+one violation for class TestClass2 related to import of java.util.Date.
+(As mentioned in PARAMETERS section, by default all imports for packages which
+start from x.y.z are disallowed and must be allowed explicitly)
+
+
+The following rule parameters
+      Allow | Package |  Import
+    checked |  x.y    | java.io.*
+    checked |  x.y.q  | java.date.*
+the rule reports two violations for classes TestClass1 and TestClass2, related to
+import of java.util.Date;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Remove the disallowed imports or review package isolation policy and modify
+the rule parameters accordingly. 
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,196 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid use of fields before initialization in constructors and static initializers [BD.PB.NOTINITCTOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid use of fields before initialization in constructors and static initializers [BD.PB.NOTINITCTOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a member variable is used prior to its explicit
+initialization in constructors and static initializers. Such cases may often
+indicate serious errors in an application's logic.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+8.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+public class Example
+{
+    static class User
+    {
+        String name;
+
+        String password;
+
+        User(String name, String password)
+        {
+            this.name = name;
+            this.password = password;
+            checkData();
+        }
+
+        void checkData()
+        {
+            // empty implementation
+        }
+    }
+
+    static class RestrictedUser
+        extends User
+    {
+        int minLoginLength = 7;
+
+        RestrictedUser(String name, String password)
+        {
+            super(name, password);
+        }
+
+        @Override
+        void checkData()
+        {
+            // minLoginLength is not yet initialized when checkData() is called from base class constructor
+            if (super.name.length() &lt; this.minLoginLength) { // VIOLATION
+                throw new IllegalArgumentException("length of name should be greater than 7");
+            }
+            // ..
+        }
+    }
+}
+
+A violation is reported for the use of the "minLoginLength" field in the "checkData" method that is
+called from the constructor of the class "User". At this point, "minLoginLength" has the value of 0
+because when an instance of the "RestrictedUser" class is created, the field is first default
+initialized by 0, then the super class constructor is called. The user defined
+initialization by the value of 7 is performed only after that.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code excerpt won't trigger a violation because the "checkData" method is called
+after the initialization of the "minLoginLength" field:
+
+public class Repair
+{
+    static class User
+    {
+        String name;
+
+        String password;
+
+        User(String name, String password)
+        {
+            this.name = name;
+            this.password = password;
+        }
+
+        void checkData()
+        {
+            // empty implementation
+        }
+    }
+
+    static class RestrictedUser
+        extends User
+    {
+        int minLoginLength = 7;
+
+        RestrictedUser(String name, String password)
+        {
+            super(name, password);
+            checkData();
+        }
+
+        @Override
+        void checkData()
+        {
+            if (super.name.length() &lt; this.minLoginLength) { // NO VIOLATION
+                throw new IllegalArgumentException("length of name should be greater than 7");
+            }
+            // ..
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-457: Use of Uninitialized Variable
+<A HREF="https://cwe.mitre.org/data/definitions/457.html">https://cwe.mitre.org/data/definitions/457.html</A>
+
+CWE-665: Improper Initialization
+<A HREF="https://cwe.mitre.org/data/definitions/665.html">https://cwe.mitre.org/data/definitions/665.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

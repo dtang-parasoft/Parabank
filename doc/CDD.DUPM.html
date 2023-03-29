@@ -1,0 +1,62 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid method duplication [CDD.DUPM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid method duplication [CDD.DUPM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code with duplicate methods. An error is reported for each
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Minimal number of duplicated tokens (default value is 80)
+- Minimal duplicate tokens size for methods in same hierarchy(default is 15)
+- Ignore identifies (default is off)
+- Ignore string and character literals (default is on)
+- Ignore number literals (default is on)
+- Ignore boolean literals (default is on)
+- Ignore code in deprecated methods (default is on)
+- Ignore methods in deprecated classes (default is on)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Copying and pasting code increases the cost of code maintenance because each
+time a modification is required, multiple instances of the same code need
+to be identified and then modified. Reducing or eliminating the amount of
+duplicated code can prevent this problem.
+
+
+</PRE>
+</BODY>
+</HTML>

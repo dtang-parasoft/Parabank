@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not invoke the 'fail()' method in a 'catch' block in a JUnit test method [JUNIT.FICB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not invoke the 'fail()' method in a 'catch' block in a JUnit test method [JUNIT.FICB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If an uncaught exception is thrown from within a test method, the test will
+automatically fail. For this reason, it is good practice to avoid calling 
+the 'fail' method within a 'catch' block.
+
+This rule detects calls to the 'fail' method within a 'catch' block in JUnit
+test methods.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that the 'fail()' method is not explicitly called
+from a 'catch' block in JUnit test methods.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class FICB
+{
+    @Test
+    public void testMethod() {
+        try{
+            FileInputStream data = new FileInputStream("c:/data.txt");
+        } catch(FileNotFoundException e) {
+            fail();  // VIOLATION
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not catch the exception or explicitly call the 'fail()' method.  Leave the exception
+uncaught, and the test case will automatically fail if there is an exception.
+
+package examples.rules.junit;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import org.junit.Test;
+
+public class FICBFixed
+{
+    @Test
+    public void testMethod() throws FileNotFoundException {
+        FileInputStream data = new FileInputStream("c:/data.txt");  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

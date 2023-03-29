@@ -1,0 +1,196 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid storing sensitive data in plaintext in a cookie [CWE.807.PLC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid storing sensitive data in plaintext in a cookie [CWE.807.PLC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule finds sensitive data in the javax.servlet.http.Cookie constructor
+and detects dangerous situations such as 
+
+1) when a cookie stores passwords
+2) when a cookie stores roles
+3) when a cookie stores user identifiers 
+
+These situations are recognized by cookie name and value. 
+
+A violation is reported for each usage of a Cookie constructor where such data is passed.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks only javax.servlet.http.Cookie instance creation.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Enforcing this rule will help to protect against many of the OWASP Top 10 
+application vulnerabilities, such as:
+
+A6-Sensitive Data Exposure
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "List of RegExp to check key in cookie" table has two column:
+-"Check values"
+    -This field specifies whether you want to check the value in a cookie.
+        -If this parameter is checked and the value is not encrypted, it will cause an error.
+            -Example usage:
+            Storing a user identifier in a cookie will not cause a security problem, but it must be encrypted. 
+            In this case, this rule has the default regular expression ".*(user|login|account).*" 
+            and is checked. new Cookie("username", "john"); causes a problem, but 
+            new Cookie("username", "91162629d258a876ee994e9233b2ad87"); does not.
+        
+        -If it is not checked, then only the presence of the same key will cause an error.
+            -Example usage:
+            Storing a password in a cookie will cause a security problem.
+            In this case, the rule has the default regular expression ".*(pass|role).*" 
+            and is checked. Both new Cookie("password", "john"); and
+            new Cookie("password", "91162629d258a876ee994e9233b2ad87");
+            cause a problem.
+    
+-"Key in cookie (RegExp)"
+    -A regular expressions for what key to check in the cookie value. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes it more difficult for attackers to exploit the application. Attackers may:
+
+1) get a password from cookie in any browser
+2) change the role in cookie (for example, to admin)
+3) login, then  change the cookie and login to another user without sending the password. 
+
+Encrypting the login protects confidentiality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.security.plc;
+
+import javax.servlet.http.Cookie;
+
+public class PLC {
+    public void cookie(String userName) {
+        Cookie cookie1 = new Cookie("userrole", "anonymus"); // VIOLATION: attackers may change cookie in browser to "admin"
+        Cookie cookie2 = new Cookie("userpass", "123"); // VIOLATION: attackers may get user password from any browser
+        Cookie cookie3 = new Cookie("username", "anonymous"); // VIOLATION: attackers may change username - example to admin
+        
+        Cookie cookie4 = new Cookie("username", userName); // IGNORED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.security.plc;
+
+import javax.servlet.http.Cookie;
+
+public class PLC {
+    public void cookie(String userName) {
+        // Cookie cookie1 = new Cookie("userrole", "anonymus"); // FIXED: Move "userrole" key to server side.
+        // Cookie cookie2 = new Cookie("userpass", "123"); // FIXED: Move "userpass" key to server side.
+        Cookie cookie3 = new Cookie("username", "91162629d258a876ee994e9233b2ad87"); // OK: Username is encrypted 
+        
+        Cookie cookie4 = new Cookie("username", userName); // IGNORED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-312: Cleartext Storage of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/312.html">https://cwe.mitre.org/data/definitions/312.html</A>
+
+CWE-315: Plaintext Storage in a Cookie
+<A HREF="https://cwe.mitre.org/data/definitions/315.html">https://cwe.mitre.org/data/definitions/315.html</A>
+
+CWE-807: Reliance on Untrusted Inputs in a Security Decision
+<A HREF="https://cwe.mitre.org/data/definitions/807.html">https://cwe.mitre.org/data/definitions/807.html</A>
+
+OWASP Top 10 2013:
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-002440: The application must protect the confidentiality and integrity of transmitted information
+
+</PRE>
+</BODY>
+</HTML>

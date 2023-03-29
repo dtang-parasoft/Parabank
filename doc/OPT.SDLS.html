@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using synchronized data structures for local variables [OPT.SDLS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using synchronized data structures for local variables [OPT.SDLS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Synchronized data structures such as "Vector" and "Hashtable" are used to avoid 
+concurrency problems in multithreaded applications.  Unsynchronized alternatives
+such as "ArrayList" and "HashMap" are more efficient for cases where 
+synchronization is not necessary.  For instance, if a "Vector" or a "Hashtable"
+is used strictly as a local variable, it may be possible to convert the "Vector"
+or "Hashtable" to an "ArrayList" or "HashMap" for efficiency.  This will prevent
+the overhead of having to acquire a lock every time the data structure is 
+accessed or modified.
+
+This rule will flag a violation for all cases where a "Vector" or "Hashtable"
+is allocated and assigned to a local variable that cannot possibly escape the 
+method's scope.  Violations will not be flagged for local variables which may
+escape the local scope (for instance, by being assigned to a field or returned).
+In these cases, synchronization may be necessary.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore cases where converting from a Vector to an ArrayList is not trivial
+    -Default is "false".
+    -Sometimes fixing a violation of this rule is difficult because there are
+     some methods which are available in the "synchronized" class "Vector" that 
+     have no equivalent method defined in "ArrayList".  For instance, 
+     "ArrayList" does not have any of the following methods: 
+         capacity() 
+         clone() 
+         copyInto()
+         ensureCapacity()
+         lastElement()
+         lastIndexOf(Object, int)
+         removeRange()
+         setElementAt()
+         setSize()
+         trimToSize()
+     It still may be possible to convert Vectors on which these methods are 
+     called into ArrayLists, but doing so is not trivial because ArrayList does
+     not define equivalents for these methods.  When this parameter is enabled,
+     the rule will not flag any violations for Vectors on which any of these
+     methods are called.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+You should only use a synchronized data structure for cases where 
+synchronization is necessary.  Synchronization is typically not necessary for
+local variables since it is not possible for multiple threads to be accessing
+the same copy of a local variable simultaneously.  This rule will help point out
+cases like this where a synchronized data structure can possibly be converted to
+an unsynchronized equivalent.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.List;
+import java.util.Vector;
+
+public class SDLS {
+    public static void main(String[] args) {
+        List list = new Vector();  //VIOLATION - using "Vector" for a local variable
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        
+        final int size = list.size();
+        for(int i = 0; i &lt; size; i++) {
+            System.out.println(list.get(i));
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use "ArrayList" instead of "Vector" and "HashMap" instead of "Hashtable".
+
+package examples.rules.opt;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SDLS_Fixed {
+    public static void main(String[] args) {
+        List list = new ArrayList();  //FIXED - use "ArrayList" instead of "Vector"
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        
+        final int size = list.size();
+        for(int i = 0; i &lt; size; i++) {
+            System.out.println(list.get(i));
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using floats [MOBILE.FLOATER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using floats [MOBILE.FLOATER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when a float or double is used in a mathematical operation such as addition, subtraction, division, multiplication, modulus, or has its sign changed.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Some mobile platforms do not have a dedicated fpu, and do all float operations in software, which can be very expensive.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule notifies the developer that they are doing a potentially expensive calculation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class FLOATER {
+	float a=4;
+	float b=4;
+	float violation=a*b;  // VIOLATION
+	float violatn=a+b;  // VIOLATION
+	float violtn=a-b;  // VIOLATION
+	float vltn=a/b;  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class FLOATER {
+	float a=4;
+	float b=4;
+	float violation=a*b;  // VIOLATION
+	float violatn=a+b;  // VIOLATION
+	float violtn=a-b;  // VIOLATION
+	float vltn=a/b;  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#avoidfloat">http://developer.android.com/guide/practices/design/performance.html#avoidfloat</A>
+
+</PRE>
+</BODY>
+</HTML>

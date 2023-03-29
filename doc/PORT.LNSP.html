@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hard code '\n' or '\r' as a line separator [PORT.LNSP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hard code '\n' or '\r' as a line separator [PORT.LNSP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies strings that contain hard coded '\n' or '\r' line 
+separator characters. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Different systems use different characters or characters sequences as 
+line separators.  Consequently, hard coding '\n', '\r', or "\r\n" violates 
+the portability of Java code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+public class LNSP {
+    public void sayHello (String name) {
+        System.out.println("Hello\n" + name);  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the println() method of PrintStream or PrintWriter, which automatically 
+terminates a line with the line separator appropriate for the platform, or use 
+the value of System.getProperty("line.separator").
+
+package examples.rules.port;
+
+public class LNSPFixed {
+    public void sayHello (String name) {
+        System.out.println("Hello");  // FIXED
+        System.out.println(name);  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+David Flanagan: "Java in a Nutshell".  O'Reilly, 
+November 1999: Third Edition, pp. 191-192
+
+</PRE>
+</BODY>
+</HTML>

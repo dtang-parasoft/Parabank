@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid declaring methods to throw general or unchecked Exception types [OWASP2021.A5.NTX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid declaring methods to throw general or unchecked Exception types [OWASP2021.A5.NTX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that are declared to throw exception types
+that are either too generic or are unchecked exceptions.
+By default, the rule detects methods which are declared to throw 'Exception',
+'Error', 'Throwable', or 'RuntimeException'. You can parameterize the rule
+to identify methods that are declared to throw other exception types; see
+PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Throwing overly broad exceptions promotes complex error handling code that is
+more likely to contain security vulnerabilities." [CWE-397]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Exception types which should not be declared to be thrown (fully qualified 
+ names)
+    -Default values are 'java.lang.Exception', 'java.lang.Error', 'java.lang.
+     Throwable', and 'java.lang.RuntimeException'.
+-Skip JUnit classes (default is false)
+    -If this parameter is enabled, the rule will not analyze methods in JUnit
+	 test classes.
+-Check for exceptions which are subclasses of 'Error' and 'RuntimeException'. 
+ (default is false)
+    -If this parameter is enabled, a violation will be flagged for each 
+     exception which is declared to be thrown and which is a subclass of 'Error' 
+     or 'RuntimeException'.  Exceptions which are a subclass of one of these two
+     classes are unchecked exceptions.
+-Ignore overriding methods. (default is true)
+    -If a method overrides another method, it must be declared to throw the same
+     exceptions as the method being overridden. For this reason, overriding
+     methods should usually be ignored.
+-Ignore methods which propagate exception types of called methods.
+ (default is true)
+    -If this parameter is enabled, a method throwing a generic exception type
+     will be ignored if it calls another method which throws the same exception
+     type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Declaring a method to throw too generic of an exception type or an unchecked 
+exception is confusing. If a generic exception type, such as 'Exception', is
+declared as the thrown exception type, the actual types of the exceptions that
+users of the method will need to handle are obscured.  Following this rule
+makes code clearer and less error-prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class NTX {
+    void lostDetailsTest () throws Exception {  // VIOLATION
+        try {
+            throw new java.io.IOException ("IO exception");
+        } finally  {
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not declare a method to throw an exception type which is too generic or an
+unchecked exception. Also, always catch exceptions that may occur in the 
+"finally" block.
+
+package examples.rules.codsta.bp;
+
+public class NTXFixed {
+    void lostDetailsTest () throws java.io.IOException {  // FIXED
+        try {
+            throw new java.io.IOException ("IO exception");
+        } finally  {
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/52f2cf86-dd5a-4c2c-aac1-e04b933f78d5">https://app.hackedu.com/link/52f2cf86-dd5a-4c2c-aac1-e04b933f78d5</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-397: Declaration of Throws for Generic Exception
+<A HREF="https://cwe.mitre.org/data/definitions/397.html">https://cwe.mitre.org/data/definitions/397.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+Nigel Warren, Philip Bishop: "Java in Practice - Design Styles and Idioms
+for Effective Java".  Addison-Wesley, 1999, p.76.
+
+SEI CERT Oracle Coding Standard for Java
+ERR07-J. Do not throw RuntimeException, Exception, or Throwable
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR07-J.+Do+not+throw+RuntimeException%2C+Exception%2C+or+Throwable">https://wiki.sei.cmu.edu/confluence/display/java/ERR07-J.+Do+not+throw+RuntimeException%2C+Exception%2C+or+Throwable</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

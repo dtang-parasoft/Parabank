@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid inefficient removal of Collection elements [BD.OPT.INEFCOL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid inefficient removal of Collection elements [BD.OPT.INEFCOL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects situations when collection elements are removed ineffectively. 
+It is triggered when an iterator is used on a collection to get elements, then 
+"remove(Object)" method is called on a collection. A more effective strategy is to 
+use "remove()" directly on an iterator, without making a collection search for 
+corresponding elements.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+import java.util.Collection;
+import java.util.Iterator;
+
+public class Example
+{
+    public void iterate(Collection&lt;Object&gt; collection)
+    {
+        Iterator&lt;Object&gt; iter = collection.iterator();
+        while (iter.hasNext()) {
+            Object element = iter.next();
+            collection.remove(element); // VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code uses a more effective strategy:
+
+import java.util.Collection;
+import java.util.Iterator;
+
+public class Repair
+{
+    public void iterate(Collection&lt;Object&gt; collection)
+    {
+        Iterator&lt;Object&gt; iter = collection.iterator();
+        while (iter.hasNext()) {
+            iter.remove(); // NO VIOLATION
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

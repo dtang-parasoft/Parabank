@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid improper use of @Id annotation [EJB.EJB3.IDA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid improper use of @Id annotation [EJB.EJB3.IDA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an @Id notation is used improperly. The following
+cases are checked:
+    1) If an @Id notation is used with a value of type double, Double, float, or
+       Float. Some precision may be lost when storing a value into a database.
+       It then becomes possible for two different @Id objects to resolve to the
+       same database entry.
+    2) If @EmbeddedId is used in conjunction with @Id.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+public class IDA {
+    @Id
+    protected double d; //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use another data type if possible, or create a separate value for the id.
+
+package examples.rules.ejb.ejb3;
+
+public class IDAFixed {
+    @Id
+    protected int i;
+    protected double d; //FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 233-239.
+
+JSR 220: Enterprise JavaBeansTM,Version 3.0
+Java Persistence API, Section #9.1.14
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,199 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close JDBC connections in "finally" blocks [JDBC.CDBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close JDBC connections in "finally" blocks [JDBC.CDBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies local JDBC connection objects that are created in the method body,
+but are not closed in the "finally" block. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.RES.LEAKS.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not check unused connection objects.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Application Denial of Service
+
+If database connections are not closed and released appropriately, attackers
+might perform an App DOS attack to exhaust database connections, preventing
+other valid users from getting the connections.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore JDBC connection is created by the following types
+   Default value: 
+     org.springframework.jdbc.core.JdbcTemplate
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Failure to close and release database connections can make other users wait
+for connections for a long time. If connections are left unclosed, other users
+may have to wait for the connections to be returned by the database.
+
+Ensure that your code is structured to close and release JDBC resources in
+all cases, even in exception and error conditions. By including the close
+statement in a finally block, resources will be closed in all circumstances.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+
+public class CDBC {
+
+    public Connection getConnection() {
+        try {
+            return DriverManager.getConnection("your connection url");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void execute() throws SQLException {
+        Connection con = getConnection();
+
+        try {
+            // assume the connection is created here
+            Statement stmt = con.createStatement();
+            // ....
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        // VIOLATION : missing "finally" block with call to 'con.close()'
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a "finally" block and close all the connections in that block.
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+
+public class CDBCFixed {
+
+    public Connection getConnection() {
+        try {
+            return DriverManager.getConnection("your connection url");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void execute() throws SQLException {
+        Connection con = getConnection();
+
+        try {
+            // assume the connection is created here
+            Statement stmt = con.createStatement();
+            // ....
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null &amp;&amp; !con.isClosed()) {
+                con.close();  // FIXED
+            }
+        }
+        // FIXED : Added a "finally" block with a call to 'con.close()'
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from SERVLET.JDBC(v5.1)
+
+</PRE>
+</BODY>
+</HTML>

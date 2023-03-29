@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parameters of Methods [METRIC.NOPAR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parameters of Methods [METRIC.NOPAR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric counts the number of parameters (arguments) of methods, constructors.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Methods with a large number of parameters are often harder to reuse because 
+they tend to be specialized, which implies that classes are missing from the model. 
+The industry standard default limits for the number of method parameters (NOPAR)
+are {0,4}. If the amount of parameters exceeds 4, you should consider moving 
+an invoked method or pass an object. In general, methods and constructors 
+with more than 3 parameters are harder to comprehend, use, and maintain. 
+Source code containing invocations of methods that have long parameter lists tend to be
+error-prone. Invoking methods with similar signatures also tends to result in errors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+        import java.awt.Rectangle;
+        import java.util.List;
+ 
+        public class Foo
+        {
+4           public void bar(int x, int dx, int dy, List&lt;Integer&gt; list)
+            { /**/ }
+ 
+2           public void Qux(Rectangle rec, List&lt;Integer&gt; list)
+            { /**/ }
+ 
+0           public Foo()
+            { }
+        }
+
+</PRE>
+</BODY>
+</HTML>

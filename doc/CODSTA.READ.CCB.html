@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Comment the ends of control structures [CODSTA.READ.CCB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Comment the ends of control structures [CODSTA.READ.CCB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Close braces should have an end-of-line comment (a comment starting with "//")
+to indicate which statement they go with.  This rule will flag a violation for 
+each close brace which comes at the end of a control statement (either an "if", 
+"switch", "do", "for", "while", or "else" statement) and which either:
+
+a) does not have an end-of-line comment or
+b) has an end-of-line comment which does not match the regular expression 
+   specified in the parameters.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For most types of control statement, this rule will look for an end-of-line 
+comment after the close brace which ends the control statement.  "do-while" 
+statements are a special case.  For this case, the end-of-line comment should
+come after the semicolon at the end of the statement.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-End-of-Line Comments (in Regular Expressions)
+    -Comment for end of "if" block (Default is "^end if")
+    -Comment for end of "else" block (Default is "^end else")
+    -Comment for end of "switch" block (Default is "^end switch")
+    -Comment for end of "do" statement (Default is "^end do")
+    -Comment for end of "for" block (Default is "^end for")
+    -Comment for end of "while" block (Default is "^end while")
+
+The regular expressions specified in the parameters are not case sensitive.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It can be unclear which control statement a close brace goes with if there are
+a lot of braces.  Using some type of standard end-of-line comment to denote the
+ends of control statements can make the code much easier to read.  It is 
+recommended that you use your own system for labeling the ends of control 
+statements.  For instance, you could label the end of the first "for" statement
+"end for 1", the end of the second "for" statement "end for 2", etc.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class CCB {
+    public static void main(String[] args) {
+        for (int i = 0; i &lt; args.length; i++) {
+            System.err.println(args[i]);
+        }                                     //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Put an end-of-line comment matching the regular expression in the parameters
+after each close brace which ends the body of a control statement.
+
+package examples.rules.codsta.read;
+
+public class CCBFixed {
+    public static void main(String[] args) {
+        for (int i = 0; i &lt; args.length; i++) {
+            System.err.println(args[i]);
+        }  //end for 1                  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

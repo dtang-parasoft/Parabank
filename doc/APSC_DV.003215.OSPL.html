@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Write one statement per line [APSC_DV.003215.OSPL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Write one statement per line [APSC_DV.003215.OSPL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any line with more than a single statement. An error is
+reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Generally, this rule uses the same definition of the term 'statement' that a 
+Java parser uses. However, there are certain exceptions:
+
+- 'break' is not considered a statement; this allows for the common pattern
+  of single-line cases in a switch statement (e.g., 'case 0: a = 0; break;')
+- Field declarations, this(...)/super(...) expressions, and catch clauses are
+  considered statements; these constructs are very similar to statements in
+  their use and are therefore treated like statements
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class OSPL {
+    int method (int a, int b) {
+        int i = a + b; return i;  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class OSPLFixed {
+    int method (int a, int b) {
+        int i = a + b;  // FIXED
+        return i;  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 7.1 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#431">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#431</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

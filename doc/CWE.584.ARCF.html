@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using 'return's inside 'finally blocks if thare are other 'return's inside the try-catch block [CWE.584.ARCF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using 'return's inside 'finally blocks if thare are other 'return's inside the try-catch block [CWE.584.ARCF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if "return" statements that are used
+in both the "finally" block and elsewhere in the corresponding
+try-catch block. Violations are reported for "return" statements
+in "finally" blocks.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The code has a return statement inside a finally block, which will cause
+any thrown exception in the try block to be discarded." [CWE-584]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The "finally" block is always executed, so the finally 
+return will always be executed and the other "return" 
+statements will be ignored.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class ARCF
+{
+    public int method (String[] arg) {
+        try {
+            int i= 0;
+            System.in.read();
+            return i;
+        } catch (java.io.IOException e) {
+            System.err.println(e.getMessage ());
+            return 1;
+        } finally {
+            System.out.println("FINALLY...");
+            return -1;  //VIOLATION
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class ARCFFixed
+{
+   public int method (String[] arg) {
+        try {
+            int i= 0;
+            System.in.read();
+            return i;
+        } catch (java.io.IOException e) {
+            System.err.println(e.getMessage ());
+            return 1;
+        } finally {
+            System.out.println("FINALLY...");
+            //FIXED
+        }
+    }
+}            
+    
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+CWE-584: Return Inside Finally Block
+<A HREF="https://cwe.mitre.org/data/definitions/584.html">https://cwe.mitre.org/data/definitions/584.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR04-J. Do not complete abruptly from a finally block
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR04-J.+Do+not+complete+abruptly+from+a+finally+block">https://wiki.sei.cmu.edu/confluence/display/java/ERR04-J.+Do+not+complete+abruptly+from+a+finally+block</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR05-J. Do not let checked exceptions escape from a finally block
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR05-J.+Do+not+let+checked+exceptions+escape+from+a+finally+block">https://wiki.sei.cmu.edu/confluence/display/java/ERR05-J.+Do+not+let+checked+exceptions+escape+from+a+finally+block</A>
+
+</PRE>
+</BODY>
+</HTML>

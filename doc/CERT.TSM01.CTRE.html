@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not let "this" reference escape during construction [CERT.TSM01.CTRE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not let "this" reference escape during construction [CERT.TSM01.CTRE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where an anonymous class is published from within a
+constructor. This allows a "this" reference to escape, and in an environment
+with multiple threads, it may be possible to view an incompletely constructed
+object.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Concurrency
+
+Viewing of an incompletely constructed object can allow the program state to
+become inconsistent or unexpected, which can lead to confusion and erroneous
+behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CTRE {
+    public CTRE(EventSource source) {
+        source.registerListener( //VIOLATION
+            new EventListener() {
+                public void onEvent(Event e) {
+                    doSomething(e);
+                }
+            });
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not publish until the constructor has safely completed. One method is to
+create a separate initializing method, which calls the constructor, and then
+publishes afterwards.
+
+package examples.rules.trs;
+
+public class CTREFixed {
+    private final EventListener listener;
+
+    private CTREFixed () {
+        listener = new EventListener() { 
+            public void onEvent(Event e) {
+                doSomething(e);
+            }
+        };
+    }
+
+    public static CTREFixed newInstance(EventSource source) {
+        CTREFixed safe = new CTREFixed();
+        source.registerListener(safe.listener); //FIXED
+        return safe;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 39-42.
+
+SEI CERT Oracle Coding Standard for Java
+TSM01-J. Do not let the this reference escape during object construction
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/TSM01-J.+Do+not+let+the+this+reference+escape+during+object+construction">https://wiki.sei.cmu.edu/confluence/display/java/TSM01-J.+Do+not+let+the+this+reference+escape+during+object+construction</A>
+
+</PRE>
+</BODY>
+</HTML>

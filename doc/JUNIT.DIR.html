@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place each test class in the same location as the class that it tests [JUNIT.DIR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place each test class in the same location as the class that it tests [JUNIT.DIR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any JUnit test class that is not in the same directory
+as the class being tested. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that the test class follows the naming convention 
+&lt;class name&gt;Test.
+
+This rule defines a JUnit test class as any class which has a name ending in 
+"Test" and which meets one of the following conditions:
+
+1. The class extends "junit.framework.TestCase".
+2. The class has at least one method with the "org.junit.Test" annotation.  This
+only applies to JUnit 4.0 and later.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a test class is in the same directory as the class it tests, both will be
+compiled during a normal build.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit_p.html">http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit_p.html</A>
+
+</PRE>
+</BODY>
+</HTML>

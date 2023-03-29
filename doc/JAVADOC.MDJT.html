@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include a meaningful description in Javadoc tags [JAVADOC.MDJT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include a meaningful description in Javadoc tags [JAVADOC.MDJT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Certain Javadoc tags should never be "empty".  That is, they should contain some
+meaningful text after the name of the tag.  Among these tags are the following:
+
+@since
+@see
+@author
+@version
+@exception
+@throws
+@return
+@param
+
+This rule will flag a violation for each case where one of these tags is used
+and the tag is not followed by any text.  It is meaningless to use these tags as
+empty tags.  
+
+In addition, Javadoc tags should avoid simply restating information that is 
+available in the corresponding method declaration.  "@return" tags which simply
+give the return type of the method are not helpful.  "@return" tags should 
+describe what values are returned in which situations.  Similarly, "@param" tags
+which simply restate the name and type of the parameter are not helpful.  
+
+This rule will flag a violation for each case where one of the tags listed above
+is used as an empty tag.  Additionally, it will flag a violation for each 
+"@return" or "@param" tag which only restates information available in the 
+method declaration.    
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+Check the following:
+    -"public" (default true)
+    -"protected" (default true)
+    -"package-private" (default true)
+    -"private" (default false)
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+All Javadoc tags should contain meaningful descriptions.  If they do not contain
+a description (or contain only a description which restates information from the
+method declaration), the Javadoc tags do not serve any useful purpose.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The "@param" and "@return" tags shown below are not helpful because they only
+restate information from the method declaration. 
+
+package examples.rules.javadoc;
+
+public class MDJT {
+
+    /**
+     * isLessThanZero.
+     * 
+     * @param number int
+     * @return boolean
+     */  //2 VIOLATIONS
+    public static boolean isLessThanZero (int number) {
+        return number &lt; 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Include a description for all Javadoc tags which should contain a description.
+For "@param" tags, give the name of the corresponding parameter and a brief 
+description of its purpose.  For "@return" tags, describe what values are return
+under all possible conditions.
+
+package examples.rules.javadoc;
+
+public class MDJT_Fixed {
+
+    /**
+     * isLessThanZero.
+     * 
+     * @param number an integer that you would like to test to see whether or 
+     *     not it is less than zero
+     * @return boolean true if the number passed in is &lt; zero, false if it is &gt;= 
+     *     zero
+     */  //FIXED
+    public static boolean isLessThanZero (int number) {
+        return number &lt; 0;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

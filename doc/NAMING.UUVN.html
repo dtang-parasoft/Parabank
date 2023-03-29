@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use variables with identical names or names that differ only in case [NAMING.UUVN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use variables with identical names or names that differ only in case [NAMING.UUVN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks to make sure that local variables and parameters are not 
+declared with names that are identical to the name of another local variable
+or parameter in the same scope except in capitalization.  A violation will be 
+flagged for each local variable or parameter which violates this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+While it is not a compiler error to have two variables with names that differ
+only in case in the same scope, it is very confusing to the person reading the
+code.  Unique variable names should be used.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class UUVN {
+    public int sum(int foo){
+        int Foo= 9; //VIOLATION- already a parameter named "foo"
+        return foo+5;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class UUVNFixed {
+    public int sum(int foo){
+        int bar= 9; //FIXED
+        return foo+5;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, p. 18.
+
+</PRE>
+</BODY>
+</HTML>

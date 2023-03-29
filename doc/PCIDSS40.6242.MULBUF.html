@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not create multiple buffered wrappers on a single byte or character stream [PCIDSS40.6242.MULBUF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not create multiple buffered wrappers on a single byte or character stream [PCIDSS40.6242.MULBUF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"An input stream must not have more than one buffered wrapper. Instead, create and use only 
+one wrapper per input stream, either by passing it as an argument to the methods that need 
+it or by declaring it as a class variable."[SEI CERT Oracle Coding Standard for Java;
+FIO06-J. Do not create multiple buffered wrappers on a single byte or character stream]
+
+This rule detects when an object of InputStream type is used to create multiple
+buffered wrappers.
+
+The following wrapper types must have a unique parameter of InputStream type:
+  * java.io.BufferedInputStream
+  * java.io.BufferedOutputStream
+  * java.io.BufferedReader
+  * java.io.BufferedWriter
+  * java.util.Scanner
+  
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Programs that use multiple wrappers around a single input stream, however, can behave unpredictably
+depending on whether the wrappers allow look-ahead. An attacker can exploit this difference in behavior, 
+for example, by redirecting System.in (from a file) or by using the System.setIn() method to redirect 
+System.in."[SEI CERT Oracle Coding Standard for Java; FIO06-J. Do not create multiple buffered wrappers
+on a single byte or character stream]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps to keep your code secure from malicious attacks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    public static char getChar()
+        throws EOFException, IOException
+    {
+        BufferedInputStream in = new BufferedInputStream(System.in); // VIOLATION
+        int input = in.read();
+        if (input == -1) {
+            throw new EOFException();
+        }
+        return (char)input;
+    }
+
+    public static void main(String[] args)
+    {
+        try {
+            System.out.print("Enter first initial: ");
+            char first = getChar();
+            System.out.println("Your first initial is " + first);
+            System.out.print("Enter last initial: ");
+            char last = getChar();
+            System.out.println("Your last initial is " + last);
+        } catch (EOFException e) {
+            System.err.println("ERROR");
+        } catch (IOException e) {
+            System.err.println("ERROR");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, create and use only a single BufferedInputStream on System.in.
+
+public class Repair
+{
+    private static BufferedInputStream in = new BufferedInputStream(System.in);
+
+    public static char getChar()
+        throws EOFException, IOException
+    {
+        int input = in.read();
+        if (input == -1) {
+            throw new EOFException();
+        }
+        in.skip(1);
+        return (char)input;
+    }
+
+    public static void main(String[] args)
+    {
+        try {
+            System.out.print("Enter first initial: ");
+            char first = getChar();
+            System.out.println("Your first initial is " + first);
+            System.out.print("Enter last initial: ");
+            char last = getChar();
+            System.out.println("Your last initial is " + last);
+        } catch (EOFException e) {
+            System.err.println("ERROR");
+        } catch (IOException e) {
+            System.err.println("ERROR");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO06-J. Do not create multiple buffered wrappers on a single byte or character stream
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO06-J.+Do+not+create+multiple+buffered+wrappers+on+a+single+byte+or+character+stream">https://wiki.sei.cmu.edu/confluence/display/java/FIO06-J.+Do+not+create+multiple+buffered+wrappers+on+a+single+byte+or+character+stream</A>
+
+Tags: PCI-DSS, CERT
+
+</PRE>
+</BODY>
+</HTML>

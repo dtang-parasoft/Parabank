@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Rethrow certain exceptions if they are caught [EXCEPT.RTERR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Rethrow certain exceptions if they are caught [EXCEPT.RTERR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Certain exceptions and errors should always be rethrown if they are caught.  In
+particular, any error of type "java.lang.Error" (or any of its subclasses) 
+should always be rethrown.  With the default setting of the parameters, this 
+rule will flag a violation for each case where such an error is not rethrown in
+a "catch" block. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is generally not recommended that you catch errors of type "java.lang.Error"
+or any of its subclasses at all.  This standard is enforced by the rules 
+CODSTA.NCE and EXCEPT.NCERR.  However, if you do need to catch these errors for 
+some reason, they should be rethrown in the "catch" block.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Error Handling and Logging
+
+Catching "java.lang.Error" or any of its subclasses without rethrowing the error
+is an indication that errors are not being properly prevented and that the 
+application may be unstable.  Instead of just catching the error, you should fix 
+the code so that it will not throw the error at all.  If this is not possible,
+you should at least re-throw the error so that the calling code can handle the
+error gracefully.  
+
+Following this rule is especially important for "java.lang.ThreadDeath" because
+catching "ThreadDeath" without re-throwing it will cause the thread to stay 
+alive.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Exception/Error types which must be rethrown in "catch" blocks (fully qualified 
+ names)
+    -Default value is "java.lang.Error".
+    -The rule will check for caught exceptions and errors which match any of the
+     types provided in the list or which are a subtype of any of the types in
+     the list.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Errors of type "java.lang.Error" and its subclasses usually indicate abnormal
+conditions that need to be fixed.  If these errors are caught, they should be
+rethrown so that they can be displayed to the user or handled in the calling
+method.
+
+Some subclasses of error must be rethrown for other reasons.  For instance, if 
+an error of type "java.lang.ThreadDeath" is caught and not rethrown, the thread
+will not terminate.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class RTERR {
+    public void threadMethod(){
+        try{
+            Thread t= new Thread ();
+            // some threading code
+        }
+        catch (ThreadDeath td) {       //VIOLATION
+            System.err.println("Warning: ThreadDeath caught");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rethrow the exception/error in the body of the "catch" block, or don't catch the
+exception/error at all if it is an unchecked exception.
+
+package examples.rules.except;
+
+public class RTERRFixed {
+    public void threadMethod(){
+        try{
+            Thread t= new Thread ();
+            // some threading code
+        }
+        catch (ThreadDeath td) {       //FIXED
+            System.err.println("Warning: ThreadDeath caught");
+            throw td;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 6:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

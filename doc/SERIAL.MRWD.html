@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure the return type of 'readResolve()' and 'writeReplace()' methods are 'java.lang.Object' [SERIAL.MRWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure the return type of 'readResolve()' and 'writeReplace()' methods are 'java.lang.Object' [SERIAL.MRWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule indentifies the 'readResolve()' and 'writeReplace()' methods
+declared in a 'java.io.Serializable' class which does not have the
+correct return type 'java.lang.Object'. An error is reported for each
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Without the correct definition of the method, it will be ignored silently 
+in the serialization mechanism
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class MRWD implements Serializable {
+
+    protected Object[] readResolve() throws ObjectStreamException {  // VIOLATION
+    	return null;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the return type to 'java.lang.Object'
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class MRWDFixed implements Serializable {
+
+    protected Object readResolve() throws ObjectStreamException { // FIXED
+    	return null;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

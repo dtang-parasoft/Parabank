@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the same locking object to access variables [TRS.USL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the same locking object to access variables [TRS.USL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a variable is protected by different locks in
+different locations. If a variable is frequently protected by a specific lock,
+and then protected by a different lock (or no lock) then a violation is flagged
+as this could be a source of deadlock. The rule checks synchronized methods,
+synchronized blocks, as well as explicit Locks (JDK 1.5 or later).
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule makes the assumption that a variable that is frequently guarded by
+locks is intended to be synchronized. This rule ignores "final" primitives and
+Strings. Empty collections from "java.util.Collections" along with return values
+from the "singleton", "synchronized", and "unmodifiable" series of methods are
+also ignored.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Concurrency
+
+If a variable is accessed in two locations using a different lock then deadlock
+can occur.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class USL {
+    int count;
+
+    synchronized void updateOnce() {
+        count++;
+    }
+    synchronized void updateTwice() {
+        count += 2;
+    }
+    void updateThrice() {
+        count += 3; //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class USLFixed {
+    int count;
+
+    synchronized void updateOnce() {
+        count++;
+    }
+    synchronized void updateTwice() {
+        count += 2;
+    }
+    synchronized void updateThrice() { //FIXED
+        count += 3;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 27-29.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow class name conventions defined for base classes [NAMING.EXTENDS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow class name conventions defined for base classes [NAMING.EXTENDS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks naming conventions for classes that extend other classes.
+You can configure it to check conventions for different base classes.
+It reports a violation for each class name that does not follow the defined convention.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Configure expected name for class extends superclass" table has three column:
+
+- first "Check hierarchy"
+This field specifies whether you want to check the entire hierarchy or only one parent class. 
+The default is checked.
+
+- second "Expected class name"
+The regular expression that classes which extend the specified classes (configured in the third column) should follow.
+
+- third "Fully qualified name of superclass" 
+The class whose children should follow this naming convention.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule enforces naming conventions for classes extending superclasses such as AbstractController, AbstractModel and other.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Create a Test Configuration with this rule, and add row to the parameterized table in the rule configuration. 
+Check the first column. In second column, add the regular expression ^.*Entity$. 
+In third, add examples.rules.naming.Entity. Then, run this Test Configuration on the following example:
+
+a) simple example:
+
+package examples.rules.naming;
+
+public class Entity {  
+ 
+}
+
+public class Person extends Entity {  // VIOLATION
+
+}
+
+b) example with hierarchy:
+
+package examples.rules.naming;
+
+public class Entity {  
+ 
+}
+
+public class Person extends Entity {  // VIOLATION Person should be named PersonEntity
+
+}
+
+public class Worker extends Person {  // VIOLATION Worker should be named WorkerEntity because highest parent is Entity
+
+}
+
+c) example without hierarchy (for this test you must uncheck "check hierarchy" option):
+
+package examples.rules.naming;
+
+public class Entity {  
+ 
+}
+
+public class Person extends Entity {  // VIOLATION Person class should be named PersonEntity
+
+}
+
+public class Worker extends Person {  // NO VIOLATION Worker class does not directly inherit Entity
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Change the example to:
+
+a)
+
+package examples.rules.naming;
+
+public class Entity {  
+ 
+}
+
+public class PersonEntity extends Entity {  // NO VIOLATION
+
+}
+
+b) 
+
+package examples.rules.naming;
+
+public class Entity {  
+ 
+}
+
+public class PersonEntity extends Entity {  // NO VIOLATION
+
+}
+
+public class WorkerEntity extends PersonEntity {  // NO VIOLATION
+
+}
+
+</PRE>
+</BODY>
+</HTML>

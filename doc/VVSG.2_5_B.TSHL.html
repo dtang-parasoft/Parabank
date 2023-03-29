@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'Thread.sleep()' while holding a lock since doing so can cause poor performance and deadlocks [VVSG.2_5_B.TSHL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'Thread.sleep()' while holding a lock since doing so can cause poor performance and deadlocks [VVSG.2_5_B.TSHL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+The 'Thread.sleep()' methods should not be called when a lock is held.  This rule
+will flag a violation for each call to 'Thread.sleep()' from within a 
+"synchronized" method or a "synchronized" block.  
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Before fixing each violation of this rule, you should ensure that replacing the 
+call to 'Thread.sleep()' with a call to 'wait()' is appropriate.  When the call to
+'Thread.sleep()' is made, it may not yet be safe to release the lock that is held
+by the current thread.  You should ensure that releasing the lock and allowing 
+another thread to run in the "synchronized" method or section of code is safe 
+before fixing any violations.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Calling 'Thread.sleep()' when a lock is held can easily lead to deadlocks; therefore,
+you should be careful about calling this method while holding a lock.  Secure 
+applications should avoid situations which can lead to deadlocks.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Calling 'Thread.sleep()' when a lock is held can result in poor performance and 
+scalability as well as deadlocks.  This is because other threads may be waiting to 
+acquire the lock held by the method that calls 'Thread.sleep()'.  The 'Thread.
+sleep()' methods do not release the lock.  Calling 'wait()' instead of 'Thread.
+sleep()', on the other hand, will release the lock and allow the other threads to 
+run.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class TSHL {
+    static TSHL _TSHLField= new TSHL();
+    
+    public static void main(String[] args) {
+        Waiter waiter= _TSHLField.new Waiter();
+        new Thread(waiter).start();
+        new Thread(waiter).start();
+    }
+    
+    class Waiter implements Runnable {
+
+        public void run() {
+            sleepMethod(1000);
+        }   
+    }
+    
+    public synchronized void sleepMethod (long timeToWait) {
+        try {
+            Thread.sleep(timeToWait);  //VIOLATION
+        } catch (InterruptedException ex) {
+            // ignore exception
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Call 'wait()' in a loop which tests the liveness condition instead of calling 
+'Thread.sleep()'.  If you do not understand why 'wait()' must be called in a loop, 
+see the rule TRS.UWIL and its documentation.  Calling 'wait()' instead of 
+'Thread.sleep()' will release the lock that the first thread holds so that the 
+second thread can enter the 'sleepMethod()' method while the first thread is 
+waiting.
+
+package examples.rules.trs;
+
+public class TSHLFixed {
+    static TSHLFixed _TSHLField= new TSHLFixed();
+    
+    public static void main(String[] args) {
+        Waiter waiter= _TSHLField.new Waiter();
+        new Thread(waiter).start();
+        new Thread(waiter).start();
+    }
+    
+    class Waiter implements Runnable {
+
+        public void run() {
+            sleepMethod(1000);
+        }   
+    }
+    
+    public synchronized void sleepMethod(long timeToWait) {
+        long end = System.currentTimeMillis() + timeToWait;
+        long remainingTime = timeToWait;
+        while (remainingTime &gt; 0) {
+            try {
+                wait(remainingTime);  //FIXED 
+            } catch (InterruptedException ex) {
+                // ignore exception
+            }
+            remainingTime = end - System.currentTimeMillis();
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 8:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK09-J. Do not perform operations that can block while holding a lock
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK09-J.+Do+not+perform+operations+that+can+block+while+holding+a+lock">https://wiki.sei.cmu.edu/confluence/display/java/LCK09-J.+Do+not+perform+operations+that+can+block+while+holding+a+lock</A>
+
+</PRE>
+</BODY>
+</HTML>

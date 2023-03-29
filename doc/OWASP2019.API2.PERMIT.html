@@ -1,0 +1,197 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid EJB 3 methods without security annotations [OWASP2019.API2.PERMIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid EJB 3 methods without security annotations [OWASP2019.API2.PERMIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects authorization weaknesses that may arise when a EJB 3 sessions bean
+is ported to a multi-user environment. @RolesAllowed, @PermitAll, and @DenyAll specify 
+the security roles permitted to access methods in an application. 
+Methods without these annotations are visible to authenticated users.
+
+A violation is reported for each class that is marked with one of following annotations:
+-@MessageDriven
+-@Stateful
+-@Stateless
+and that contains a non-constructor method without one of the following annotations:
+-@RolesAllowed
+-@PermitAll
+-@DenyAll
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not work with descriptors-based security roles. When you use descriptors to configure security roles,
+then this rule reports false positive results. 
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+category: Weak Security Controls
+category: Data Security
+category: Unsafe Environment Configuration
+category: Exposing Sensitive Data
+
+Enforcing this rule will help  protect against the OWASP 2013 Top 10 
+application vulnerabilities, including:
+
+A4-Insecure Direct Object Reference
+A7-Missing Function Level Access Control
+
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule reduces the attack surface by carefully mapping roles with method or class functionality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+@Stateful
+public class PERMIT_1 {
+    
+    public PERMIT_1() {
+        // constructor
+    }
+    
+    public void test1() {
+        //BAD
+    }
+    
+    @RolesAllowed(value={"role1", "role2"})
+    public void test2() {
+        //OK
+    }
+    
+    @DenyAll
+    public void test3() {
+        //OK
+    }
+    
+    @PermitAll
+    public void test4() {
+        //OK
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+@Stateful
+@PermitAll
+public class PERMIT_1 {
+    
+    public PERMIT_1() {
+        // constructor
+    }
+    
+    public void test1() {
+        //OK
+    }
+    
+    @RolesAllowed(value={"role1", "role2"})
+    public void test2() {
+        //OK
+    }
+    
+    public void test3() {
+        //OK
+    }
+    
+    @DenyAll
+    public void test4() {
+        //OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013:
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-862: Missing Authorization
+<A HREF="https://cwe.mitre.org/data/definitions/862.html">https://cwe.mitre.org/data/definitions/862.html</A>
+
+2021 CWE Weaknesses On the Cusp
+CWE-284: Improper Privilege Management
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-841: Improper Enforcement of Behavioral Workflow
+<A HREF="https://cwe.mitre.org/data/definitions/841.html">https://cwe.mitre.org/data/definitions/841.html</A>
+
+Using EJB 3.0 Security Annotations
+<A HREF="http://download.oracle.com/docs/cd/B32110_01/web.1013/b28221/servsecr004.htm">http://download.oracle.com/docs/cd/B32110_01/web.1013/b28221/servsecr004.htm</A>
+
+JSR-250 Common Annotations for the Java Platform Evaluation 1.0 Final Release
+<A HREF="http://download.oracle.com/otndocs/jcp/caj-1.0-fr-eval-oth-JSpec/">http://download.oracle.com/otndocs/jcp/caj-1.0-fr-eval-oth-JSpec/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000460: The application must enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies
+
+</PRE>
+</BODY>
+</HTML>

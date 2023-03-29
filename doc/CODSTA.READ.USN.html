@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid literal constants [CODSTA.READ.USN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid literal constants [CODSTA.READ.USN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses numeric literal constants. An error is 
+reported if a literal constant is used. To prevent the reporting of spurious 
+errors, Jtest does not report an error for some literal constants.  Some 
+examples of literal constants for which no errors will be reported with the 
+default settings of the parameters are:
+
+      -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0.0, 0L, 0.0F, 0.0D, 1F
+
+The rule can be configured to use a custom list of legal literal constants. To 
+configure this rule, open the Test Configurations | Static tab. Right click the 
+rule and select "View/Change Rule Parameters".  Modify the list titled "literal 
+constants allowed(in regular expression)".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not report any violations for literal constants used in calls to
+the constructors for "enum" constants.  It is acceptable to use literal 
+constants in these cases because the "enum" constant itself usually serves as a 
+named constant for that literal constant.  Also, it is not syntactically 
+legal to define a "static final" field before a call to an "enum" constant 
+constructor within the body of an "enum" type.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Using hard-coded constant values is error prone.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore non-"static" "final" variables
+    -Default is "false"
+-Ignore literal constants in annotations
+    -Default is "true"
+    -If this parameter is enabled, the rule will ignore literal constants inside
+     annotations. In the following example, '512' would not be
+     flagged:
+         @Column(name="SOME_COLUMN", length=512)
+         public String getData() { return data; }
+-Ignore literal constants in "switch" cases
+    -Default is "false"
+    -If this parameter is enabled, the rule will ignore literal constants which
+     are used to specify cases in "switch" statements.
+-literal constants allowed(in regular expression):
+    -This rule can be configured to use a custom list of legal literal constants.
+     The default list (literal constants allowed):
+        ^(\\+|-)?1([Ll]|(\\.0+)?[FfDd]?)?$,
+        ^\\+?[2-9]([Ll]|(\\.0+)?[FfDd]?)?$,  
+        ^\\+?10([Ll]|(\\.0+)?[FfDd]?)?$,
+        ^\\+?(0)+([Ll]|(\\.0+)?[FfDd]?)?$
+-Ignore literal constants in the following types and/or methods (in form of
+ &lt;regular expression for fully qualified type&gt;#&lt;method name&gt;(&lt;parameter1 fully 
+  qualified type&gt;,&lt;parameter2 fully qualified type&gt;)):
+    -Specify types and/or methods that should not be checked for literal 
+     constants.
+    -Either the type or the method must be specified, but it is not required
+     that you specify both.  If only a method is specified, that method will be
+     excluded from the checking for all types.  Similarly, if only a type is
+     specified, all methods in types matching that regular expression will be
+     excluded from the checking.  Examples:
+         -examples\.rules.*  (only type specified)
+         -equals(java.lang.Object)  (only method specified)
+         -examples\.rules.*#equals(java.lang.Object)  (both specified)
+    -By default, the list contains only "hashCode()".
+-Ignore literal constants passed to the following methods: 
+    -Specify the types and methods for which the parameters should not be 
+     checked.  (Default value is "^java\\.awt\\.Color$#." so that no violations
+     are flagged for parameters to the methods of "java.awt.Color".)
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Named constants ("final static" fields) make the code much easier to understand 
+and maintain.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class USN {
+    public int[] getArray () {
+        return new int [1000];  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Put the literal constant into a "static final" field.
+
+package examples.rules.codsta.read;
+
+public class USNFixed {
+    private static final int ARRAY_SIZE = 1000;
+    public int[] getArray () {
+        return new int [ARRAY_SIZE];  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place "default" as the last case of the "switch" statement [PB.PDCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place "default" as the last case of the "switch" statement [PB.PDCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "default" case that is not the last case of
+the "switch" statement. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is a best practice for the "default" case to be the last case of the 
+"switch" statement. If the "default" case is not the last case, you must 
+ensure that the "default" case has a "break" statement. Otherwise, it will
+fall through to the next case.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class PDCL {
+
+    public void method() {
+        switch(3) {
+        case 1 : System.out.println("case 1");
+        default : System.out.println("default case");  // VIOLATION
+        case 2 : System.out.println("case 2");
+        }
+        // output: 
+        // default case
+        // case 2
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place the "default" case last.
+
+public class PDCLFixed {
+
+    public void method() {
+        switch(3) {
+        case 1 : System.out.println("case 1");
+        case 2 : System.out.println("case 2");
+        default : System.out.println("default case");  // FIXED
+        }
+        // output:
+        // default case
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+MSC57-J. Strive for logical completeness
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC57-J.+Strive+for+logical+completeness">https://wiki.sei.cmu.edu/confluence/display/java/MSC57-J.+Strive+for+logical+completeness</A>
+
+</PRE>
+</BODY>
+</HTML>

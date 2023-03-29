@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure proper usage of StringBuilder/StringBuffer objects [BD.PB.SBONE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure proper usage of StringBuilder/StringBuffer objects [BD.PB.SBONE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects the improper use of StringBuilder or StringBuffer objects. The proper usage is to
+change its state before using its content. No violation is reported if the object state is changed
+on at least one path before its content is used.
+
+Methods considered changing state are :
+
+   * java.lang.StringBuilder.append
+   * java.lang.StringBuilder.appendCodePoint
+   * java.lang.StringBuilder.delete
+   * java.lang.StringBuilder.deleteCharAt
+   * java.lang.StringBuilder.insert
+   * java.lang.StringBuilder.replace
+   * java.lang.StringBuilder.reverse
+   * java.lang.StringBuilder.setCharAt
+   
+and corresponding methods of java.lang.StringBuffer.
+
+Methods considered as using content are :
+
+   * java.lang.StringBuilder.getChars
+   * java.lang.StringBuilder.subSequence
+   * java.lang.StringBuilder.substring
+   * java.lang.StringBuilder.toString
+   
+and corresponding methods of java.lang.StringBuffer.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+public class Example
+{
+    public String example1()
+    {
+        StringBuilder sb = new StringBuilder("abc");
+        return sb.toString();
+    } // VIOLATION
+
+    public String example2()
+    {
+        StringBuffer sb = new StringBuffer("");
+        sb.append("qwe");
+        return "def";
+    } // VIOLATION
+}
+
+The problem is that in first example there is no state changing method for created StringBuilder,
+therefore it should not be created at all.
+In the second example we change the state of created StringBuffer, but we do not use its content
+(for example by calling "toString()" method), which is a possible bug.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    public String example1()
+    {
+        StringBuilder sb = new StringBuilder("abc");
+        sb.replace(0, 2, "xyz");
+        return sb.toString();
+    } // NO VIOLATION
+
+    public String example2()
+    {
+        StringBuffer sb = new StringBuffer("");
+        sb.append("qwe");
+        return sb.toString();
+    } // NO VIOLATION
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Initialize all local variables explicitly at the declaration statement [CWE.456.LV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Initialize all local variables explicitly at the declaration statement [CWE.456.LV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies local variables that are not initialized in their 
+declaration. An error is reported for each occurrence.
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag "final" local variables since the compiler enforces
+that "final" local variables are explicitly initialized.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Uninitialized variables are a potential source of bugs.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class LV {
+    public boolean method (int size) {
+        int max;  // VIOLATION
+        return size &gt; 0;
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Initialize all local variables in their declaration.
+
+package examples.rules.init;
+
+public class LVFixed {
+    public boolean method (int size) {
+        int max = 0;  // FIXED
+        return size &gt; 0;
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-456: Missing Initialization of a Variable
+<A HREF="https://cwe.mitre.org/data/definitions/456.html">https://cwe.mitre.org/data/definitions/456.html</A>
+
+Section 6.3 of <A HREF="http://www.oracle.com/technetwork/java/codeconventions-150003.pdf">http://www.oracle.com/technetwork/java/codeconventions-150003.pdf</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+DCL53-J. Minimize the scope of variables
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/DCL53-J.+Minimize+the+scope+of+variables">https://wiki.sei.cmu.edu/confluence/display/java/DCL53-J.+Minimize+the+scope+of+variables</A>
+
+</PRE>
+</BODY>
+</HTML>

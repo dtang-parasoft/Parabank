@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify @Retention for annotation type declarations [PB.CUB.SRAD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify @Retention for annotation type declarations [PB.CUB.SRAD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies annotation type declarations which do not specify a
+@Retention (java.lang.annotation.Retention) annotation.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a '@Retention' annotation is not specified for an annotation type declaration
+then it defaults to 'RetentionPolicy.CLASS'. This means that the annotation is
+retained by the class file, but the VM may dispose of it. If reflection is used
+to access the annotation then 'RetetionPolicy.RUNTIME' should be used.
+Otherwise, the annotation may not be visible at runtime which could cause
+confusion. So, it is often beneficial to always explicitly specify '@Retention'
+to clarify an annotation's intended use.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public @interface SRAD {
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify @Retention for the annotation type declaration.
+
+package examples.rules.pb.cub;
+
+@Retention(RetentionPolicy.SOURCE)
+public @interface SRADFixed {
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Retention (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/annotation/Retention.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/annotation/Retention.html</A>
+
+RetentionPolicy (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/annotation/RetentionPolicy.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/annotation/RetentionPolicy.html</A>
+
+</PRE>
+</BODY>
+</HTML>

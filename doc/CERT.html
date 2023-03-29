@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+SEI CERT Oracle Coding Standard for Java [CERT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+SEI CERT Oracle Coding Standard for Java [CERT]
+</STRONG>
+<p>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="CERT.DCL00.html">DCL00-J: Prevent class initialization cycles [CERT.DCL00]</a></code><br>
+<code><a href="CERT.DCL02.html">DCL02-J: Do not modify the collector's elements during an enhanced for statement [CERT.DCL02]</a></code><br>
+<code><a href="CERT.DCL51.html">DCL51-J: Do not shadow or obscure identifiers in subscopes [CERT.DCL51]</a></code><br>
+<code><a href="CERT.DCL52.html">DCL52-J: Do not declare more than one variable per declaration [CERT.DCL52]</a></code><br>
+<code><a href="CERT.DCL53.html">DCL53-J: Minimize the scope of variables [CERT.DCL53]</a></code><br>
+<code><a href="CERT.DCL57.html">DCL57-J: Avoid ambiguous overloading of variable arity methods [CERT.DCL57]</a></code><br>
+<code><a href="CERT.DCL60.html">DCL60-J: Avoid cyclic dependencies between packages [CERT.DCL60]</a></code><br>
+<code><a href="CERT.ENV02.html">ENV02-J: Do not trust the values of environment variables [CERT.ENV02]</a></code><br>
+<code><a href="CERT.ERR00.html">ERR00-J: Do not suppress or ignore checked exceptions [CERT.ERR00]</a></code><br>
+<code><a href="CERT.ERR01.html">ERR01-J: Do not allow exceptions to expose sensitive data [CERT.ERR01]</a></code><br>
+<code><a href="CERT.ERR03.html">ERR03-J: Restore prior object state on method failure [CERT.ERR03]</a></code><br>
+<code><a href="CERT.ERR04.html">ERR04-J: Do not complete abruptly from finally block [CERT.ERR04]</a></code><br>
+<code><a href="CERT.ERR05.html">ERR05-J: Do not let checked exceptions escape from a finally block [CERT.ERR05]</a></code><br>
+<code><a href="CERT.ERR07.html">ERR07-J: Do not throw RuntimeExceptions, Exceptions or Throwable [CERT.ERR07]</a></code><br>
+<code><a href="CERT.ERR08.html">ERR08-J: Do not catch NullPointerExceptions or any of its ancestors [CERT.ERR08]</a></code><br>
+<code><a href="CERT.ERR09.html">ERR09-J: Do not allow untrusted code to terminate the JVM [CERT.ERR09]</a></code><br>
+<code><a href="CERT.ERR51.html">ERR51-J: Prefer user-defined exceptions over more general exception types [CERT.ERR51]</a></code><br>
+<code><a href="CERT.ERR54.html">ERR54-J: Use a try-with-resources statement to safely handle closeable resources [CERT.ERR54]</a></code><br>
+<code><a href="CERT.EXP00.html">EXP00-J: Do not ignore values returned by methods [CERT.EXP00]</a></code><br>
+<code><a href="CERT.EXP01.html">EXP01-J: Do not use a null in a case where an object is required [CERT.EXP01]</a></code><br>
+<code><a href="CERT.EXP02.html">EXP02-J: Do not use the Object.equals() method to compare two arrays [CERT.EXP02]</a></code><br>
+<code><a href="CERT.EXP03.html">EXP03-J: Do not use the equality operators when comparing boxed values [CERT.EXP03]</a></code><br>
+<code><a href="CERT.EXP05.html">EXP05-J: Do not follow a write by a subsequent write or read of the same object within an expression [CERT.EXP05]</a></code><br>
+<code><a href="CERT.EXP50.html">EXP50-J: Do not confuse abstract object equality with reference equality [CERT.EXP50]</a></code><br>
+<code><a href="CERT.EXP51.html">EXP51-J: Do not perform assignments in conditional expressions [CERT.EXP51]</a></code><br>
+<code><a href="CERT.EXP52.html">EXP52-J: Use braces for the body of an if, for, or while statement [CERT.EXP52]</a></code><br>
+<code><a href="CERT.EXP53.html">EXP53-J: Use parentheses for precedence of operation [CERT.EXP53]</a></code><br>
+<code><a href="CERT.EXP55.html">EXP55-J: Use the same type for the second and third operands in conditional expressions [CERT.EXP55]</a></code><br>
+<code><a href="CERT.FIO03.html">FIO03-J: Remove temporary files before termination [CERT.FIO03]</a></code><br>
+<code><a href="CERT.FIO04.html">FIO04-J: Release resources when they are no longer needed [CERT.FIO04]</a></code><br>
+<code><a href="CERT.FIO05.html">FIO05-J: Do not expose buffers created using the wrap() or duplicate() methods to untrusted code [CERT.FIO05]</a></code><br>
+<code><a href="CERT.FIO06.html">FIO06-J: Do not create multiple buffered wrappers on a single byte of character strream [CERT.FIO06]</a></code><br>
+<code><a href="CERT.FIO07.html">FIO07.JDo not let external process block on IO buffers [CERT.FIO07]</a></code><br>
+<code><a href="CERT.FIO08.html">FIO08-J: Distinguish between characters or bytes read from a stream and -1 [CERT.FIO08]</a></code><br>
+<code><a href="CERT.FIO09.html">FIO09-J: Do not rely on the write() method to output integers outside the range 0 - 255 [CERT.FIO09]</a></code><br>
+<code><a href="CERT.FIO12.html">FIO12-J: Provide methods to read a write little-endian data [CERT.FIO12]</a></code><br>
+<code><a href="CERT.FIO13.html">FIO13-J: Do not log sensitive information outside a trusted boundary [CERT.FIO13]</a></code><br>
+<code><a href="CERT.FIO14.html">FIO14-J: Perform proper cleanup at program termination [CERT.FIO14]</a></code><br>
+<code><a href="CERT.FIO16.html">FIO16-J: Canonicalize path names before validating them. [CERT.FIO16]</a></code><br>
+<code><a href="CERT.IDS00.html">IDS00-J: Prevent SQL Injection [CERT.IDS00]</a></code><br>
+<code><a href="CERT.IDS03.html">IDS03-J: Do not log unsanitized user input [CERT.IDS03]</a></code><br>
+<code><a href="CERT.IDS06.html">IDS06-J: Exclude unsanitized uer input from format strings [CERT.IDS06]</a></code><br>
+<code><a href="CERT.IDS07.html">IDS07-J: Sanitize untrusted data passed to Runtime.exec() method [CERT.IDS07]</a></code><br>
+<code><a href="CERT.IDS11.html">IDS11-J: Perform any string modifications before validation [CERT.IDS11]</a></code><br>
+<code><a href="CERT.IDS16.html">IDS16-J: Prevent XML injection [CERT.IDS16]</a></code><br>
+<code><a href="CERT.IDS51.html">IDS51-J: Properly encode or escape output [CERT.IDS51]</a></code><br>
+<code><a href="CERT.IDS52.html">IDS52-J: Prevent code injection [CERT.IDS52]</a></code><br>
+<code><a href="CERT.IDS53.html">IDS53-J: Prevent XPath Injection [CERT.IDS53]</a></code><br>
+<code><a href="CERT.IDS54.html">IDS54-J: Prevent LDAP injection [CERT.IDS54]</a></code><br>
+<code><a href="CERT.JNI00.html">JNI00-J: Define wrappers around native methods [CERT.JNI00]</a></code><br>
+<code><a href="CERT.JNI01.html">JNI01-J: Safely invoke standard APIs that perform tasks using the immediate caller's class loader instance (LoadLibrary) [CERT.JNI01]</a></code><br>
+<code><a href="CERT.LCK00.html">LCK00-J: Use private final lock objects to synchronize classes that may interact with untrusted code [CERT.LCK00]</a></code><br>
+<code><a href="CERT.LCK01.html">LCK01-J: Do not synchronize on objects that may be reused [CERT.LCK01]</a></code><br>
+<code><a href="CERT.LCK02.html">LCK02-J: Do not synchronize on the class object returned by getClass() [CERT.LCK02]</a></code><br>
+<code><a href="CERT.LCK04.html">LCK04-J: Do not synchronize on a collection view if the backing collection is accessible [CERT.LCK04]</a></code><br>
+<code><a href="CERT.LCK05.html">LCK05-J: Synchronize access to static fields that can be modified by untrusted code [CERT.LCK05]</a></code><br>
+<code><a href="CERT.LCK06.html">LCK06-J: Do not use an instance lock to protect shared static data [CERT.LCK06]</a></code><br>
+<code><a href="CERT.LCK07.html">LCK07-J: Avoid deadlock by requesting and releasing locks in the same order [CERT.LCK07]</a></code><br>
+<code><a href="CERT.LCK08.html">LCK08-J: Ensure acrively held locks are released on exceptional conditions [CERT.LCK08]</a></code><br>
+<code><a href="CERT.LCK09.html">LCK09-J: Do not perform operations that can block while holding a lock [CERT.LCK09]</a></code><br>
+<code><a href="CERT.LCK10.html">LCK10-J: Use a correct form of the double-checked locking idiom [CERT.LCK10]</a></code><br>
+<code><a href="CERT.MET02.html">MET02-J: Do not use deprecated or obsolete classes or methods [CERT.MET02]</a></code><br>
+<code><a href="CERT.MET04.html">MET04-J: Do not increase the accessibility of overridden or hidden methods [CERT.MET04]</a></code><br>
+<code><a href="CERT.MET06.html">MET06-J: Do not invoke overridable methods in clone() [CERT.MET06]</a></code><br>
+<code><a href="CERT.MET07.html">MET07-J: Never declare a class method that hides a method declared in a superclass or superinterfaces [CERT.MET07]</a></code><br>
+<code><a href="CERT.MET08.html">MET08-J: Preserve the equality contract when overriding the equals() method [CERT.MET08]</a></code><br>
+<code><a href="CERT.MET09.html">MET09-J: Classes that define equals() method must also define hashCode() method [CERT.MET09]</a></code><br>
+<code><a href="CERT.MET11.html">MET11-J: Ensure that keys used in comparison operations are immutable [CERT.MET11]</a></code><br>
+<code><a href="CERT.MET12.html">MET12-J: Do not use finalizers [CERT.MET12]</a></code><br>
+<code><a href="CERT.MET50.html">MET50-J: Avoid ambiguous or confusing uses of overloading [CERT.MET50]</a></code><br>
+<code><a href="CERT.MET52.html">MET52-J: Do not use the clone() method to copy untrusted method parameters [CERT.MET52]</a></code><br>
+<code><a href="CERT.MET53.html">MET53-J: Ensure that the clone() method calls super.clone() [CERT.MET53]</a></code><br>
+<code><a href="CERT.MSC00.html">MSC00-J: Use SSLSocket rather than Socket for secure data exchange [CERT.MSC00]</a></code><br>
+<code><a href="CERT.MSC01.html">MSC01-J: Do not use an empty infinite loop [CERT.MSC01]</a></code><br>
+<code><a href="CERT.MSC02.html">MSC02-J: Generate strong random numbers [CERT.MSC02]</a></code><br>
+<code><a href="CERT.MSC03.html">MSC03-J: Never hard code sensitive information [CERT.MSC03]</a></code><br>
+<code><a href="CERT.MSC04.html">MSC04-J: Do not leak memory [CERT.MSC04]</a></code><br>
+<code><a href="CERT.MSC06.html">MSC06-J: Do not modify the underlying collection when an iteration is in progress [CERT.MSC06]</a></code><br>
+<code><a href="CERT.MSC07.html">MSC07-J: Prevent multiple instantiations of singleton objects [CERT.MSC07]</a></code><br>
+<code><a href="CERT.MSC52.html">MSC52-J: Finish every set of statements associated with a case label with a break statement [CERT.MSC52]</a></code><br>
+<code><a href="CERT.MSC56.html">MSC56-J: Detect and remove superfluous code and values [CERT.MSC56]</a></code><br>
+<code><a href="CERT.MSC57.html">MSC57-J: Strive for logical completeness [CERT.MSC57]</a></code><br>
+<code><a href="CERT.MSC60.html">MSC60-J: Do not use assertions to verify the absence of runtime errors [CERT.MSC60]</a></code><br>
+<code><a href="CERT.MSC61.html">MSC61-J: Do not use insecure or weak cryptographic algorithms [CERT.MSC61]</a></code><br>
+<code><a href="CERT.MSC62.html">MSC62-J: Store passwords using a hash function [CERT.MSC62]</a></code><br>
+<code><a href="CERT.NUM00.html">NUM00-J: Detect or prevent integer overflow [CERT.NUM00]</a></code><br>
+<code><a href="CERT.NUM01.html">NUM01-J: Do not perform bitwise and arithmetic operations on the same data [CERT.NUM01]</a></code><br>
+<code><a href="CERT.NUM02.html">NUM02-J: Ensure that division and remainder operations do not result in divide by zero errors [CERT.NUM02]</a></code><br>
+<code><a href="CERT.NUM04.html">NUM04-J: Do not use floating-point numbers if precise computation is required [CERT.NUM04]</a></code><br>
+<code><a href="CERT.NUM07.html">NUM07-J: Do not attempt comparisons with NaN [CERT.NUM07]</a></code><br>
+<code><a href="CERT.NUM08.html">NUM08-J: Check floating-point inputs for exceptional values [CERT.NUM08]</a></code><br>
+<code><a href="CERT.NUM09.html">NUM09-J: Do not use floating-point variables as loop counters [CERT.NUM09]</a></code><br>
+<code><a href="CERT.NUM10.html">NUM10-J: Do not construct BigDecimal objects from floating-point literals [CERT.NUM10]</a></code><br>
+<code><a href="CERT.NUM12.html">NUM12-J: Ensure conversions of numeric types to narrower types do not result in lost or misinterpreted data [CERT.NUM12]</a></code><br>
+<code><a href="CERT.NUM13.html">NUM13-J: Avoid loss of precision when converting primitive integers to floating-point [CERT.NUM13]</a></code><br>
+<code><a href="CERT.NUM50.html">NUM50-J: Convert integers to floating point for floating-point operations [CERT.NUM50]</a></code><br>
+<code><a href="CERT.NUM51.html">NUM51-J: Do not assume that the remainder operator always returns a nonnegative result for integral operands [CERT.NUM51]</a></code><br>
+<code><a href="CERT.OBJ03.html">OBJ03-J: Prevent heap pollution [CERT.OBJ03]</a></code><br>
+<code><a href="CERT.OBJ04.html">OBJ04-J: Provide mutable classes with copy functionality to safely allow passing instances to untrusted code [CERT.OBJ04]</a></code><br>
+<code><a href="CERT.OBJ05.html">OBJ05-J: Defensively copy private mutable class members before returning their references [CERT.OBJ05]</a></code><br>
+<code><a href="CERT.OBJ06.html">OBJ06-J: Defensively copy mutable inputs and mutable internal components [CERT.OBJ06]</a></code><br>
+<code><a href="CERT.OBJ07.html">OBJ07-J: Sensitive classes must not let themselves be copied [CERT.OBJ07]</a></code><br>
+<code><a href="CERT.OBJ08.html">OBJ08-J: Do not expose private members of an outer class from within a nested class [CERT.OBJ08]</a></code><br>
+<code><a href="CERT.OBJ09.html">OBJ09-J: Compare classes and not class names [CERT.OBJ09]</a></code><br>
+<code><a href="CERT.OBJ10.html">OBJ10-J: Do not use public static nonfinal variables [CERT.OBJ10]</a></code><br>
+<code><a href="CERT.OBJ11.html">OBJ11-J: Be wary of letting constructors throw exceptions [CERT.OBJ11]</a></code><br>
+<code><a href="CERT.OBJ13.html">OBJ13-J: Ensure that references to mutable objects are not exposed [CERT.OBJ13]</a></code><br>
+<code><a href="CERT.OBJ51.html">OBJ51-J: Minimize the accessibility of classes and their members [CERT.OBJ51]</a></code><br>
+<code><a href="CERT.SEC01.html">SEC01-J: Do not allow tainted variables in privileged blocks [CERT.SEC01]</a></code><br>
+<code><a href="CERT.SEC02.html">SEC02-J: Do not base security checks on untrusted sources [CERT.SEC02]</a></code><br>
+<code><a href="CERT.SEC03.html">SEC03-J: Do not load trusted classes after allowing untrusted code to load in arbitrary classes [CERT.SEC03]</a></code><br>
+<code><a href="CERT.SEC04.html">SEC04-J: Protect sensitive operations with security manager checks [CERT.SEC04]</a></code><br>
+<code><a href="CERT.SEC05.html">SEC05-J: Do not use reflection to increase accessibility of classes, methods or fields [CERT.SEC05]</a></code><br>
+<code><a href="CERT.SEC51.html">SEC51-J: Minimize privileged code [CERT.SEC51]</a></code><br>
+<code><a href="CERT.SER00.html">SER00-J: Enable serialization compatibility during class evolution [CERT.SER00]</a></code><br>
+<code><a href="CERT.SER01.html">SER01-J: Do not deviate from the proper signatures of serialization methods [CERT.SER01]</a></code><br>
+<code><a href="CERT.SER03.html">SER03-J: Do not serialize unencrypted, sensitive data [CERT.SER03]</a></code><br>
+<code><a href="CERT.SER04.html">SER04-J: Do not allow serialization and deserialization to bypass the security manager [CERT.SER04]</a></code><br>
+<code><a href="CERT.SER07.html">SER07-J: Do not use the default serialized form for classes with implementation-defined invariants [CERT.SER07]</a></code><br>
+<code><a href="CERT.SER09.html">SER09-J: Do not invoke overridable methods from readObject() method [CERT.SER09]</a></code><br>
+<code><a href="CERT.SER11.html">SER11-J: Prevent overwriting of externalizable objects [CERT.SER11]</a></code><br>
+<code><a href="CERT.SER12.html">SER12-J: Prevent deserialization of untrusted data [CERT.SER12]</a></code><br>
+<code><a href="CERT.STR00.html">STR00-J: Don't form strings containing partial characters from variable-width encodings [CERT.STR00]</a></code><br>
+<code><a href="CERT.STR01.html">STR01-J: Do not assume that a Java char fully represents a Unicode code point [CERT.STR01]</a></code><br>
+<code><a href="CERT.STR02.html">STR02-J: Specify an appropriate locale when comparing locale-dependent data [CERT.STR02]</a></code><br>
+<code><a href="CERT.THI00.html">THI00-J: Do not invoke Thread::run() [CERT.THI00]</a></code><br>
+<code><a href="CERT.THI01.html">THI01-J: Do not invode ThreadGroup methods [CERT.THI01]</a></code><br>
+<code><a href="CERT.THI02.html">THI02-J: Notify all waiting threads rather than a single thread [CERT.THI02]</a></code><br>
+<code><a href="CERT.THI03.html">THI03-J: Always invoke wait() and await() methods inside a loop [CERT.THI03]</a></code><br>
+<code><a href="CERT.THI05.html">THI05-J: Do not use Thread::stop() to terminate threads. [CERT.THI05]</a></code><br>
+<code><a href="CERT.TPS00.html">TPS00-J: Use thread pools to enable graceful degradation of service during traffic bursts [CERT.TPS00]</a></code><br>
+<code><a href="CERT.TSM00.html">TSM00-J: Do not override thread-safe methods with methods that are not thread-safe [CERT.TSM00]</a></code><br>
+<code><a href="CERT.TSM01.html">TSM01-J: Do not let the this reference escape during object construction [CERT.TSM01]</a></code><br>
+<code><a href="CERT.TSM02.html">TSM02-J: Do not use background threads during class initialization [CERT.TSM02]</a></code><br>
+<code><a href="CERT.VNA00.html">VNA00-J: Ensure visibility when accessing shared primitive variables [CERT.VNA00]</a></code><br>
+<code><a href="CERT.VNA02.html">VNA02-J: Ensure that compound operations on shared variables are atomic [CERT.VNA02]</a></code><br>
+<code><a href="CERT.VNA03.html">VNA03-J: Do not assume that a group of calls to independently atomic methods is atomic [CERT.VNA03]</a></code><br>
+</BODY>
+</HTML>

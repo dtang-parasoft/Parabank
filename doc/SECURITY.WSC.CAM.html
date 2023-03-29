@@ -1,0 +1,213 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Keep all authentication methods centralized to enforce consistency [SECURITY.WSC.CAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Keep all authentication methods centralized to enforce consistency [SECURITY.WSC.CAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies authentication methods which are called outside of their
+centralized location. An error is reported for each occurrence.
+
+Instead of calling authentication methods directly, a wrapper method should be
+used which calls the method that does the actual authentication.  The methods
+which do the actual authentication are specified in the "Authentication method
+names" parameter.  The wrapper methods which are allowed to call these methods
+directly are specified in the "Centralized authentication method names" 
+parameter.  If a method not specified in this parameter calls one of the methods
+specified in the "Authentication method names" parameter, an error is flagged.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule can be further parameterized with naming conventions by the application
+architect to enforce centralization of authentication methods in an application.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Authentication
+
+Authentication should be centralized so that it can be validated as consistent.
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability "A7-Missing Function Level Access Control".
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and applications"
+and Requirement #8: "Assign a unique ID to each person with computer access".
+Specifically, this rule helps to test for Issue 6.5.3: "Broken authentication 
+and session management" and Issue 8.5: "Ensure proper user authentication and 
+password management for non-consumer users and administrators on all system 
+components as follows:".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Authentication method names (in regular expressions)
+ [qualified name of declaring type#method name]
+    -The method calls which should be centralized.
+    -A violation will be flagged when any of the methods in this list are called
+     from outside the methods listed in the "Centralized authentication method 
+     names" parameter.
+    -The default values are:
+        javax.security.auth.login.LoginContext#getSubject.*
+        javax.security.auth.login.LoginContext#login.*
+
+-Centralized authentication method names (in regular expressions)
+ [qualified name of declaring type#method name]
+    -The method declarations in which the methods listed in the "Authentication 
+     method names" parameter can be invoked.
+    -A violation will be flagged when any of the methods listed in the 
+     "Authentication method names" parameter is called from outside of the 
+     methods specified in this list.
+    -The default value is:
+        .*#login.*
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An authentication method centralization rule can be used to enforce a single 
+point of failure and prevents new implementations of this critical functionality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+public class CAM_AuthenticationClass {
+   
+    public void login(String s) throws LoginException {
+        LoginContext lc = null;
+        lc.login();
+    }
+   
+    public void nonAuthenticationMethod(String s) throws LoginException {
+        LoginContext lc = null;
+        lc.login();    //VIOLATION
+    }
+}
+
+class CAM_NonAuthenticationClass {
+    public void authenticationMethod(String s) throws LoginException {
+        LoginContext lc = null;
+        lc.login();    //VIOLATION  
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not call authentication from methods not specified in the "Centralized 
+authentication method names" parameter.  Call one of the wrapper methods 
+specified in the "Centralized authentication method names" parameter instead.
+
+package examples.rules.security.wsc;
+
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+public class CAM_AuthenticationClassFixed {
+   
+    public void login(String s) throws LoginException {
+        LoginContext lc = null;
+        lc.login();
+    }
+    
+    public void nonAuthenticationMethod(String s) throws LoginException {
+        login(s);  //FIXED
+    }
+}
+
+class CAM_NonAuthenticationClass {
+    public void authenticationMethod(String s) throws LoginException {
+        CAM_AuthenticationClassFixed authClass= new CAM_AuthenticationClassFixed();
+        authClass.login(s);    //FIXED  
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A7-Missing Function Level Access Control):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 3.2
+6.5.8 Improper access control
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000480: The application must enforce approved authorizations for controlling the flow of information within the system based on organization-defined information flow control policies
+
+</PRE>
+</BODY>
+</HTML>

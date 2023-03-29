@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'System.arraycopy()' instead of using a loop to copy arrays [OPT.IRB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'System.arraycopy()' instead of using a loop to copy arrays [OPT.IRB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Disallows the copying of arrays inside a loop.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+'System.arraycopy()' is much faster than using a loop to copy an array.
+Repairing violations of this rule may also help to prevent infinite loops.
+See EXAMPLE.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, a loop is used to copy an array instead of
+'System.arraycopy()'. An infinite loop is also possible for large
+files as 'file.length()' returns a long.
+
+package examples.rules.opt;
+
+import java.io.*;
+
+public class IRB {
+    public static void copyInto(File file, byte[] array, int start)
+        throws IOException
+    {
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+            byte[] temp = new byte[(int)file.length()];
+            stream.read(temp);
+            for (int i = 0; i &lt; file.length(); i++) {
+                array[start + i] = temp[i]; //VIOLATION
+            }
+
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the loop with a call to 'System.arraycopy()'. Notice that
+in this case an infinite loop was also prevented as 'file.length()'
+is now cast to an int. However, one drawback is that some data may
+be truncated for large files.
+
+package examples.rules.opt;
+
+import java.io.*;
+
+public class IRBFixed {
+    public static void copyInto(File file, byte[] array, int start)
+        throws IOException
+    {
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+            byte[] temp = new byte[(int)file.length()];
+            stream.read(temp);
+            System.arraycopy(temp, 0, array, start, (int)file.length()); //FIXED
+
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

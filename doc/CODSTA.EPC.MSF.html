@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use too many non-"final" "static" fields [CODSTA.EPC.MSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use too many non-"final" "static" fields [CODSTA.EPC.MSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that use more than 2(by default) non-"final" "static" fields.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum non-"final" "static" fields (default value is 2)
+-Ignore the following types and their subtypes: (Specify fully qualified names)
+    "org.eclipse.osgi.util.NLS" (default)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Static fields are the equivalent of global variables in non-OO languages.  They
+make methods more context-dependent, hide possible side-effects, sometimes
+present synchronized access problems, and cause fragile,
+non-extensible constructions.  Also, neither static variables nor methods can
+be overridden in any useful sense in subclasses.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+public class MSF {
+    private static int s_size;    
+    public static int s_count;
+    static String s_title;  // VIOLATION
+
+    static void setFields (int size, String title) {
+        s_size = size;    
+        s_title = title;
+        s_count++;
+    }     
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Try to minimize non-"final" "static" fields if possible.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://g.oswego.edu/dl/html/javaCodingStd.html">http://g.oswego.edu/dl/html/javaCodingStd.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

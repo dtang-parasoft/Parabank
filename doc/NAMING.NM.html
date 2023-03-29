@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for non-"static" methods [NAMING.NM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for non-"static" methods [NAMING.NM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-"static" methods that do not follow the user-defined
+naming convention (as specified in a regular expression). By default, the
+rule requires that each non-"static" method name starts with a lower case character.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression
+    -Non-"static" method names should match the listed regular expression.
+    -The default is "^[a-z]".  This enforces that the names of non-"static"
+     methods begin with a lower case letter.
+-check public method. (default is true)
+-check protected method. (default is true)
+-check package-private method. (default is true)
+-check private method. (default is true)
+-Negate regular expression
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     non-"static" method matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be
+     flagged for non-"static" method names which do not match the regular
+     expression specified.
+-Ignore case
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of non-
+     "static" methods must match the regular expression specified, including in
+     case.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class NM {
+    void Method () {  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the identifier to follow the convention.
+
+package examples.rules.naming;
+
+public class NMFixed {
+    void method () {  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Section 9 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367</A>
+
+</PRE>
+</BODY>
+</HTML>

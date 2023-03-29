@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid declaring methods that return 'Object' [CODSTA.BP.AMRO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid declaring methods that return 'Object' [CODSTA.BP.AMRO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method declarations that return 'java.lang.Object'.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule ignores methods that override Java API methods which return Object.
+For example, implementations of 'clone()' will not be flagged. This rule does
+not check 'abstract' methods or methods defined in an interface.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore overriding method (default true)
+    Enabling this parameter will ignore methods that override another method.
+    This will cause only the initial overridden method to be flagged.
+
+-Ignore methods which only return 'Object' types (default true)
+    Enabling this parameter will ignore methods that only return 'Object' types.
+    For example:
+        Object method() {
+            return new Object();
+        }
+    The previous method would be ignored as it does return an 'Object'.
+
+-Ignore method stubs (default true)
+    Enabling this parameter will ignore methods that only return 'null' or
+    throw an exception.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Methods which return Object can create confusion as to what is being returned.
+The return values often have to be cast before they can be used. In some cases
+this can lead to a ClassCastException. When possible, it is beneficial to return
+a more specific type to improve readability and prevent erroneous use of the
+method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class AMRO {
+    public Object add(int i, int j) { //VIOLATION
+        return new Integer(i + j);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class AMROFixed {
+    public Integer add(int i, int j) { //FIXED
+        return new Integer(i + j);
+    }           
+}
+
+</PRE>
+</BODY>
+</HTML>

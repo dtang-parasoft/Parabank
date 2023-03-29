@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Check the return value of calls to 'String.indexOf()' before passing this value to other "String" methods [PB.RE.CIOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Check the return value of calls to 'String.indexOf()' before passing this value to other "String" methods [PB.RE.CIOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+It is common practice to call the 'indexOf()' method of "String" and pass the 
+result to another "String" method (such as 'substring()', 'charAt()', or 
+'getBytes()').  If the result of the call to 'indexOf()' is passed to one of the 
+"String" methods which will throw an "IndexOutOfBoundsException" for cases where
+the index value is invalid, you should always check the return value of 
+'indexOf()' before passing it to the other method.  Otherwise, an unexpected
+"IndexOutOfBoundsException" may be thrown.  The complete list of "String" 
+methods which throw an "IndexOutOfBoundsException" (as of JDK 5.0) is:
+
+-charAt
+-codePointAt
+-codePointBefore
+-codePointCount
+-offsetByCodePoints
+-getBytes
+-getChars
+-substring
+-subSequence
+
+This rule will flag a violation for each case where it appears that the return
+value from a call to 'indexOf()' is passed to one of these methods without
+checking that return value.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you pass the return value from 'String.indexOf()' to another "String" method
+without checking that return value, an unexpected "IndexOutOfBoundsException"
+may result.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Notice that, in this example, the return value of 'indexOf()' is passed to
+'substring()' without checking that it is not "-1".
+
+package examples.rules.pb.re;
+
+class CIOR {
+    public static void main(String[] args){
+        String s= getSubstringStartingWithA("foo");
+        System.err.println("Substring starting with 'a' is "+s);
+    }
+    
+    private static String getSubstringStartingWithA(String s) {
+        int index= s.indexOf('a');  //VIOLATION
+        return s.substring(index);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Check the return value from the call to 'indexOf()', and only call 'substring()'
+if it is greater than or equal to "0".  In other cases, you may also need to 
+check that the return value is less than or equal to the length of the String.
+
+package examples.rules.pb;
+
+public class CIORFixed {
+    public static void main(String[] args){
+        String s= getSubstringStartingWithA("foo");
+        System.err.println("Substring starting with 'a' is "+s);
+    }
+    
+    private static String getSubstringStartingWithA(String s) {
+        int index= s.indexOf('a');
+        if(index &gt;= 0){
+            return s.substring(index);
+        } else {
+            return "";
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare the setter method for the Hibernate identifier 'private' [HIBERNATE.PIDS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare the setter method for the Hibernate identifier 'private' [HIBERNATE.PIDS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the setter method for the field that is the identifier
+for a Hibernate persistent class is 'private'.  Only classes which are mapped 
+in a Hibernate mapping file are tested.  The rule needs to read this file to
+determine which field is the identifier.  A violation will be flagged for each
+'set' method for the identifier which is not declared as 'private'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks classes which are mapped in a "Hibernate-mapping"
+document.  It looks for these mappings in all files in the tested project whose
+names end in the ".hbm.xml" extension.  Once it finds a mapping for the class,
+the rule will look for an "id" tag to determine which field is the identifier.
+
+This rule was created for use with Hibernate 3.1.  It is not guaranteed to apply
+to all versions of Hibernate.  You should not enable this rule if it does not
+apply to the version of Hibernate you are using.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The identifier field is assigned by Hibernate and should not be modified by the
+user.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example assumes there is a ".hbm.xml" file in the project with a mapping
+such as the following:
+
+&lt;hibernate-mapping&gt;
+   &lt;class name="examples.rules.hibernate.PIDS" table="PERSON"&gt;
+        &lt;id name="id" column="PERSON_ID"&gt;
+            &lt;generator class="native"/&gt;
+        &lt;/id&gt;
+        &lt;property name="age"/&gt;
+    &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+         
+package examples.rules.hibernate;
+         
+public class PIDS {  
+    private Long id;
+    private int age;
+
+    public PIDS() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {  //VIOLATION
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+         
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the identifier's setter method 'private'.
+
+package examples.rules.hibernate;
+         
+public class PIDSFixed {
+    private Long id;
+    private int age;
+
+    public PIDS() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    private void setId(Long id) {  //FIXED
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html</A>
+
+</PRE>
+</BODY>
+</HTML>

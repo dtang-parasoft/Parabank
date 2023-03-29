@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "float" and "double" if exact answers are required [CERT.NUM04.UBD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "float" and "double" if exact answers are required [CERT.NUM04.UBD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies variables of "float" and "double" types used
+for calculations and comparisons that require highly accurate results.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v4.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The "float" and "double" types are designed primarily for scientific and
+engineering calculations. They perform binary floating-point arithmetic,
+which was carefully designed to provide accurate approximations quickly over
+a broad range of magnitudes. They do not, however, provide exact results and
+should not be used when exact results are required.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+package examples.rules.pb.num;
+
+import java.math.*;
+
+public class UBD {
+    public static float calculateDiscountedSum(int code, float initialSum, Consumer person) {
+        float discountedSum = calculateCommonDiscountedSum(initialSum);
+        if (code == SPECIAL_OFFER) {
+            discountedSum *= getSpecialOfferDiscountCoefficient(); // VIOLATION
+            if (discountedSum == 0.01) { // VIOLATION
+                discountedSum = 0;
+            }
+        }
+        if (code == PERSONAL_DISCOUNT) {
+            float progressionCoef = person.getOverallSum() / discountedSum; // 2 VIOLATIONS
+            discountedSum *= person.getPersonalDiscountCoefficient(); // VIOLATION
+            float nextPersounalDiscount = person.getPersonalDiscountCoefficient() + progressionCoef; // 2 VIOLATIONS
+            person.setPersonalDiscountCoefficient(nextPersounalDiscount);
+        }
+        person.setOverallSum(discountedSum + person.getOverallSum()); // 2 VIOLATIONS
+        return discountedSum;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Change "float" and "double" types to the 'java.math.BigDecimal' type.
+
+package examples.rules.pb.num;
+
+import java.math.*;
+
+public class UBDFixed {
+    public static BigDecimal calculateDiscountedSum(int code, BigDecimal initialSum, Consumer person) {
+        BigDecimal discountedSum = calculateCommonDiscountedSum(initialSum);
+        if (code == SPECIAL_OFFER) {
+            discountedSum = discountedSum.multiply(getSpecialOfferDiscountCoefficient()) ; // FIXED
+            if (discountedSum.equals(new BigDecimal("0.01"))) { // FIXED
+                discountedSum = new BigDecimal("0");
+            }
+        }
+        if (code == PERSONAL_DISCOUNT) {
+            BigDecimal progressionCoef = person.getOverallSum().divide(discountedSum); // FIXED
+            discountedSum = discountedSum.multiply(person.getPersonalDiscountCoefficient()); // FIXED
+            BigDecimal nextPersonalDiscount = person.getPersonalDiscountCoefficient().add(progressionCoef); // FIXED
+            person.setPersonalDiscountCoefficient(nextPersonalDiscount);
+        }
+        person.setOverallSum(discountedSum.add(person.getOverallSum())); // FIXED
+        return discountedSum;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 149-151
+
+SEI CERT Oracle Coding Standard for Java
+NUM04-J. Do not use floating-point numbers if precise computation is required
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM04-J.+Do+not+use+floating-point+numbers+if+precise+computation+is+required">https://wiki.sei.cmu.edu/confluence/display/java/NUM04-J.+Do+not+use+floating-point+numbers+if+precise+computation+is+required</A>
+
+</PRE>
+</BODY>
+</HTML>

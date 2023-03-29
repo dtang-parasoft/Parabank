@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using 'Hashtable' and 'Vector' [CODSTA.BP.HTV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using 'Hashtable' and 'Vector' [CODSTA.BP.HTV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instantiations of 'java.util.Hashtable' and
+'java.util.Vector'. A violation is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check Hashtable (default true)
+-Check Vector (default true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hashtable and Vector provide synchronization while other Collections and Maps
+do not. This can lead to confusion as to whether or not synchronization was
+intended and required. In cases where synchronization is not required, HashMap
+or ArrayList usually be used as a drop-in replacement. Unsynchronized
+Collections or Maps can also improve performance. In cases where synchronization
+is required, the 'java.util.Collections#synchronizedXXX()' methods can be used
+to wrap a Collection or Map. A call to one of these methods has the benefit of
+explicitly stating in the code that any synchronization is intended.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.util.*;
+
+public class HTV {
+    private Hashtable _table;
+
+    public HTV() {
+        _table = new HashTable(); //VIOLATION
+        _table.put("Hello","World");
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.util.*;
+
+public class HTVFixed {
+    private Map _table;
+
+    public HTVFixed() {
+        _table = new HashMap(); //FIXED
+        _table.put("Hello","World");
+    }
+    ...    
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Hashtable (Java Platform SE 6)
+<A HREF="http://java.sun.com/javase/6/docs/api/java/util/Hashtable.html">http://java.sun.com/javase/6/docs/api/java/util/Hashtable.html</A>
+
+Vector (Java Platform SE 6)
+<A HREF="http://java.sun.com/javase/6/docs/api/java/util/Vector.html">http://java.sun.com/javase/6/docs/api/java/util/Vector.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not check whether the result of "String.indexOf()" is positive or non-positive [PB.LOGIC.CPI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not check whether the result of "String.indexOf()" is positive or non-positive [PB.LOGIC.CPI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Checking whether the result of a call to "String.indexOf()" is positive or
+non-positive (rather than negative or non-negative) is a common mistake.  This 
+rule will flag as a possible bug for any of the following comparisons:
+
+1. String.indexOf(...) &gt; 0
+2. String.indexOf(...) &lt;= 0
+3. 0 &lt; String.indexOf(...)
+4. 0 &gt;= String.indexOf(...)
+
+The intention behind these comparisons is probably to check whether or not the
+String which is passed as a parameter is contained within the String which is 
+the calling object.  To accomplish this, one would need to check whether the
+result of the call to "String.indexOf(...)" is negative or non-negative.  The 
+comparisons shown above are incorrect because they check whether the result of 
+calling "String.indexOf(...)" is positive or non-positive.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When calling "String.indexOf(...)", one should check whether the result is 
+negative or non-negative since String indices start at 0.  Checking whether the
+result of the call is positive or non-positive is a subtle bug that does not
+take into account the case where the parameter String occurs at the beginning 
+of the other String.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class CPI{
+    public static void main(String[] args){
+        String myStr= "foobar";
+        if(myStr.indexOf("foo")&gt;0){  // VIOLATION
+            System.err.println("String contains foo.");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure the comparison checks whether the result of "String.indexOf()" is
+negative or non-negative (rather than positive or non-positive).
+
+package examples.rules.pb.logic;
+
+public class CPIFixed{
+    public static void main(String[] args){
+        String myStr= "foobar";
+        if(myStr.indexOf("foo")&gt;=0){  // FIXED
+            System.err.println("String contains foo.");
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

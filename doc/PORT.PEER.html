@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "java.awt.peer.*" interfaces directly [PORT.PEER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "java.awt.peer.*" interfaces directly [PORT.PEER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that directly uses the interfaces defined in 
+the "java.awt.peer" package. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+FILE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+These interfaces are meant for use only by implementors of the AWT package.
+Applications that directly use these interfaces are not portable.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+import java.awt.peer.ComponentPeer;
+
+public interface PEER extends ComponentPeer {    // VIOLATION
+    public void setName(String name);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'java.awt.peer' package directly.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+David Flanagan: "Java in a Nutshell".  O'Reilly
+November, 1999: Third Edition, pp.190-192
+
+</PRE>
+</BODY>
+</HTML>

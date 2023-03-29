@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When calling "Math.ceil()", do not pass in an integer that has been cast to a floating point type [OPT.ICDPC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When calling "Math.ceil()", do not pass in an integer that has been cast to a floating point type [OPT.ICDPC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks to make sure that an integer type (short, int, or long) is not 
+cast to a floating point type (float or double) and passed to the "Math.ceil()" 
+method.  This operation is a no-op since converting an integer to a floating 
+point should give a number with no fractional part.  A violation will be flagged
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Calling "Math.ceil()" with a number that has no fractional part as the argument
+is unnecessary and is likely indicative of a bug in the logic of the code.  
+Perhaps the argument to "Math.ceil()" was supposed to be something that 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class ICDPC{
+    public static void main(String[] args){
+        System.err.println("The ceiling of 3/4 is: "+
+                Math.ceil((double)(3/4))); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class ICDPCFixed{
+    public static void main(String[] args){
+        System.err.println("The ceiling of 3/4 is: "+ (3/4)); // FIXED : removed unnecessary Math.ceil() call
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide a 'Locale' argument when instantiating 'SimpleDateFormat' objects [INTER.SDFL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide a 'Locale' argument when instantiating 'SimpleDateFormat' objects [INTER.SDFL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code where a 'SimpleDateFormat' object is 
+instantiated without a 'Locale' argument. An error is reported for 
+each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Because SimpleDateFormat is locale-sensitive, it is always
+a good practice to specify the locale during instantiation
+instead of assuming that the default locale is always suitable.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.misc;
+
+public class SDFL {
+    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy"); //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.misc;
+
+public class SDFLFixed {
+    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy", Locale.US); //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

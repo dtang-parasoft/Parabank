@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using "public static final" array fields [CWE.582.PSFA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using "public static final" array fields [CWE.582.PSFA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Disallows the use of "public static final" array fields.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will ignore all array constants inside an interface.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+When array fields are declared "final", it is easy to forget that these fields 
+can still be modified since the individual elements can be modified.  For 
+security purposes, you should not allow "public" access to mutable fields such 
+as arrays.  This will prevent attackers from modifying the field.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The contents of all non-empty array fields are mutable, so attackers can
+modify your 'constants' if you ignore this rule.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class PSFA {
+    public static final Integer[] MUTABLE = { new Integer(0) };  // VIOLATION
+
+    public static void main (String[] args) {
+        MUTABLE[0] = new Integer(1);
+        System.out.println ("MUTABLE[0]=" + MUTABLE[0]);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In the previous example, the output is "MUTABLE[0]=1", because the value can
+be changed.  To avoid this, ensure that users cannot directly access your
+'constant' arrays.
+
+package examples.rules.pb.cub;
+
+import java.util.*;
+
+public class PSFAFixed {
+    private static final Integer[] MUTABLE = { new Integer(0) }; // FIXED
+    public static final List unmutable =
+        Collections.unmodifiableList (Arrays.asList(MUTABLE));
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 62
+
+CWE-582: Array Declared Public, Final, and Static
+<A HREF="https://cwe.mitre.org/data/definitions/582.html">https://cwe.mitre.org/data/definitions/582.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+</PRE>
+</BODY>
+</HTML>

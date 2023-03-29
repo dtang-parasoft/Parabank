@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not extend other @MessageDriven beans from a @MessageDriven bean [EJB.EJB3.MDBS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not extend other @MessageDriven beans from a @MessageDriven bean [EJB.EJB3.MDBS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies @MessageDriven beans which have another @MessageDriven
+bean as a superclass. The EJB3 Specification does not provide this capability.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@MessageDriven
+public class MDBS extends MessageDrivenClass { //VIOLATION
+    ...
+}
+
+@MessageDriven
+class MessageDrivenClass {
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove extension of @MessageDriven superclass.
+
+package examples.rules.ejb.ejb3;
+
+@MessageDriven
+public class MDBSFixed { //FIXED
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 124.
+
+JSR 220: Enterprise JavaBeans, Version 3.0
+EJB Core Contracts and Requirements, Section 5.6.2
+
+</PRE>
+</BODY>
+</HTML>

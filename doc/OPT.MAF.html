@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make getter and setter methods for instance fields "final" [OPT.MAF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make getter and setter methods for instance fields "final" [OPT.MAF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies getter and setter methods for instance fields that are not "final".
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If you are using Hotspot VM and Sun's Java 2 SDK1.3, this rule does not improve 
+performance.
+
+You should be careful when using the quickfix for this rule because the quickfix may 
+cause compile errors.  The quickfix is to declare the getter or setter method "final".  
+While this is OK in most cases, it will cause a compile error if the getter or setter
+method is overridden.  Since getter and setter methods are generally not overridden, 
+this case should be rare and may indicate a design flaw in the code.  Because the 
+quickfix may cause compile errors, the "Quickfix All" option is not available for this 
+rule.  You should review each violation and make sure that applying the quickfix will 
+not cause a compile error.  
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Making getter and setter methods for instance fields "final" tells the compiler that 
+the method cannot be overridden and thus can be inlined.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class MAF {
+    public void setSize (int size) {  // VIOLATION
+         _size = size;
+    }
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the accessor "final".
+
+package examples.rules.opt;
+
+public class MAFFixed {
+    final public void setSize (int size) {  // FIXED
+         _size = size;
+    }
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Warren N. and Bishop P. (1999), "Java in Practice - Design Styles and Idioms
+for Effective Java".  Addison-Wesley, ISBN: 0-201-36065-9 p. 4-5
+
+</PRE>
+</BODY>
+</HTML>

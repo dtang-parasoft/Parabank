@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide a '@post' contract for all "public" methods [DBC.PUBMPOST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide a '@post' contract for all "public" methods [DBC.PUBMPOST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "public" method without a '@post' contract.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If there's no Javadoc comment, Jtest will not report this error.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Post-conditions check whether the method works correctly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class PUBMPOST
+{
+   /**
+    * method add
+    */
+    public int add (int a, int b) {  // VIOLATION
+        return a + b;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide a '@post' contract, or use '/** @post $none */' to document
+the lack of one.
+
+package examples.rules.dbc;
+
+public class PUBMPOSTFixed
+{
+    /** @post $result == a + b */  // FIXED
+    public int add (int a, int b) {
+        return a + b;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+See the "Design by Contract" section in the Jtest User's Guide.
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 50, 75 - 76
+
+</PRE>
+</BODY>
+</HTML>

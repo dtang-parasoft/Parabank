@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not make method calls to internal classes from non-internal classes [CODSTA.ORG.DINT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not make method calls to internal classes from non-internal classes [CODSTA.ORG.DINT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when methods from classes that are marked as internal
+are externally accessed.
+The rule can be parameterized to specify which classes the rule will
+assume to be internal and to list packages you want the rule to ignore
+(see PARAMETERS).
+
+You can mark a class as internal in one of the following ways:
+- as a string in a comment that precedes the class definition.
+- as a custom Javadoc tag.
+- as a class annotation.
+The rule must be parameterized to specify the string, Javadoc tag and/or
+annotation (the default is "internal"); see PARAMETERS.
+
+In addition, you can mark all classes in a package as internal by adding 
+the name of the package to the list in the "Internal packages" parameter.
+
+The rule checks the following types of access('B' indicates an internal class):
+  - Method calls
+  - Use of the "A instanceof B" expression
+  - Use of "B.class"
+  - Declarations of any variable with a type that is defined in an internal
+    file
+  - Generic specification such as "ArrayList&lt;B&gt;"
+  - Import statements "import B"
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Packages that should not be checked (in regular expressions)
+     Allows you to specify packages the rule will ignore. Provide a list of
+     packages in regular expressions (the default is ".*nocheck.*").
+-Internal packages (in regular expressions)
+     Allows you to specify packages the rule will assume to be internal. As
+     a result, all classes in the listed packages will be considered to be
+     internal (the default is .*internal.*). 
+
+-Annotations to mark internal classes (fully-qualified names)
+    Allows you to specify a list of Java annotations the rule will assume to
+    be markers of internal classes. Provide a list of fully-qualified
+    annotation names in the "Fully-qualified Name of Annotation" table.
+
+Marking internal classes in comments
+-Check single-line comments (enabled by default)
+-Check C-style comments (enabled by default)
+-String to mark internal classes in comments (the default is "internal")
+
+Marking internal classes in Javadoc
+-Check Javadoc tags (enabled by default)
+-Custom tag to mark internal classes in Javadoc (the default is "@internal")
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+His rule helps you avoid data leakage by ensuring that internal methods are
+not externally called 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the method marked as internal is externally called.
+
+package com.parasoft.codsta.org.dint.examples;
+
+import com.parasoft.internal.InternalExample;
+
+public class DINT {
+    void method(){
+        new InternalExample().internalMethodCall(); // VIOLATION the InternalExample
+                                                    // class is declared in internal package
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use call methods from the class marked as 'internal'.
+
+package com.parasoft.codsta.org.dint.examples;
+
+public class DINTFixed {
+    void method(){ // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

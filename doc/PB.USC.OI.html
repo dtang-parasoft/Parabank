@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid increment and decrement statements which have no effect [PB.USC.OI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid increment and decrement statements which have no effect [PB.USC.OI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag increment and decrement statements which have no effect.  
+There are 2 cases where this can happen:
+
+1. The result of an increment or decrement on a variable is overwritten by an 
+   assignment to the same variable. (e.g., "i= i++;" or "i+= i++") The statement 
+   "i= i++;" has no effect because it is equivalent to "i= i".
+   
+2. A post-increment or post-decrement is done on a local variable in a return
+   statement. (e.g., "return i++;") In this case, the change in the local 
+   variable's value will only take effect in the method's scope, which has 
+   already been left because of the return statement.
+   
+A violation will be flagged for each post-increment or post-decrement which 
+meets one of these two conditions.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An increment or decrement which has no effect is useless and usually indicates
+a bug in the code.   When a programmer puts such an expression in the code, 
+they probably intended for the expression to have some kind of effect.  The 
+expression should probably be moved to a different place or changed in some way.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class OI {
+    public int method(){
+        int i=0;
+        i= i++; //VIOLATION
+        return i++; //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+One fix is to move the increment or decrement to a separate statement before the 
+assignment.  In some cases, the assignment statement in which the increment or
+decrement was nested will then have no effect and can be eliminated (for 
+example, if the original statement was "i= i++;").  Another possible fix is to 
+change the post-increment or post-decrement to a pre-increment or pre-decrement.
+
+package examples.rules.pb.usc;
+
+public class OIFixed {
+    public int method(){
+        int i=0;
+        i++; //FIXED
+        return ++i; //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+    Addison-Wesley, 2005, pp. 55-56
+
+</PRE>
+</BODY>
+</HTML>

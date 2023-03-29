@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid exporting "internal" packages in MANIFEST.MF [ECLIPSE.IPMF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid exporting "internal" packages in MANIFEST.MF [ECLIPSE.IPMF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "internal" packages that are exported in MANIFEST.MF.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The Export-Package manifest attribute in an Eclipse plug-in specifies which packages of Java code
+are accessible at runtime from other plug-ins.  It applies to Eclipse version 3.1 and later.
+
+Packages with "internal" in the package name should not be listed in the Export-Package section of
+Eclipse plugin MANIFEST.MF files unless they have the ";x-internal:=true" or ";x-friends:=..."
+suffix.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Export-Package: com.acme.eclipse.plugin,
+ com.acme.eclipse.plugin.internal, # VIOLATION An internal package is exported
+ com.acme.eclipse.plugin.internal.constants # VIOLATION An internal package is exported
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Export-Package: com.acme.eclipse.plugin,
+ com.acme.eclipse.plugin.internal;x-internal:=true,
+ com.acme.eclipse.plugin.constants;x-friends:="com.acme.eclipse.friend.plugin"
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the TemporaryFolder Rule in JUnit 5 tests [JUNIT.TDIR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the TemporaryFolder Rule in JUnit 5 tests [JUNIT.TDIR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The built-in TempDirectory extension is used to create and clean up
+a temporary directory for an individual test or all tests in a test class.
+It is registered by default. To use it, annotate a non-private field of type
+java.nio.file.Path or java.io.File with @TempDir or add a parameter of type
+java.nio.file.Path or java.io.File annotated with @TempDir to a lifecycle
+method or test method."
+[JUnit 5 User Guide, 2.20.1. The TempDirectory Extension]
+
+The @Rule annotation is not supported in JUnit 5. For this reason,
+the TemporaryFolder Rule, which handles creating and deleting temporary files
+in JUnit 4, is not available in JUnit 5 and can only be enabled by annotating
+the test class with @EnableRuleMigrationSupport. Using the TemporaryFolder Rule
+in a JUnit 5 test results in throwing IllegalStateException.
+
+JUnit 5 introduced the TempDirectory extension, which allows you to use 
+the @TempDir annotation to enable creation of files and folders that should be
+deleted when the test method finishes.
+
+This rule detects when the TemporaryFolder Rule is used in JUnit 5 test
+classes.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a JUnit 5 test class is a class that contains a method
+marked with one of the following annotations:
+- @Test (from the org.junit.jupiter.api package)
+- @TestFactory
+- @TestTemplate,
+- @ParameterizedTest
+- @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule facilitates the migration process from JUnit 4 to JUnit 5 by
+helping you ensure that the @TempDir annotation is used to handle
+temporary directories.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the TemporaryFolder Rule is used in 
+a JUnit 5 test.
+
+import org.junit.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.rules.TemporaryFolder;
+
+import java.io.*;
+
+public class TempTest
+{
+    @Rule
+    public final TemporaryFolder tmp = new TemporaryFolder(); // VIOLATION
+
+    @Test
+    public void testTemporaryFolder() throws IOException {
+            String testString = "testString";
+
+            File createdFile = tmp.newFile("myfile.txt");
+            FileWriter writer = new FileWriter(createdFile, false);
+            writer.append(testString);
+            writer.close();
+
+            BufferedReader reader = new BufferedReader(new FileReader(createdFile));
+            Assertions.assertEquals(testString, reader.readLine());
+            reader.close();
+        }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use the @TempDir annotation to allow creation of temporary
+files and folders.
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.*;
+import java.nio.file.Path;
+
+public class TempTest
+{
+    @TempDir
+    File temporaryDir; // NO VIOLATION
+
+    @Test
+    public void testTemporaryFolder() throws IOException {
+            String testString = "testString";
+
+            File createdFile = new File(temporaryDir, "myfile.txt");
+            FileWriter writer = new FileWriter(createdFile, false);
+            writer.append(testString);
+            writer.close();
+
+            BufferedReader reader = new BufferedReader(new FileReader(createdFile));
+            String readed = reader.readLine();
+
+            Assertions.assertEquals(testString, readed);
+            reader.close();
+        }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JUnit 5 User Guide
+3.2. Migration Tips
+<A HREF="https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4">https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4</A>
+
+JUnit 5 User Guide
+2.20.1. The TempDirectory Extension
+<A HREF="https://junit.org/junit5/docs/current/user-guide/#writing-tests-built-in-extensions-TempDirectory">https://junit.org/junit5/docs/current/user-guide/#writing-tests-built-in-extensions-TempDirectory</A>
+
+Javadoc Annotation Type EnableRuleMigrationSupport
+<A HREF="https://junit.org/junit5/docs/5.5.2/api/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html">https://junit.org/junit5/docs/5.5.2/api/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html</A>
+
+</PRE>
+</BODY>
+</HTML>

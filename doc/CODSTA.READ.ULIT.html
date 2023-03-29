@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use underscore characters (_) in numerical literal [CODSTA.READ.ULIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use underscore characters (_) in numerical literal [CODSTA.READ.ULIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+﻿DESCRIPTION
+In Java SE 7 and later, underscores (_) may be used in numerical literals to separate groups of digits.
+This rule identifies cases where the underscore convention isn't used and reports errors.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Minimum value
+    Specifies the minimum value that is checked. Literals with values lower that the minimum are ignored. 
+    Default is 100000.
+    
+-Density
+   How often underscores are used. Example: 
+   If you set this parameter to 4 then the underscore convention looks like 100_0000_0000
+   Default is 3.
+
+-Check only initialized variables
+   Limit only to cases where numeric literal is initialized. Example:
+   If this parameter is used, literals that look like a = 1000 + 1000000 are ignored.
+   The parameter is not used by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Using an underscore in numerical literals increases code readability.
+
+NOTE
+This rule has one quickfix - "Place underscore (_) at correct position in numbers."
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+int a = 100000000; // VIOLATION
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+int a = 100_000_000; // FIXED
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/language/underscores-literals.html">http://docs.oracle.com/javase/7/docs/technotes/guides/language/underscores-literals.html</A>
+
+</PRE>
+</BODY>
+</HTML>

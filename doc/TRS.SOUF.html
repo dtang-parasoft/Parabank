@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not synchronize on non-"final" fields since doing so makes it difficult to guarantee mutual exclusion [TRS.SOUF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not synchronize on non-"final" fields since doing so makes it difficult to guarantee mutual exclusion [TRS.SOUF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies synchronized blocks that synchronize on 
+non-final fields. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+So that an attacker will not modify a field which is used for 
+synchronization, you should ensure that all fields which are used
+for synchronization are "final".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is risky to synchronize on a non-final field. A non-final
+field's reference could be changed at any time, and once
+the reference is changed, the synchronized block loses its
+mutual exclusion property.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class SOUF {
+    Object lock; //lock might be changed over time
+    SOUF(Object lock) {
+	this.lock= lock;
+    }
+    public void myMethod() {
+        synchronized(lock) { //VIOLATION
+            //...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class SOUFFixed {
+    final Object lock; //FIXED
+    SOUFFixed(Object lock) {
+        this.lock= lock;
+    }
+    public void myMethod() {
+        synchronized(lock) {//FIXED
+            //...
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

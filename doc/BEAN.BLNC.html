@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use appropriate signatures for listener method names in JavaBean classes [BEAN.BLNC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use appropriate signatures for listener method names in JavaBean classes [BEAN.BLNC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Bean class listener method names with inappropriate signatures. 
+An error is reported if the listener method in a JavaBean class does not follow
+the following pattern:
+
+    public void addTYPE(TYPE listener) {
+    }
+    public void removeTYPE(TYPE listener) {
+    }
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule defines a JavaBean class as a class which implements Serializable, 
+contains a public default constructor, and has a name ending with "Bean". 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The listener methods in JavaBeans classes are invoked through reflection.  Thus,
+if the methods are not named according to the expected naming convention, they
+may never get invoked.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.bean;
+
+import java.io.*;
+import java.awt.event.*;
+
+public class BLNCBean implements Serializable {
+
+    public void addactionListener(ActionListener listener) {  // VIOLATION
+
+    }
+
+    public void removeactionListener(ActionListener listener) {  // VIOLATION
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rename the listener methods.
+
+package examples.rules.bean;
+
+import java.io.*;
+import java.awt.event.*;
+
+public class BLNCFixedBean implements Serializable {
+
+    public void addActionListener(ActionListener listener) {  // FIXED 
+
+    }
+
+    public void removeActionListener(ActionListener listener) {  // FIXED 
+
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

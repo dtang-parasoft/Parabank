@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure 'wait()', 'notify()' and 'notifyAll()' are invoked on an object that is clearly synchronized in its enclosing mod scope [TRS.NSYN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure 'wait()', 'notify()' and 'notifyAll()' are invoked on an object that is clearly synchronized in its enclosing mod scope [TRS.NSYN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies 'wait()', 'notify()' or 'notifyAll()' 
+that are not invoked within a 'synchronized(this)' block or a
+"synchronized" method. If 'wait()', 'notify()' or 'notifyAll()'
+are invoked on an object 'o' other than the current instance, 
+then it should be enclosed by a synchronized(o) block. 
+An error is reported for each violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Failure to follow this rule can cause your application to crash with an
+IllegalMonitorStateException.  Also, the IllegalMonitorStateException stack
+trace may contain sensitive implementation details which should not be 
+exposed to the user.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a thread invokes 'wait()', 'notify()' or 'notifyAll()'
+that are not enclosed by corresponding "synchronized" method or "synchronzied" 
+block, it might not acquire the lock correctly. If a 
+thread does not own the lock and tries to invoke any
+of those methods on the lock, an IllegalMonitorStateException
+would be thrown.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+A monitor can be locked from another method, which directly or indirectly
+invokes an unsynchronized method.  The unsynchronized method may need to
+call 'wait()' or 'notify()'.  The rule would conflict with this programming
+style.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class NSYN {
+    public boolean _isConsumed;
+    public void consume() throws InterruptedException{
+	while (_isConsumed) {
+	    wait();  // VIOLATION, could throw IllegalMonitorStateException
+        }
+	//consume
+        _isConsumed= true;
+	notifyAll(); //VIOLATION, could throw IllegalMonitorStateException
+    }
+    public void pause(Object control) throws InterruptedException {
+        control.wait (1000); // VIOLATION, could throw IllegalMonitorStateException
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class NSYNFixed {
+    public boolean _isConsumed;
+    public synchronized void consume() throws InterruptedException{  //FIXED
+	while (_isConsumed) {
+	    wait ();  
+        }
+	//consume
+        _isConsumed= true;
+	notifyAll(); 
+    }
+    public void pause(Object control) throws InterruptedException {
+        synchronized(control) {
+            control.wait (1000); //FIXED
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 5:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+</PRE>
+</BODY>
+</HTML>

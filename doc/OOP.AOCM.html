@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always override certain methods when extending certain types [OOP.AOCM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always override certain methods when extending certain types [OOP.AOCM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Some methods are designed to always be overridden whenever certain classes are 
+subclassed.  While it is generally better to define such methods as "abstract"
+to force subclasses to provide their own implementations of these methods, this
+is not always done for various reasons.  One example of such a method is the
+"available()" method of class "java.io.InputStream".  The Javadoc for this 
+method states, "This method should be overridden by subclasses." even though the
+method is not "abstract".  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Methods which should always be overridden
+    -This parameter consists of two lists: "Declaring Class (Specify fully 
+     qualified name)" and "Method Signature (&lt;method name&gt;(&lt;parameter1 fully 
+     qualified type&gt;,&lt;parameter2 fully qualified type&gt;,...))".  
+    -For each type that you specify in the first list, you must specify 
+     the methods which must be overridden for that type in the second list.
+     (You can think of the two lists as a "one-to-many" mapping from type names
+     to method signatures.) 
+    -By default, only the "available()" method of "java.io.InputStream" is
+     included in the parameter lists.
+
+    Format: 
+        list1_decl_class_name&lt;\#&gt;list2_method1_signature\#list2_method2_signature;...
+  
+    Examples:
+    * java.io.InputStream&lt;\#&gt;available()
+    * java.io.InputStream&lt;\#&gt;available();java.util.ArrayList&lt;\#&gt;add(java.lang.Object)\#addAll(java.util.Collection)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If subclasses of a certain class do not override certain methods, these 
+subclasses may inherit an incorrect implementation of these methods.  For 
+instance, the "available()" method of class "java.io.InputStream" simply returns
+0.  When "java.io.InputStream" is extended, this method should be overridden to 
+provide a meaningful implementation.  Since this method is not abstract, 
+subclasses of "java.io.InputStream" will not be forced by the compiler to 
+override this method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class AOCM extends InputStream {  //VIOLATION- doesn't override "available()"
+    int _available;
+    byte[] _buffer;
+    
+    public AOCM(int bufsiz) {
+        _buffer= new byte[bufsiz];
+        _available= bufsiz;
+    }
+    
+    public int read() throws IOException {
+        int bytesRead= super.read(_buffer);
+        _available-= bytesRead;
+        return bytesRead;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide a correct implementation of the method which should always be 
+overridden.
+
+package examples.rules.oop;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class AOCMFixed extends InputStream {
+    int _available;
+    byte[] _buffer;
+    
+    public AOCMFixed(int bufsiz) {
+        _buffer= new byte[bufsiz];
+        _available= bufsiz;
+    }
+    
+    public int read() throws IOException {
+        int bytesRead= super.read(_buffer);
+        _available-= bytesRead;
+        return bytesRead;
+    }
+    
+    public int available() {  //FIXED
+        return _available;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

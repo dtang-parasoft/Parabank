@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that dereferenced variables match variables which were previously checked for "null" [CERT.EXP01.NCMD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that dereferenced variables match variables which were previously checked for "null" [CERT.EXP01.NCMD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A common pattern to prevent NullPointerExceptions is to make sure that some 
+field or variable is not "null" and then to dereference it.  The code for this
+looks something like this:
+
+if(s != null &amp;&amp; s.equals("foo")) {
+    //Do something.
+}
+
+Here, "s" is first tested to make sure that it is not "null" before it is 
+dereferenced.  A common mistake when using this pattern is for the variable 
+being checked for "null" on the left side of the expression to not match the
+variable which is dereferenced on the right side of the expression.  For 
+example:
+
+if(s != null &amp;&amp; s2.equals("foo")) {
+    //Do something.
+}
+
+The intention here was to prevent NullPointerExceptions by checking to make sure 
+that "s" is not "null" before calling the 'equals()' method on "s"; however, 
+the wrong variable was used as the calling object for the 'equals()' method.
+
+This rule will flag a violation for each expression using the "&amp;&amp;" operator 
+where a variable (or field) is checked to make sure that it is not "null" on the
+left side and a different variable is dereferenced on the right side.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only flag cases where the variable being dereferenced in the 
+condition and the variable being checked against "null" are of the same type.
+This helps to cut down on noise.  Code where the types of the variables are the
+same is more likely to be a bug because, in these cases, the two variables can 
+be used interchangeably.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+This rule will help to prevent NullPointerExceptions, which can result in 
+sensitive information being leaked to the user.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Bugs like the one described in the "DESCRIPTION" section are common, especially 
+when copying and pasting code.  Code which violates this rule should be reviewed 
+to make sure it is correct.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The code shown below will throw a "NullPointerException" because the variable
+being dereferenced ("s2") does not match the variable which is compared against
+"null" ("s").
+
+package examples.rules.pb.re;
+
+public class NCMD {
+    public static void method(String s) {
+        String s2 = null;
+        if(s != null &amp;&amp; s2.equals("")) {  //VIOLATION- should be dereferencing "s" and not "s2"
+        }
+    }
+
+    public static void main(String[] args) {
+        method("");
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change either the variable that is compared against "null" or the variable that
+is dereferenced so that the two match.
+
+package examples.rules.pb.re;
+
+public class NCMD_Fixed {
+    public static void method(String s) {
+        String s2 = null;
+        if(s != null &amp;&amp; s.equals("")) {  //FIXED
+        }
+    }
+
+    public static void main(String[] args) {
+        method("");
+    }  
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+EXP01-J. Do not use a null in a case where an object is required
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP01-J.+Do+not+use+a+null+in+a+case+where+an+object+is+required">https://wiki.sei.cmu.edu/confluence/display/java/EXP01-J.+Do+not+use+a+null+in+a+case+where+an+object+is+required</A>
+
+</PRE>
+</BODY>
+</HTML>

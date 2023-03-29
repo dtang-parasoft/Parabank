@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only "clone()" instances of "final" classes [CERT.MET52.CIFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only "clone()" instances of "final" classes [CERT.MET52.CIFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a call to "clone()" is made by an instance of a
+non-"final" class.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+If a class is not declared "final" it may be possible to construct a malicious
+subclass. For security purposes, calls to "clone()" should be assumed that they
+may operate on malicious data. Therefore, to reduce the likelihood of this
+occurring classes which may be cloned should be declared "final".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class CIFC {
+    public Data getClone(Data d) {
+        return d.clone(); //VIOLATION
+    }
+
+    class Data {
+        int _i;
+
+        Data(Data d) {
+            _i = d._i;
+        }
+
+        protected Data clone() {
+            return new Data(this);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the class "final" if possible.
+
+package examples.rules.security.wsc;
+
+public class CIFC_Fixed {
+    public Data getClone(Data d) {
+        return d.clone(); //VIOLATION
+    }
+
+
+    final class Data { //FIXED
+        int _i;
+
+        Data(Data d) {
+            _i = d._i;
+        }
+
+        protected Data clone() {
+            return new Data(this);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+    
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+SEI CERT Oracle Coding Standard for Java
+MET52-J. Do not use the clone() method to copy untrusted method parameters
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET52-J.+Do+not+use+the+clone%28%29+method+to+copy+untrusted+method+parameters">https://wiki.sei.cmu.edu/confluence/display/java/MET52-J.+Do+not+use+the+clone%28%29+method+to+copy+untrusted+method+parameters</A>
+
+</PRE>
+</BODY>
+</HTML>

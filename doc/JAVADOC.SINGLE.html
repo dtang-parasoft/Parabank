@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce restraint on number of lines used for Javadoc comments [JAVADOC.SINGLE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce restraint on number of lines used for Javadoc comments [JAVADOC.SINGLE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule would report an error if the number of lines used
+in the javadoc comment does not follow the setting.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Javadoc format option:
+    -Always use multiple lines for javadoc comments (default option)
+    -Always use single line for javadoc comments if they fit 
+    
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.JAVADOC;
+
+public class SINGLE {
+    /**Void method that does nothing*/    //VIOLATION
+    public void myMethod() {}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.JAVADOC;
+
+public class SINGLE {
+    /** 
+     * Void method that does nothing //FIXED
+     */   
+    public void myMethod() {} 
+}
+
+</PRE>
+</BODY>
+</HTML>

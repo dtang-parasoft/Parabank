@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Number of Returns in Methods [METRIC.NORET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Number of Returns in Methods [METRIC.NORET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metrics counts the number of return statements in a method.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Methods with a large amount of return statements are more difficult to debug
+and may be a sign of poor organization. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Depth   Code
+
+        class Foo
+        {
+            String bar(int i, int j, int k)
+            {
+                String str = null;
+ 
+                if (i &gt;= 2) {
+                    str = "correct";
+                }
+                if (j &gt; 10)
+                {
++1                  return "out of range";
+                }
+                switch (i) {
+                    case 0:
++1                      return "nothing";
+                    case 1:
+                        throw new IllegalArgumentException();
+                    default:
++1                      return str;
+                }
+            }
+        }
+        
+Total: 3
+
+</PRE>
+</BODY>
+</HTML>

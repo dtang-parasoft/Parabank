@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent the scripting API from executing untrusted code [CWE.94.ASAPI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent the scripting API from executing untrusted code [CWE.94.ASAPI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Code injection simply involves injecting malicious code into an application,
+which will be executed in the context of the application. There are a couple
+ways in which Java code could be injected into an application such as using
+the scripting API. . . If an attacker can control which script file is loaded
+or part of the script code that is evaluated, then malicious code can be
+executed." [OWASP Reference]
+
+This rule can identify when Java scripting is used in code. By default, it
+detects when the eval() method, which can execute a string as JavaScript code,
+is called on a scriptEngine object.
+
+The rule can be parameterized to trigger every time a scriptEngine
+object is instantiated (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When software allows a user's input to contain code syntax, it might be
+possible for an attacker to craft the code in such a way that it will alter
+the intended control flow of the software. Such an alteration could lead to
+arbitrary code execution." [CWE-94]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Report only when eval() is called  (enabled by default)
+	With this parameter enabled, the rule triggers when the eval() method is
+	called on the scriptEngine object. Disabling this parameter results in
+	reporting all instantiations of ScriptEngineManager objects.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid executing untrusted scripts to prevent unexpected
+behavior and security breaches (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the eval() method is called on the scriptEngine
+object.
+
+package examples.rules.security.wsc;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+public class ASAPI_1 {
+    public void evaluate(String dynamicCode) throws ScriptException {
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        ScriptEngine scriptEngine = scriptEngineManager.getEngineByExtension("js");
+        scriptEngine.eval(dynamicCode);    // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using a sandbox that, by default, blocks access to all
+Java classes. As a result, classes that are safe to be used in JavaScript must
+be explicitly allowed. 
+
+package examples.rules.security.wsc;
+
+import delight.nashornsandbox.NashornSandbox;
+import delight.nashornsandbox.NashornSandboxes;
+
+import javax.script.ScriptException;
+import java.io.File;
+
+public class ASAPI_1
+{
+    public void evaluate(String dynamicCode) throws ScriptException {
+        NashornSandbox sandbox = NashornSandboxes.create();
+        sandbox.allow(File.class);      //allow access only to File class
+        sandbox.eval(dynamicCode);      //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Reference
+Code injection in Java
+<A HREF="https://www.owasp.org/index.php/Code_injection_in_Java">https://www.owasp.org/index.php/Code_injection_in_Java</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-94: Improper Control of Generation of Code ('Code Injection')
+<A HREF="https://cwe.mitre.org/data/definitions/94.html">https://cwe.mitre.org/data/definitions/94.html</A>
+
+Sandboxing Rhino in Java
+<A HREF="https://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">https://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/</A>
+
+Java Scripting Programmer's Guide
+<A HREF="https://docs.oracle.com/javase/7/docs/technotes/guides/scripting/programmer_guide/">https://docs.oracle.com/javase/7/docs/technotes/guides/scripting/programmer_guide/</A>
+
+Secure Coding Guidelines for Java SE
+3 Injection and Inclusion
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#3-8">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#3-8</A>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

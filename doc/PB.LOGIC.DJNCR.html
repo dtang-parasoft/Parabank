@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not discard the result of a call to "readLine()" after checking that the return value is non-null [PB.LOGIC.DJNCR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not discard the result of a call to "readLine()" after checking that the return value is non-null [PB.LOGIC.DJNCR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the return value of a call to "readLine()" is not ignored 
+after it is checked to see whether or not it is "null".  A violation will be
+flagged for each place where the return value of a call to "readLine()" is not
+stored into a variable or used in some way other than to compare it against
+"null".  This rule only checks calls to the "readLine()" method declared in the
+"java.io.Reader" class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the return value of a call to "readLine()" is not null, the programmer will
+usually want to use this return value.  If the return value is not stored in a
+variable or used immediately, it is lost since calling "readLine()" again will 
+read a different line.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+import java.io.*;
+
+public class DJNCR {
+    public static void main(String[] args){    
+        BufferedReader br= new BufferedReader(new StringReader(""));
+        try{
+            if(br.readLine()!= null){  //VIOLATION
+                System.out.println("readLine() was not null");
+            }
+        }
+        catch(Exception e){}
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Store the return value of "readLine()" into a variable or use it some other way.
+
+package examples.rules.pb.logic;
+
+import java.io.*;
+
+public class DJNCRFixed {
+    public static void main(String[] args){    
+        BufferedReader br= new BufferedReader(new StringReader(""));
+        try{
+            String line= br.readLine();
+            if(line!= null){  //VIOLATION
+                System.out.println("The line was "+line);
+            }
+        }
+        catch(Exception e){}
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

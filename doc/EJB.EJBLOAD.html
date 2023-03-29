@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call finder methods in the 'ejbLoad()' [EJB.EJBLOAD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call finder methods in the 'ejbLoad()' [EJB.EJBLOAD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls finder methods in 'ejbLoad()' methods.  An 
+error is reported if a Home interface's finder method is called from an the 
+'ejbLoad()' method of an "EntityBean" or a "SessionBean".
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using "Lazy Loading" might reduce the number of finder method calls. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+public class EJBLOADBean implements EntityBean {
+
+    private long orderId;
+    private String orderName;
+    private long lineItemId;    // FK to the child table LineItems table    
+    private Collection lineItems;    // child data from LineItems table
+
+    public void ejbLoad() {  // VIOLATION
+
+        // step1: select orderId, orderName and lineItemId from Order table
+        /* step2: get lineItems by looking up LineItem entity bean
+                   : look up LineItem home reference through JNDI
+        */
+        // ERROR calling find method from ejbLoad.
+        lineItems = lineItemHome.findLineItems(lineItemId); 
+    }
+
+    public Collection getLineItems(){
+        return lineItems;
+    }	
+    // ...
+}
+
+Here, you are getting data for both parent and child (OrderBean and LineItem) in one call 
+in the ejbLoad() method. This is called aggressive/eager loading. You are getting data 
+from the database for every client business method request or when the transaction ends. 
+However, the client may often be interested in only orderId and orderName, but not LineItems. 
+For example, if you use a finder method to get orders, you might get 100 orders and 1000 
+lineItems. You get 1000 lineItems records unnecessarily even though the client didn't 
+want lineItems. Remember that ejbLoad() is called even when the Container wants to 
+activate a bean; this is extra overhead.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can solve this problem using Lazy Loading. In Lazy Loading, you load the child data as required,
+when required. The above example can  be rewritten like this :
+
+package examples.rules.ejb;
+
+public class EJBLOADFixedBean implements EntityBean {
+    private long orderId;
+    private String orderName;
+    private long lineItemId;    // FK to the child table LineItems table    
+    private Collection lineItems;    // child data from LineItems table
+
+    public void ejbLoad() { 
+        // step1: select orderId, orderName and lineItemId from Order table
+    }
+
+    public Collection getLineItems(){  // FIXED
+
+        /* step2: get lineItems by looking up LineItem entity bean
+                   : look up LineItem home reference through JNDI
+        */
+        lineItems = lineItemHome.findLineItems(lineItemId);
+        return lineItems;
+    }
+}
+
+Here, you load the data as and when the client calls getLineItems(), but not when it calls other 
+business methods. Thus, Lazy Loading is best to improve performance; use it when you 
+implement relationships in Entity Beans.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Best Practices to improve performance in EJB" published on-line at 
+<A HREF="http://www.precisejava.com/javaperf/j2ee/EJB.htm">http://www.precisejava.com/javaperf/j2ee/EJB.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

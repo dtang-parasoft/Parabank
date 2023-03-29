@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'InvocationContext.proceed()' from @AroundInvoke methods [EJB.EJB3.CPIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'InvocationContext.proceed()' from @AroundInvoke methods [EJB.EJB3.CPIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a method with the "@AroundInvoke" annotation does
+not call "InvocationContext.proceed()" with the parameter. If "proceed()" is not
+called, the method which was intercepted will never be called.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A violation is only flagged if the "@AroundInvoke" method matches the signature:
+"Object &lt;METHOD&gt;(InvocationContext) throws Exception"
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+public class CPIM {
+    @AroundInvoke
+    Object aroundInvokeMethod(InvocationContext ic) throws Exception { //VIOLATION
+        _logger.entering("CPIM", "interceptedMethod");
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a call to "InvocationContext.proceed()"
+
+package examples.rules.ejb.ejb3;
+
+public class CPIMFixed {
+    @AroundInvoke
+    Object aroundInvokeMethod(InvocationContext ic) throws Exception { //FIXED
+        _logger.entering("CPIMFixed", "interceptedMethod");
+        return ic.proceed();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. p. 162-165.
+
+JSR 220: Enterprise JavaBeansTM,Version 3.0
+EJB Core Contracts and Requirements, Section #12.3
+
+</PRE>
+</BODY>
+</HTML>

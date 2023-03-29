@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not acquire locks in different order [CWE.833.ORDER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not acquire locks in different order [CWE.833.ORDER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where two mutexes are locked in different orders, which
+can cause a deadlock. The violation will be reported if there exist at least
+two locks and at least two paths on which they are acquired in different orders.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Reported violation presents at least two separate paths to show different
+order of lock acquisitions. Therefore, each of these path contains a top-level
+node describing the path and the actual flow path is reported one level below.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents application deadlocks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Example
+{
+    static Lock lock1 = new ReentrantLock();
+
+    static Lock lock2 = new ReentrantLock();
+
+    static int v1, v2;
+
+    void takeLocksA(Lock a, Lock b)
+    {
+        a.lock();
+        v1++;
+        b.lock(); // lock2 is acquired after lock1 (from fooA) // VIOLATION
+        v2++;
+        a.unlock();
+        b.unlock();
+    }
+
+    void takeLocksB(Lock a, Lock b)
+    {
+        b.lock();
+        v2++;
+        a.lock(); // lock1 is acquired after lock2 (from fooB)
+        v1++;
+        b.unlock();
+        a.unlock();
+    }
+
+    void fooA()
+    {
+        takeLocksA(lock1, lock2);
+    }
+
+    void fooB()
+    {
+        takeLocksB(lock1, lock2);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Repair
+{
+    static Lock lock1 = new ReentrantLock();
+
+    static Lock lock2 = new ReentrantLock();
+
+    static int v1, v2;
+
+    void takeLocksA(Lock a, Lock b)
+    {
+        a.lock();
+        v1++;
+        b.lock();
+        v2++;
+        a.unlock();
+        b.unlock();
+    }
+
+    void takeLocksB(Lock a, Lock b)
+    {
+        b.lock();
+        v2++;
+        a.lock();
+        v1++;
+        b.unlock();
+        a.unlock();
+    }
+
+    void fooA()
+    {
+        takeLocksA(lock1, lock2);
+    }
+
+    void fooB()
+    {
+        takeLocksB(lock2, lock1);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-833: Deadlock
+<A HREF="https://cwe.mitre.org/data/definitions/833.html">https://cwe.mitre.org/data/definitions/833.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

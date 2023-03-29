@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implement Runnable instead of extending Thread [TRS.IRET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implement Runnable instead of extending Thread [TRS.IRET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies types which extend Thread. A violation is flagged for each
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In general, it is preferential to avoid extending concrete classes. This is
+especially true if common code is not shared between them. In most cases a class
+which extends Thread can instead implement Runnable. Implementing Runnable also
+allows the class to extend another class if desired. Furthermore, extending
+Thread has a larger overhead.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class IRET {
+    public static void main(String[] args) {
+        new ExtendedThread().start();
+    }
+}
+
+class ExtendedThread extends Thread { //VIOLATION
+    public void run() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class IRETFixed {
+    public static void main(String[] args) {
+        new Thread(new ImplementedRunnable()).start();
+    }
+}
+
+class ImplementedRunnable implements Runnable { //FIXED
+    public void run() {
+        ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

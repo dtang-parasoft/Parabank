@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assign 'protected' accessibility to 'readResolve()' and 'writeReplace()' methods in serializable classes [APSC_DV.001460.MASP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assign 'protected' accessibility to 'readResolve()' and 'writeReplace()' methods in serializable classes [APSC_DV.001460.MASP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks serializable classes to detect the 'readResolve'
+and 'writeReplace' methods that are not declared as 'protected'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The application deserializes untrusted data without sufficiently verifying
+that the resulting data will be valid. . . Attackers can modify unexpected
+objects or data that was assumed to be safe from modification. . .
+The consequences can vary widely, because it depends on which objects or
+methods are being deserialized, and how they are used. Making an assumption
+that the code in the deserialized object is valid is dangerous and can enable
+exploitation." [CWE-502]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that the 'readResolve' and 'writeReplace' methods are
+available to subclasses of a serializable class, which simplifies extending
+classes that implement 'java.io.Serializable'.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.io.*;
+
+public class MASP implements Serializable {
+    private Object readResolve () // VIOLATION
+    throws ObjectStreamException 
+    {
+    return null;
+    }  
+    private Object writeReplace ()  // VIOLATION
+    throws ObjectStreamException 
+    {
+    return null;
+    } 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the 'readResolve ()' and 'writeReplace ()' methods as 'protected'.
+
+package examples.rules.pb.api;
+
+import java.io.*;
+
+public class MASPFixed implements Serializable {
+    protected Object readResolve () // FIXED
+    throws ObjectStreamException 
+    {
+    return null;
+    }  
+    protected Object writeReplace ()  // FIXED
+    throws ObjectStreamException 
+    {
+    return null;
+    } 
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A08:2021 - Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-502: Deserialization of Untrusted Data
+<A HREF="https://cwe.mitre.org/data/definitions/502.html">https://cwe.mitre.org/data/definitions/502.html</A>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 78-83
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

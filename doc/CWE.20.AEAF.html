@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not extend from the Struts classes 'ActionForm' and 'DynaActionForm' [CWE.20.AEAF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not extend from the Struts classes 'ActionForm' and 'DynaActionForm' [CWE.20.AEAF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule makes sure that classes do not extend from the class "org.apache.struts.action.
+ActionForm" or from the class "org.apache.struts.action.DynaActionForm". A violation will be 
+flagged for each class extending either ActionForm or DynaActionForm.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+If an ActionForm is not validated, the values passed to the system can cause various types of 
+security errors based on unvalidated inputs such as SQL injection, cross-site scripting, and 
+other injection vulnerabilities.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Instead of extending ActionForm or DynaActionForm, Struts ActionForms should extend from one
+of the following:
+    org.apache.struts.validator.ValidatorForm
+    org.apache.struts.validator.ValidatorActionForm
+    org.apache.struts.validator.DynaValidatorForm
+    org.apache.struts.validator.DynaValidatorActionForm
+Extending ActionForm or DynaActionForm causes the Struts validation framework to be bypassed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package example.rules.security.iba;
+
+import org.apache.struts.action.ActionForm;
+
+public class AEAF extends ActionForm  {
+    public AEAF() {
+        super();        
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Extend from ValidatorForm, ValidatorActionForm, DynaValidatorForm, or DynaValidatorActionForm
+instead of ActionForm or DynaActionForm.
+
+package example.rules.security.iba;
+
+import org.apache.struts.validator.ValidatorForm;
+
+public class AEAFFixed extends ValidatorForm  {
+    public AEAFFixed() {
+        super();        
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Introduction to Injection Attacks
+Video: <A HREF="https://vimeo.com/262069083">https://vimeo.com/262069083</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf</A>
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-104: Struts: Form Bean Does Not Extend Validation Class
+<A HREF="https://cwe.mitre.org/data/definitions/104.html">https://cwe.mitre.org/data/definitions/104.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not overload the 'finalize()' method [PB.API.OF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not overload the 'finalize()' method [PB.API.OF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies 'finalize()' methods that are overloaded.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A user-defined 'finalize()' method would be invoked during 
+garbage collection only if it is overriden. An overloaded 
+'finalize()' method that declares extra parameters would not
+be executed by the VM.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class OF {
+    protected void finalize(Object o) { //VIOLATION
+        super.finalize(); 
+        //some other clean-ups
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class OFFixed {
+    protected void finalize() { //FIXED
+        super.finalize(); 
+        //some other clean-ups
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+MET12-J. Do not use finalizers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers">https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers</A>
+
+</PRE>
+</BODY>
+</HTML>

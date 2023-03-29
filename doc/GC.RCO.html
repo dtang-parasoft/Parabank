@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Reuse immutable constant objects to conserve memory [GC.RCO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Reuse immutable constant objects to conserve memory [GC.RCO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation when it detects the creation of constant
+immutable objects that are not assigned to final variables.  Examples of
+immutable objects are zero length arrays (i.e. "new Integer [0]") and the
+primitive wrapper types (Integer/Long/Byte/...).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not report a violation for objects defined in static
+initializers, as these are guaranteed to be executed only once.
+
+There is a Quick Fix for this rule to create a "final" field for constant
+immutable objects, but the Quick Fix is not available in all situations.  The
+Quick Fix will try to create a "static final" field for the constant immutable
+object, but there are some cases where it must create an instance (non-"static")
+field.  Two cases where the Quick Fix cannot create a "static" field for a
+constant object are:
+
+1.  The constant object is created within an inner non-"static" class.  In this
+case, creating a "static" field for the constant object would cause a compile
+error because "static" fields cannot be defined within inner non-"static" types.
+The Quick Fix will create an instance field in this case.
+
+2.  An inner non-"static" type is accessed within the initialization of the
+constant immutable object.  Accessing an inner non-"static" type within the
+initialization of a "static" field requires an instance of the class which
+declares that inner type, so the Quick Fix will just create an instance (non-
+"static") "final" field in this case.
+
+The "Quick Fix All" feature is not available for this rule because the
+Quick Fix requires user input of a field name.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore anonymous class objects. (Default is "true".)
+    -If this option is enabled, no violations will be flagged for creations of
+     objects of anonymous types.
+-Ignore classes (in regular expression)
+    - default list: 
+        java.io.InputStream
+        java.io.OutputStream
+        
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Repeated creation of immutable constant objects unnecessarily increases the
+memory that the program is using. It is also always preferable to assign
+constants to a named variable to make the program more easy to understand
+and maintain.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rule.gc;
+
+public class RCO {
+    /**
+     * Array with children, an empty array by default
+     */
+    protected Object[] getChildren() {
+        return new Object[0];  // VIOLATION
+    }
+
+    static Long coerceToLong(String s) {
+        if (s == null || s.length() == 0)
+            return new Long(-1);  // VIOLATION
+        else
+            return new Long(s);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Define a constant for the immutable constant object and reuse it.  Depending on
+the location of the error and the object being created, an immutable constant
+object can be assigned to either a "final" class member or a "final" local
+variable.  If possible, a "final" class member should be used; however, if the
+constant object uses a local variable in its creation, a local "final" object
+must be used.
+
+package examples.rule.gc;
+
+public class RCOFixed {
+    public static final Object[] NO_CHILDREN = new Object[0];
+
+    /**
+     * Array with children, an empty array by default
+     */
+    protected Object[] getChildren() {
+        return NO_CHILDREN;  // FIXED
+    }
+
+    private static final Long LONG_N1 = new Long(-1);
+
+    static Long coerceToLong(String s) {
+        if (s == null || s.length() == 0)
+            return LONG_N1;  // FIXED
+        else
+            return new Long(s);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

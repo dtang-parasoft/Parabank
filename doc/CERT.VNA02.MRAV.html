@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Access related Atomic variables in a synchronized block [CERT.VNA02.MRAV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Access related Atomic variables in a synchronized block [CERT.VNA02.MRAV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies multiple Atomic variable fields updated in a method.
+Atomic fields are considered to be types belonging to the package
+"java.util.concurrent.atomic". This rule flags when the Atomic fields are not
+updated within a synchronized method or block. Atomic variables are guaranteed
+to update atomically individually, but not in relation to one another. There
+remains a possibility if the variables are accessed elsewhere to see one Atomic
+field as having been updated, while the other has yet to be updated.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule makes the assumption that two (or more) variables are related if they
+are updated in a method together. This is not always the case, and sometimes
+the variables are safe to remain as is. It is best to analyze results on a case
+by case basis. See "DRAWBACKS" for further information.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Concurrency
+
+If two variables are related and not updated as an atomic unit, then it may
+be possible to access the variables and see an inconsistent state where only one
+of the two variables has been updated.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If the variables are not accessed elsewhere, then wrapping them in a synchronized
+block or Lock may be superfluous. In this case, it may be better to convert the
+field to a non-Atomic version while updating the field in a synchronized block.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class MRAV {
+    AtomicLong time = new AtomicLong();
+    AtomicLong date = new AtomicLong();
+
+    public void updateTime() { //VIOLATION
+        time.set(getCurrentTime());
+        date.set(getCurrentDate());
+    }
+
+    public long getTime() {
+        return time.get();
+    }
+
+    public long getDate() {
+        return date.get();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class MRAVFixed {
+    AtomicLong time = new AtomicLong();
+    AtomicLong date = new AtomicLong();
+    private static final Object LOCK = new Object();
+
+    public void updateTime() { //FIXED
+        synchronized(LOCK) {
+            time.set(getCurrentTime());
+            date.set(getCurrentDate());
+        }
+    }
+
+    public long getTime() {
+        return time.get();
+    }
+
+    public long getDate() {
+        return date.get();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 23-25.
+
+SEI CERT Oracle Coding Standard for Java
+VNA00-J. Ensure visibility when accessing shared primitive variables
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/VNA00-J.+Ensure+visibility+when+accessing+shared+primitive+variables">https://wiki.sei.cmu.edu/confluence/display/java/VNA00-J.+Ensure+visibility+when+accessing+shared+primitive+variables</A>
+
+SEI CERT Oracle Coding Standard for Java
+VNA02-J. Ensure that compound operations on shared variables are atomic
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/VNA02-J.+Ensure+that+compound+operations+on+shared+variables+are+atomic">https://wiki.sei.cmu.edu/confluence/display/java/VNA02-J.+Ensure+that+compound+operations+on+shared+variables+are+atomic</A>
+
+SEI CERT Oracle Coding Standard for Java
+VNA03-J. Do not assume that a group of calls to independently atomic methods is atomic
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/VNA03-J.+Do+not+assume+that+a+group+of+calls+to+independently+atomic+methods+is+atomic">https://wiki.sei.cmu.edu/confluence/display/java/VNA03-J.+Do+not+assume+that+a+group+of+calls+to+independently+atomic+methods+is+atomic</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use AWT classes in Web components [SECURITY.EAB.AWT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use AWT classes in Web components [SECURITY.EAB.AWT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should not use AWT components.  This rule will flag a violation
+for each method invocation from the "java.awt" package in a web component. A
+class or interface is considered a web component if it extends or implements a
+type from the "javax.servlet" package. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Web components which have AWT code in them are likely to have unanticipated 
+functionality from an architectural point of view, which decreases the quality 
+and security of the application. Additionally, it may represent an entry point 
+for an attacker.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for calls to AWT methods (default "2")
+    This parameter allows for indirect checking of AWT calls. Specifying a value
+    of "1" will only check for direct calls to these methods. A value of "2"
+    will check if any of the methods called from the web component in turn call
+    an AWT method, and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+J2SE Abstract Windowing Toolkit (AWT) functionality should not be used in web 
+components. Web components are server-side, front end transactional components, 
+and containers are designed to facilitate high-throughput transaction 
+processing. As such, interaction with a keyboard or a display will 
+interfere with these objectives. Therefore, it is not recommended to use AWT
+functionality in web components.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import javax.servlet.Servlet;
+import java.awt.ActionEvent;
+
+public class AWT implements Servlet {
+    public testMethod(ActionEvent ae) {
+        ae.dispatch(); //VIOLATION
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid using anything from the "java.awt" package.
+
+</PRE>
+</BODY>
+</HTML>

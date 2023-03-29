@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare all formal parameters as "final" [CODSTA.BP.FPF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare all formal parameters as "final" [CODSTA.BP.FPF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies formal parameters that are not declared
+as "final". With the default setting of the parameters,  
+parameters of "catch" blocks are checked in addition to method 
+parameters.  An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This coding style is a matter of personal preference. Ignoring
+this rule will not lead to software errors.
+
+This rule may report false positives.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Code Quality
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore parameters which are declared in a "catch" block. 
+ (Default value is "false".)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Trying to modify parameters could be very confusing. 
+Declaring all parameters as final could prevent this 
+confusion.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+class FPF {
+    public int sum(int a, int b) { //VIOLATION
+        return (a + b); 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+class FPFFixed {
+    public int sum(final int a, final int b) { //FIXED
+        return (a + b); 
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

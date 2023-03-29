@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid dereferencing null objects [PB.RE.PNPD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid dereferencing null objects [PB.RE.PNPD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule searches for possible attempts to dereference a null pointer.  It
+will flag violations such as the following:
+
+if(w== null){
+    w.close();
+}
+
+It searches for places where a method call is made on an object that is likely
+to be null based on the flow control.  It also will detect similar errors in
+the bodies of the boolean expression portions of if-statements, such as the
+following:
+
+if(w== null &amp;&amp; w.isOpen()){
+}
+
+It will also flag a case where a null literal is thrown, since this is an
+attempt to dereference it.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.EXCEPT.NP.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Enforcing this rule will help prevent bugs because it will catch many potential
+NullPointerExceptions before runtime.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule is deprecated because returns false positive violations. Instead this please use BD.EXCEPT.NP rule.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class PNPD {
+    public static void close(InputStream stream) throws IOException {
+        if (stream == null)
+            stream.close(); // VIOLATION
+    }
+
+    public static void main(String[] args) throws IOException {
+        close(null);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Fix the code logic so that you never call a method on an object if that object
+is null.  In this case, the fix is just to change the "==" operator to a "!="
+operator.
+
+package examples.rules.pb.re;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class PNPDFixed {
+    public static void close(InputStream stream) throws IOException {
+        if (stream != null)  // FIXED
+            stream.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        close(null);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

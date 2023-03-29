@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use Atomic variables when always accessed in synchronized manner [TRS.AIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use Atomic variables when always accessed in synchronized manner [TRS.AIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Atomic variable fields only accessed inside synchronized
+methods, synchronized blocks, or explicit Locks. This rule only checks classes
+with a single Atomic variable field. Violations should be analyzed on a case by
+case basis. See "NOTES".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule attempts to ensure the Atomic variable is not accessed by external
+classes. It does this by only checking private fields and ignoring Atomic
+variables passed to methods, assigned to other variables, or returned by a
+method. Violations should still be analyzed to ensure it is safe to use a
+non-Atomic variable.
+
+This rule only checks classes with a single Atomic field. Classes with more than
+one Atomic field that are related should continue to modify them in a
+synchronized manner. Otherwise, there is a possibility of being in a state where
+one variable has been updated but another has yet to be. See TRS.MRAV for more
+information.
+
+This rule does not ensure that the Atomic variable is accessed with the same
+lock. It may be beneficial to run TRS.USL in addition to this rule. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If an Atomic variable is only accessed in synchronized methods, synchronized
+blocks, or explicit Locks then it is usually unnecessary for the variable to
+be Atomic. Using multiple synchronization techniques can cause confusion and may
+hinder performance.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class AIL {
+    private AtomicLong _long = new AtomicLong(); //VIOLATION
+    private static final Object LOCK = new Object();
+
+    public void setLong(long l) {
+        synchronized(LOCK) {
+            _long.set(l);
+        }
+    }
+    public long getLong() {
+        synchronized(LOCK) {
+            return _long.get();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a non-Atomic field, or remove the synchronization blocks (assuming other
+variables are not using them).
+
+package examples.rules.trs;
+
+public class AILFixed {
+    private long _long = new AtomicLong(); //FIXED
+    private static final Object LOCK = new Object();
+
+    public void setLong(long l) {
+        synchronized(LOCK) {
+            long = l;
+        }
+    }
+    public long getLong() {
+        synchronized(LOCK) {
+            return long;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 29-32.
+
+</PRE>
+</BODY>
+</HTML>

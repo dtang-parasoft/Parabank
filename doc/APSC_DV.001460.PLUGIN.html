@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure Plugins are added in the 'struts-config.xml' [APSC_DV.001460.PLUGIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure Plugins are added in the 'struts-config.xml' [APSC_DV.001460.PLUGIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if the plugin names which are listed in the rule parameter 
+does not exist in 'struts-config.xml'. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Using the Struts Validator to check all program input before it is processed by 
+the application can prevent vulnerabilities that result from unchecked input.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Checks whether the following Plugins exist in the 'struts-config.xml'
+    -By default, checks "org.apache.struts.validator.ValidatorPlugIn" plugin
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;struts-config&gt;
+    .....
+    &lt;!-- VIOLATION : missing plugin "org.apache.struts.validator.ValidatorPlugIn" --&gt;
+&lt;/struts-config&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;struts-config&gt;
+    .....
+    &lt;!-- FIXED : add plugin "org.apache.struts.validator.ValidatorPlugIn" --&gt;
+    &lt;plug-in className="org.apache.struts.validator.ValidatorPlugIn"&gt;
+        &lt;set-property property="pathnames"
+                      value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/&gt;
+    &lt;/plug-in&gt;
+&lt;/struts-config&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-106: Struts: Plug-in Framework not in Use
+<A HREF="https://cwe.mitre.org/data/definitions/106.html">https://cwe.mitre.org/data/definitions/106.html</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

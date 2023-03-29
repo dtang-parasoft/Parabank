@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid control statements with empty bodies [PB.TYPO.EB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid control statements with empty bodies [PB.TYPO.EB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "if", "for", "while", "do while", "else" and "switch" statements 
+with empty bodies. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Two old rules "PB.FEB" and "PB.IEB", that check for empty bodies of "if" and "for"
+statements, are deprecated since this new rule covers their functionalities. 
+
+This rule will not flag a violation for statements with empty bodies which 
+perform some useful work in their parenthesized blocks.  For instance, a "while"
+statement which has an empty body but updates some local variable in its 
+condition will not be flagged as a violation if that local variable is used 
+later.  In this case, the empty body is probably not a bug.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unintended empty control statements may cause erratic behavior as well as create
+security holes if important checks are bypassed.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Elements that would be flagged as empty bodies
+     Empty body could refer to 
+     -empty statement (a single semicolon) or 
+     -empty block (curly braces with nothing inside)
+     
+     Users can choose to flag either one or both of them as empty bodies.
+     Besides, users also have control over which control statement blocks 
+     would be flagged. They include "if", "else", "for", "while", "do while"
+     and "switch".
+     
+-Report only if the empty statement is on the same line as the control statement.
+ (Default is "true") 
+     -This parameter only applies for empty statements (that is, semicolons by
+      themselves).  It does not apply for empty blocks.  
+     -If an empty statement (semicolon) is on a separate line from the rest of
+      the control statement, a violation will not be flagged when this parameter
+      is selected.  This situation is less likely to be a bug than the situation
+      where an empty statement appears on the same line as the rest of the 
+      control statement.   
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A conditional statement that is immediately followed by a closing statement
+(e.g. a semicolon) is usually a typo.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class EB {
+    void method (int i) {
+        if (i &lt; 0) ;  // VIOLATION
+            System.out.println("negative i"); // This always gets printed
+    }
+}
+
+The 'println ()' statement will always be executed regardless
+of the value of 'i'. 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary semicolon.
+
+package examples.rules.pb.typo;
+
+public class EBFixed {
+    void method (int i) {
+        if (i &lt; 0)  // FIXED
+            System.out.println("negative i");
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-483: Incorrect Block Delimitation
+<A HREF="https://cwe.mitre.org/data/definitions/483.html">https://cwe.mitre.org/data/definitions/483.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC01-J. Do not use an empty infinite loop
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC01-J.+Do+not+use+an+empty+infinite+loop">https://wiki.sei.cmu.edu/confluence/display/java/MSC01-J.+Do+not+use+an+empty+infinite+loop</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated PB.FEB
+@deprecated PB.IEB
+
+</PRE>
+</BODY>
+</HTML>

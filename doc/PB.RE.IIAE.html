@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make sure the IllegalArgumentException message matches the code logic [PB.RE.IIAE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make sure the IllegalArgumentException message matches the code logic [PB.RE.IIAE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In some cases the IllegalArgumentException message contains
+information regarding what the valid argument values should be.
+This rule uses that information to make sure the logic that checks
+the argument matches the specification contained in the
+IllegalArgumentException message.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule can only check some cases, but if it reports an error it
+means that either the exception message or the code checking the argument
+is incorrect. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+class IIAE {
+    public int[] allocate (int size) {
+        if (size &lt; 0)
+            throw new IllegalArgumentException ("size must be less than 0"); // VIOLATION
+    }
+    
+    public void setName (String name) {
+        if (name != null)  
+            throw new IllegalArgumentException ("name must be non-null"); // VIOLATION
+    }
+}
+    
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+class IIAEFixed {
+    public int[] allocate (int size) {
+        if (size &lt; 0)
+            throw new IllegalArgumentException ("size must be greater or equal than 0");  // FIXED
+    }
+    
+    public void setName (String name) {
+        if (name == null)  // FIXED
+            throw new IllegalArgumentException ("name must be non-null");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that file target paths retrieved by resolving symbolic links are safe [CWE.59.FOLLOW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that file target paths retrieved by resolving symbolic links are safe [CWE.59.FOLLOW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The software attempts to access a file based on the filename, but it does not
+properly prevent that filename from identifying a link or shortcut that
+resolves to an unintended resource." [CWE-61]
+
+Setting the 'FOLLOW_LINKS' option for the java.nio.file.FileVisitOption class
+enables resolving symbolic links in file paths. This might possibly lead to
+a security threat if the resolved path enables access to resources from
+outside of the intended control sphere.
+For this reason, you need to manually ensure that the file path is within
+a trusted sphere or use an adequate validating method.
+
+This is an inspection method that detects when FileVisitOption.FOLLOW_LINKS is used
+in code. After you successfully verify that the file path is secure, you need to
+suppress the violation reported by this rule, using the Parasoft syntax
+for suppression comments.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"An attacker may be able to traverse the file system to unintended locations
+and read or overwrite the contents of unexpected files. If the files are used
+for a security mechanism then an attacker may be able to bypass the mechanism."
+[CWE-59]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent an attacker from accessing resources by exploiting
+symbolic links.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the listRestrictedFiles() method returns all files
+from the server's demilitarized zone. However, the method can also return paths
+to files placed outside of the zone, providing room for exploitation by
+an attacker.
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+public class FOLLOW
+{
+    public static final File RESTRICTED_ZONE = new File("server/restricted/zone");
+
+    public static final Stream&lt;String&gt; listRestrictedFiles() throws IOException {
+      return Files.walk(RESTRICTED_ZONE.toPath(), FileVisitOption.FOLLOW_LINKS)
+          .map(Path::toAbsolutePath)
+          .map(Path::toString);
+    }
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To ensure that the code is secure, manually verify that the path is within
+a trusted sphere or use a validation method to verify the path. Then add
+a suppression comment to prevent reporting this violation in future analysis
+runs.
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+public class FOLLOW
+{
+    public static final File RESTRICTED_ZONE = new File("server/restricted/zone");
+
+    public static final Stream&lt;String&gt; listRestrictedFiles() throws IOException {
+      return Files.walk(RESTRICTED_ZONE.toPath(), FileVisitOption.FOLLOW_LINKS) // parasoft-suppress SECURITY.WSC.FOLLOW "verified"
+              .filter(s -&gt; {
+                 return validate(s);
+              })
+          .map(Path::toAbsolutePath)
+          .map(Path::toString);
+    }
+
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Weaknesses On the Cusp
+CWE-59: Improper Link Resolution Before File Access ('Link Following')
+<A HREF="https://cwe.mitre.org/data/definitions/59.html">https://cwe.mitre.org/data/definitions/59.html</A>
+
+CWE-61: UNIX Symbolic Link (Symlink) Following
+<A HREF="https://cwe.mitre.org/data/definitions/61.html">https://cwe.mitre.org/data/definitions/61.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the '@param' Javadoc tag for each parameter of methods [JAVADOC.PARAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the '@param' Javadoc tag for each parameter of methods [JAVADOC.PARAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any method that has a Javadoc comment but
+does not have an '@param' tag for each parameter. An 
+error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest will not report a violation of this rule if a method does not have a Javadoc
+comment.  Another rule (JAVADOC.MJDC) will report an error 
+if there is no Javadoc comment.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-check "public" methods (default as true)
+-check "protected" methods (default as true)
+-check "package-private" methods (default as true)
+-check "private" methods (default as false)
+-Use this tag for overriding and implementing methods: (default is '@see')
+    -If an overriding or implementing method contains this tag, it does not have
+     to have separate '@param' tags for each of the parameters.
+      
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Helps users of your methods understand what data you expect in each parameter.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some parameters are obvious enough that they do not benefit from comments. There 
+might not be anything to add to the '@param' text other than what is obvious from
+the names of the parameter and the method.  The 'fixed' example below is an 
+example of this problem.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class PARAM {
+
+    /**
+     */  // VIOLATION
+    public void setId (String id) {
+        _id = id;
+    }
+    private String _id;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide a '@param' tag for each "public" method's parameters.
+
+package examples.rules.javadoc;
+
+public class PARAMFixed {
+
+    /** 
+     * @param id is set as the new id.
+     */  // FIXED
+    public void setId (String id) {
+        _id = id;
+    }
+    private String _id;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.PARAM2
+@deprecated JAVADOC.PARAM3
+@deprecated JAVADOC.PARAM4
+
+</PRE>
+</BODY>
+</HTML>

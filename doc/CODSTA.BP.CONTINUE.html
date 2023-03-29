@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "break" and/or "continue" statements [CODSTA.BP.CONTINUE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "break" and/or "continue" statements [CODSTA.BP.CONTINUE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses "break" and/or "continue" 
+patterns. An error is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flag "break" statements. (default is false)
+-Flag "continue" statements. (default is true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using "continue" and "break" makes it difficult to later break the
+construct into smaller constructs or methods. It also forces the
+developer to consider more than one end point for a construct.
+By following this rule, you make the code more readable and modular.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class CONTINUE {
+    public int getNum (int max){
+        int i= 0;
+        while (true) {
+            i+= max;
+            max--;
+            if (max== 0) {
+                break; //VIOLATION
+            } 			
+        }
+        return i;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Reorganize the logic of the code segment in order to 
+avoid those patterns.
+
+package examples.rules.codsta.bp;
+
+public class CONTINUEFixed {
+    public int getNum (int max){
+        int i= 0;
+        while (max&gt; 0) {
+            i+= max;
+            max--;   //FIXED
+        }
+        return i;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that 'axis.enableListQuery' is set to "false" in Axis 'server-config.wsdd' files [APSC_DV.000170.AELQ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that 'axis.enableListQuery' is set to "false" in Axis 'server-config.wsdd' files [APSC_DV.000170.AELQ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if the parameter 'axis.enableListQuery' is set to "true" in
+an Apache Axis 'server-config.wsdd' file.  An error is reported for each 
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If 'axis.enableListQuery' is set to "true" in a 'server-config.wsdd' file, it
+will cause the current system config to be listed.  This can expose sensitive 
+information such as passwords.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+server-config.wsdd:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;globalConfiguration&gt;
+    &lt;parameter name="adminPassword" value="admin"/&gt;
+    &lt;parameter name="attachments.Directory" value="c:\temp\attachments"/&gt;
+    &lt;parameter name="sendMultiRefs" value="true"/&gt;
+    &lt;parameter name="sendXsiTypes" value="true"/&gt;
+    &lt;parameter name="attachments.implementation"
+               value="org.apache.axis.attachments.AttachmentsImpl"/&gt;
+    &lt;parameter name="sendXMLDeclaration" value="true"/&gt;
+    &lt;parameter name="enable2DArrayEncoding" value="true"/&gt; 
+    &lt;parameter name="dotNetSoapEncFix" value="false"/&gt;
+    &lt;parameter name="axis.enableListQuery" value="true"/&gt;  &lt;!-- VIOLATION --&gt;
+&lt;/globalConfiguration&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+'axis.enableListQuery' has a default value of "false" if no value is specified 
+for it.  Either explicitly set 'axis.enableListQuery' to "false" or leave it 
+unspecified so that it will default to "false".
+
+server-config.wsdd:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;globalConfiguration&gt;
+    &lt;parameter name="adminPassword" value="admin"/&gt;
+    &lt;parameter name="attachments.Directory" value="c:\temp\attachments"/&gt;
+    &lt;parameter name="sendMultiRefs" value="true"/&gt;
+    &lt;parameter name="sendXsiTypes" value="true"/&gt;
+    &lt;parameter name="attachments.implementation"
+               value="org.apache.axis.attachments.AttachmentsImpl"/&gt;
+    &lt;parameter name="sendXMLDeclaration" value="true"/&gt;
+    &lt;parameter name="enable2DArrayEncoding" value="true"/&gt; 
+    &lt;parameter name="dotNetSoapEncFix" value="false"/&gt;  
+    &lt;!-- FIXED: 'axis.enableListQuery' will default to "false" since it is not 
+         specified --&gt;
+&lt;/globalConfiguration&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Apache Axis Reference Guide", "Global Axis Configuration" section:
+<A HREF="http://ws.apache.org/axis/java/reference.html#GlobalAxisConfiguration">http://ws.apache.org/axis/java/reference.html#GlobalAxisConfiguration</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer ''type'' over ''index'' for constructor argument matching [SPRING.PREFTYPE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer ''type'' over ''index'' for constructor argument matching [SPRING.PREFTYPE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule enforces using the "type" attribute instead of  "index" in the &lt;constructor-arg&gt; tag within Spring XML configuration files.
+Each use of "index" is flagged (unless both "type" and "index" are present).
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Both tags need to be specified in the same cases to avoid ambiguity.
+  
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The "type" attribute is less error-prone and easier to read than "index" 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;bean id="myPizza"
+        class="examples.Pizza"&gt;
+        &lt;constructor-arg  index="0" value="Dracula"/&gt;
+        &lt;constructor-arg  index="1" value="4"/&gt;
+&lt;/bean&gt;
+    
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+&lt;bean id="myPizza"
+        class="examples.Pizza"&gt;
+        &lt;constructor-arg  type="java.lang.String"  value="Dracula"/&gt;
+        &lt;constructor-arg  type="int" value="4"/&gt;
+&lt;/bean&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Twelve Best Practices For Spring XML Configurations by Jason Zhicheng Li (O'Reilly ONJava.com)
+<A HREF="http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html">http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html</A>
+
+</PRE>
+</BODY>
+</HTML>

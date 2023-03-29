@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not expose data with a 'FileNotFound' exception [SECURITY.ESD.SNFD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not expose data with a 'FileNotFound' exception [SECURITY.ESD.SNFD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method calls that throw uncaught FileNotFound exceptions.
+A violation is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If a method calls the java.io.FileInputStream constructor to read an underlying
+configuration file and that file is not present, a java.io.FileNotFoundException
+containing the file path is thrown. Propagating this exception back to the 
+method caller exposes the layout of the file system. Many forms of attack 
+require knowing or guessing locations of files.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class SNFD {
+    void method()  throws FileNotFoundException{
+        method2(); //VIOLATION
+    }
+    void method2() throws FileNotFoundException { }
+}
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place the method call in a try/catch block.
+
+package examples.rules.security.esd;
+
+public class SNFDFixed {
+    void method() throws FileNotFoundException {
+        try{
+            method2();  //FIXED
+        }catch(Exception e ){  }
+    }
+    void method2() throws FileNotFoundException { }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#2-1">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#2-1</A>
+
+</PRE>
+</BODY>
+</HTML>

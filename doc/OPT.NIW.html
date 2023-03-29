@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid creating new instances of BigInteger and BigDecimal [OPT.NIW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid creating new instances of BigInteger and BigDecimal [OPT.NIW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the following instances:
+  new BigInteger(0)
+  new BigInteger(1)
+  new BigInteger(10)
+  
+  new BigDecimal(0)
+  new BigDecimal(1)
+  new BigDecimal(10)
+  
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Instead of creating a new BigInteger or BigDecimal instance, using a predefined
+constant in BigInteger or BigDecimal can improve performance.
+
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.math.*;
+
+public class NIW {
+
+    private BigInteger bint = new BigInteger(1);  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use BigInteger.ONE
+
+package examples.rules.opt;
+
+import java.math.*;
+
+public class NIWFixed {
+
+    private BigInteger bint = BigInteger.ONE; // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

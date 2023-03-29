@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid hard-coded line separators in property values [PROPS.HCLS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid hard-coded line separators in property values [PROPS.HCLS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags property values containing hard-coded line separators. The line
+separators flagged are "\n" and "\r" or any combination of the two.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+These violations can be fixed by storing individual lines or paragraphs as
+separate properties. If the concern is length, then the code should perform
+line-breaking and wrapping and the message should be stored as a single property
+value without separators.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Various operating systems may use differing line separators and hard-coding them
+into property files can cause unexpected or incorrect behavior. The user may
+also have code intended to gather the values and convert them to proper line
+separators. However, often times this code is accidentally omitted or bypassed
+and the properties file may also contain line separators other than the standard
+separator.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#VIOLATION - has a "\n" character
+HCLS_key=The value of this key is:\n0
+ 
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the key with two keys.
+
+#FIXED - removed "\n" character
+HCLS_key=The value of this key is:
+HCLS_key2=0
+
+</PRE>
+</BODY>
+</HTML>

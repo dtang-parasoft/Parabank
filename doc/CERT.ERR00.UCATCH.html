@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a caught exception in the "catch" block [CERT.ERR00.UCATCH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a caught exception in the "catch" block [CERT.ERR00.UCATCH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies caught exceptions that are not used in the "catch" block. 
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Comment to suppress the error (in regular expression)
+    -This rule will not report an error if a specific comment is included in the
+     "catch" block.  By default, the rule will not report an error if an "ignore 
+     exception" comment is included in the "catch" block.
+-Ignore exceptions with names matching the following regular expression(s):
+    -The rule will not flag a violation if the name of the exception matches one
+     of the regular expressions specified in this list.  Matching is not case
+     sensitive, so differences in case will be ignored.
+    -By default, the list includes "^ignore$", which means that violations will 
+     not be flagged for exception variables with the name "ignore".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the caught exception is not used inside of the "catch" block, 
+it may be more difficult to determine where and why the exception occurred.
+For example, it is difficult to trace back the cause of the exception 
+without using a method such as printStackTrace().
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UCATCH {
+
+    public void method () {
+        try {
+            System.in.read ();
+        } catch (java.io.IOException e) {
+            System.out.println("IOException");
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure the caught exception is used in the "catch" body.
+
+package examples.rules.uc;
+
+public class UCATCHFixed {
+
+    public void method () {
+        try {
+            System.in.read ();
+        } catch (java.io.IOException e) {
+            System.out.println("IOException : " + e.getMessage());
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+ERR00-J. Do not suppress or ignore checked exceptions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR00-J.+Do+not+suppress+or+ignore+checked+exceptions">https://wiki.sei.cmu.edu/confluence/display/java/ERR00-J.+Do+not+suppress+or+ignore+checked+exceptions</A>
+
+</PRE>
+</BODY>
+</HTML>

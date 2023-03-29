@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'Thread.yield()' because it may behave differently under different Virtual Machines [TRS.AUTY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'Thread.yield()' because it may behave differently under different Virtual Machines [TRS.AUTY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of 'Thread.yield()'.  An error is reported for 
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+The 'Thread.yield()' method is often used within processor intensive loops to
+yield execution to other threads.  However, since there is no guarantee how
+the 'Thread.yield()' method will be implemented on different virtual machines,
+this may not work as intended.  On many Java Virtual Machines, the 'Thread.yield()'
+method is simply implemented as a no-op.  If this is the case, the machine may
+hang if you are relying on the 'Thread.yield()' method to control thread execution. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'Thread.yield()' has no predictable impact on the behavior of an application
+when run under different virtual machines.  If you are depending on yielding
+as a source of liveness or safety, then you have no guarantee that
+your program will always work.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This method changes the scheduling of your program, so it may be useful during
+testing to insert calls to 'Thread.yield()' to try to break your program by
+exercising more possible execution orders.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid using 'Thread.yield()'.  Try to minimize the number of concurrently running 
+threads.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 204-207
+
+2.  Cigital Java Security Rulepack # 4:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

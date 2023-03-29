@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "try", "catch" and "finally" blocks with empty bodies [CWE.391.AECB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "try", "catch" and "finally" blocks with empty bodies [CWE.391.AECB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "try", "catch" and/or "finally" blocks with empty bodies. 
+An error is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag an error in the following cases:
+For catch block, if the exception variable name matches the regular expression.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Error Handling and Logging
+
+Empty "catch" block indicates unhandled errors. It is important for the 
+application to handle every error appropriately.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "try" block (default as true)
+-Check "catch" block (default as true)
+-Check "finally" block (default as true)
+-Disallow blocks with comments as content (default as false)
+    By default, blocks with comments in them are treated as non-empty.
+    With option turned on, blocks with only comments in them will be flagged.
+
+-Regular expression of exception variable name.
+    If the exception variable name matches the listed regular expression,
+    this rule will not flag an error.
+    Default regular expression is "^ignore$".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Empty blocks do not contribute any semantic meaning to the code and should be
+removed for simplicity. Besides, it is good practice to insert error handling code 
+inside of each "catch" block. Finally block should also contains clean-up code to
+correctly implement its intended functionality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class AECB {
+    /*
+     * VIOLATIONS: empty catch and finally blocks
+     */
+    public void method () {
+        try {
+            System.in.read ();
+        } catch (java.io.IOException e) {
+        } finally { 
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add exception handling code inside the "catch" block.
+
+package examples.rules.pb.typo;
+
+public class AECBFixed {
+    public void method () {
+        try {
+            System.in.read ();
+        } catch (java.io.IOException e) {
+            Messages.log(e); //FIXED
+        } //FIXED, empty "finally" block is removed
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/34f413ad-e8f9-4ff7-944f-9cd46b171b48">https://app.hackedu.com/link/34f413ad-e8f9-4ff7-944f-9cd46b171b48</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+CWE-391: Unchecked Error Condition
+<A HREF="https://cwe.mitre.org/data/definitions/391.html">https://cwe.mitre.org/data/definitions/391.html</A>
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison-Wesley, 2001, pp. 187
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+Cigital Java Security Rulepack # 1:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP00-J. Do not ignore values returned by methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP00-J.+Do+not+ignore+values+returned+by+methods">https://wiki.sei.cmu.edu/confluence/display/java/EXP00-J.+Do+not+ignore+values+returned+by+methods</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

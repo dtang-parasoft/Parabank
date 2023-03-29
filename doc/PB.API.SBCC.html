@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass a 'char' to the 'StringBuffer(int)' constructor [PB.API.SBCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass a 'char' to the 'StringBuffer(int)' constructor [PB.API.SBCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each case where the 'StringBuffer(
+int)' constructor is called with a 'char' as its argument.  While it is
+legal to do this, the results are probably not what the programmer 
+intended.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Since there is no 'StringBuffer(char)' constructor, Java will perform
+an implicit widening conversion to convert a 'char' to an 'int' if you
+pass a 'char' to the 'StringBuffer()' constructor.  Thus, the 
+constructor that gets called is 'StringBuffer(int)'.  This constructor
+will create an empty 'StringBuffer' with the capacity specified by its
+'int' argument.  This means that, instead of creating a 'StringBuffer'
+with the character 'M' in it, "new StringBuffer('M')" will create an 
+empty buffer with capacity 77.  This is counterintuitive and is 
+probably not what was intended.   
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class SBCC {
+    public static void main(String[] args) {
+        StringBuffer word = new StringBuffer('J');  //VIOLATION
+        word.append("test");
+        System.out.println(word);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the 'StringBuffer' constructor which takes a String as an argument
+instead of passing in a 'char'.
+ 
+package examples.rules.pb.api;
+
+public class SBCCFixed {
+    public static void main(String[] args) {
+        StringBuffer word = new StringBuffer("J");  //FIXED
+        word.append("test");
+        System.out.println(word);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+    Addison-Wesley, 2005, pp. 49-52
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare constant local variables "final" [CODSTA.READ.FLV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare constant local variables "final" [CODSTA.READ.FLV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-"final" constant local variables that are not modified 
+after their declaration. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+By default, this rule checks only primitive type local variables.  The rule can 
+be parameterized to also check local variables which have non-primitive types.  
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Types of variables to check
+    -Primitive types only
+        -This is the default selection.  This means that only variables of 
+         primitive types are checked by default.  
+    -All types
+        -When this option is selected, the rule will check variables which have
+         object (non-primitive) types as well as primitive types.
+    -Ignore mutable types
+        -Default is "false".
+        -When "All types" is selected for "Types of variables to check", you may
+         need to enable this parameter if you want to avoid conflicts with 
+         our rule 'PB.CUB.IMM: Ensure "static" "final" fields are immutable.' 
+         Telling the rule to ignore mutable types will avoid conflicts with 
+         PB.CUB.IMM.
+        -WARNING: Enabling this parameter will significantly slow down the 
+         performance of this rule since the check for mutability is slow.  You 
+         should only enable this parameter if you have a good reason for doing 
+         so or if you are only testing on a small amount of code, as the rule 
+         may take a long time with this parameter enabled if you are testing on 
+         a lot of code.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+These values are constants, so adding "final" makes it explicit that these values
+will not change.  Also, it is possible that a local variable which is never 
+modified but not declared "final" is a bug.  You may have meant to change the
+value of this variable at some point but just forgot to do so.  You should 
+inspect the usage of the variable to make sure it was intended to be constant 
+and either make the variable "final" or change its value somewhere within the 
+method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class FLV {
+    private int method (int x) {
+        int size = 5;  // VIOLATION
+        return size + x;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the variable "final".
+
+package examples.rules.codsta.read;
+
+public class FLVFixed {
+    private int method (int x) {
+        final int size = 5;  // FIXED
+        return size + x;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Private Members of Types [METRIC.NOPRIVMIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Private Members of Types [METRIC.NOPRIVMIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The following metric count the number of private members of types. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+        public class Foo
+        {
+            public int bar;
+            protected int _qux;
++1          private int _baz;
+ 
+            Foo() { /* .. */ }
+ 
++1          private void garply() { }
+        }
+
+Total: 2
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place a single space character or no space character between a method name and the opening "(" parenthesis [APSC_DV.003215.MSP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place a single space character or no space character between a method name and the opening "(" parenthesis [APSC_DV.003215.MSP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is a parameterized rule that identifies either:
+1) method names that do not have a single space before their opening '(' parenthesis or 
+2) method names that have a space before their opening '(' parenthesis. 
+The rule parameters specify which of the above cases trigger the rule.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only applies to method declarations; it does not apply to method calls.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-One space before the opening '(' parenthesis 
+-No space before the opening '(' parenthesis (enabled by default)
+
+The default "No space before the opening '('" option is in line with the default
+pattern used by Eclipse and the older versions of the Parasoft tool.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class MSP {
+    public void method() {  // VIOLATION
+    }
+    public void method1  () {  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place exactly one space between the method and its opening '(' parenthesis.
+
+package examples.rules.format;
+
+public class MSPFixed {
+    public void method () {  // FIXED
+    }
+    public void method1 () {  // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 10 - 13
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

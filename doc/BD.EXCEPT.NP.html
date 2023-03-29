@@ -1,0 +1,326 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid NullPointerException [BD.EXCEPT.NP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid NullPointerException [BD.EXCEPT.NP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each variable or expression that is dereferenced should have a non-null value
+at the point of dereferencing on any flow path.
+A variable or expression is dereferenced in Java in one of the following cases:
+   * a method is called on it (a.method());
+   * one of its fields is requested (a.field);
+   * the length of an array is requested (arr.length);
+   * an array element is requested (arr[i]).
+
+This rule detects when a NullPointerException may possibly be thrown at runtime
+due to a null pointer dereference.
+
+Violations reported by this rule typically point to paths that dereference
+uninitialized variables. Alternatively, they could point to paths related to
+missing requirements, unimplemented functionality, or secondary use cases.
+Assumptions that are made at the development stage about how the system is
+meant to be used or what kind of stimuli it would take need to be included in
+the requirements and properly implemented in the system to prevent the system
+from being used incorrectly. If a missing implementation and a possible misuse
+of the system is detected, the paths will represent the missing requirements
+and unimplemented functionality.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"NULL pointer dereferences usually result in the failure of the process unless
+exception handling (on some platforms) is available and implemented. Even when
+exception handling is used, it can still be very difficult to return
+the software to a safe state of operation." [CWE-476]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Reporting of violations where variable is known to be null due to a null
+check" group of parameters allows you to specify how the rule reports null
+checks:
+   * If disabled, the rule will report violations only on variables that are
+     certain to be assigned with a null value.
+   * If enabled, the rule will report violations not only for null value
+     assignment, but also when a check for a null value that stipulates null
+	 pointer dereferencing at the point of use is detected. Here is an example
+	 of this type of violations:
+	 
+        boolean b = (obj == null); // null check stipulates null dereferencing
+        ...                        // at violation point
+        if (b) {
+           ...
+           obj.toString(); // violation is reported if this option is enabled
+        }
+
+  The "Except for the cases when the null check is performed inside a called
+  method of the following visibility" parameter helps you reduce the number of
+  unwanted violations caused by a null check. Enabling this option allows you
+  to specify which methods the rule ignores during null check, depending on
+  their visibility. The following visibility levels are available:
+   * "public" 
+   * "public, protected"
+   * "public, protected, package-private" (default)
+   * "methods of any visibility"
+
+  The following table describes the rule behavior for different visibility
+  options and parameterization options. Violations are only reported for
+  combinations marked with '+'.
+	                                                           method visibility
+  Parameterization:                                | public | protected | package private | private |
+  the option is disabled                           |    +   |     +     |        +        |    +    |
+  "public"                                         |    -   |     +     |        +        |    +    |
+  "protected and public"                           |    -   |     -     |        +        |    +    |
+  "package-private, protected and public"          |    -   |     -     |        -        |    +    |
+  "private, package-private, protected and public" |    -   |     -     |        -        |    -    |
+
+  Consider the following example:
+
+     class Example
+     {
+        protected void foo(Object obj)
+        {
+           if (obj != null) {
+              ...
+           }
+        }
+
+        void bar(Object obj)
+        {
+           foo(obj);
+           obj.toString(); // is the violation reported?
+        }
+     }
+
+  Whether the violation inside bar() will be reported or not depends on
+  the visibility of foo() and parameterization of the rule. With the default
+  parameterization, violations in the bar() function will not be reported
+  because foo() is a protected method.
+
+The "Methods that do not accept null as their parameters" parameter allows you
+to specify methods whose parameters are not allowed to accept null.
+
+Fill in the following columns to configure a method and specify the data it
+affects. 
+- "Enabled" - enables or disables the method. If disabled, the rule assumes
+    that the method can take null as parameters.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "Non-null parameters" - specifies which method parameters do not accept null.
+    List 1-based indexes of parameters separated by a comma or use "*" to
+	specify that none of the method parameters accept null.
+
+
+The "Potential null returners" group of parameters allows you to specify if
+the potential ability of some methods to return null should be taken into
+consideration during analysis. Currently, this feature is implemented for
+methods from the standard Java 2 packages java.lang, java.io, java.util.
+You can enable one or more of the following options:
+   1 "Consider J2SE methods which may return null and it's hard to prevent it"
+     Methods that may return null and are difficult to protect from returning
+     null. In this case, the code should not assume that the returned value
+     will be non-null and perform appropriate checks where necessary.
+
+   2 "Consider J2SE methods which may return null but it's not hard to prevent
+     it"
+     Methods that may return null but can be written in such a way that they
+	 never will return null. In this case, it is not necessary to check
+     the returned values.
+
+   3 "Consider J2SE collections' access methods can return null"
+     Collections access methods that may return null
+     
+public class ExtendedNullPointer
+{
+    String sFileName = "";
+
+    Map&lt;String, Locale&gt; supportedLocalesMap = new HashMap&lt;String, Locale&gt;();
+
+    int getLineLength()
+    {
+        String sFirstLine = "First line";
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(sFileName));
+            sFirstLine = reader.readLine();
+        } catch (Exception e) {
+            System.out.println("Exception occured. " + e.toString());
+            System.out.println("Cause message: " + e.getCause().getMessage()); // VIOLATION (if parameter #1 turned on)
+        } finally {
+            close(reader);
+        }
+        return sFirstLine.length(); // VIOLATION (if parameter #2 turned on)
+    }
+
+    String getCurrentCountryName()
+    {
+        String sLanguage = System.getProperty("Language");
+        String sLngLowerCase = sLanguage.toLowerCase(); // VIOLATION (if parameter #1 turned on)
+        return getCountry(sLngLowerCase, true);
+    }
+
+    String getCountry(String languageId, boolean bDisplayName)
+    {
+        Locale locale = supportedLocalesMap.get(languageId);
+        return locale.getCountry(); // VIOLATION (if parameter #3 turned on)
+    }
+
+    private void close(Reader reader)
+    {
+        if (reader == null) {
+            return;
+        }
+        try {
+            reader.close();
+        } catch (Exception e) {}
+    }
+}
+
+
+The "External functions that may return null" parameter allows you to specify
+additional methods whose return values will be assumed to be null.
+
+Fill in the following columns to configure a method.
+- "Enabled" - enables or disables the method. If disabled, the rule does not
+    consider the method to be a null-returning method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you make your application robust and make it function in
+an expected way under any conditions/with any input.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Here is an example that triggers a violation:
+
+public class Example
+{
+    public void foo(String arg)
+    {
+        arg.length(); // VIOLATION
+    }
+
+    public void goo()
+    {
+        foo(null);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code won't trigger a violation because when the argument is null,
+the method is never called on it:
+
+public class Repair
+{
+    public void foo(String arg)
+    {
+        if (arg != null) {
+            arg.length(); // NO VIOLATION
+        }
+    }
+
+    public void goo()
+    {
+        foo(null);
+    }
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-476: NULL Pointer Dereference
+<A HREF="https://cwe.mitre.org/data/definitions/476.html">https://cwe.mitre.org/data/definitions/476.html</A>
+
+CWE-457: Use of Uninitialized Variable
+<A HREF="https://cwe.mitre.org/data/definitions/457.html">https://cwe.mitre.org/data/definitions/457.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP01-J. Do not use a null in a case where an object is required
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP01-J.+Do+not+use+a+null+in+a+case+where+an+object+is+required">https://wiki.sei.cmu.edu/confluence/display/java/EXP01-J.+Do+not+use+a+null+in+a+case+where+an+object+is+required</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

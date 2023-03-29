@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Possible integer overflow in a compare or compareTo method [PB.NUM.CMP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Possible integer overflow in a compare or compareTo method [PB.NUM.CMP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+ 
+This rule flags instances when there is a possible integer overflow in a compare
+or compareTo method.  When the Comparable interface is implemented, this rule checks
+the compare() method for possible integer overflows.  When the Comparator interface
+is implemented, this rule checks the compareTo method.
+
+Each possible overflow will be flagged.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In the case of overflow, the method can return incorrect result.  For 
+instance, if firstIdentifier=2^31-1 and secondIdentifier=-2^31,
+performing firstIdentifier-secondIdentifier will return -1, which is incorrect.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public int compare(Object o1, Object o2) {
+    int firstIdentifier = ((IIdentifiable)o1).getId();
+    int secondIdentifier = ((IIdentifiable)o2).getId();
+    return firstIdentifier - secondIdentifier;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public int compare(Object o1, Object o2) {
+    int firstIdentifier = ((IIdentifiable)o1).getId();
+    int secondIdentifier = ((IIdentifiable)o2).getId();
+    return (firstIdentifier&lt;secondIdentifier ? -1 : (firstIdentifier==secondIdentifier ? 0 : 1));
+}
+
+</PRE>
+</BODY>
+</HTML>

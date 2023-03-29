@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Optimization [OPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Optimization [OPT]
+</STRONG>
+<p>
+<PRE>
+Rules that check for non-optimal constructs.
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="OPT.AAM.html">Change non-"private" members to "private" in anonymous classes [OPT.AAM]</a></code><br>
+<code><a href="OPT.AAS.html">Use abbreviated assignment operators [OPT.AAS]</a></code><br>
+<code><a href="OPT.ACDO.html">Do not use the 'new String(String)' constructor [OPT.ACDO]</a></code><br>
+<code><a href="OPT.AGC.html">Do not get the 'Class' object through new object instantiation [OPT.AGC]</a></code><br>
+<code><a href="OPT.ANIPW.html">Avoid new instantiations of primitive wrapper objects, whose values are cached [OPT.ANIPW]</a></code><br>
+<code><a href="OPT.AUMO.html">Avoid unnecessary Map operations [OPT.AUMO]</a></code><br>
+<code><a href="OPT.BR.html">Simplify "boolean" returns [OPT.BR]</a></code><br>
+<code><a href="OPT.CCR.html">Close all "java.io.Closeable" resources in a "finally" block [OPT.CCR]</a></code><br>
+<code><a href="OPT.CEIL.html">Avoid putting constant expressions inside loops [OPT.CEIL]</a></code><br>
+<code><a href="OPT.CEL.html">Do not call methods in loop condition statements [OPT.CEL]</a></code><br>
+<code><a href="OPT.CIO.html">Close input and output resources in "finally" blocks [OPT.CIO]</a></code><br>
+<code><a href="OPT.CLL.html">Check the logging level before calling potentially expensive logging operations [OPT.CLL]</a></code><br>
+<code><a href="OPT.CPTS.html">Do not convert a value to a String by concatenating the empty String [OPT.CPTS]</a></code><br>
+<code><a href="OPT.CRSG.html">Avoid duplicate calls to the "get" methods of "ResultSet" [OPT.CRSG]</a></code><br>
+<code><a href="OPT.CRWD.html">Close resources as early as possible [OPT.CRWD]</a></code><br>
+<code><a href="OPT.CTLV.html">Do not use a "private" field that is accessed in only one method; change it to a local variable [OPT.CTLV]</a></code><br>
+<code><a href="OPT.DIC.html">Define initial capacities for 'ArrayList', 'HashMap', 'HashSet', 'Hashtable', 'Vector' and 'WeakHashMap' [OPT.DIC]</a></code><br>
+<code><a href="OPT.EES.html">Use 'String.length() == 0' instead of 'String.equals("")' [OPT.EES]</a></code><br>
+<code><a href="OPT.EIC.html">Use 'equalsIgnoreCase()' instead of calls to 'toLowerCase()' or 'toUpperCase()' [OPT.EIC]</a></code><br>
+<code><a href="OPT.EOIL.html">Avoid calling expensive operations in the body of a loop [OPT.EOIL]</a></code><br>
+<code><a href="OPT.ICDPC.html">When calling "Math.ceil()", do not pass in an integer that has been cast to a floating point type [OPT.ICDPC]</a></code><br>
+<code><a href="OPT.ICGA.html">Avoid accessing members which will require synthetic accessor methods [OPT.ICGA]</a></code><br>
+<code><a href="OPT.ILUG.html">Do not iterate through Lists using the 'get()' method [OPT.ILUG]</a></code><br>
+<code><a href="OPT.IRB.html">Use 'System.arraycopy()' instead of using a loop to copy arrays [OPT.IRB]</a></code><br>
+<code><a href="OPT.ISC.html">Do not instantiate a class which contains only static fields and methods [OPT.ISC]</a></code><br>
+<code><a href="OPT.LIOL.html">Move invariants outside of loops wherever possible [OPT.LIOL]</a></code><br>
+<code><a href="OPT.LOOP.html">Do not instantiate variables in a loop body [OPT.LOOP]</a></code><br>
+<code><a href="OPT.MAF.html">Make getter and setter methods for instance fields "final" [OPT.MAF]</a></code><br>
+<code><a href="OPT.MUNC.html">Avoid unnecessary comparisons to "null" [OPT.MUNC]</a></code><br>
+<code><a href="OPT.NCIO.html">Avoid 'null' check before 'instanceof' [OPT.NCIO]</a></code><br>
+<code><a href="OPT.NIVND.html">Use the 'nextInt()' method to generate a random integer [OPT.NIVND]</a></code><br>
+<code><a href="OPT.NIW.html">Avoid creating new instances of BigInteger and BigDecimal [OPT.NIW]</a></code><br>
+<code><a href="OPT.NSF.html">Declare "final" fields with a known compile time value as "static" [OPT.NSF]</a></code><br>
+<code><a href="OPT.PCTS.html">Use 'charAt()' instead of 'startsWith()' for one character comparisons [OPT.PCTS]</a></code><br>
+<code><a href="OPT.PRIM.html">Do not instantiate the wrapper classes for primitive types [OPT.PRIM]</a></code><br>
+<code><a href="OPT.SB.html">Specify an initial 'StringBuffer' capacity [OPT.SB]</a></code><br>
+<code><a href="OPT.SBL.html">Avoid converting StringBuffer or StringBuilder to String to check length [OPT.SBL]</a></code><br>
+<code><a href="OPT.SBS.html">Use 'StringBuilder' instead of 'StringBuffer' when synchronization is not required [OPT.SBS]</a></code><br>
+<code><a href="OPT.SDLS.html">Avoid using synchronized data structures for local variables [OPT.SDLS]</a></code><br>
+<code><a href="OPT.SI.html">Declare member classes "static" if possible [OPT.SI]</a></code><br>
+<code><a href="OPT.SRA.html">Avoid using 'String.replaceAll()' with literal values [OPT.SRA]</a></code><br>
+<code><a href="OPT.STCA.html">Do not call ''String.toCharArray()'' unnecessarily [OPT.STCA]</a></code><br>
+<code><a href="OPT.STR.html">Use single quotes instead of double quotes for single character string concatenation [OPT.STR]</a></code><br>
+<code><a href="OPT.STRBUF.html">Simplify methods that return strings that are always concatenated [OPT.STRBUF]</a></code><br>
+<code><a href="OPT.STS.html">Avoid unnecessary calls to 'String' methods [OPT.STS]</a></code><br>
+<code><a href="OPT.SWIF.html">Avoid use of if statements if they can be replaced with switch statements [OPT.SWIF]</a></code><br>
+<code><a href="OPT.SYN.html">Do not call a synchronized method inside of a loop [OPT.SYN]</a></code><br>
+<code><a href="OPT.TOARRAY.html">Use collection size for target array in 'toArray()' [OPT.TOARRAY]</a></code><br>
+<code><a href="OPT.UEQ.html">Do not compare boolean variables with "true" [OPT.UEQ]</a></code><br>
+<code><a href="OPT.UISO.html">Avoid unnecessary "instanceof" evaluations [OPT.UISO]</a></code><br>
+<code><a href="OPT.UMATH.html">Do not call the methods from 'java.lang.Math' if the result is a constant which can be easily determined [OPT.UMATH]</a></code><br>
+<code><a href="OPT.UNC.html">Avoid unnecessary casting [OPT.UNC]</a></code><br>
+<code><a href="OPT.USB.html">Use 'StringBuffer' instead of 'String' when concatenating strings [OPT.USB]</a></code><br>
+<code><a href="OPT.USC.html">Use 'String' instead of 'StringBuffer' for constant strings [OPT.USC]</a></code><br>
+<code><a href="OPT.USCL.html">Avoid questionable uses of non-short-circuit logic [OPT.USCL]</a></code><br>
+<code><a href="OPT.USV.html">Use 'stack' variables whenever possible [OPT.USV]</a></code><br>
+</BODY>
+</HTML>

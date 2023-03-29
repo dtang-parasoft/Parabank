@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure @IdClass is Serializable and defines "equals()" and "hashCode()" methods [EJB.EJB3.IDCS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure @IdClass is Serializable and defines "equals()" and "hashCode()" methods [EJB.EJB3.IDCS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an "@IdClass" does not implement Serializable,
+does not define an "equals()" method, or does not define a "hashCode()" method.
+A violation is flagged on the class specifying the "@IdClass".
+
+The following locations are checked for IdClass specifications:
+    1) "@IdClass" annotation
+    2) "id-class" in a "META-INF/orm.xml" file.
+If specified in both locations, the value from the "orm.xml" file is used.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "equals()" and "hashCode()" methods should be semantically equivalent to
+those used by the database. Otherwise, there may be discrepancies between what
+is treated as the same within and outside of the database.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Entity
+@IdClass(IDCSPK.class)
+public class IDCS { //VIOLATION
+    ...
+}
+
+class IDCSPK {
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure the "@IdClass" implements Serializable, defines an "equals()"  method,
+and defines a "hashCode()" method.
+
+package examples.rules.ejb.ejb3;
+
+@Entity
+@IdClass(IDCSPK.class)
+public class IDCSFixed { //FIXED
+    ...
+}
+
+class IDCSPK implements Serializable {
+    public boolean equals(Object o) {
+        ...
+    }
+    public int hashCode() {
+        ...
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 235-237.
+
+JSR 220: Enterprise JavaBeansTM,Version 3.0
+Java Persistence API, Section #2.1.4
+
+</PRE>
+</BODY>
+</HTML>

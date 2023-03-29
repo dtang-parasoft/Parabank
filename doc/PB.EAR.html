@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that non-"void" methods have a return value other than empty arrays and "null" [PB.EAR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that non-"void" methods have a return value other than empty arrays and "null" [PB.EAR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method definitions where the only possible return values
+from the method are empty arrays and the constant "null".  It will look for 
+errors in any method defined to return a non-primitive type.  If each of the
+return values is an array which was never initialized to hold any elements or 
+the constant "null", a violation will be flagged.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Options:
+    - Flag only methods where every return value is the literal "null".
+    - Flag methods where every return value is either the literal "null" or an 
+      empty array.
+- Ignore method which are members of abstract classes or overriding abstract methods 
+  from abstract classes.
+    Default value is false.      
+- Ignore interface implementation methods.
+    Default value is false.   
+
+Description:
+
+This parameter is used to determine whether or not an empty array is considered
+to be a valid return value from a method.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Returning an empty array or the constant "null" could cause unexpected 
+exceptions if the user tries to access an element of the returned array or
+does not check if the return value is "null".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class EAR {
+
+    public int[] method() {
+        int[] a= {};
+        return a;   //VIOLATION
+    }
+
+    public Object method3(){  
+        return null;   //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the return type is an array, be sure to initialize the returned array with
+either a non-empty list or a "new" statement.  Also, make sure that there is a
+path of execution that will lead to something other than the constant "null" 
+being returned.
+
+package examples.rules.pb;
+
+public class EARFixed {
+
+    public int[] method() {
+        int[] a= {5};
+        return a;   //FIXED
+    }
+    
+    public int[] method2() {
+        int[] a= new int[5];
+        return a;   //FIXED
+    }
+    
+    public Object method3(){  
+        return new Object();   //FIXED
+    }    
+}
+
+</PRE>
+</BODY>
+</HTML>

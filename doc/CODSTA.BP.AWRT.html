@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using wildcards in method return types [CODSTA.BP.AWRT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using wildcards in method return types [CODSTA.BP.AWRT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that have a return type containing a wildcard.
+Violations should be analyzed on a case by case basis as changing a method
+definition can often alter the semantics.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Wildcard types can limit access to aspects of the return type. In general, it is
+preferential to avoid wildcards in return types as it gives the user more
+options as to what can be performed with the return data. Furthermore, the
+warning and error messages that result from using wildcards can often be
+confusing.
+
+For example:
+    void method(Number[][] array) {
+        List&lt;? extends Number&gt; result = sumArray(array);
+        result.add(new Integer(0)); //compilation error
+    }
+In the above example "result" is of type "List&lt;? extends Number&gt;". When
+attempting to to add an Integer "result" it creates a compilation error. This is
+because although Integer extends Number, "result" could actually be a
+"List&lt;Double&gt;". So, to maintain type safety the "add()" call is not allowed.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Changing the method definition may alter the semantics.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class AWRT {
+    public List&lt;? extends Number&gt; sumArray(Number[][] array) { //VIOLATION
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the wildcard with a generic or explicit type. Note that this often
+changes of the semantics of the method.
+
+package examples.rules.codsta.bp;
+
+public class ABCLFixed {
+    public List&lt;Number&gt; sumArray(Number[][] array) { //FIXED
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Java Generics FAQs - Programming With Java Generics by Angelika Langer
+<A HREF="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ303">http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ303</A>
+
+</PRE>
+</BODY>
+</HTML>

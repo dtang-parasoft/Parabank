@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare all fields of user-defined 'Exception' as "final" [EXCEPT.IMMEX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare all fields of user-defined 'Exception' as "final" [EXCEPT.IMMEX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies fields of user-defined exception classes 
+that are not declared as "final" or "private". An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Static fields would not be identified as errors.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Exception classes are supposed to carry exception information
+that other classes should not be able to modify. Consequently, it makes sense to 
+declare the fields as final or private to guard them from unauthorized
+modifications.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class IMMEX extends java.lang.Exception { //VIOLATION
+    String extraMessage;
+    int severity;
+    //...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class IMMEXFixed extends java.lang.Exception {
+    final String extraMessage;
+    private int severity;
+    //...
+}
+
+</PRE>
+</BODY>
+</HTML>

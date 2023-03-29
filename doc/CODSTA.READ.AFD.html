@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Access and set fields directly in the declaring type instead of using getter and setter methods [CODSTA.READ.AFD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Access and set fields directly in the declaring type instead of using getter and setter methods [CODSTA.READ.AFD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation for each place where a "getter" or "setter" method 
+is used to access or set a field in the class in which that field is declared.  
+Fields can always be accessed directly in their declaring class, so it is not
+necessary to use "getter" or "setter" methods in this case.   
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for any call to a "getter" or "setter" 
+method which performs some actions in addition to getting or setting the field.
+For purposes of this rule, a "getter" is defined as a method with one statement
+that returns a field, and a "setter" is defined as a method with one statement 
+which sets a field.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Indirect access of fields through "getter" and "setter" methods is unnecessary
+in the class in which these fields are declared.  Accessing them in this way 
+just serves to clutter the code and is less efficient.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class AFD {
+    private int _i;
+    
+    public void method(){
+        System.out.println("i: "+getI());  //VIOLATION
+        setI(4);  //VIOLATION
+    }
+    
+    public void setI(int i){
+        _i= i;
+    }
+    
+    public int getI(){
+        return _i;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Access the field directly instead of using the "getter" or "setter" method.
+
+package examples.rules.codsta.read;
+
+public class AFDFixed {
+    private int _i;
+    
+    public void method(){
+        System.out.println("i: "+_i);  //FIXED
+        _i= 4;  //FIXED
+    }
+    
+    public void setI(int i){
+        _i= i;
+    }
+    
+    public int getI(){
+        return _i;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

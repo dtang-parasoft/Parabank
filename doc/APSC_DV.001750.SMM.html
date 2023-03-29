@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the SOAP Monitor module [APSC_DV.001750.SMM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the SOAP Monitor module [APSC_DV.001750.SMM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Apache Axis 2 comes with a utility called the SOAP Monitor module.  For security
+reasons, you should only enable this module for debugging purposes.  This rule 
+identifies cases where the SOAP Monitor module is enabled in an 'axis2.xml' 
+file.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+When the SOAP Monitor module is enabled, it is easy for attackers to eavesdrop 
+on SOAP messages sent and received by a Web application.  To protect sensitive
+information, this utility should always be disabled.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The SOAP Monitor module is enabled by adding a tag '&lt;module ref="soapmonitor"/&gt;'
+to the "axis2.xml" file.
+
+axis2.xml:
+
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;module ref="soapmonitor"/&gt;  &lt;!-- VIOLATION --&gt;
+    ...
+&lt;/axisconfig&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The SOAP Monitor utility is not enabled by default for security reasons.  You 
+should remove any '&lt;module ref="soapmonitor"/&gt;' tags from the "axis2.xml" files 
+of any production code to ensure that your application is not vulnerable to 
+monitoring.
+
+axis2.xml:
+
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;!-- FIXED: Removed the '&lt;module ref="soapmonitor"/&gt;' tag --&gt;
+    ...
+&lt;/axisconfig&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Apache Axis Reference Guide":
+<A HREF="http://ws.apache.org/axis2/1_4_1/soapmonitor-module.html">http://ws.apache.org/axis2/1_4_1/soapmonitor-module.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

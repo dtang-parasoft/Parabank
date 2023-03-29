@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the optional java.util.Locale parameter [CERT.STR02.CCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the optional java.util.Locale parameter [CERT.STR02.CCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when locale-sensitive methods are called without passing the optional java.util.Locale parameter.
+The rule can be parameterized with a list of methods that will be analyzed (see the PARAMETERS section).
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not analyze constructors, and ignores the inheritance hierarchy.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-List of methods with optional java.util.Locale parameter 
+   This parameter allows you to specify methods with the optional java.util.Locale parameter
+   that will be analyzed. By default, the following methods are configured:
+   
+    Type                                            Method
+    ----------------------------                    ------------------------------
+    java.awt.Font                                   getFamily
+    java.awt.Font                                   getFontName
+    java.awt.GraphicsEnvironment                    getAvailableFontFamilyNames
+    java.io.PrintStream                             format
+    java.io.PrintStream                             printf
+    java.io.PrintWriter                             format
+    java.io.PrintWriter                             printf
+    java.lang.String                                format
+    java.lang.String                                toLowerCase
+    java.lang.String                                toUpperCase
+    java.nio.charset.Charset                        displayName
+    java.text.BreakIterator                         getCharacterInstance
+    java.text.BreakIterator                         getLineInstance
+    java.text.BreakIterator                         getSentenceInstance
+    java.text.BreakIterator                         getWordInstance
+    java.text.Collator                              getInstance
+    java.text.DateFormat                            getDateInstance
+    java.text.DateFormat                            getDateTimeInstance
+    java.text.DateFormat                            getTimeInstance
+    java.text.DateFormatSymbols                     getInstance
+    java.text.DecimalFormatSymbols                  getInstance
+    java.text.NumberFormat                          getInstance
+    java.text.NumberFormat                          getIntegerInstance
+    java.text.NumberFormat                          getNumberInstance
+    java.text.NumberFormat                          getPercentInstance
+    java.text.NumberFormat                          getScientificInstance
+    java.text.NumberFormat                          getCurrencyInstance
+    java.time.format.DateTimeFormatter              ofPattern
+    java.time.format.DateTimeFormatterBuilder       toFormatter
+    java.time.format.ZoneName                       toZid
+    java.util.Calendar                              getInstance
+    java.util.Currency                              getDisplayName
+    java.util.Currency                              getInstance
+    java.util.Currency                              getSymbol
+    java.util.Formatter                             format
+    java.util.TimeZone                              getDisplayName
+    javafx.beans.binding.Bindings                   format
+    javafx.beans.binding.NumberExpression           asString
+    javafx.beans.binding.NumberExpressionBase       asString
+    javafx.beans.binding.ObjectExpression           asString
+    javax.accessibility.AccessibleBundle            toDisplayString
+    javax.swing.MultiUIDefaults                     get
+    javax.swing.UIDefaults                          get
+    javax.swing.UIDefaults                          getBoolean
+    javax.swing.UIDefaults                          getBorder
+    javax.swing.UIDefaults                          getColor
+    javax.swing.UIDefaults                          getDimension
+    javax.swing.UIDefaults                          getFont
+    javax.swing.UIDefaults                          getIcon
+    javax.swing.UIDefaults                          getInsets
+    javax.swing.UIDefaults                          getInt
+    javax.swing.UIDefaults                          getString
+    javax.xml.soap.SOAPBody                         addFault
+    javax.xml.soap.SOAPFault                        setFaultString
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid errors that may result from calling locale-sensitive
+methods.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code triggers the rule:
+
+public class CCL {
+     Font font = new Font("TimesRoman", Font.PLAIN, 18);
+     String family = font.getFamily(); // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class CCLFixed {
+     Font font = new Font("TimesRoman", Font.PLAIN, 18);
+     String family = font.getFamily(Locale.US); // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+STR02-J. Specify an appropriate locale when comparing locale-dependent data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/STR02-J.+Specify+an+appropriate+locale+when+comparing+locale-dependent+data">https://wiki.sei.cmu.edu/confluence/display/java/STR02-J.+Specify+an+appropriate+locale+when+comparing+locale-dependent+data</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use javax.sql.DataSource to get the database connection [JDBC.UDS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use javax.sql.DataSource to get the database connection [JDBC.UDS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that use java.sql.DriverManager.getConnection()
+or java.sql.Driver.connect() to get the database connection. An 
+error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Opening a connection to a database is a fairly expensive
+operation that requires time and resources. Both
+performance and scalability are affected. Since database
+connections are limited, if each client manages its own
+connection, the total number of connections will likely be
+exhausted much sooner than desired.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+
+public class UDS {
+
+    public UDS() throws ClassNotFoundException {
+        Class.forName("your JDBC driver name");
+    }
+        
+    public Connection getConnection() {
+        return DriverManager.getConnection("your database url");  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+use javax.sql.DataSource instead
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+import javax.sql.*;
+import javax.naming.*;
+
+public class UDSFixed {
+
+    private DataSource _ds;
+
+    public UDSFixed() {
+	InitialContext ctx = new InitialContext();
+        _ds = (DataSource) ctx.lookup("java:comp/env/Your DataSource name");  
+    }
+
+    public Connection getConnection() throws SQLException {
+        return _ds.getConnection();  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 108
+
+</PRE>
+</BODY>
+</HTML>

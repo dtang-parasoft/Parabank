@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Catch 'OutOfMemoryError' for large array allocations [MOBILE.J2ME.OOME]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Catch 'OutOfMemoryError' for large array allocations [MOBILE.J2ME.OOME]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not catch 'OutOfMemoryError' for
+large array allocations. An error is reported for each occurrence. 
+
+Embedded devices usually offer only a very limited amount of memory.
+Compared to desktop or enterprise VMs that run on larger systems,
+embedded devices are much more likely to run out of memory during
+operations. This possibility should be taken into account for for
+large array allocations. Instead of having an OutOfMemoryError reported
+through the device's default mechanism, the application should catch
+that error and issue an appropriate error message. 
+
+All array allocations whose size cannot be determined by static analysis
+(because the array size is calculated at runtime) and all constant-size
+array allocations with 1024 or more elements are considered potentially
+"large" allocations.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Error Handling
+
+Always catch and log exceptions appropriately. See BENEFITS for more
+information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The practice of catching OutOfMemoryErrors for large allocations gives
+the application an opportunity to recover (for example, by using a
+different type of memory, such as the RecordStore), or at least
+ensures that the problem is reported in a consistent manner and that
+the application can continue running. The size of the additional code
+required for the error handling is usually not a problem as embedded 
+applications typically contain only a small number of large memory allocations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following class allocates a large chunk of memory without taking
+into account that this might cause the system to run out of memory:
+
+package examples.rules.mobile.j2me;
+
+public class OOME {
+     private final static int IMAGE_SIZE = 8*1024;
+
+     public static byte[] createNewImageMemory() {
+         return new byte[IMAGE_SIZE]; // VIOLATION
+     }
+}
+        
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Surround the allocation with a try...catch block as follows:
+
+package examples.rules.mobile.j2me;
+
+public class OOMEFixed {
+     private final static int IMAGE_SIZE = 8*1024;
+
+     public static byte[] createNewImageMemory() {
+         try {
+             return new byte[IMAGE_SIZE];
+         } catch (OutOfMemoryError error) { // FIXED
+             return new byte[0];
+             //
+             // Or report the error in an appropriate manner,
+             // or use a different way of obtaining the memory
+         }
+     }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Jonathan Knudsen, Understanding MIDlet Memory (article)
+
+</PRE>
+</BODY>
+</HTML>

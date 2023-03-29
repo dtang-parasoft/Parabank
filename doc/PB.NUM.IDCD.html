@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assign the result of an integer division to a floating point variable [PB.NUM.IDCD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assign the result of an integer division to a floating point variable [PB.NUM.IDCD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+It is likely a mistake if the result of an integer division is cast to a 
+floating point type.  This rule will flag as a violation any case where the 
+result of dividing two integers is assigned into a variable of a floating point
+type (either "float" or "double") in an initialization or in an assignment 
+statement.  A violation will be flagged for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When division is performed on two integers, precision is lost.  Specifically,
+everything to the right of the decimal point is truncated.  Even if the result 
+is assigned to a variable of a floating point type, this precision is still
+lost.  Instead of assigning the result of an integer division into a floating 
+point variable, you should cast one of the operands before performing the 
+division.  This will perform the division with floating point precision.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class IDCD {
+    public static void main(String[] args){
+        int x= 4;
+        int y= 5;
+        double d= x/y;  //VIOLATION- d is 0.0, not 0.8
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Cast one of the operands to a floating point type before performing the 
+division.
+
+package examples.rules.pb.num;
+
+public class IDCDFixed {
+    public static void main(String[] args){
+        int x= 4;
+        int y= 5;
+        double d= ((double)x)/y;  //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Numeric Errors
+Video: <A HREF="https://vimeo.com/238779116">https://vimeo.com/238779116</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-681: Incorrect Conversion between Numeric Types
+<A HREF="https://cwe.mitre.org/data/definitions/681.html">https://cwe.mitre.org/data/definitions/681.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-704: Incorrect Type Conversion or Cast
+<A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+NUM50-J. Convert integers to floating point for floating-point operations
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM50-J.+Convert+integers+to+floating+point+for+floating-point+operations">https://wiki.sei.cmu.edu/confluence/display/java/NUM50-J.+Convert+integers+to+floating+point+for+floating-point+operations</A>
+
+</PRE>
+</BODY>
+</HTML>

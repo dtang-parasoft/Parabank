@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that a cleanup method is defined in the test class [JUNIT.OTDM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that a cleanup method is defined in the test class [JUNIT.OTDM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit test classes that fail to perform cleanup after
+the test cases are executed.
+The rule detects:
+- In JUnit 3, classes that not override the 'tearDown ()' method.
+- In JUnit 4, classes that do not contain any methods annotated with @After.
+- In JUnit 5, classes that do not contain any methods annotated with @AfterEach.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that all open resources, such as networking
+connections and files, are cleaned up after all the tests defined
+in the class have been executed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.*;
+
+public class OTDM {  // VIOLATION: missing '@AfterEach' method
+
+    @BeforeEach
+    public void setUp () {
+        //setup code
+    }
+
+    @Test
+    public void testMethod() {
+        //some test code
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+'@AfterEach' method has been added.
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.*;
+
+public class OTDMFixed {
+
+    @BeforeEach
+    public void setUp () {
+        //setup code
+    }
+
+    @Test
+    public void testMethod() {
+        //some test code
+    }
+
+    @AfterEach
+    public void cleanUp () {  // FIXED
+        // cleanup code
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit.html">http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit.html</A>
+
+</PRE>
+</BODY>
+</HTML>

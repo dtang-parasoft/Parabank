@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Improper signature of the annotated method in EJB bean [EJB.EJB3.CMF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Improper signature of the annotated method in EJB bean [EJB.EJB3.CMF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an annotated callback method has improper
+formatting. The following callback annotations are checked: "@PostActivate",
+"@PostConstruct", "@PreDestroy", and "@PrePassivate". These methods are checked
+for Stateless, Stateful, and MessageDriven beans. A callback method satisfying
+these conditions should have "void" return type and no parameters.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateful
+public class CMF {
+    @PostActivate
+    @PostConstruct
+    String startMethod() { //VIOLATION
+        return "success";
+    }
+
+    @PreDestroy
+    @PrePassivate
+    void stopMethod(Object o) { //VIOLATION
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the wrong method is used, place the annotation on the correct method.
+Otherwise, ensure the method does not return a value and has no parameters.
+
+package examples.rules.ejb.ejb3;
+
+@Stateful
+public class CMF {
+    @PostActivate
+    @PostConstruct
+    void startMethod() { //FIXED
+
+    }
+
+    @PreDestroy
+    @PrePassivate
+    void stopMethod() { //FIXED
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 90-93.
+
+JSR 220: Enterprise JavaBeansTM,Version 3.0
+EJB Core Contracts and Requirements, Section #12.4
+
+</PRE>
+</BODY>
+</HTML>

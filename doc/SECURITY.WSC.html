@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Weak Security Controls [SECURITY.WSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Weak Security Controls [SECURITY.WSC]
+</STRONG>
+<p>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="SECURITY.WSC.ACDP.html">Avoid using anonymous "privileged" classes when invoking "AccessController.doPrivileged()" [SECURITY.WSC.ACDP]</a></code><br>
+<code><a href="SECURITY.WSC.ACMD.html">Avoid using custom MessageDigest implementations [SECURITY.WSC.ACMD]</a></code><br>
+<code><a href="SECURITY.WSC.ACPST.html">Do not call the 'printStackTrace()' method of "Throwable" objects [SECURITY.WSC.ACPST]</a></code><br>
+<code><a href="SECURITY.WSC.AHCA.html">Avoid hard-coding the arguments to certain methods [SECURITY.WSC.AHCA]</a></code><br>
+<code><a href="SECURITY.WSC.AISSAJAVA.html">Avoid using insecure cryptographic algorithms for data encryption with Spring [SECURITY.WSC.AISSAJAVA]</a></code><br>
+<code><a href="SECURITY.WSC.AISSAXML.html">Avoid using insecure cryptographic algorithms in Spring XML configurations [SECURITY.WSC.AISSAXML]</a></code><br>
+<code><a href="SECURITY.WSC.AMA.html">Avoid constructors and overriding methods which are more accessible than those of their super classes [SECURITY.WSC.AMA]</a></code><br>
+<code><a href="SECURITY.WSC.APIBS.html">Inspect usage of standard API calls that bypass security [SECURITY.WSC.APIBS]</a></code><br>
+<code><a href="SECURITY.WSC.ARXML.html">Process XML and HTML with a library instead of raw text [SECURITY.WSC.ARXML]</a></code><br>
+<code><a href="SECURITY.WSC.ASAPI.html">Prevent the scripting API from executing untrusted code [SECURITY.WSC.ASAPI]</a></code><br>
+<code><a href="SECURITY.WSC.AUIC.html">Do not use inner classes [SECURITY.WSC.AUIC]</a></code><br>
+<code><a href="SECURITY.WSC.AUNC.html">Avoid using the javax.crypto.NullCipher class in non-test classes [SECURITY.WSC.AUNC]</a></code><br>
+<code><a href="SECURITY.WSC.BP.html">Allow only certain providers to be specified for the 'Security.addProvider()' method [SECURITY.WSC.BP]</a></code><br>
+<code><a href="SECURITY.WSC.BUSSB.html">Prevent external processes from blocking on output or error streams [SECURITY.WSC.BUSSB]</a></code><br>
+<code><a href="SECURITY.WSC.CACM.html">Keep all access control methods centralized to enforce consistency [SECURITY.WSC.CACM]</a></code><br>
+<code><a href="SECURITY.WSC.CAM.html">Keep all authentication methods centralized to enforce consistency [SECURITY.WSC.CAM]</a></code><br>
+<code><a href="SECURITY.WSC.CAP.html">Always clone array parameters which are stored to fields [SECURITY.WSC.CAP]</a></code><br>
+<code><a href="SECURITY.WSC.CFM.html">Only call "final" methods from specified code blocks in non-"final" classes [SECURITY.WSC.CFM]</a></code><br>
+<code><a href="SECURITY.WSC.CIFC.html">Only "clone()" instances of "final" classes [SECURITY.WSC.CIFC]</a></code><br>
+<code><a href="SECURITY.WSC.CKTS.html">Avoid using cryptographic keys which are too short [SECURITY.WSC.CKTS]</a></code><br>
+<code><a href="SECURITY.WSC.CL.html">Do not define custom class loaders [SECURITY.WSC.CL]</a></code><br>
+<code><a href="SECURITY.WSC.CLI.html">Inspect instantiations of 'ClassLoader' objects [SECURITY.WSC.CLI]</a></code><br>
+<code><a href="SECURITY.WSC.CLO.html">Do not override any 'ClassLoader' method except 'findClass()' [SECURITY.WSC.CLO]</a></code><br>
+<code><a href="SECURITY.WSC.CLONE.html">Make your 'clone()' method "final" for security [SECURITY.WSC.CLONE]</a></code><br>
+<code><a href="SECURITY.WSC.CMO.html">Do not pass mutable objects to 'ObjectOutputStream' in the 'writeObject()' method [SECURITY.WSC.CMO]</a></code><br>
+<code><a href="SECURITY.WSC.DCSM.html">Do not define custom 'SecurityManager's [SECURITY.WSC.DCSM]</a></code><br>
+<code><a href="SECURITY.WSC.DMDS.html">Avoid using the DriverManagerDataSource class in production code [SECURITY.WSC.DMDS]</a></code><br>
+<code><a href="SECURITY.WSC.DNSL.html">Avoid DNS lookups for decision making [SECURITY.WSC.DNSL]</a></code><br>
+<code><a href="SECURITY.WSC.DSER.html">Make your classes nondeserializeable [SECURITY.WSC.DSER]</a></code><br>
+<code><a href="SECURITY.WSC.ENPP.html">Ensure arguments passed to certain methods come from predefined methods list [SECURITY.WSC.ENPP]</a></code><br>
+<code><a href="SECURITY.WSC.EWSSEC.html">Avoid debug information from Spring Security framework to logs [SECURITY.WSC.EWSSEC]</a></code><br>
+<code><a href="SECURITY.WSC.FIMU.html">Make immutable classes final [SECURITY.WSC.FIMU]</a></code><br>
+<code><a href="SECURITY.WSC.FOLLOW.html">Ensure that file target paths retrieved by resolving symbolic links are safe [SECURITY.WSC.FOLLOW]</a></code><br>
+<code><a href="SECURITY.WSC.FXMLP.html">Ensure that Secure Processing is used [SECURITY.WSC.FXMLP]</a></code><br>
+<code><a href="SECURITY.WSC.HCCK.html">Avoid using hard-coded cryptographic keys [SECURITY.WSC.HCCK]</a></code><br>
+<code><a href="SECURITY.WSC.HCCS.html">Avoid passing hardcoded usernames/passwords/URLs to database connection methods [SECURITY.WSC.HCCS]</a></code><br>
+<code><a href="SECURITY.WSC.HGRSI.html">Avoid using the 'getRequestedSessionId' method from the 'HttpServletRequest' class [SECURITY.WSC.HGRSI]</a></code><br>
+<code><a href="SECURITY.WSC.HTTPRHA.html">Do not rely on IP addresses obtained from HTTP request headers for authentication [SECURITY.WSC.HTTPRHA]</a></code><br>
+<code><a href="SECURITY.WSC.HV.html">Ensure the HostnameVerifier.verify() method validates the certificate [SECURITY.WSC.HV]</a></code><br>
+<code><a href="SECURITY.WSC.ICA.html">Avoid using insecure algorithms for cryptography [SECURITY.WSC.ICA]</a></code><br>
+<code><a href="SECURITY.WSC.IDP.html">Avoid setting the write or execute file permissions to unintended users [SECURITY.WSC.IDP]</a></code><br>
+<code><a href="SECURITY.WSC.INIVF.html">Defend against partially initialized instances of non-final classes [SECURITY.WSC.INIVF]</a></code><br>
+<code><a href="SECURITY.WSC.INNER.html">Make all member classes "private" [SECURITY.WSC.INNER]</a></code><br>
+<code><a href="SECURITY.WSC.ISL.html">Always call 'HttpSession.invalidate()' before 'LoginContext.login()' [SECURITY.WSC.ISL]</a></code><br>
+<code><a href="SECURITY.WSC.IVR.html">Avoid non-random "byte[]" when using IvParameterSpec [SECURITY.WSC.IVR]</a></code><br>
+<code><a href="SECURITY.WSC.JXCORS.html">Restrict cross-origin resource sharing to secure origins [SECURITY.WSC.JXCORS]</a></code><br>
+<code><a href="SECURITY.WSC.LNK.html">Validate shortcut target paths before use [SECURITY.WSC.LNK]</a></code><br>
+<code><a href="SECURITY.WSC.MCMDU.html">MessageDigest objects must process the data with the 'update' method [SECURITY.WSC.MCMDU]</a></code><br>
+<code><a href="SECURITY.WSC.MCNC.html">Make your classes noncloneable [SECURITY.WSC.MCNC]</a></code><br>
+<code><a href="SECURITY.WSC.MDSALT.html">Use hash functions with a salt [SECURITY.WSC.MDSALT]</a></code><br>
+<code><a href="SECURITY.WSC.PAC.html">Call authentication methods to enforce consistency [SECURITY.WSC.PAC]</a></code><br>
+<code><a href="SECURITY.WSC.PACC.html">Call access control methods to enforce consistency [SECURITY.WSC.PACC]</a></code><br>
+<code><a href="SECURITY.WSC.PAF.html">Declare subclasses of 'PrivilegedAction', 'PrivilegedExceptionAction', and 'PrivilegedActionException' "final" [SECURITY.WSC.PAF]</a></code><br>
+<code><a href="SECURITY.WSC.PBFA.html">Ensure sufficient protection against multiple failed authentication attempts [SECURITY.WSC.PBFA]</a></code><br>
+<code><a href="SECURITY.WSC.PBPSF.html">Declare subclasses of 'Permission' and 'BasicPermission' "final" [SECURITY.WSC.PBPSF]</a></code><br>
+<code><a href="SECURITY.WSC.PBRTE.html">Always specify absolute paths to execute commands [SECURITY.WSC.PBRTE]</a></code><br>
+<code><a href="SECURITY.WSC.PPKG.html">Ensure that all Permissions, PrivilegedActions, and PrivilegedActionExceptions are declared in the same package [SECURITY.WSC.PPKG]</a></code><br>
+<code><a href="SECURITY.WSC.PRMF.html">Declare the 'run()' method of 'PrivilegedAction' and 'PrivilegedExceptionAction' implementations "final" [SECURITY.WSC.PRMF]</a></code><br>
+<code><a href="SECURITY.WSC.PSFC.html">Do not declare fields as "public" "static" "final" 'Collection' or 'Map' objects [SECURITY.WSC.PSFC]</a></code><br>
+<code><a href="SECURITY.WSC.RDM.html">Inspect 'Random' objects or 'Math.random()' methods that could indicate areas where malicious code has been placed [SECURITY.WSC.RDM]</a></code><br>
+<code><a href="SECURITY.WSC.SCF.html">Enforce 'SecurityManager' checks before setting or getting fields [SECURITY.WSC.SCF]</a></code><br>
+<code><a href="SECURITY.WSC.SCHTTP.html">Mark cookies as HttpOnly [SECURITY.WSC.SCHTTP]</a></code><br>
+<code><a href="SECURITY.WSC.SCLONE.html">Enforce 'SecurityManager' checks in methods of 'Cloneable' classes [SECURITY.WSC.SCLONE]</a></code><br>
+<code><a href="SECURITY.WSC.SCSER.html">Enforce 'SecurityManager' checks in methods of 'Serializable' classes [SECURITY.WSC.SCSER]</a></code><br>
+<code><a href="SECURITY.WSC.SCSM.html">Ensure 'SecurityManager' check in constructor of "public" non-"final" sensitive type [SECURITY.WSC.SCSM]</a></code><br>
+<code><a href="SECURITY.WSC.SER.html">Make your classes nonserializeable [SECURITY.WSC.SER]</a></code><br>
+<code><a href="SECURITY.WSC.SIKG.html">Initialize KeyGenerator instances [SECURITY.WSC.SIKG]</a></code><br>
+<code><a href="SECURITY.WSC.SL.html">Avoid string literals except in constant declarations and calls to System.out or System.err's 'print' or 'println' methods [SECURITY.WSC.SL]</a></code><br>
+<code><a href="SECURITY.WSC.SMSTR.html">Ensure 'SecurityManager' checks before 'Socket' transfers or retrievals [SECURITY.WSC.SMSTR]</a></code><br>
+<code><a href="SECURITY.WSC.SRD.html">Use 'java.security.SecureRandom' instead of 'java.util.Random' or 'Math.random()' [SECURITY.WSC.SRD]</a></code><br>
+<code><a href="SECURITY.WSC.SS.html">Do not use sockets in web components [SECURITY.WSC.SS]</a></code><br>
+<code><a href="SECURITY.WSC.SSM.html">Ensure that an appropriate security manager is set [SECURITY.WSC.SSM]</a></code><br>
+<code><a href="SECURITY.WSC.SSP.html">Do not call 'System.setProperty()' in a web component [SECURITY.WSC.SSP]</a></code><br>
+<code><a href="SECURITY.WSC.STREP.html">Use library methods for string replacements of special characters in HTML and XML [SECURITY.WSC.STREP]</a></code><br>
+<code><a href="SECURITY.WSC.UMAIN.html">Avoid 'main()' methods because they may allow unauthorized access to classes [SECURITY.WSC.UMAIN]</a></code><br>
+<code><a href="SECURITY.WSC.UOSC.html">Use the ''getSecure()'' and ''setSecure()'' methods to enforce the use of secure cookies [SECURITY.WSC.UOSC]</a></code><br>
+<code><a href="SECURITY.WSC.USC.html">Use the SSL-enabled version of classes when possible [SECURITY.WSC.USC]</a></code><br>
+<code><a href="SECURITY.WSC.UWM.html">Use wrapper methods instead of calling dangerous or problematic methods directly (custom rule) [SECURITY.WSC.UWM]</a></code><br>
+<code><a href="SECURITY.WSC.VJFS.html">Always verify JarFile signatures [SECURITY.WSC.VJFS]</a></code><br>
+<code><a href="SECURITY.WSC.VSI.html">Properly validate server identity [SECURITY.WSC.VSI]</a></code><br>
+<code><a href="SECURITY.WSC.ZOIS.html">Inspect usage of scripting API [SECURITY.WSC.ZOIS]</a></code><br>
+</BODY>
+</HTML>

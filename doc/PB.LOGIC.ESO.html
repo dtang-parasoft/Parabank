@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling 'equals()' with same object [PB.LOGIC.ESO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling 'equals()' with same object [PB.LOGIC.ESO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for calls to the 'equals()' with the same caller and argument.
+A violation is flagged for each case.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the 'equals()' method is called with the same caller and argument it is
+usually a sign of a logic error or typo. One common case is when two objects are
+being compared. If a field of two objects are intended to be compared, and 
+the 'equals()' method is called with the same caller and argument, then it may
+appear that the two objects are equivalent when they are not. See EXAMPLE.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class EOL {
+    private String _name;
+    private Object _data;
+
+    public EOL(String name, Object data) {
+        _name = name;
+        _data = data;
+    }
+
+    public boolean hasSameData(EOL eol) {
+        return _data.equals(_data); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class EOLFixed {
+    private String _name;
+    private Object _data;
+
+    public EOLFixed(String name, Object data) {
+        _name = name;
+        _data = data;
+    }
+
+    public boolean hasSameData(EOLFixed eol) {
+        return _data.equals(eol._data); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

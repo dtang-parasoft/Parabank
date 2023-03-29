@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid chains of "instanceof" comparisons [CODSTA.POD.CIOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid chains of "instanceof" comparisons [CODSTA.POD.CIOC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Code which contains an "if-else if-...-else" statement where the condition of 
+each branch is an "instanceof" expression (or a combination of "instanceof"
+expressions) often indicates poor object-oriented design.  By default, this 
+rule will flag a violation for each "if-else if-...-else" statement which 
+contains more than 2 branches where each branch of the conditional statement is
+an "instanceof" expression (or a combination of "instanceof" expressions) and
+where every type used in the "instanceof" expressions has a common supertype.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum number of "instanceof" comparisons allowed in an "if-else if-...-else"
+ statement
+    -Default value is "2".
+    -If a conditional statement of the form "if-else if-...-else" contains more
+     than the specified number of branches and each branch is an "instanceof"
+     test, a violation will be flagged.  The final "else" branch (if any) is not 
+     counted in the number of "instanceof" comparisons since there is no 
+     condition on the final "else" branch.
+-Only flag a violation when the types in the comparisons have a common supertype
+    -Default is "true".
+    -Enabling this parameter will help reduce the number of violations reported
+     by this rule which are very difficult (or impossible) to fix.  If the types 
+     in a chain of "instanceof" comparisons all have a common supertype, there 
+     is a good chance that the actions performed in that "if-else if-...-else" 
+     statement can be refactored into a method defined in that supertype.  That 
+     way, the correct actions can be performed automatically by calling the 
+     polymorphic method instead of having to use "instanceof" comparisons.  If 
+     the types do not share a common supertype, this is not possible without 
+     making significant changes to the code.
+    -When this parameter is enabled, no violation will be flagged if not all of
+     the types in the chain of "instanceof" comparisons have a common supertype
+     or if the source code for that common supertype is not present (i.e., if it
+     comes from some JAR file or Java library).  If the source code is not
+     present, it is assumed that the user cannot modify the supertype.
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Instead of using multiple "instanceof" expressions to decide which code path to
+take in a conditional statement, you should refactor the code to take advantage
+of features of object-oriented programming such as polymorphism.  This may not 
+always be possible or desirable, but it is worth considering.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, a chain of "instanceof" tests is used to determine which type
+name to print out.  
+
+package examples.rules.codsta.pod;
+
+public class CIOC {
+    public void printType() {
+        if(this instanceof SubclassA) {
+            System.out.println("SubclassA");
+        } else if(this instanceof SubclassB) {
+            System.out.println("SubclassB");
+        } else if(this instanceof SubclassC) {
+            System.out.println("SubclassC");
+        } else {
+            System.out.println("CIOC");
+        }
+    }
+}
+
+class SubclassA extends CIOC {
+}
+ 
+class SubclassB extends CIOC {
+}
+
+class SubclassC extends CIOC {
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Instead of using a chain of "instanceof" tests to determine which type name to 
+print, you can override the 'printType()' method in the subclasses.  This 
+eliminates the need to use "instanceof" and is a much cleaner solution. 
+
+package examples.rules.codsta.pod;
+
+public class CIOC_Fixed {
+    public void printType() {
+        System.out.println("CIOC_Fixed");
+    }
+}
+
+class SubclassA extends CIOC_Fixed {
+    public void printType() {
+        System.out.println("SubclassA");
+    }
+}
+ 
+class SubclassB extends CIOC_Fixed {
+    public void printType() {
+        System.out.println("SubclassB");
+    }
+}
+
+class SubclassC extends CIOC_Fixed {
+    public void printType() {
+        System.out.println("SubclassC");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

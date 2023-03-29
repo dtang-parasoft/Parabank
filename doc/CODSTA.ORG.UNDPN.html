@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure all types have a non default package name [CODSTA.ORG.UNDPN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure all types have a non default package name [CODSTA.ORG.UNDPN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies types(classes, interfaces, enum, annotation) that do not have
+a non default package name. An error is reported at the beginning
+of the file if the type inside that file belong to the 
+default package.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+FILE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+As the number of files (classes) scales up, it is easier to 
+manage files (classes) if they are assigned to packages in
+an organized way. Enforcing this rule could prevent files
+(classes) from dangling in a large file system without a 
+categorized identity.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+//VIOLATION: no package statement
+
+public class UNDPN {
+    //...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org; //FIXED
+
+public class UNDPNFixed {
+    //...
+}
+
+</PRE>
+</BODY>
+</HTML>

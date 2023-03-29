@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use single quotes instead of double quotes for single character string concatenation [OPT.STR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use single quotes instead of double quotes for single character string concatenation [OPT.STR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses double quotes instead of single quotes for
+single character string concatenation. An error is reported if code uses String
+concatenation with the "+" operator when one of the arguments is a single
+character String. This rule also checks single character String concatenations
+through use of the StringBuffer or StringBuilder 'append()' method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Code is optimized when you use single quotes instead of double quotes for single
+character string concatenation. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class STR {
+    public String method(String s) {
+        String string = null;
+        string = s + "d";  // VIOLATION
+        return string;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Instead of concatenating one-character String constants, replace them with
+character constants.
+
+package examples.rules.opt;
+
+public class STRFixed {
+    public String method(String s) {
+        String string = null;
+        string = s + 'd';  // FIXED
+        return string;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

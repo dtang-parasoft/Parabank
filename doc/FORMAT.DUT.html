@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use spaces instead of tabs (or tabs instead of spaces) [FORMAT.DUT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use spaces instead of tabs (or tabs instead of spaces) [FORMAT.DUT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Depending on the setting of the parameters, this rule identifies code that uses
+either tab characters instead of spaces or space characters instead of tabs. By
+default, the rule checks that space characters are used instead of tabs.  An
+error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Choose to use tabs or spaces
+    -Depending on the setting of this parameter, the rule will enforce the
+     usage of either tabs or spaces.  (Default is "Use spaces".)
+    -If the parameter is set to "Use tabs", the rule will only check for the
+     use of spaces at the beginning of each line.  A violation will be flagged
+     for each block of spaces appearing at the beginning of a line that is
+     equivalent to one tab.
+-Spaces per tab
+    -The number of spaces that are equivalent to one tab (Default is 4.)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+By avoiding tab characters, you reduce the chances of code appearing
+differently in different editors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class DUT {
+    public void spaced_method () {}
+    public void tabbed_method () {}  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace tabs with an agreed-upon number of spaces.  Traditionally a tab
+represents '8' spaces.  The preceding example could occur when a user
+has set their editor to use '4' space tabs, causing confusion for people
+who view the file in a different editor.
+
+package examples.rules.format;
+
+public class DUTFixed {
+    public void spaced_method () {}
+    public void nolonger_tabbed_method () {}  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

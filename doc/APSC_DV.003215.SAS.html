@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of space character(s) after every semicolon [APSC_DV.003215.SAS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of space character(s) after every semicolon [APSC_DV.003215.SAS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+    
+This rule identifies semicolons that are not followed by the required number of space
+characters. With the default parameters, an error is reported if any semicolon that appears
+in the header of a 'for' loop is not followed by a single ' ' space character. 
+
+Semicolons that appear as statement terminators are not subject to this rule. Semicolons
+that are located at the end of a line or followed only by whitespace or
+comments on the same line are also exempt from this rule. There is also a parameter where 
+the user can specify whether or not to make an exception for the common idiom 'for (;;)'.    
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Number of spaces after every semicolon (default value is 1)
+-Ignore rule for the special case "for(;;)" (default is true)
+   -When this parameter is true, a "for" statement of the form "for(;;)..." 
+    (with no spaces around the semicolons) will be ignored regardless of the 
+    setting of the other parameter. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class SAS {
+    public void method () {
+        for (int i = 0;i &lt; 10;i++) {  // VIOLATION
+            System.out.println ("i: " + i);
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place a single space after each semicolon.
+
+package examples.rules.format;
+
+public class SASFixed {
+    public void method () {
+        for (int i = 0; i &lt; 10; i++) {  // FIXED
+            System.out.println ("i: " + i);
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 8.2 of <A HREF="http://java.sun.com/docs/codeconv/html/CodeConventions.doc7.html#682">http://java.sun.com/docs/codeconv/html/CodeConventions.doc7.html#682</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 10 - 13
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

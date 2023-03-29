@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a Context Object to manage HTTP request parameters [CWE.601.UCO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a Context Object to manage HTTP request parameters [CWE.601.UCO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies Servlet classes that do not use
+Context Objects to manage HTTP request parameters. An error
+is reported if javax.servlet.ServletRequest.getParameter() 
+or javax.servlet.ServletRequest.getParameterValues() is invoked 
+from within a Servlet class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+By creating a request context and getting parameters from 
+the request context (instead of from the HttpServeletRequest 
+directly), a separate facade is added before parameters are
+passed to the application. This architecture makes it very 
+easy to enforce correct and centralized input validation 
+schemes by performing input validation in the request 
+context class. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+  
+An application typically uses system information, such as
+request, configuration, and security data, throughout the
+lifecycle of a request and response. Aspects of this system
+information are accessed based on their relevance to a
+certain processing context. When application-specific 
+components and services are exposed to system information
+that is outside their context, these components' flexibility
+and reusability are reduced. Using a protocol-specific
+API outside its relevant context means exposing all the
+components that use this API to specific interface and
+parsing details. Each client component is then highly coupled
+with that specific protocol.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class UCO extends HttpServlet {
+
+    public void doGet(HttpServletRequest request,
+	HttpServletResponse response
+    ) {
+	String first_name = request.getParameter("fname"); // VIOLATION
+	String last_name = request.getParameter("lname"); // VIOLATION
+	String email = request.getParameter("email"); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use Object context.
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class UCOFixed extends HttpServlet {
+
+    public void doGet(HttpServletRequest request,
+	HttpServletResponse response
+    ) {
+	RequestContextFactory requestContextFactory =
+	    RequestContextFactory.getInstance();
+        RequestContext requestContext = 
+	    requestContextFactory.createRequestContext(request);  // FIXED
+
+	String first_name = requestContext.getFirstName();
+	String last_name = requestContext.getLastName();
+	String email = requestContext.getEmail(); 
+    }
+}
+
+class RequestContextFactory {
+    private static RequestContextFactory _rcf;
+
+    private RequestContextFactory() {
+    }
+
+    static RequestContextFactory getInstance() {
+	if (_rcf == null) {
+            _rcf = new RequestContextFactory();
+	}
+	return _rcf;
+    }
+    RequestContext createRequestContext(ServletRequest request) {
+	String fn = validate(request.getParameter("fname"));
+	String ln = validate(request.getParameter("lname"));
+	String email = validate(request.getParameter("email"));
+	return new RequestContext(fn, ln, email);
+    }
+}
+
+class RequestContext {
+
+    private String _firstName;
+    private String _lastName;
+    private String _email;
+
+    RequestContext(String fn, String ln, String email) {
+	_firstName = fn;
+	_lastName = ln;
+	_email = email;
+    }
+
+    final String getFirstName() {
+	return _firstName;
+    }
+
+    final String getLastName() {
+	return _lastName;
+    }
+
+    final String getEmail() {
+	return _email;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-15: External Control of System or Configuration Setting
+<A HREF="https://cwe.mitre.org/data/definitions/15.html">https://cwe.mitre.org/data/definitions/15.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-601: URL Redirection to Untrusted Site ('Open Redirect')
+<A HREF="https://cwe.mitre.org/data/definitions/601.html">https://cwe.mitre.org/data/definitions/601.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 181
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing a database from Action Classes [STRUTS.ACDA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing a database from Action Classes [STRUTS.ACDA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies database accesses made from a Struts Action Class. A
+violation is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For the purpose of this rule, database accesses are considered to be any call to
+an 'executeXXX()' method of a 'java.sql.Statement' object.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Accessing a database from a Struts Action Class violates the Model View
+Controller pattern by tying the business layer to the control layer. Extracting
+the code can improve maintainability and promote code reuse. A common
+methodology is to use the Data Access Object pattern. See REFERENCES for more
+information.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.struts;
+
+import java.sql.*;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+
+public class ACDA extends Action {
+    private static final String _USER = "user";
+    private static final String _PASSWORD = "password";
+    private static final String _URL = "jdbc:mysql://localhost:3306/database";
+    private static final String _QUERY = "SELECT * FROM NAME LIMIT 1";
+
+    public ActionForward execute(
+        ActionMapping mapping,
+        ActionForm form,
+        HttpServletRequest request,
+        HttpServletResponse response
+    )
+    {
+        ...
+        String name = "";
+        try {
+            Class.forName("com.mysql.jdbc.Driver"); 
+            Connection conn = DriverManager.getConnection(_URL, _USER, _PASSWORD);
+            PreparedStatement stmt = conn.prepareStatement(_QUERY);
+            ResultSet rs = stmt.executeQuery(); //VIOLATION
+            if (rs.next()) {
+                name = rs.getString(1);
+            }
+        } catch (Exception e) {
+            //empty
+        }
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the Data Access Object (DAO) pattern if possible.
+
+package examples.struts;
+
+import java.sql.*;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+
+public class ACDAFixed extends Action {
+    public ActionForward execute(
+        ActionMapping mapping,
+        ActionForm form,
+        HttpServletRequest request,
+        HttpServletResponse response
+    )
+    {
+        ...
+        String name = nameDAO.getName(); //FIXED
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Accessing a Database
+<A HREF="http://struts.apache.org/release/1.2.x/faqs/database.html">http://struts.apache.org/release/1.2.x/faqs/database.html</A>
+
+Core J2EE Patterns - Data Access Object
+<A HREF="http://www.oracle.com/technetwork/java/dataaccessobject-138824.html">http://www.oracle.com/technetwork/java/dataaccessobject-138824.html</A>
+
+</PRE>
+</BODY>
+</HTML>

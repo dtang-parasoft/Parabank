@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid double initialization of fields [INIT.DI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid double initialization of fields [INIT.DI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a field is initialized both in its declaration
+and also in a constructor.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule was formerly a parameter of INIT.CSI.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum level of checking allowed (default is 4)
+    -Note that constructors may call setter methods to initialize field values.
+     In turn, these methods may call other methods. As a result, a large number
+     of methods may be involved. This parameter allows controlling the extent to
+     which this is checked. Specifying a higher value may yield more accurate
+     results, but will likely increase the time to run the rule.
+
+-Check non-static fields (default is true)
+-Check static fields (default is false)
+-Ignore fields initialized with default values (default is true)
+    -Enabling this parameter will ignore fields which are set to their default
+     values. Default values are considered to be:
+          array = null
+          primitive boolean = false
+          primitive number = 0
+          non-primitive object = null
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Fields which are double initialized may be unintended and cause confusion about
+which value the field is initialized to. There may also be a performance penalty
+by initializing the variable twice.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class DI {
+    private int NUM = 5;
+
+    public DI() {
+        NUM = 10; //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Determine which value was intended and initialize only once.
+
+package examples.rules.init;
+
+public class DIFixed {
+    private int NUM;
+
+    public DIFixed() {
+        NUM = 10; //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

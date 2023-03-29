@@ -1,0 +1,231 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Encapsulate arguments of dangerous methods with a validation method [VVSG.2_5_2_A.EACM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Encapsulate arguments of dangerous methods with a validation method [VVSG.2_5_2_A.EACM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when data that is passed to dangerous methods has not been validated.
+
+The methods that are considered to be dangerous are listed in the documentation of the following rules:
+* BD.SECURITY.TDCMD
+* BD.SECURITY.TDDIG
+* BD.SECURITY.TDENV
+* BD.SECURITY.TDFILES
+* BD.SECURITY.TDFNAMES
+* BD.SECURITY.TDINPUT
+* BD.SECURITY.TDJXPATH
+* BD.SECURITY.TDLDAP
+* BD.SECURITY.TDLIB
+* BD.SECURITY.TDLOG
+* BD.SECURITY.TDRESP
+* BD.SECURITY.TDRFL
+* BD.SECURITY.TDSQL
+* BD.SECURITY.TDXML
+* BD.SECURITY.TDXPATH
+* BD.SECURITY.TDXSS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+category: Code Quality
+
+Input validation needs to be performed on all dangerous data in order to prevent
+security vulnerabilities.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+For example, to prevent an HTTP response splitting, there could be an encoding
+method that accepts a possibly-tainted string coming from the user input and
+returns an encoded string that can be safely used to an HTTP response.
+In this case, the encoding method must be defined as a validating method that
+returns clean data. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Dangerous methods to be ignored" parameter allows you to specify dangerous
+methods the rule ignores. Methods configured with this parameter do not trigger
+the rule. By default, the following dangerous methods are ignored:
+* File(File parent, String child)
+* File(String pathname)
+* File(String parent, String child)
+* File(URI uri)
+
+Fill in the following columns to configure additional methods.
+- "Enabled" - enables or disables the dangerous method. If disabled, the rule
+    does not ignore the method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+
+The "Inspected elements" parameter allows you to specify which code elements
+the rule inspects. You can enable one the following options:
+- Constructors - the rule only inspects constructors.
+- Methods - the rule only inspects methods.
+- Methods and constructors - the rule inspects both constructors and methods.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A validation rule can be used to enforce expected behavior and prevent tainted 
+data from being passed to backend systems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
+public class Example
+{
+    public void process(String filename)
+    {
+        try {
+            FileInputStream fInput = new FileInputStream(filename); // VIOLATION
+            FileChannel channel = fInput.getChannel();
+            ByteBuffer dst = ByteBuffer.allocate(512);
+            int read = channel.read(dst);
+            // ... 
+        } catch (Exception ioe) {
+            System.out.println("Exception occured: " + ioe);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add validation method
+
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
+public class Repair
+{
+    public void process(String filename)
+    {
+        try {
+            FileInputStream fInput = new FileInputStream(validate(filename)); // NO VIOLATION
+            FileChannel channel = fInput.getChannel();
+            ByteBuffer dst = ByteBuffer.allocate(512);
+            int read = channel.read(dst);
+            // ... 
+        } catch (Exception ioe) {
+            System.out.println("Exception occured: " + ioe);
+        }
+    }
+
+    String validate(String file)
+    {
+        // data validation
+        return file;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+<A HREF="https://cwe.mitre.org/data/definitions/79.html">https://cwe.mitre.org/data/definitions/79.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-352: Cross-Site Request Forgery (CSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</A>
+
+Tags: PCI-DSS, CWE
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecates SECURITY.IBA.VPPD
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,241 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use chain constructors in classes with multiple constructors [CODSTA.POD.CHAIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use chain constructors in classes with multiple constructors [CODSTA.POD.CHAIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any class that has multiple constructors but 
+does not use a chain constructor by calling 'this()'. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are some cases where it is better to not chain constructor calls.  For 
+instance, for subclasses of "Exception", the typical pattern is to have 
+constructors accepting some combination of String (message) and Throwable 
+(cause) and calling up to the corresponding "super" constructor.  Chaining 
+constructors is not common coding practice in this case.  This is why subclasses
+of "java.lang.Exception" are not checked with the default parameterization of 
+the rule.  The user should add whatever other types there are that should not 
+have chained constructor calls to the parameter list.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Duplicate code introduces implementation errors. 
+Try to always reuse well-written code.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore subtypes of the following types (Specify fully qualified type names):
+    -Default value is "java.lang.Exception".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When developers change one constructor, they often neglect to change the
+other constructors. Consequently, the more general constructors should call
+the "catch-all" constructors, which accept more parameters.  The more general
+constructor will provide the default value to the "catch-all" constructor.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class CHAIN {
+
+    private String _streetName;
+    private String _streetName2;
+    private String _aptNum;
+    private String _city;
+    private String _state;
+    private int _zip;
+    private String _country;
+
+    public CHAIN(
+        String streetName, 
+        String city, 
+        String state, 
+        int zip, 
+        String country
+    ) {  // VIOLATION
+
+        _streetName = streetName,
+        _streetName2 = "",
+        _aptNum = "";
+        _city = city;
+        _state = state;
+        _zip = zip;
+        _country = country;
+    }
+
+    public CHAIN(
+        String streetName, 
+        String aptNum, 
+        String city, 
+        String state, 
+        int zip
+    ) {  // VIOLATION
+
+        _streetName = streetName,
+        _streetName2 = "",
+        _aptNum = aptNum;
+        _city = city;
+        _state = state;
+        _zip = zip;
+        _country = "USA"; 
+    }
+
+    public CHAIN(
+        String streetName, 
+        String streetName2, 
+        String aptNum, 
+        String city, 
+        String state, 
+        int zip, 
+        String country
+    ) {
+        _streetName = streetName,
+        _streetName2 = streetName2,
+        _aptNum = aptNum;
+        _city = city;
+        _state = state;
+        _zip = zip;
+        _country = country;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use chain constructor.
+
+package examples.rules.codsta.pod;
+
+public class CHAINFixed {
+
+    private String _streetName;
+    private String _streetName2;
+    private String _aptNum;
+    private String _city;
+    private String _state;
+    private int _zip;
+    private String _country;
+
+    public CHAINFixed(
+        String streetName, 
+        String city, 
+        String state, 
+        int zip, 
+        String country
+    ) {
+        this(streetName,"", "", "", "", zip, country);  // FIXED
+    }
+
+    public CHAINFixed(
+        String streetName, 
+        String aptNum, 
+        String city, 
+        String state, 
+        int zip
+    ) {
+        this(streetName,"", aptNum, city, state, zip, "USA");  // FIXED
+    }
+
+    public CHAINFixed(
+        String streetName, 
+        String streetName2, 
+        String aptNum, 
+        String city, 
+        String state, 
+        int zip, 
+        String country
+    ) {
+        _streetName = streetName,
+        _streetName2 = streetName2,
+        _aptNum = aptNum;
+        _city = city;
+        _state = state;
+        _zip = zip;
+        _country = country;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.industriallogic.com/papers/rtp017.pdf">http://www.industriallogic.com/papers/rtp017.pdf</A> 
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 71 - 72
+
+</PRE>
+</BODY>
+</HTML>

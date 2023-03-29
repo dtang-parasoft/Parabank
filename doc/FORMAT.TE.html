@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the preferred formatting for conditional expressions [FORMAT.TE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the preferred formatting for conditional expressions [FORMAT.TE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies conditional expressions (a ? b : c) that do not use 
+the preferred formatting. An error is reported if the expressions do not follow
+these three acceptable formats:
+ 
+alpha = (aLongBooleanExpression) ? beta : gamma;  
+alpha = (aLongBooleanExpression) ? beta
+                                 : gamma;  
+alpha = (aLongBooleanExpression)
+        ? beta 
+        : gamma;  
+
+When an expression will not fit on a single line, break it according to
+general principles.  
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Enforced formats for conditional expressions:
+    -expression1 ? expression2 : expression3     (default is true)
+    -expression1 ? expression2                   (default is true)
+                 : expression3
+    -expression1                                 (default is true)
+     ? expression2
+     : expression3
+-The condition must be parenthesized (default is false)
+    -If this parameter is enabled, a violation will be flagged if the 
+     condition part of the conditional expression is not parenthesized.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+class TE {
+    void foo (int radix, String str, String count) {
+        int size = str.endsWith ("str") ? Integer.parseInt (count) : 
+            Integer.parseInt (count, radix); //VIOLATION           
+        System.out.println ("size = " +size);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Modify the code to follow the coding standard.
+
+package examples.rules.format;
+
+class TEFixed {
+    void foo (int radix, String str, String count) {
+        int size = str.endsWith ("str") 
+                   ? Integer.parseInt (count) 
+                   : Integer.parseInt (count, radix);           
+        /* OR this
+        int size = str.endsWith ("str") ? Integer.parseInt (count) 
+                                        : Integer.parseInt (count, radix);
+        */
+        System.out.println ("size = " +size);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 4.2 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html">http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

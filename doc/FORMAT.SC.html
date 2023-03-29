@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of space character(s) between a conditional statement and the opening "(" parenthesis [FORMAT.SC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of space character(s) between a conditional statement and the opening "(" parenthesis [FORMAT.SC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any keyword for conditional, loop, and exception statement
+that is not followed by one whitespace(by default) character (unless it is at 
+the end of a line or followed by comment). 
+
+This rule applies to the keywords "if", "else", "switch", "for", "while",
+and "catch". If such a keyword is followed by an opening
+parenthesis "(", there must be no more than one space(by default) after the
+parenthesis. The keyword "synchronized" is not subject to rule FORMAT.SC. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Number of spaces in between (default value is 1)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class SC {
+    public void method (int i) {
+        if(  i &lt; 0) {  // VIOLATION
+            System.out.println("Less than zero");
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place a single space before the "(" and place no more than one space after
+the parenthesis.
+
+package examples.rules.format;
+
+public class SCFixed {
+    public void method (int i) {
+        if (i &lt; 0) {  // FIXED
+      //if ( i &lt; 0) { // Would also be acceptable  
+            System.out.println("Less than zero");
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#475">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#475</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 10 - 13
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

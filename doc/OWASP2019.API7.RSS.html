@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the 'scope' attribute is set to either "request" or "session" for actions and exceptions in 'struts-config.xml' files [OWASP2019.API7.RSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the 'scope' attribute is set to either "request" or "session" for actions and exceptions in 'struts-config.xml' files [OWASP2019.API7.RSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+'&lt;action&gt;' elements and '&lt;exception&gt;' elements in 'struts-config.xml' files can
+contain an optional 'scope' attribute.  For '&lt;action&gt;' elements, the 'scope'
+attribute is used to specify the scope within which the form bean will be 
+placed.  For '&lt;exception&gt;' elements, the 'scope' attribute is used to specify 
+the scope level within which the ActionError instance will be stored.  For both 
+'&lt;action&gt;' elements and '&lt;exception&gt;' elements, the only acceptable values for 
+the 'scope' attribute are "request" and "session".
+
+This rule will flag a violation for each '&lt;action&gt;' element or '&lt;exception&gt;' 
+element which has a 'scope' attribute that is set to anything other than 
+"request" or "session".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Incorrect 'scope' attributes are common typos which can cause your application
+to not behave as expected.  This may lead to application instability, a denial 
+of access, or some other security-related problem for the user.
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A5-Security Misconfiguration".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A 'scope' attribute which is set to anything other than "request" or "session" 
+is a bug.  This bug may cause the Struts application to not function as 
+intended.  It is easy to make a mistake when typing the 'scope' attribute due
+to carelessness or misunderstanding.  This rule will help to catch these 
+mistakes.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This sample 'struts-config.xml' file contains both an '&lt;action&gt;' element with an
+unrecognized 'scope' attribute ("foo") and an '&lt;exception&gt;' element which has a
+'scope' attribute containing a typo ("sesion").
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;struts-config&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/login" type="com.oreilly.actions.LoginAction" scope="foo" name="loginForm"
+            validate="true" input="/Login.jsp" /&gt;  &lt;!-- VIOLATION: "foo" is not an acceptable
+                                                        value for the 'scope' attribute --&gt;
+    &lt;/action-mappings&gt;
+    
+    &lt;global-exceptions&gt;
+        &lt;exception key="global.error.invalidLogin" path="/security/signin.jsp" scope="sesion"
+            type="com.oreilly.struts.InvalidLoginException" /&gt;  &lt;!-- VIOLATION: The spelling of 
+                                                          the 'scope' attribute contains a typo --&gt;
+    &lt;/global-exceptions&gt;
+
+&lt;/struts-config&gt; 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that the 'scope' attributes for '&lt;action&gt;' and '&lt;exception&gt;' elements are
+set to either "request" or "session" whenever they are specified.
+
+struts-config.xml:
+    
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE struts-config PUBLIC
+      "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+      "<A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;
+&lt;struts-config&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/login" type="com.oreilly.actions.LoginAction" scope="request" 
+            name="loginForm" validate="true" input="/Login.jsp" /&gt;  &lt;!-- FIXED --&gt;
+    &lt;/action-mappings&gt;
+    
+    &lt;global-exceptions&gt;
+        &lt;exception key="global.error.invalidLogin" path="/security/signin.jsp" 
+            scope="session" type="com.oreilly.struts.InvalidLoginException" /&gt;  &lt;!-- FIXED --&gt;
+    &lt;/global-exceptions&gt;   
+
+&lt;/struts-config&gt; 
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Cigital Java Security Rule Pack # 48:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+2. Struts 1.3.10 Documentation:
+<A HREF="http://struts.apache.org/release/1.3.x/userGuide/index.html">http://struts.apache.org/release/1.3.x/userGuide/index.html</A>
+
+3. OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+4. OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "static final" constants for single character literals in an Internationalized environment [INTER.NCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "static final" constants for single character literals in an Internationalized environment [INTER.NCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies single character literals that are not placed in constants.
+This means that single character literals can only be used when they are declared
+"static" and "final". An error is reported for each occurrence, with the
+following exception: an error is not reported if a special comment was added
+to the line of code that does not follow the rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the following special comment to prevent Jtest from reporting
+any INTER rules for a specific line of code:
+
+1. /* NOI18N */
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class NCL {
+    public void method () {
+        System.out.println ('c');  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Put the literal into a constant.
+
+package examples.rules.inter;
+
+public class NCLFixed {
+    public void method () {
+        System.out.println (mychar);  // FIXED
+    }
+    private static final char mychar = 'c';
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/">http://docs.oracle.com/javase/tutorial/i18n/</A>
+
+</PRE>
+</BODY>
+</HTML>

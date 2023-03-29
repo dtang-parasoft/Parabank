@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unsynchronized accesses of "Collections.synchronized" wrapped Collections [TRS.UACS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unsynchronized accesses of "Collections.synchronized" wrapped Collections [TRS.UACS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to one of the following wrapper methods of
+"java.util.Collections": "synchronizedCollection", "synchronizedList", 
+"synchronizedMap", "synchronizedSet", "synchronizedSortedMap", and
+"synchronizedSortedSet".
+If a pre-existing Collections is passed as an argument, and then that Collection
+is accessed in a means other than through the wrapped version, then a violation
+is flagged.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A user may wrap a Collection but unintentionally continue to access it in an
+unsynchronized means. This could cause confusion and synchronization errors.
+For example, a user may call "Collections.synchronizedList(list)" without
+assigning it to anything. Then if "list" is accessed afterwards, it is done
+so in an unsynchronized manner, despite the user possibly believing it had been
+made safe.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class UACS {
+    List list0 = new ArrayList();
+    List list1 = Collections.synchronizedList(list0);
+    
+    void addList() {
+        list1.add(new Object());
+        list1.add(new Object());
+        list0.add(new Object()); //VIOLATION
+        list1.add(new Object());
+    }
+    
+    void addList(List list) {
+        Collections.synchronizedList(list);
+        list.add(new Object()); //VIOLATION
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If possible, pass the wrapper method a new instance of a Collection to prevent
+other references from being visible. Or if the intent was to synchronize an
+existing Collection make sure the wrapped Collection is assigned and all
+accesses are done through the wrapped Collection.
+
+package examples.rules.trs;
+
+public class UACSFixed {
+    List list0 = new ArrayList();
+    List list1 = Collections.synchronizedList(list0);
+    
+    void addList() {
+        list1.add(new Object());
+        list1.add(new Object());
+        list1.add(new Object()); //FIXED
+        list1.add(new Object());
+    }
+    
+    void addList(List list) {
+        List synchList = Collections.synchronizedList(list);
+        synchList.add(new Object()); //FIXED
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 58-60.
+
+Collections
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html</A>
+
+</PRE>
+</BODY>
+</HTML>

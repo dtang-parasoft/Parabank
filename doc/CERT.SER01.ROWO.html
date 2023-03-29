@@ -1,0 +1,206 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the 'readObject()' and 'writeObject()' methods have the correct signature [CERT.SER01.ROWO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the 'readObject()' and 'writeObject()' methods have the correct signature [CERT.SER01.ROWO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies any 'readObject()' or 'writeObject()' method
+declared in a 'Serializable' class which does not have the correct
+signature.  According to the Javadoc for these methods, the 'writeObject()'
+and 'readObject()' methods of classes implementing the 'java.io.Serializable'
+interface must exactly match the following signatures:
+
+private void writeObject(java.io.ObjectOutputStream out) throws IOException
+
+private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+
+Note that the methods must meet all of the following requirements:
+
+1.  They must be declared as "private" with "void" as the return type.
+2.  They must have the correct parameter types.
+3.  They must be declared to throw no exceptions other than the specified 
+exceptions.  If a 'readObject()' or 'writeObject()' method does not declare 
+one or more of the specified exceptions to be thrown, that is acceptable.  
+However, the method must not declare an exception to be thrown that is not 
+specified above.
+4.  They must have no additional modifiers other than "private".  An optional
+"final" modifier is also acceptable if you want to make sure that the provided
+serialization methods are not overridden in any subclasses.
+
+This rule will flag a violation for each method named 'readObject()' or
+'writeObject()' which is declared in a class implementing the 'Serializable' 
+interface and which does not match the signatures shown above.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to the Javadoc for the 'writeObject()' and 'readObject()' methods, 
+these methods must have the exact same signatures as those shown above.  If
+a method is named 'readObject()' or 'writeObject()' but does not have a 
+signature matching the ones shown above, it is most likely a bug that will 
+cause the serialization to not work correctly.  For instance, if the 'writeObject()'
+and 'readObject()' methods are not declared "private", the serialization 
+mechanism will just ignore them silently.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class ROWO implements Serializable {
+
+    private int _value;
+
+    public ROWO(int value) {
+        _value = value;
+    }
+
+    public int getValue() {
+        return _value;
+    }
+
+    public void writeObject(ObjectOutputStream out) throws IOException {  //VIOLATION
+        System.out.println("writeObject: " + _value);
+        out.writeInt(_value);
+    }
+
+    public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {  //VIOLATION
+        _value = in.readInt() + 1;
+        System.out.println("readObject: " + _value);
+    }
+
+    public static void main(String[] args) throws Exception {
+        FileOutputStream out = new FileOutputStream("data.out");
+        ObjectOutputStream oos = new ObjectOutputStream(out);
+
+        ROWO data = new ROWO(6);
+        oos.writeObject(data);
+        out.close();
+
+        FileInputStream in = new FileInputStream("data.out");
+        ObjectInputStream ois = new ObjectInputStream(in);
+        data = (ROWO) ois.readObject();
+        if (data.getValue() == 7) {
+            System.out.println("test passed");
+        }
+        else {
+            System.err.println("TEST FAILED: " + data.getValue());
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class ROWOFixed implements Serializable {
+
+    private int _value;
+
+    public ROWOFixed(int value) {
+        _value = value;
+    }
+
+    public int getValue() {
+        return _value;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {  //FIXED
+        System.out.println("writeObject: " + _value);
+        out.writeInt(_value);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {  //FIXED
+        _value = in.readInt() + 1;
+        System.out.println("readObject: " + _value);
+    }
+
+    public static void main(String[] args) throws Exception {
+        FileOutputStream out = new FileOutputStream("data.out");
+        ObjectOutputStream oos = new ObjectOutputStream(out);
+
+        ROWOFixed data = new ROWOFixed(6);
+        oos.writeObject(data);
+        out.close();
+
+        FileInputStream in = new FileInputStream("data.out");
+        ObjectInputStream ois = new ObjectInputStream(in);
+        data = (ROWOFixed) ois.readObject();
+        if (data.getValue() == 7) {
+            System.out.println("test passed");
+        }
+        else {
+            System.err.println("TEST FAILED: " + data.getValue());
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+SER01-J. Do not deviate from the proper signatures of serialization methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER01-J.+Do+not+deviate+from+the+proper+signatures+of+serialization+methods">https://wiki.sei.cmu.edu/confluence/display/java/SER01-J.+Do+not+deviate+from+the+proper+signatures+of+serialization+methods</A>
+
+</PRE>
+</BODY>
+</HTML>

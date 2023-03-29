@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Override 'Object.equals()' in JavaBean classes [BEAN.EQUALS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Override 'Object.equals()' in JavaBean classes [BEAN.EQUALS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JavaBean classes that do not override 'Object.equals()'.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule defines a JavaBean class as a class which implements Serializable, 
+contains a public default constructor, and has a name ending with "Bean".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The implementation of the 'equals()' method which is inherited from class
+"Object" considers two expressions to be equal only if the two expressions 
+reference the exact same Object.  This is probably not the intended 
+behavior.  You probably want to compare two objects for equality by 
+comparing the fields of these objects.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.bean;
+
+import java.io.*;
+
+public class EQUALSBean implements Serializable {
+    private String name;
+
+    public EQUALSBean(String n){
+        name= n;
+    }
+
+    // VIOLATION : missing equals()
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+override equals()
+
+package examples.rules.bean;
+
+import java.io.*;
+
+public class EQUALSFixedBean implements Serializable {
+    private String name;
+
+    public EQUALSFixedBean(String n){
+        name= n;
+    }
+
+    public boolean equals(Object obj) {  // FIXED
+        if(!(obj instanceof EQUALSFixedBean)){
+            return false;
+        }
+        EQUALSFixedBean temp= (EQUALSFixedBean)obj;
+        return this.name.equals(temp.name);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

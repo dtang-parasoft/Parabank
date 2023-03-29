@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect instantiations of 'ClassLoader' objects [SECURITY.WSC.CLI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect instantiations of 'ClassLoader' objects [SECURITY.WSC.CLI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instantiations of 'ClassLoader' object. 
+A message is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Malicious Code
+
+This rule prevents insecure class loaders. See BENEFITS for more
+information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+As insecure 'ClassLoader' object could allow untrusted 
+classes to be loaded. Consequently, instantiations of 'ClassLoader' 
+should be inspected carefully.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class CLI {
+    public static void main(String[] args) {
+        ClassLoader cl = new MyClassLoader();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that the class loader is secure.
+
+</PRE>
+</BODY>
+</HTML>

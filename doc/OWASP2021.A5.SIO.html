@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling print methods of 'System.err' or 'System.out' [OWASP2021.A5.SIO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling print methods of 'System.err' or 'System.out' [OWASP2021.A5.SIO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+All debugging statements should be removed from production code before
+the product is released. Accidentally leaving a debugging statement in
+the application code may reveal sensitive information to a user, which
+makes the application prone to security attacks.
+
+This rule identifies calls to commonly used debugging methods. It detects
+invocations of the following methods of 'System.err' and 'System.out' classes:
+* format
+* print
+* println
+* write
+
+The rule can be parameterized to specify the scope of analysis
+(see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Debugging statements may include sensitive information, such as implementation
+details. 
+
+"The sensitive information. . . may be useful for launching other, more deadly
+attacks." [CWE-209]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Include classes - allows you to specify a subset of classes the rule will
+    analyze (by default, the rule checks all available classes); the table
+    consists of two columns:
+    - Base class/interface - if enabled, the rule will analyze all classes
+      that implement or extend the specified class or interface
+    - Class/interface name (regular expressions) - a regular expression that matches
+      the name of the class that will be analyzed
+
+- Exclude methods - allows you to specify methods the rule will not analyze-place
+    each method name on a new line (by default, the following methods are
+    excluded: 'main', 'show', 'verbose')
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that all debugging statements are removed from
+your production code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security;
+
+public class SIO {
+
+    public int getMax(int i, int j, int default_num) {
+
+    int result = default_num;
+    if (i &gt;= 0 &amp;&amp; i &gt; j) {
+        result = i;
+    } else if (j &gt;= 0 &amp;&amp; j &gt;= i) {
+        result = j;
+    }
+    System.out.println("result is : " + result); // VIOLATION
+    return result;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the 'System.out.println()' statement.
+
+package examples.rules.security;
+
+public class SIOFixed {
+
+    public int getMax(int i, int j, int default_num) {
+
+    int result = default_num;
+    if (i &gt;= 0 &amp;&amp; i &gt; j) {
+        result = i;
+    } else if (j &gt;= 0 &amp;&amp; j &gt;= i) {
+        result = j;
+    }
+
+    // OK : remove the 'System.out.println()' statement
+
+    return result;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/f421268b-b5e7-4163-a40e-621f2bcdd334">https://app.hackedu.com/link/f421268b-b5e7-4163-a40e-621f2bcdd334</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-200: Information Exposure
+<A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+CWE-209: Information Exposure Through an Error Message
+<A HREF="https://cwe.mitre.org/data/definitions/209.html">https://cwe.mitre.org/data/definitions/209.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not throw exceptions from constructors of "public" non-"final" classes [CERT.OBJ11.EPNFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not throw exceptions from constructors of "public" non-"final" classes [CERT.OBJ11.EPNFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a constructor declaration of a "public"
+non-"final" class throws an exception. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+If an exception is thrown from a constructor of a "public" non-"final" class an
+attacker may be able to access a partially constructed object. One alternative
+is to use a flag to signify that an error occurred during initialization and
+consult the flag before any action the object takes.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class EPNFC {
+    int _i;
+
+    EPNFC(int i) throws Exception {
+        if (i == 0) {
+            throw new Exception();
+        }
+        _i = i;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid throwing an exception from the constructor. If the exception is to declare
+an error occurred it may be possible to instead set a flag which is checked at
+necessary stages.
+
+package examples.rules.except;
+
+public class EPNFCFixed {
+    int _i;
+    volatile boolean _isValid = false;
+
+    EPNFC(int i) throws Exception {
+        if (i != 0) {
+            _i = i;
+            isValid = true;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Secure Coding Guidelines for the Java Programming Language, version 2.0
+    <A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#7-3">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#7-3</A>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware:
+    <A HREF="http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf">http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ11-J. Be wary of letting constructors throw exceptions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions">https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions</A>
+
+</PRE>
+</BODY>
+</HTML>

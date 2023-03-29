@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "static" methods when the declaring class is a parameter type [CODSTA.POD.ASM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "static" methods when the declaring class is a parameter type [CODSTA.POD.ASM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a method has a parameter which is the same type as the method's declaring
+class, it is not necessary to declare this method "static".  This rule will flag
+a violation for each method which is declared "static" and which has a parameter
+of the same type as the declaring class.  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Methods with array parameters are not checked as it is generally not
+plausible to change the method to a non-"static" type.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is a bad coding practice to declare a method "static" when that method has a 
+parameter which is the same type as the method's declaring class.  Since it is
+necessary to have an instance of the declaring class to call such a method 
+anyway, there is no reason to declare the method "static".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class ASM {
+    int field1;
+    int field2;
+
+    static boolean isValid(ASM obj) {  // VIOLATION
+        return (obj.field1 &gt; 0) &amp;&amp; (obj.field2 &gt; 0);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The method can be changed to an instance method.  The parameter which is the same 
+type as the declaring class can be removed, and the implicit "this" reference can 
+be used in place of that parameter. 
+
+package examples.rules.codsta.pod;
+
+public class ASMFixed {
+    int field1;
+    int field2;
+
+    boolean isValid() {  // REPAIR
+        return (field1 &gt; 0) &amp;&amp; (field2 &gt; 0);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

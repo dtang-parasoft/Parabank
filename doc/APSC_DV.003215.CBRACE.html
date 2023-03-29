@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place a closing brace on its own line [APSC_DV.003215.CBRACE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place a closing brace on its own line [APSC_DV.003215.CBRACE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+As a general rule, the closing brace should be set on a separate line.
+This rule detects closing braces that are not on their own lines, with 
+the following exceptions:
+- closing braces in array initializers.
+- closing braces that are on the same line as their corresponding opening braces.
+
+By default, the rule ignores the following keywords and tokens that appear after
+the closing brace on the same line if the closing brace the first non-whitespace
+token of a line:
+    - else
+    - catch
+    - finally
+    - while (only if part of a do...while loop)
+    - }
+    - ;
+    - /*
+    - //
+The rule can be parameterized to report the above cases (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not analyze lambdas and anonymous class declarations.
+
+  
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore case "} else {" (enabled by default)
+-Ignore case "} catch {" (enabled by default)
+-Ignore case "} finally {" (enabled by default)
+-Ignore case "} while();" (enabled by default)
+-Ignore case "}}" (enabled by default) - applies only to double closing braces that are not followed by any characters 
+-Ignore case "} ;" (enabled by default)
+-Ignore case "} /* " (enabled by default)
+-Ignore case "} // " (enabled by default)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps all team members follow the same formatting style to make it easier
+to read and understand the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class CBRACE {
+    private int index; }  // VIOLATION
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Put the closing "}" brace on its own line.
+
+package examples.rules.format;
+
+public class CBRACEFixed {
+    private int index;
+}  // FIXED
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 6.4 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#381">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#381</A>
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

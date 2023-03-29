@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use '==' or '!=' to compare objects [CWE.595.UEIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use '==' or '!=' to compare objects [CWE.595.UEIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+As a rule, the '==' and '!=' operators compare two objects to check if they
+are instances of the same object, while the 'equals()' method checks if two
+objects have the same value.
+
+This rule detects when the comparison operators "==" or "!=" are used instead
+of the 'equals()' method to compare objects.
+The rule can be parameterized (see PARAMETERS). With the default parameters
+enabled, an error is reported for each case where "==" or "!=" is used when
+comparing objects.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not trigger when:
+- the operands of a comparison operator are Class objects (Class objects can
+  be compared using '==' or '!=')
+- the operands of a comparison operator are objects of type "java.lang.Object"
+  (comparing two objects of type "java.lang.Object" for equality using the "=="
+  or "!=" operator is identical with comparing them using the 'equals()'
+  method.)
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The program compares object references instead of the contents of the objects
+themselves, preventing it from detecting equivalent objects. . . This weakness
+can lead to erroneous results that can cause unexpected application behaviors."
+[CWE-595]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Scope of checking:
+    - All objects (enabled by default)
+    - Only 'String' objects
+- Check for calls to the 'equals()' method of class Object on arrays (enabled by default)
+- Check comparisons to "static" "final" objects
+- Check comparisons in equals() methods (enabled by default)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid errors in comparisons of objects.
+
+In addition, the rule reveals mistakes in assumptions about unboxing for
+Java 1.5 and later. If two integers are compared, it may appear they are
+equal whereas, in fact, they are not.
+For example:
+    void isSame(Integer a, Integer b) {
+        return (a == b);
+    }
+This method returns true if "a" and "b" refer to the same object, but not if
+they simply have the same value (i.e. they are not unboxed for the comparison).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+import java.awt.*;
+
+public class UEIC {
+    public boolean notEqual (Choice other) {
+       boolean monthly = co != other;  // VIOLATION
+       return monthly;
+    }
+    private Choice co = null;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'equals()' instead of "==" or "!=".
+
+package examples.rules.pb.cub;
+
+import java.awt.*;
+
+public class UEICFixed {
+    public boolean notEqual (Choice other) {
+       boolean monthly = !(co.equals(other));  // FIXED
+       return monthly;
+    }
+    private Choice co = null;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-595: Comparison of Object References Instead of Object Contents
+<A HREF="https://cwe.mitre.org/data/definitions/595.html">https://cwe.mitre.org/data/definitions/595.html</A>
+
+Joshua Bloch: "Effective Java - Programming Language Guide
+Addison Wesley, 2001, pp.25 - 36
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 69 - 70
+
+SEI CERT Oracle Coding Standard for Java
+EXP02-J. Do not use the Object.equals() method to compare two arrays
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP02-J.+Do+not+use+the+Object.equals%28%29+method+to+compare+two+arrays">https://wiki.sei.cmu.edu/confluence/display/java/EXP02-J.+Do+not+use+the+Object.equals%28%29+method+to+compare+two+arrays</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP03-J. Do not use the equality operators when comparing values of boxed primitives
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP03-J.+Do+not+use+the+equality+operators+when+comparing+values+of+boxed+primitives">https://wiki.sei.cmu.edu/confluence/display/java/EXP03-J.+Do+not+use+the+equality+operators+when+comparing+values+of+boxed+primitives</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP50-J. Do not confuse abstract object equality with reference equality
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP50-J.+Do+not+confuse+abstract+object+equality+with+reference+equality">https://wiki.sei.cmu.edu/confluence/display/java/EXP50-J.+Do+not+confuse+abstract+object+equality+with+reference+equality</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid assignment within a condition [CERT.EXP51.ASI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid assignment within a condition [CERT.EXP51.ASI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies when assignments are used in "if" conditional statements.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+"The code uses an operator for assignment when the intention was to perform
+a comparison. . . This bug is generally the result of a typo and usually causes
+obvious problems with program execution." [CWE-481]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The code uses an operator for assignment when the intention was to perform
+a comparison. . . This bug is generally the result of a typo and usually causes
+obvious problems with program execution. If the comparison is in an if statement,
+the if statement will usually evaluate the value of the right-hand side of
+the predicate." [CWE-481]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flag assignments to "boolean" objects only (default as true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Assignments in many types of conditional statements in Java are illegal
+because they are easy to accidentally type.  Following this rule helps
+maintain that conformity and prevents difficult-to-detect bugs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class ASI {
+    public int foo (boolean b) {
+        int ret = 0;
+        if (b = true) {  // VIOLATION
+            ret = 3;
+        }
+        return ret;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the variable assignment to a separate statement. Or, if the variable 
+assignment was a mistake, then replace it with a "==" comparison operator.
+
+package examples.rules.pb.typo;
+
+public class ASIFixed {
+    public int foo (boolean b) {
+        int ret = 0;
+        if (b == true) {  // FIXED
+            ret = 3;
+        }
+        return ret;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://g.oswego.edu/dl/html/javaCodingStd.html">http://g.oswego.edu/dl/html/javaCodingStd.html</A>
+
+Section 10.4 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#547">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#547</A>
+
+CWE-481: Assigning instead of Comparing
+<A HREF="https://cwe.mitre.org/data/definitions/481.html">https://cwe.mitre.org/data/definitions/481.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP51-J. Do not perform assignments in conditional expressions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP51-J.+Do+not+perform+assignments+in+conditional+expressions">https://wiki.sei.cmu.edu/confluence/display/java/EXP51-J.+Do+not+perform+assignments+in+conditional+expressions</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unreachable "else if" and "else" cases [VVSG.14_2_G.UIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unreachable "else if" and "else" cases [VVSG.14_2_G.UIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "else if" or "else" cases that are not reachable. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "static final boolean" constants and "boolean" literals (default true)
+    -Boolean constants and variables which always evaluate to the same value are
+     less likely to be misplaced expressions. Instead, they could be conditional
+     expressions that are used as flags to toggle on or off code segments.
+     Enabling this parameter will cause these conditional statements to not 
+     be flagged as errors.
+     The following cases will be ignored:
+        -Expressions consisting of just a single boolean constant or variable,
+         as well as expressions where a single boolean constant or variable is
+         negated using the "!".
+        -Comparisons of a single boolean constant or variable to "true" or
+         "false" will also not be flagged. This is equivalent to the case of a
+         single boolean constant or variable and may indicate that the constant
+         or variable is being used as a flag to toggle code.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Since an unreachable case would never be executed, it should be removed.
+However, in most of the cases, unreachable cases are unintended. They could be
+caused by misplaced conditions or incorrect logic, such a logic flaw should be
+fixed to ensure correct behavior of the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class UIF {
+    public String getGradeFromScore(int score) {
+        if (score &lt; 50) {
+            return "FAIL";
+        } 
+        else if (score &gt;= 50) {
+            return "PASS";
+        } 
+        else if (score == 100) {  //VIOLATION: unreachable case
+            return "PERFECT";
+        } 
+        else {                    //VIOLATION: unreachable case
+            return "INVALID_SCORE";
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class UIFFixed {
+    public String getGradeFromScore(int score) {
+        if (score &gt;= 0 &amp;&amp; score &lt; 50) {
+            return "FAIL";
+        } 
+        else if (score &gt;= 50 &amp;&amp; score &lt; 100) {  //FIXED
+            return "PASS";
+        } 
+        else if (score == 100) {
+            return "PERFECT";
+        } 
+        else { 
+            return "INVALID_SCORE";
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

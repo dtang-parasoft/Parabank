@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'equalsIgnoreCase()' instead of calls to 'toLowerCase()' or 'toUpperCase()' [OPT.EIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'equalsIgnoreCase()' instead of calls to 'toLowerCase()' or 'toUpperCase()' [OPT.EIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag cases where 'equals()' is called following a call to
+'toLowerCase()' or 'toUpperCase()'. See NOTES and BENEFITS 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks chained method calls as well as cases where the return value of
+'toLowerCase()' or 'toUpperCase()' is stored and then used in a call to
+'equals()'. If the return value of 'toLowerCase()' or 'toUpperCase()' is stored
+to a field or used elsewhere then a violation will not be flagged.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important. 
+
+It is more efficient to call 'equalsIgnoreCase()' instead of converting a String
+to lowercase or uppercase and then calling 'equals()'.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class EIC {
+    boolean isMatch(String s, String t)
+    {
+        return s.toLowerCase().equals(t.toLowerCase()); //VIOLATION 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a call to 'equalsIgnoreCase()' instead.
+
+package examples.rules.opt;
+
+public class EICFixed {
+    boolean isMatch(String s, String t)
+    {
+        return s.equalsIgnoreCase(t); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

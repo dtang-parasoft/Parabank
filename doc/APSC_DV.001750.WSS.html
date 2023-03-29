@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the Rampart WS-Security module is enabled in Axis2 configuration files [APSC_DV.001750.WSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the Rampart WS-Security module is enabled in Axis2 configuration files [APSC_DV.001750.WSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Apache Axis2 comes with a security module called "Rampart" which provides 
+WS-Security features.  This module is enabled by adding a '&lt;module ref="rampart"/&gt;' 
+tag to the 'services.xml' or 'axis2.xml' file.  This rule will flag a violation 
+for each 'services.xml' or 'axis2.xml' file which is missing the tag 
+'&lt;module ref="rampart"/&gt;'.  Without this tag, Rampart will be disabled.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+The Apache Rampart WS-Security module is provided with Apache Axis2 to ensure 
+message integrity and confidentiality.  If Rampart is disabled, it makes it
+difficult to guarantee message integrity and confidentiality.
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A5-Security Misconfiguration".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+services.xml:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;service&gt;
+    &lt;operation name="echo"&gt;
+        &lt;messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/&gt;
+    &lt;/operation&gt;    
+    &lt;parameter name="ServiceClass" locked="false"&gt;org.apache.rampart.samples.sample02.SimpleService&lt;/parameter&gt;
+    
+    &lt;!-- VIOLATION: missing tag to enable Rampart WS-Security --&gt;
+&lt;/service&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Enable Rampart security by adding a '&lt;module ref="rampart"/&gt;' tag and adding 
+"InflowSecurity" and/or "OutflowSecurity" parameters.  
+
+services.xml:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;service&gt;
+    &lt;operation name="echo"&gt;
+        &lt;messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/&gt;
+    &lt;/operation&gt;    
+    &lt;parameter name="ServiceClass" locked="false"&gt;org.apache.rampart.samples.sample02.SimpleService&lt;/parameter&gt;
+    
+    &lt;!-- FIXED: Added a '&lt;module ref="rampart" /&gt;' tag and an "InflowSecurity"
+         parameter --&gt;
+    &lt;module ref="rampart" /&gt;
+    
+    &lt;parameter name="InflowSecurity"&gt;
+      &lt;action&gt;
+        &lt;items&gt;UsernameToken Timestamp&lt;/items&gt;
+        &lt;passwordCallbackClass&gt;org.apache.rampart.samples.sample02.PWCBHandler&lt;/passwordCallbackClass&gt;
+      &lt;/action&gt;
+    &lt;/parameter&gt;
+&lt;/service&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Securing SOAP Messages with Rampart":
+<A HREF="http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html">http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html</A>
+
+OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

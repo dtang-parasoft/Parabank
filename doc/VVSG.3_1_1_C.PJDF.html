@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide Javadoc comments and descriptions for fields [VVSG.3_1_1_C.PJDF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide Javadoc comments and descriptions for fields [VVSG.3_1_1_C.PJDF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies fields that lack Javadoc comments
+or descriptions within the Javadoc comments.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quick Fix All" feature is not always available for this rule because some
+of the Quick Fixes require user input.  These cases must be Quick Fixed
+individually.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check if javadoc comment is missing (default as true)
+-Check if javadoc description is missing (default as false)
+    Javadoc should give a brief description of the commenting field.
+
+-check "public" fields (default as true)
+-check "protected" fields (default as false)
+-check "package-private" fields (default as false)
+-check "private" fields (default as false)
+
+-Ignore fields with names (in regular expression):
+    Allows you to provide a list of fields to ignore. If a
+    field name matches any of the regular expressions, it will be exempt from
+    this rule. For example, if "^serialId$" is added to the list, then fields
+    with name "serialID" would not identified as errors-- even if they do not
+    have Javadoc.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Commenting your code is a good way to document its behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+/** Comments about this class
+ */
+public class PJDF {
+
+    public int index; // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide Javadoc comments for each field.
+
+package examples.rules.javadoc;
+
+/** Comments about this class
+ */
+public class PJDFFixed {
+
+     /** Comments about this field
+      */
+    public int index; // FIXED
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison-Wesley, 2001, pp. 136 -139
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#385">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#385</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.MFJCH
+@deprecated JAVADOC.MFJCH2
+@deprecated JAVADOC.MFJCH3
+@deprecated JAVADOC.MFJCH4
+@deprecated JAVADOC.PJDCF
+@deprecated JAVADOC.PJDCF2
+@deprecated JAVADOC.PJDCF3
+@deprecated JAVADOC.PJDCF4
+
+</PRE>
+</BODY>
+</HTML>

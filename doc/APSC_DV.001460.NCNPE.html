@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not catch 'NullPointerException' [APSC_DV.001460.NCNPE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not catch 'NullPointerException' [APSC_DV.001460.NCNPE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any attempt to catch 'NullPointerException'.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Error Handling and Logging
+
+Following this rule may introduce security problems because
+NullPointerExceptions that are thrown by the application might be
+left uncaught.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'NullPointerException's are likely to be thrown by the VM in unexpected
+situations; code should be fixed to handle the unexpected situations.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NCNPE {
+    public void myMethod() {
+	try {
+            //...
+	} catch (NullPointerException e) {//VIOLATION
+            //...
+        } catch (IOException e) {
+            //...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NCNPEFixed {
+    public void myMethod() {
+	try {
+            //...
+        }
+        //FIXED, the catch block is removed
+        catch (IOException e) {
+            //...
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/6fe6b2f7-0309-4e11-acae-c038cc047b84">https://app.hackedu.com/link/6fe6b2f7-0309-4e11-acae-c038cc047b84</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-395: Use of NullPointerException Catch to Detect NULL Pointer Dereference
+<A HREF="https://cwe.mitre.org/data/definitions/395.html">https://cwe.mitre.org/data/definitions/395.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR08-J. Do not catch NullPointerException or any of its ancestors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR08-J.+Do+not+catch+NullPointerException+or+any+of+its+ancestors">https://wiki.sei.cmu.edu/confluence/display/java/ERR08-J.+Do+not+catch+NullPointerException+or+any+of+its+ancestors</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

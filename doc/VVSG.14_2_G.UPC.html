@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused "private" classes or interfaces [VVSG.14_2_G.UPC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused "private" classes or interfaces [VVSG.14_2_G.UPC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that defines unused "private" types.  An error is
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+The code may implement features that bypass security.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+These unused entities usually point to either:
+
+1) Old code that is no longer needed.  This makes the code more difficult to
+   understand.
+
+2) A logical flaw (if the entity needs to be used, but other classes incorrectly
+   avoid using it).
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UPC {
+
+    /**
+     * This is a test method
+     */
+    public void method() {
+
+    }
+
+    private class UPC_Inner { // VIOLATION : unused
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove class 'UPC_Inner'.
+
+package examples.rules.uc;
+
+public class UPCFixed {
+
+    /**
+     * This is a test method
+     */
+    public void method() {
+
+    }
+
+    // FIXED : removed class UPC_Inner
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+</PRE>
+</BODY>
+</HTML>

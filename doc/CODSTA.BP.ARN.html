@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid returning "null" for arrays and certain types [CODSTA.BP.ARN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid returning "null" for arrays and certain types [CODSTA.BP.ARN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+  
+This rule identifies methods with an array return type which return "null" 
+instead of an empty array. This method may also be parameterized to identify
+"null" being returned for specific types. An error is reported for each
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore methods with "@return" tags matching the following regular expression:
+    -When this parameter is enabled, the rule will ignore methods which have the
+     specified text in the body of an "@return" Javadoc tag.
+    -By default, the parameter is enabled with a default regular expression of
+     "&lt;code&gt;null&lt;/code&gt;".  This means that methods with "&lt;code&gt;null&lt;/code&gt;" in
+     an "@return" Javadoc tag will be ignored.  For instance, the following 
+     method will not be flagged even though it returns "null":
+     
+     /**
+      * @return Allowed to return &lt;code&gt;null&lt;/code&gt;
+      */
+     public Object[] testMethod() {
+         return null;
+     }
+     
+    -The regular expression is not case-sensitive.
+
+-Check arrays (default true)
+    Enabling this parameter will check methods whose return type is an array.
+    This rule will only flag a "null" array if there is an empty array returned
+    elsewhere. This is to avoid flagging methods that return "null" and an empty
+    array purposefully to mean two different things.
+
+-Check specific types (default false)
+    Enabling this parameter will check methods whose return type matches or is a
+    subtype of one of the parameters. Types must be listed as fully qualified
+    names.
+
+    Default type list:
+        java.util.Collection
+        java.util.Enumeration
+        java.util.Iterator
+        java.util.Map
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Clients have to write extra code when using array methods that may return "null" 
+instead of an empty array.  Before processing the array, client code must check
+that the method return value is non-"null".  This clutters the program.  
+Moreover, it provides only an insignificant performance improvement over 
+returning an empty array.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.util.*;
+
+public class ARN {
+    private List slist;
+    
+    public String[] getStringList () {
+        if (slist.size() == 0) { 
+            return null;  // VIOLATION
+        }
+        
+        return (String[])slist.toArray (new String[slist.size ()]);
+    }
+    
+    public void find () {
+        ARN a = new ARN ();
+        String[] list = a.getStringList ();
+        if (list != null)  {  // client had to write extra error checking code
+            if (Arrays.asList (list).contains ("Hello")) {
+                System.out.println ("find");
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Return an empty array instead of "null".
+
+package examples.rules.codsta.bp;
+
+import java.util.*;
+
+public class ARNFixed {
+    private List slist;
+
+    public String[] getStringList () {  
+        return (String[])slist.toArray (new String[slist.size()]);  // FIXED
+    }
+    
+    public void find () {
+        ARNFixed a = new ARNFixed ();
+        String[] list = a.getStringList ();
+        if (Arrays.asList (list).contains ("Hello")) {
+            System.out.println ("find");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 134
+
+</PRE>
+</BODY>
+</HTML>

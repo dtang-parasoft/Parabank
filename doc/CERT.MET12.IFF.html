@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'super.finalize()' in the "finally" block of 'finalize()' methods [CERT.MET12.IFF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'super.finalize()' in the "finally" block of 'finalize()' methods [CERT.MET12.IFF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks "finalize()" methods containing a "super.finalize()"
+invocation. A violation is flagged for each case where "super.finalize()" is
+not invoked in a top-level "finally" block.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule can be used in conjunction with GC.FCF which will flag violations
+where no 'super.finalize()' is invoked.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If that call is not made, the superclasses' finalize methods will not be
+invoked.  You should make this call -  even if the parent class doesn't define
+'finalize ()' - for two reasons.  First, this allows a parent class that uses
+'finalize ()' to be added to your class without modifying your code.
+Second, following this rule habituates you to always calling
+'super.finalize ()' so that you don't accidentally forget to call it when your
+class has a parent with a 'finalize ()' method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+public class IFF {
+    protected void finalize () throws Throwable {
+       //VIOLATION, 'super.finalize()' is not invoked in "finally" block
+       try {
+           super.finalize();
+       }
+       catch (Exception e) {
+       }
+       finally {
+           return;
+       }
+    }
+
+    public class IFFMember {
+        //VIOLATION, missing a "finally" block that invokes 'super.finalize()'
+        //Note that if 'close()' throws an exception, 'super.finalize()' would
+        //  not be invoked
+        protected void finalize() throws Throwable {
+            try { //VIOLATION, missing 
+                close();
+                super.finalize();
+            }
+            catch (Exception e) {
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move "super.finalize()" call to a top-level "finally" block. Add a "finally"
+block if one is not present.
+
+package examples.rules.gc;
+
+public class IFFFixed {
+    protected void finalize () throws Throwable {
+       try { //FIXED
+       }
+       catch (Exception e) {
+       }
+       finally {
+           super.finalize();
+           return;
+       }
+    }
+
+    public class IFFMember {
+        protected void finalize() throws Throwable {
+            try { //FIXED
+                close();
+            }
+            catch (Exception e) {
+            }
+            finally {
+                super.finalize();
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"The Java Programming Language, Second Edition", by Ken Arnold 
+and James Gosling. Page 49.
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 74 - 75.
+
+SEI CERT Oracle Coding Standard for Java
+MET12-J. Do not use finalizers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers">https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers</A>
+
+</PRE>
+</BODY>
+</HTML>

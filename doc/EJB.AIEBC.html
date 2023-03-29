@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid excessive inter-entity bean communication [EJB.AIEBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid excessive inter-entity bean communication [EJB.AIEBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies excessive inter-entity bean communication.
+An error is reported if an entity bean references another entity bean.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Entity beans have significantly more overhead than plain
+Java objects. Class to entity bean methods are remote and
+incur network overhead. Also, entity beans must interact
+with an external data source. Even if two entity beans are
+in the same container, remote method invocation semantics
+apply (the container is involved in the communication) when
+one entity bean calls the other bean. Some container 
+implementations may optimize such calls because they recognize
+that the call comes from an object within the same container,
+but this is vendor-specific and cannot be relied upon.
+Another issue is that entity bean is not able to demarcate
+a transaction. When using entity beans, you are only allowed to
+have container-managed transactions. This means that, depending
+on the transaction attribute of the entity bean method, the
+container may start a new transaction, participate in the
+current transaction, or do neither. When a client invokes a
+method on an entity bean, the transaction includes the chain
+of dependent entity beans and binds them into the transaction's
+context. This reduces the performance throughput of the entity
+beans as a whole, because any transaction may lock multiple
+entity beans and possibly introduce deadlock situations.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. 2001. pp. 110-111.
+
+</PRE>
+</BODY>
+</HTML>

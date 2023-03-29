@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implement one or more 'ejbCreate()' methods in bean classes [EJB.IECM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implement one or more 'ejbCreate()' methods in bean classes [EJB.IECM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "SessionBean" or "EntityBean" class that does not 
+implement one or more 'ejbCreate()' methods. An error is reported for each 
+occurrence. 
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+For session beans, it is required that they implement one or more 'ejbCreate()'
+methods by the Enterprise JavaBeans specification (version 1.1 and greater).
+For entity beans, it is not required in the specification, but it is still
+recommended.  The 'ejbCreate()' method is the standard way a bean object is 
+created by the container, so each entity bean should define at least one 
+'ejbCreate()' method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.ejb.*;
+
+public class IECM implements SessionBean {  //VIOLATION- There is no ejbCreate() 
+                                            //method defined
+    private String _id;
+    
+    //Stubs for SessionBean methods
+    public void setSessionContext(SessionContext ctx) { }
+    public void ejbRemove() { }
+    public void ejbActivate() { }
+    public void ejbPassivate() { }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.ejb.*;
+
+public class IECMFixed implements SessionBean {
+    private String _id;
+    
+    public void ejbCreate(String id) {  //FIXED
+        _id= id;
+    }
+    
+    //Stubs for SessionBean methods
+    public void setSessionContext(SessionContext ctx) { }
+    public void ejbRemove() { }
+    public void ejbActivate() { }
+    public void ejbPassivate() { }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Enterprise JavaBeans Tutorial".
+j2eetutorial\doc\Entity.html
+j2eetutorial\doc\Session.html
+
+Or on the web at:
+<A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/BMP2.html#wp79725">http://java.sun.com/j2ee/1.4/docs/tutorial/doc/BMP2.html#wp79725</A>
+<A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Session2.html#wp79709">http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Session2.html#wp79709</A>
+
+Sections 7.11.3 (p. 100), 10.6.4 (p. 191), and 12.2.3 (p. 269) of the EJB 
+specification (version 2.0).  The EJB specification is available online at 
+<A HREF="http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/">http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/</A>
+
+</PRE>
+</BODY>
+</HTML>

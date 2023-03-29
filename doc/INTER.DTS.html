@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'toString()' or 'String.valueOf()' on Date objects in an Internationalized environment [INTER.DTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'toString()' or 'String.valueOf()' on Date objects in an Internationalized environment [INTER.DTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to 'toString ()' or 'String.valueOf ()' on 'Date' 
+objects.  An error is reported for each occurrence, with the following exception: 
+an error is not reported if a special comment was added to the line of code that 
+does not follow the rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the following special comment to prevent Jtest from reporting
+any INTER rules for a specific line of code:
+
+1. /* NOI18N */
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Because date formats differ by region and language, 'Date.toString ()' and 
+'String.valueOf(Date)' must not be used in an internationalized environment.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+import java.util.Date;
+
+public class DTS {
+    public void printToday () {
+        Date today = new Date ();
+        String todayStr = today.toString ();  // VIOLATION
+        System.out.println (todayStr);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The 'DateFormat' class provides predefined formatting styles that are
+locale-specific and easy to use.
+
+package examples.rules.inter;
+
+import java.util.Date;
+import java.util.Locale;
+import java.text.DateFormat;
+
+public class DTSFixed {
+    public void printToday () {
+        Locale currentLocale = Locale.getDefault ();
+        DateFormat dateFormatter = DateFormat.getDateInstance (
+            DateFormat.DEFAULT, currentLocale);
+        Date today = new Date ();
+        String todayStr = dateFormatter.format (today);  // FIXED
+        System.out.println (todayStr);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html">http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html</A>
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/format/dateFormat.html">http://docs.oracle.com/javase/tutorial/i18n/format/dateFormat.html</A>
+
+</PRE>
+</BODY>
+</HTML>

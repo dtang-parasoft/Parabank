@@ -1,0 +1,229 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing sensitive data to functions that write to log files [CWE.532.SENSLOG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing sensitive data to functions that write to log files [CWE.532.SENSLOG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Information written to log files can be of a sensitive nature and give
+valuable guidance to an attacker or expose sensitive user information".
+[CWE-532] 
+
+This rule detects when sensitive data is written to log files.
+The rule must be parameterized to define sensitive data and specify logging
+methods; see PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"While logging all information may be helpful during development stages, it is
+important that logging levels be set appropriately before a product ships so 
+that sensitive user data and system information are not accidentally exposed 
+to potential attackers". [CWE-532] 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The 'Secure data processing methods' parameter allows you to specify
+methods that can convert sensitive data to safe values.
+Fill in the following columns to configure a method.
+- 'Enabled' - enables or disables the securing method. If disabled, the rule
+    does not consider the data processed by the method to be secure.
+- 'Fully qualified type name (wildcard)' - specifies
+    the fully qualified name of the type that declares the method. You can
+    use "*" for a method declared in any type.
+- 'Method name (wildcard)' - specifies the name of the method.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to method with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance methods.
+- 'Returns secured data' - if enabled, the method secures its return value.
+- 'Secured parameters' - specifies which method parameters are secured by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are secured.
+By default, the following method is considered to secure the data it processes:
+ - '[Ss]ecure*'
+
+The 'Logging methods' parameter allows you to specify methods that write
+information to log files. The rule triggers when sensitive data is passed as
+a parameter to one of the listed methods.
+
+Fill in the following columns to configure additional logging methods.
+- 'Enabled' - enables or disables the logging method. If disabled, the rule
+    does not consider the methods to be a logging method.
+- 'Fully qualified type name (wildcard)' - specifies
+    the fully qualified name of the type that declares the method. You can
+    use "*" for a method declared in any type.
+- 'Method name (wildcard)' - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to method with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance methods.
+- 'Logged parameters' - specifies which method parameters should be checked
+    for being sensitive. List 1-based indexes of parameters separated by a comma
+    or use "*" to specify that all method parameters should be checked.
+By default, the rule checks the parameters of the following methods:
+- the "*Log*" method of "*[Ll]og*" type
+- the "*log*" method of "*[Ll]og*" type
+- the "*[Ii]nfo*" method of "*[Ll]og*" type
+- the "*[Ww]arn*" method of "*[Ll]og*" type
+- the "*[Ee]rror*" method of "*[Ll]og*" type
+
+The 'Sensitive variables' parameter allows you to specify the names of
+variables that the rule considers to be sensitive.
+Fill in the following columns to configure a sensitive variable:
+- 'Enabled' - enables or disables the sensitive variable. If disabled, the rule
+    does not consider the variable to be sensitive.
+- 'Fully qualified variable name (wildcard)' - specifies the fully qualified
+name of the variable. You can use "*" to specify that all variables are
+considered to be sensitive.
+By default, the following variable names are considered to be sensitive:
+- '*[Pp]assword*'
+- '*[Pp]asswd*'
+ 
+The 'Sensitive methods' parameter allows you to specify methods the rule
+considers to be sensitive.
+- 'Enabled' - enables or disables the sensitive method. If disabled, the rule
+    does not consider the method to be a sensitive method.
+- 'Fully qualified type name (wildcard)' - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method
+    declared in any type.
+- 'Method name (wildcard)' - specifies the name of the method.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to methods with the specified name that are
+	defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance methods.
+- ''this' object is sensitive' - if enabled, the method makes the object it is
+    called on sensitive.
+- 'Returns sensitive data' - if enabled, the method makes its return value
+    sensitive.
+- 'Sensitive parameters' - specifies which method parameters are made
+    sensitive by the method. List 1-based indexes of parameters separated by
+    a comma or use "*" to specify that all method parameters are affected.
+By default, the following method is considered to be sensitive:
+- '*[Pp]assword*'
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent the exposure of sensitive data to potential
+attackers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, sensitive data is passed to the 'info' method,
+which writes data to a file.
+
+import java.io.IOException;
+import java.util.logging.Logger;
+
+public abstract class Example
+{
+    private Logger logger;
+
+    public abstract String getPassword();
+
+    public void test01()
+        throws IOException
+    {
+        String password = getPassword();
+        logger.info(password); //  VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by securing the password with the secure data processing
+method 'secure' before writing the data to a file.
+
+import java.io.IOException;
+import java.util.logging.Logger;
+
+public abstract class Repair
+{
+    private Logger logger;
+
+    public abstract String getPassword();
+
+    public abstract String secure(String sTxt);
+
+    public void test01()
+        throws IOException
+    {
+        String password = getPassword();
+        logger.info(secure(password)); // NO VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Weaknesses On the Cusp
+CWE-200: Exposure of Sensitive Information to an Unauthorized Actor
+<A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+2021 CWE Weaknesses On the Cusp
+CWE-532: Insertion of Sensitive Information into Log File
+<A HREF="https://cwe.mitre.org/data/definitions/532.html">https://cwe.mitre.org/data/definitions/532.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000650: The application must not write sensitive data into the application logs.
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

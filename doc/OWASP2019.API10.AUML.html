@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using multiple loggers, use logging levels instead [OWASP2019.API10.AUML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using multiple loggers, use logging levels instead [OWASP2019.API10.AUML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags classes with multiple loggers.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Logger Types to Check:
+    -Default values are:
+     java.util.logging.Logger
+     org.apache.log4j.Logger
+     
+By default, this rule will only check the types "java.util.logging.Logger" and 
+"org.apache.log4j.Logger".  These are two of the most commonly used loggers.  If
+you use a logger other than these two, you should add the fully qualified name 
+of that logger to the parameter list. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Similar functionality can be achieved by using logging levels, which is often
+considered the preferred method. This can also aid in clarifying the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.util.logging.Logger;
+
+public class AUML { //VIOLATION
+    private final static Logger _logger1 = Logger.getAnonymousLogger();
+    private final static Logger _logger2 = Logger.getAnonymousLogger();
+    private final static Logger _logger3 = Logger.getAnonymousLogger();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove additional loggers, and implement logging levels.
+
+package examples.rules.codsta.bp;
+
+import java.util.logging.Logger;
+
+public class AUMLFixed { //FIXED
+    private final static Logger _logger1 = Logger.getAnonymousLogger();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+</PRE>
+</BODY>
+</HTML>

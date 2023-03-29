@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Order class elements appropriately [CODSTA.ORG.FO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Order class elements appropriately [CODSTA.ORG.FO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies class or interface elements that are not ordered 
+appropriately. An error is reported if the element order does not follow
+the designated order pattern. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+FILE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "main" method (enabled by default)
+     Lets you determine if the rule flags the declaration "public static void main(String[])"
+     even if it is out of order.
+ 
+-Sorting priority 
+     Lets you indicate the sorting priority for properties including 'member type', 'visibility'
+     and 'final/non-final'. If an ordering conflict occurs (where correcting a violation of one
+     property would lead to the violation of another), sorting elements based on the highest 
+     priority property is preferred. Note that you can have a property ignored by checking the 
+     corresponding 'ignore' check box.
+     
+     The default priority setting is (from highest to lowest):
+     1) member type
+     2) accessibility
+     3) final/non-final
+     
+-Member type sorting order
+     Lets you indicate the 'member type' sorting order. By default, the order pattern is:
+     1) member classes or interfaces
+     2) static fields
+     3) static initializers
+     4) static methods
+     5) initializers
+     6) fields
+     7) constructors
+     8) methods
+     
+-Accessibility sorting order
+     Lets you indicate the 'accessibility' ('visibility') sorting order. By default, the order pattern is:
+     1) public
+     2) protected
+     3) default (package-private)
+     4) private
+     
+-Final/non-final sorting order
+     Lets you indicate the 'final/non-final' sorting order. By default, the order pattern is:
+     1) final
+     2) non-final
+
+-Flag multiple errors if there is more than one violation (default is false)
+    -If this option is enabled, the rule will attempt to flag all the violations
+     of this rule in each class.
+    -WARNING: Enabling this option may lead to some inaccurate error messages.
+     Ideally, the class should be retested after each change to the ordering 
+     since rearranging one element of a class will change where the other 
+     elements of the class should be located.    
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes code easier to read and less error-prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+public class FO { // VIOLATION
+
+    private String _str; // The private field is placed before the public static
+                         // and before the public static method
+    public static int s_count;
+
+    public static int count() {
+    return s_count;
+    }
+
+    public String toString() {
+        return _str;
+    }
+
+    public FO() { // Public constructor is placed after public method
+        _str = "OOP.FO";
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Reorganize the declarations.
+
+package examples.rules.codsta.org;
+
+public class FOFixed { // FIXED
+
+    public static int s_count;
+
+    public static int count() {
+        return s_count;
+    }
+
+    private String _str;
+
+    public FOFixed() {
+        _str = "OOP.FO";
+    }
+
+    public String toString() {
+        return _str;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141855.html#1852">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141855.html#1852</A> (3.1.3)
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated CODSTA.ORCIA
+@deprecated CODSTA.ORCIS
+@deprecated CODSTA.ORCIF
+@deprecated OOP.LPF
+
+</PRE>
+</BODY>
+</HTML>

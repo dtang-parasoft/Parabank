@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid parsing untrusted data with XMLDecoder [PCIDSS40.6241.AUXD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid parsing untrusted data with XMLDecoder [PCIDSS40.6241.AUXD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The XMLDecoder class is used to read XML documents. Parsing an untrusted XML
+file may make the application prone to security attacks. For this reason, you
+must ensure that the XML document read by XMLDecoder is trusted or validated
+before it is parsed.
+
+This rule detects when the XMLDecoder class is used.
+Once you verify that the XML file is trusted or validated before parsing, you
+can suppress the finding to prevent it from being reported in the subsequent
+analysis runs.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Applications and APIs will be vulnerable if they deserialize hostile or
+tampered objects supplied by an attacker." [OWASP 2017 Top 10: A8]
+
+"Injection flaws occur when an attacker can send hostile data to
+an interpreter." [OWASP 2017 Top 10: A1]
+
+"Making an assumption that the code in the deserialized object is valid is
+dangerous and can enable exploitation." [CWE-502]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code security by helping you ensure that that XML files
+parsed by the XMLDecoder class are trusted or validated before parsing (see
+SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security;
+
+public class AUXD {
+
+    public static void deserialize(String path) {
+        XMLDecoder d = null;
+        try {
+            d = new XMLDecoder(
+                new BufferedInputStream(
+                    new FileInputStream(path)));
+            Object result = d.readObject(); //VIOLATION
+            return result;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if(d != null)
+                d.close();
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Verify that the XML file is trusted or validated before parsing and then
+suppress the violation to prevent it from being reported in the subsequent
+analysis runs.
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Serialization
+Video: <A HREF="https://vimeo.com/205101080">https://vimeo.com/205101080</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/3df27907-1ff2-4c8d-be9a-9130259c6474">https://app.hackedu.com/link/3df27907-1ff2-4c8d-be9a-9130259c6474</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-502: Deserialization of Untrusted Data
+<A HREF="https://cwe.mitre.org/data/definitions/502.html">https://cwe.mitre.org/data/definitions/502.html</A>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

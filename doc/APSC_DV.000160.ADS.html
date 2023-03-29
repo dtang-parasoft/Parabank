@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that 'axis.development.system' is set to "false" in Axis 'server-config.wsdd' files [APSC_DV.000160.ADS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that 'axis.development.system' is set to "false" in Axis 'server-config.wsdd' files [APSC_DV.000160.ADS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where the parameter 'axis.development.system' is set 
+to "true" in an Apache Axis 'server-config.wsdd' file.  An error is reported for 
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+'axis.development.system' should only be set to "true" during the development 
+phase.  Having this property set to "true" in production code will cause stack 
+traces and other debugging information to be exposed to the user.  This 
+information is likely to include sensitive information and implementation 
+details that should not be exposed to the user. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+server-config.wsdd:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;globalConfiguration&gt;
+    &lt;parameter name="adminPassword" value="admin"/&gt;
+    &lt;parameter name="attachments.Directory" value="c:\temp\attachments"/&gt;
+    &lt;parameter name="sendMultiRefs" value="true"/&gt;
+    &lt;parameter name="sendXsiTypes" value="true"/&gt;
+    &lt;parameter name="attachments.implementation"
+               value="org.apache.axis.attachments.AttachmentsImpl"/&gt;
+    &lt;parameter name="sendXMLDeclaration" value="true"/&gt;
+    &lt;parameter name="enable2DArrayEncoding" value="true"/&gt;
+    &lt;parameter name="dotNetSoapEncFix" value="false"/&gt;
+    &lt;parameter name="axis.development.system" value="true"/&gt;  &lt;!-- VIOLATION --&gt;
+&lt;/globalConfiguration&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Set 'axis.development.system' to "false" so that debugging information will not
+accidentally be leaked to the user.
+
+server-config.wsdd:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;globalConfiguration&gt;
+    &lt;parameter name="adminPassword" value="admin"/&gt;
+    &lt;parameter name="attachments.Directory" value="c:\temp\attachments"/&gt;
+    &lt;parameter name="sendMultiRefs" value="true"/&gt;
+    &lt;parameter name="sendXsiTypes" value="true"/&gt;
+    &lt;parameter name="attachments.implementation"
+               value="org.apache.axis.attachments.AttachmentsImpl"/&gt;
+    &lt;parameter name="sendXMLDeclaration" value="true"/&gt;
+    &lt;parameter name="enable2DArrayEncoding" value="true"/&gt; 
+    &lt;parameter name="dotNetSoapEncFix" value="false"/&gt;  
+    &lt;parameter name="axis.development.system" value="false"/&gt;  &lt;!-- FIXED --&gt;
+&lt;/globalConfiguration&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Apache Axis Reference Guide", "Global Axis Configuration" section:
+<A HREF="http://ws.apache.org/axis/java/reference.html#GlobalAxisConfiguration">http://ws.apache.org/axis/java/reference.html#GlobalAxisConfiguration</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

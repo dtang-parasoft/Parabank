@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implementing interfaces only to access constants [OOP.IIAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implementing interfaces only to access constants [OOP.IIAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Interfaces should not be implemented just so that constants can be accessed 
+without having to use their qualified names (the name of the interface
+followed by a "." and the name of the constant).  While it is common practice to
+do this, it is confusing and not recommended.  This rule will flag a violation 
+for each interface that is implemented which defines (or inherits) at least one 
+constant field but does not define (or inherit) any methods.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is similar to the rule 'CODSTA.ISACF: Do not use an "interface" to 
+define constants', but the two rules are different.  While CODSTA.ISACF enforces 
+that you not define constants in interfaces at all, this rule enforces that you 
+not implement interfaces solely to access constants.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Implementing an interface usually implies that you're providing a concrete 
+implementation for some general type.  This means that there should be at least 
+one method defined (or inherited) for each interface that is implemented.  If an
+interface which defines only constant fields is implemented, there is no 
+concrete implementation required.  Since readers of the code expect implemented 
+interfaces to provide some concrete implementation, this may be confusing.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Implementing an interface to access constants allows the constants to be 
+accessed without using their qualified names.  This makes the code more compact,
+but this benefit comes at the expense of making the code more confusing.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Here, the interface "INameConstant" does not define any methods.  It is 
+implemented solely to allow access to the constant "NAME" without using the
+qualified name.
+
+package examples.rules.oop;
+
+public class IIAC implements INameConstant {  //VIOLATION
+    public static void main(String[] args) {
+        System.out.println("My name is " + NAME);
+    }
+}
+
+interface INameConstant {
+    String NAME = "Steve";
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not implement interfaces just to access constants.  Use the qualified name to
+access these constants instead.
+
+package examples.rules.oop;
+
+public class IIACFixed { 
+    public static void main(String[] args) {
+        System.out.println("My name is " + INameConstant.NAME);  //FIXED
+    }
+}
+
+interface INameConstant {
+    String NAME = "Steve";
+}
+
+</PRE>
+</BODY>
+</HTML>

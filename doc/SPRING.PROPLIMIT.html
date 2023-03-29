@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow convention for bean properties [SPRING.PROPLIMIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow convention for bean properties [SPRING.PROPLIMIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule specifies how the property in xml bean should be declared in Spring XML configuration files.
+A violation is reported for each property that does not follow the specified convention.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Allow p-namespace
+    -this option causes the rule to allow p-namespace form properties; it is enabled by default
+
+-Allow shortcut property form
+    -this option causes the rule to allow shortcut form properties; it is enabled by default
+
+-Allow long property form
+    -this option causes the rule to allow long form properties;  it is enabled by default
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Following this rule makes code easier to understand and maintain. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Uncheck "-Allow long property form option" in the rule parameters, then run on this example:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A>"
+  xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+  xsi:schemaLocation="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A> <A HREF="http://www.springframework.org/schema/beans/spring-beans.xsd">http://www.springframework.org/schema/beans/spring-beans.xsd</A>"&gt;
+
+
+  &lt;!-- P-namespace test --&gt;
+  &lt;bean name="myBeanA" class="parasoft.spring.impl.BeanImpl" p:test-ref="myBeanA"&gt;
+    &lt;meta key="test meta key" value="333"/&gt;
+  &lt;/bean&gt; 
+  
+  &lt;!-- Long way test --&gt;
+  &lt;bean name="myBeanB" class="parasoft.spring.impl.BeanImpl"&gt;
+    &lt;property name="test"&gt;
+        &lt;ref bean="myBeanA" /&gt;
+    &lt;/property&gt;
+  &lt;/bean&gt; 
+  
+  &lt;!-- Short way test --&gt;
+  &lt;bean name="myBeanC" class="parasoft.spring.impl.BeanImpl"&gt;
+    &lt;property name="test" ref="myBeanB"/&gt;
+  &lt;/bean&gt; 
+
+&lt;/beans&gt; 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Now you should see an error on the second test:
+
+  &lt;!-- Long way test --&gt;
+  &lt;bean name="myBeanB" class="parasoft.spring.impl.BeanImpl"&gt;
+    &lt;property name="test"&gt;
+        &lt;ref bean="myBeanA" /&gt;
+    &lt;/property&gt;
+  &lt;/bean&gt; 
+  
+After changing it to the short form:
+
+  &lt;bean name="myBeanB" class="parasoft.spring.impl.BeanImpl"&gt;
+    &lt;property name="test" ref="myBeanA" /&gt;
+  &lt;/bean&gt; 
+  
+a violation will not be reported.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. Spring Framework Documentation 
+"3.4.2 Dependencies and configuration in detail"
+<A HREF="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html</A>
+
+</PRE>
+</BODY>
+</HTML>

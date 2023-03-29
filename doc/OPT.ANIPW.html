@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid new instantiations of primitive wrapper objects, whose values are cached [OPT.ANIPW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid new instantiations of primitive wrapper objects, whose values are cached [OPT.ANIPW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags instances where primitive wrapper classes are instantiated and
+a cached primitive wrapper object exists. As of Java 5 common values for Byte,
+Char, Integer, Long, and Short are cached. So, "valueOf()" should be used in
+place of a new instantiation when possible. The common values cached for Byte,
+Integer, Long, and Short are -128 to 127. The common values cached for Char are
+0 to 127.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Replacing new instantiations of common primitive wrapper class objects with
+"valueOf" can improve performance.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+In some cases the user may desire or require a new instantiation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class ANIPW {
+    void method() {
+        Byte byte1 = new Byte((byte)-128); //VIOLATION
+        Character character1 = new Character((char)0); //VIOLATION
+        Integer int1 = new Integer(-128); //VIOLATION
+        Long long1 = new Long(-128); //VIOLATION
+        Short short1 = new Short((short)-128); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the instantiation to "valueOf()"
+
+package examples.rules.opt;
+
+public class ANIPWFixed {
+    void method() {
+        Byte byte1 = Byte.valueOf((byte)-128); //FIXED
+        Character character1 = Character.valueOf((char)0); //FIXED
+        Integer int1 = Integer.valueOf(-128); //FIXED
+        Long long1 = Long.valueOf(-128); //FIXED
+        Short short1 = Short.valueOf((short)-128); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+OWASP Java Gotchas - Immutable Objects/Wrapper Class Caching
+<A HREF="http://www.owasp.org/index.php/Java_gotchas#Immutable_Objects_.2F_Wrapper_Class_Caching">http://www.owasp.org/index.php/Java_gotchas#Immutable_Objects_.2F_Wrapper_Class_Caching</A>
+
+</PRE>
+</BODY>
+</HTML>

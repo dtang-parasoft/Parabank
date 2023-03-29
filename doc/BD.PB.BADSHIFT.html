@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid incorrect shift operations [BD.PB.BADSHIFT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid incorrect shift operations [BD.PB.BADSHIFT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects incorrect shift operations.
+The rule must be parameterized to define the incorrect shift operations
+to be reported (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.0.8
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Unexpected results of incorrect shift operations may introduce security
+threats. In addition, they make it difficult for security auditors to
+determine which checks must be performed to eliminate security flaws and ensure
+data integrity.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+If the "Report violation when negative value is shifted" parameter is enabled,
+the rule triggers when the left operand of the shift operator is negative
+This parameter is enabled by default.
+
+If the "Report violation when shifting by negative value" parameter is enabled,
+the rule triggers when the right operand of the shift operator is negative.
+This parameter is enabled by default.
+
+If the "Report violation when shifting by too big value" parameter is enabled,
+the rule triggers when the right operand of the shift operator is greater or
+equal to the number of bits in the left operand.
+This parameter is disabled by default.
+
+If the "Report violation when shifting will result in overflow" parameter is
+enabled, the rule triggers when the result of the shift operation results in
+overflow.
+This parameter is enabled by default.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid errors that may be caused by incorrect shift
+operations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the shift operation results in overflow:
+
+public class Example
+{
+    long[] getResult()
+    {
+        long res[] = new long[8];
+        int tab[] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7};
+        for (int i = 7; i &gt;= 0; i--) {
+            res[i] = tab[i] &lt;&lt; (8 * i); // VIOLATION
+        }
+        return res;
+    }
+    
+    public int calculate()
+    {
+        int k = 2;
+        k -= 52;
+        return k &gt;&gt; 2; // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    long[] getResult()
+    {
+        long res[] = new long[8];
+        long tab[] = new long[] { 0, 1, 2, 3, 4, 5, 6, 7};
+        for (int i = 7; i &gt;= 0; i--) {
+            res[i] = tab[i] &lt;&lt; (8 * i); // NO VIOLATION
+        }
+        return res;
+    }
+
+    public int calculate()
+    {
+        int k = 2;
+        k -= 52;
+        return k / 4; // NO VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+NUM01-J. Do not perform bitwise and arithmetic operations on the same data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM01-J.+Do+not+perform+bitwise+and+arithmetic+operations+on+the+same+data">https://wiki.sei.cmu.edu/confluence/display/java/NUM01-J.+Do+not+perform+bitwise+and+arithmetic+operations+on+the+same+data</A>
+
+</PRE>
+</BODY>
+</HTML>

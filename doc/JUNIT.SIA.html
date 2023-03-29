@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure JUnit test cases include assertion methods [JUNIT.SIA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure JUnit test cases include assertion methods [JUNIT.SIA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit test cases that do not contain any assertion method
+from the following classes: junit.framework.Assert, org.junit.Assert,
+org.junit.jupiter.api.Assertions
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum level of checking allowed (default is 2)
+    You can specify the maximum level of checking by setting this parameter.
+    Note that testing methods could call other testing routines (methods), and 
+    the ones that are called might actually call other methods.  
+    Consequently, the total number of methods involved might be very
+    large. By setting the number of levels, you can determine the extent of the 
+    algorithm's checking. If you set the level to a high number, fewer false
+    positive errors will be reported, but the computation could increase. False
+    positives are generally unlikely when the level is set at '5'.
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that each JUnit test case includes at lease one
+assertion method.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class SIA extends TestCase {
+    public void test0() { //VIOLATION
+        ObjectGenerator generator= new ObjectGenerator();
+        Object o= generator.getObject(); 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class SIAFixed extends TestCase {
+    public void test0() { //FIXED
+        ObjectGenerator generator= new ObjectGenerator();
+        Object o= generator.getObject(); 
+        assertNotNull("generates a null object", o);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

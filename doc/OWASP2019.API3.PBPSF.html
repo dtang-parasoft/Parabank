@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare subclasses of 'Permission' and 'BasicPermission' "final" [OWASP2019.API3.PBPSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare subclasses of 'Permission' and 'BasicPermission' "final" [OWASP2019.API3.PBPSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a class is non-"final" and satisfies one of the
+following:
+    1. The class extends "java.security.BasicPermission"
+    2. The class extends "java.security.Permission"
+    
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+"Permission" classes are used to interact with sensitive data and operations.
+A subclass should be declared "final" to prevent an attacker from creating a
+subclass and gaining access to sensitive information.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check subclasses of "java.security.Permission" (default on)
+-Check subclasses of "java.security.BasicPermission" (default on)
+-Ignore subclasses which are enclosed by a "final" outer class (default on)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.BasicPermission;
+
+public class PBPSF extends BasicPermission { //VIOLATION
+    public PBPSF(String name) {
+        super(name);
+    }
+    ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.BasicPermission;
+
+public final class PBPSFFixed extends BasicPermission { //FIXED
+    public PBPSFFixed(String name) {
+        super(name);
+    }
+    ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

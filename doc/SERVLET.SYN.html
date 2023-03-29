@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Minimize synchronization in Servlets [SERVLET.SYN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Minimize synchronization in Servlets [SERVLET.SYN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Servlet class "synchronized" blocks with more than 6 statements.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flag "synchronized" blocks with number of lines greater than (default 6)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Servlets are multi-threaded.  Servlet-based applications must recognize 
+and handle this.  However, if large sections of code are synchronized, an 
+application effectively becomes single threaded, and throughput decreases.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+
+public class SYN extends HttpServlet {
+    private int numberOfRows = 0;
+    private javax.sql.DataSource ds = null;
+
+    public void method (HttpServletRequest request) {
+        ResultSet rs = null;
+        try {
+            synchronized (this) {  // VIOLATION
+                PreparedStatement stmt = null;
+                Connection conn = null;
+                String info = null;
+                int startingRows = numberOfRows;
+                conn = ds.getConnection ("db2admin", "db2admin");
+                stmt = conn.prepareStatement ("select * from db2admin.employy");
+                rs = stmt.executeQuery ();
+                info = rs.getString ("Name");
+            }
+        } catch (Exception e) {
+        } finally {
+             try { rs.close (); }
+             catch (Exception e) {}
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Minimize the number of "synchronized" statements.
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+
+public class SYNFixed extends HttpServlet {
+    private int numberOfRows = 0;
+    private javax.sql.DataSource ds = null;
+
+    public void method (HttpServletRequest request) {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+        int startingRows;
+
+        synchronized (this) {  // FIXED
+            startingRows = numberOfRows;
+        }
+
+        try {
+            String info = null;
+            conn = ds.getConnection ("db2admin", "db2admin");
+            stmt = conn.prepareStatement ("select * from db2admin.employy");
+            rs = stmt.executeQuery ();
+            info = rs.getString ("Name");
+         } catch (Exception e) {
+         } finally {
+             try { rs.close (); }
+             catch (Exception e) {}
+         }
+    }
+}
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

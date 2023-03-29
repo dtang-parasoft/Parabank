@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not rely on automatic boxing and unboxing of primitive types [CODSTA.READ.ABUB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not rely on automatic boxing and unboxing of primitive types [CODSTA.READ.ABUB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+As of JDK 1.5, primitive types (such as "int") are assignment compatible with 
+certain non-primitive wrapper types (such as "java.lang.Integer").  The compiler 
+will perform automatic "boxing" and "unboxing" of primitive types with their 
+equivalent wrapper types.  However, developers should not rely on this behavior
+because it makes the code more difficult to read.  Automatic "boxing" and 
+"unboxing" does not add any new features to the Java language since the compiler
+will generate the code to perform the conversions from primitive to wrapper 
+types anyway.  Automatic "boxing" and "unboxing" is just "syntactic sugar" which
+makes the compiler implicitly perform conversions that programmers previously 
+had to do explicitly.    This rule enforces that a primitive type is not used in 
+places where a non-primitive type is expected and vice versa.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Automatic "boxing" and "unboxing" is likely to confuse readers who are not used 
+to primitive and wrapper types being used interchangeably.  Explicitly performing 
+conversions between primitive types and wrapper classes is usually more clear 
+than forcing the compiler to do the conversions implicitly.  
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Although explicitly performing all conversions between primitive and wrapper 
+classes can lead to clearer code, doing so will also make the code more verbose. 
+The ability to use primitive types and their associated wrapper classes 
+interchangeably is a convenience feature which will make the code more compact
+because it eliminates the need for explicit conversions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+import java.util.List;
+
+public class ABUB {
+    public void add (List listObj)    
+    {
+        listObj.add(5);  // VIOLATION
+        Integer i = (Integer) listObj.get(listObj.size() - 1);
+        method(i);  // VIOLATION
+    }
+    
+    public void method (int i)
+    {
+        System.err.println("The number is " + i);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Perform all boxing and unboxing explicitly.
+
+package examples.rules.codsta.read;
+
+import java.util.List;
+
+public class ABUBFixed {
+    public void add (List listObj)    
+    {
+        listObj.add(Integer.valueOf(5));  // FIXED
+        Integer i = (Integer) listObj.get(listObj.size() - 1);
+        method(i.intValue());  // FIXED
+    }
+    
+    public void method (int i)
+    {
+        System.err.println("The number is " + i);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'String.equals()' in an Internationalized environment [INTER.SE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'String.equals()' in an Internationalized environment [INTER.SE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of 'String.equals ()' and 'String.
+equalsIgnoreCase ()'. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'equals ()' and 'equalsIgnoreCase ()' cannot be relied on to sort strings 
+because the Unicode values of the characters in the strings do not 
+correspond to the relative order of the characters for most languages.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class SE {
+    public boolean compstr (String s1, String s2) {
+        boolean b = (s1.equals (s2));  // VIOLATION
+        return b;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The predefined collation rules provided by the 'Collator' class should be 
+used to sort strings in a locale-independent manner.  To instantiate the
+Collator class, call the 'getInstance ()' method.  Usually, you create a 
+Collator for the default locale, as in the following example:
+
+    Collator myCollator = Collator.getInstance ();
+
+You can also specify a particular locale when you create a Collator, as follows:
+
+     Collator myFrenchCollator = Collator.getInstance (Locale.FRENCH);
+
+Then, you invoke 'Collator.compare ()' to perform a locale-independent 
+string comparison as follows:
+
+      myCollator.compare (s1,s2); 
+
+For more on the 'Collator' class, see
+<A HREF="http://java.sun.com/docs/books/tutorial/i18n/text/collationintro.html">http://java.sun.com/docs/books/tutorial/i18n/text/collationintro.html</A>
+
+The repaired version of our original example follows:
+
+package examples.rules.inter;
+
+import java.text.Collator;
+
+public class SEFixed {
+    public boolean compstr (String s1, String s2) {
+        Collator myCollator = Collator.getInstance ();
+        boolean b = (myCollator.compare(s1,s2) == 0);  // FIXED
+        return b;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://java.sun.com/docs/books/tutorial/i18n/intro/checklist.html">http://java.sun.com/docs/books/tutorial/i18n/intro/checklist.html</A>
+<A HREF="http://java.sun.com/docs/books/tutorial/i18n/text/locale.html">http://java.sun.com/docs/books/tutorial/i18n/text/locale.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid label statements [VVSG.2_3_1_B.AULS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid label statements [VVSG.2_3_1_B.AULS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies labels in code. An error is reported 
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A complementary rule UC.AUL may be beneficial in finding
+only label statements which are either invalid or unused.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using labels could cause an illogical flow, which can lead to
+erroneous code and could make the code difficult to read.
+Code can always be rewritten in a way that does not use
+labels.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class AULS
+{
+    public static void main (String args[]) {
+        int a = 0;
+        int b = 0;
+        while (a &lt;= 10) {
+            tag:  //VIOLATION
+            {
+                a++;
+                b = 0;
+                while (b &lt;= 10) {
+                    b++;
+                    System.out.println(a * b);
+                    if (a == b)
+                        break tag;
+                }
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class AULSFixed
+{
+    public static void main (String args[]) {
+      
+        int a = 0;
+        int b = 0;
+        boolean flag= true;
+        while (a &lt;= 10) {
+            a++;
+            b = 0;
+            flag= true;
+            while ((b &lt;= 10) &amp;&amp; (flag)) {
+                b++;
+                System.out.println(a * b);
+                if (a == b)
+                    flag= false; //FIXED: USING FLAG INSTEAD
+            }
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

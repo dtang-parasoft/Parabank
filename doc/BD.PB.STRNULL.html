@@ -1,0 +1,233 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not append null value to strings [BD.PB.STRNULL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not append null value to strings [BD.PB.STRNULL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When a complex string that may be finally output to a user of an application
+is created by  concatenating several simpler strings, a literal string "null"
+will be appended to the output string if one of the operands to
+the concatenation operation is null.
+
+This rule detects when:
+- a null value is appended to a string.
+- a null value is passed to one of the following methods
+(except parameters for which java.lang.NullPointerException may be thrown):
+
+   * java.io.PrintStream.append
+   * java.io.PrintStream.format
+   * java.io.PrintStream.printf
+   * java.io.PrintStream.print
+   * java.io.PrintStream.println
+   * java.lang.String.format
+   * java.lang.StringBuilder.append
+   * java.lang.StringBuilder.insert
+   * java.lang.StringBuffer.append
+   * java.lang.StringBuffer.insert
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects all occurrences of null values appended to strings passed
+to the above methods. If a null value is intentionally appended to a string,
+the reported violation may need to be suppressed.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Reporting of violations where variable is known to be null due to a null
+check" group of parameters allows you to specify how the rule reports null
+checks:
+   * If disabled, the rule will report violations only on variables that are
+     certain to be assigned with a null value.
+   * If enabled, the rule will report violations not only for null value
+     assignment, but also when a check for a null value that stipulates null
+     value appending at the point of use is detected. Here is an example of
+     this type of violations:
+       boolean b = (obj == null); // null check that stipulates null value
+       ...                        // appending at violation point
+       if (b) {
+        ...
+        System.out.printf("Object value: %s", obj); // violation reported
+       }                                           // if this option is enabled
+
+  The "Except for the cases when the null check is performed inside a called
+  method of the following visibility" parameter helps you reduce the number of
+  unwanted violations caused by a null check. Enabling this option allows you
+  to specify which methods the rule ignores during null check, depending on
+  their visibility. The following visibility levels are available:
+   * "public" 
+   * "public, protected"
+   * "public, protected, package-private" (default)
+   * "any visibility"
+
+  The following table describes the rule behavior for different visibility
+  options and parameterization options. Violations are only reported for
+  combinations marked with '+'.
+	                                                           method visibility
+  Parameterization:                                | public | protected | package private | private |
+  the option is disabled                           |    +   |     +     |        +        |    +    |
+  "public"                                         |    -   |     +     |        +        |    +    |
+  "protected and public"                           |    -   |     -     |        +        |    +    |
+  "package-private, protected and public"          |    -   |     -     |        -        |    +    |
+  "private, package-private, protected and public" |    -   |     -     |        -        |    -    |
+
+  Consider the following example:
+
+  class Example
+  {
+      protected void foo(Object obj)
+      {
+          if (obj != null) {
+              ...
+          }
+      }
+
+      void bar(Object obj)
+      {
+          foo(obj);
+          System.out.printf("Object value: %s", obj); // Is violation reported?
+      }
+  }
+
+  Whether the violation inside bar() will be reported or not depends on
+  the visibility of foo() and parameterization of the rule. With the default
+  parameterization, violations in the bar() function will not be reported
+  because foo() is a protected method.
+
+The "Potential null returners" group of parameters allows you to specify if
+the potential ability of some methods to return null should be taken into
+consideration during analysis. Currently, this feature is implemented for
+methods from the standard Java 2 packages java.lang, java.io, java.util.
+You can enable one or more of the following options:
+   1 "Consider J2SE methods which may return null and it's hard to prevent it"
+     Methods that may return null and are difficult to protect from returning
+     null. In this case, the code should not assume that the returned value
+     will be non-null and perform appropriate checks where necessary.
+
+   2 "Consider J2SE methods which may return null but it's not hard to prevent
+     it"
+     Methods that may return null but can be written in such a way that they
+	 never will return null. In this case, it is not necessary to check
+     the returned values.
+
+   3 "Consider J2SE collections' access methods can return null"
+     Collections access methods that may return null
+
+     
+The "External functions that may return null" parameter allows you to specify
+additional methods whose return values will be assumed to be null.
+
+Fill in the following columns to configure a method.
+- "Enabled" - enables or disables the method. If disabled, the rule does not
+    consider the method to be a null-returning method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using strings in an unexpected format.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Here is an example that triggers a violation:
+
+public class Example
+{
+    public void printSummary(int count)
+    {
+        String descriptor = getDescriptor(count);
+        System.out.printf("Selection descriptor: %s; Count: %d", descriptor, count); // VIOLATION 
+    }
+
+    private String getDescriptor(int count)
+    {
+        String descriptor = null;
+        if (count != 0) {
+            // compute the descriptor 
+        }
+        return descriptor;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by initializing the variable with the default.
+
+public class Repair
+{
+    public void printSummary(int count)
+    {
+        String descriptor = getDescriptor(count);
+        System.out.printf("Selection descriptor: %s; Count: %d", descriptor, count); // NO VIOLATION
+    }
+
+    private String getDescriptor(int count)
+    {
+        String descriptor = "default descriptor";
+        if (count != 0) {
+            // compute the descriptor
+        }
+        return descriptor;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

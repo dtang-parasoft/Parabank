@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary parentheses [FORMAT.UP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary parentheses [FORMAT.UP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unnecessary parentheses in statements. An error
+is reported for any unnecessary parentheses which do not add to
+the program's semantic meaning.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Some parentheses that might appear to be semantically unnecessary could enhance
+code readability and hence should be preserved. Parentheses might be
+placed purposefully in nested operation statements or inline conditional
+statements, as those statements could be difficult to read without them.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check inline conditional expressions (default is false)
+    By default, the rule will ignore those parentheses and will not flag them as
+    errors. However, you can have them identified as errors by enabling the
+    above option.
+
+-Check nested operations (default is true)
+    By default, the rule will check for unneccesary parentheses in compound 
+    expressions nested operations.  However, this can be turned off by
+    disabling the above option.
+
+-Check order of operation in expressions (default is false)
+    By default, the rule will not remove extra parentheses used for the sake of
+    clarifying order of operations.  However, you can have unnecessary
+    parentheses (whose removal will not affect the order of operation) be 
+    identified as errors by enabling the above option.
+
+-Scope of checking
+    -only return statements
+    -all statements (default option)
+        Because this rule is an extension of a previous implementation that
+        only checked for return statements, the 'check only return statement' 
+        option is available so that this rule can behave similarly to the 
+        previous implementation. Currently, this option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Sometimes extra parentheses only make the expressions look more complicated.
+Removing those parentheses simplifies code, which makes it easier to understand
+and less error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UPOR {
+    public Integer getPositiveInteger(Integer i) {
+        if ((i.intValue())&lt; 0) //NO FLAG (would be flag if 'check nested operations' is enabled)
+            return (null); //VIOLATION
+        else {
+            i= (i+ 2); //VIOLATION
+            return (new Integer(i)); //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary parentheses.
+
+public class UPORFixed {
+    public Integer getPositiveInteger(Integer i) {
+        if (i.intValue()&lt; 0) //NO FLAG
+            return null; //FIXED
+        else {
+            i= i+ 2; //FIXED
+            return new Integer(i); //FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 7.3 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#438">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#438</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

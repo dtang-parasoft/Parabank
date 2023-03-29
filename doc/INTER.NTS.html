@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'toString()' or 'String.valueOf()' on numeric values in an Internationalized environment [INTER.NTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'toString()' or 'String.valueOf()' on numeric values in an Internationalized environment [INTER.NTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls 'toString ()' or 'String.valueOf ()' on a 
+numeric value.  This rule will check all of the numeric primitive types as well 
+as any subclass of java.lang.Number, including BigDecimal, BigInteger, Byte, 
+Double, Float, Integer, Long, and Short.  An error is reported for each 
+occurrence, with the following exception: an error is not reported if a special 
+comment was added to the line of code that does not follow the rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the following special comment to prevent Jtest from reporting
+any INTER rules for a specific line of code:
+
+1. /* NOI18N */
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Numbers and currencies that are displayed must be formatted in a
+locale-independent manner. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class NTS {
+    public void method (Double amount) {
+        String amountStr = amount.toString ();  // VIOLATION
+        System.out.println (amountStr);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the code with a routine that formats the number correctly.
+The Java programming language provides several classes that format numbers. 
+One way to format numbers correctly is to use predefined formats using the 
+"NumberFormat" class.  This allows you to format numbers, currencies, and 
+percentages according to Locale.
+
+package examples.rules.inter;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
+public class NTSFixed {
+    public void method (Double amount) {
+        Locale currentLocale = Locale.getDefault ();
+        NumberFormat numberFormatter = 
+            NumberFormat.getNumberInstance (currentLocale);
+        String amountStr = numberFormatter.format (amount);  // FIXED
+        System.out.println (amountStr + ' ' + currentLocale.toString ());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html">http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html</A>
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/format/numberFormat.html">http://docs.oracle.com/javase/tutorial/i18n/format/numberFormat.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Unrestricted lock resource [CWE.667.CLOSE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Unrestricted lock resource [CWE.667.CLOSE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule prevents leaving unclosed resources which may result in unreleased locks.
+It finds variables responsible for the resource and checks whether the close method is
+called on this variable. If not, a violation is reported.
+
+This is a configurable rule. You can specify the resource class and method 
+that must be used to close resources from the class. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule applies only for variables not transferred to other classes.
+If the variable is an argument of another class's method, it is ignored.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+category: Erratic Application Behavior
+
+When an attacker can control a lock, the program may wait 
+indefinitely until the attacker releases the lock, 
+causing a denial of service to other users of the program. 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Class name
+    -Default is "java.io.Closeable"
+    -This is the class responsible for the resource
+    -The Rule always checks the hierarchy
+    
+-Method name
+    -Default is "close"
+    -This is the resource closing method
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule reduces problems with locked resources (such as locks on files).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// BAD
+public class Example {
+
+    public Example() {
+        try {
+            Writer fw = new FileWriter("/tmp/resourceLock");
+            closeFw(fw);
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void closeFw(Writer fw) throws IOException {
+        // fw.close(); // BAD
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// OK
+public class Example {
+
+    public Example() {
+        try {
+            Writer fw = new FileWriter("/tmp/resourceLock");
+            closeFw(fw);
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void closeFw(Writer fw) throws IOException {
+        fw.close(); // OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-667: Improper Locking
+<A HREF="https://cwe.mitre.org/data/definitions/667.html">https://cwe.mitre.org/data/definitions/667.html</A>
+
+CWE-772: Missing Release of Resource after Effective Lifetime
+<A HREF="https://cwe.mitre.org/data/definitions/772.html">https://cwe.mitre.org/data/definitions/772.html</A>
+
+SAMATE-2104 example
+<A HREF="http://samate.nist.gov/SRD/view_testcase.php?tID=2104">http://samate.nist.gov/SRD/view_testcase.php?tID=2104</A>
+
+SAMATE-2124 example
+<A HREF="http://samate.nist.gov/SRD/view_testcase.php?tID=2124">http://samate.nist.gov/SRD/view_testcase.php?tID=2124</A>
+
+</PRE>
+</BODY>
+</HTML>

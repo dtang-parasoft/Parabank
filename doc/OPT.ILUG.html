@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not iterate through Lists using the 'get()' method [OPT.ILUG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not iterate through Lists using the 'get()' method [OPT.ILUG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag cases where lists (that is, objects of types which extend
+from "java.util.List") are iterated through using the "get()" method instead of
+an iterator (for JDK versions 1.4 and lower) or a "foreach" loop (for JDK 
+versions 1.5 and higher).  A violation will be flagged for each call to the 
+"get()" method of "java.util.List" inside of a loop where an iterator or a 
+"foreach" loop could have been used instead. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag in the following cases.  It may be necessary to use an
+index variable and the "get()" method in these cases.
+
+1.  The index variable used to iterate through the loop is used elsewhere in the
+loop. 
+2.  The list is traversed in an order different than the standard order for 
+traversing through a list (for instance, if the list is traversed from back to 
+front or if only every other element of the list is accessed).
+3.  The condition used to determine when to stop the iteration is a comparison 
+to a call to the "size()" method of a list.  This rule will only flag cases 
+where the size used in the comparison is stored in a variable.  The reason for
+this is that, if a loop condition like "i &lt; list.size()" is used instead of "i &lt; 
+size", it often means that elements are being added to or removed from the list 
+in the loop.  In this case, it may not be appropriate to use an iterator to 
+iterate through the list.
+
+In addition, the rule will not flag if the compile-time type of the List being 
+iterated through is "java.util.ArrayList".  For "java.util.ArrayList", using the
+'get()' method to iterate through a List is very efficient.  In fact, using the
+'get()' method to iterate through an "ArrayList" is even more efficient than 
+using an "Iterator".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Using the "get()" method and an index variable to iterate through a list may be 
+inefficient (for instance, for objects of type "java.util.LinkedList").  Using 
+an iterator or a "foreach" loop can make the code more efficient and cleaner.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class ILUG {
+    public static void main(String[] args) {
+        List foo= new LinkedList();
+        foo.add("a");
+        foo.add("b");
+        printList(foo);
+    }
+    
+    public static void printList(List list) {
+        int size = list.size();
+        for (int i = 0; i &lt; size; i++) {
+            System.err.println(list.get(i));  //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The repair depends on which version of the JDK you are using.  If you are using
+JDK 1.4 or earlier, use an iterator instead of the "get()" method.  Here is an
+example of this:
+
+package examples.rules.opt;
+
+public class ILUGFixed {
+    public static void main(String[] args) {
+        List foo= new LinkedList();
+        foo.add("a");
+        foo.add("b");
+        printList(foo);
+    }
+    
+    public static void printList(List list) {
+        Iterator iter = list.iterator();
+        while (iter.hasNext()) {
+            System.err.println(iter.next());  //FIXED
+        }
+    }
+}
+
+If you are using JDK 1.5 or later, you should fix the violation by using the 
+"foreach" construct that was new for JDK 1.5.  Here is an example of the 
+"printList()" method shown above using a "foreach" loop instead of an iterator:
+
+    public static void printList(List list) {
+        for (Object o : list) {
+            System.err.println(o);  //FIXED
+        }
+    }
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Restrict cross-origin resource sharing to secure origins [OWASP2021.A5.JXCORS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Restrict cross-origin resource sharing to secure origins [OWASP2021.A5.JXCORS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Cross-Origin Resource Sharing (CORS) is a mechanism that uses additional HTTP
+headers to tell browsers to give a web application running at one origin,
+access to selected resources from a different origin. A web application
+executes a cross-origin HTTP request when it requests a resource that has
+a different origin (domain, protocol, or port) from its own." [MDN web docs]
+
+Implementing CORS may lead to security threats if you fail to explicitly
+specify safe origins, allowing any origin to access resources.
+
+This rule detects when the value of '*' or 'null' is passed as the second
+argument to a header method that configures CORS. 
+
+This rule checks the following methods:
+- setHeader()
+- header()
+- add()
+- addHeader()
+
+from the following classes
+- javax.ws.rs.container.ContainerResponseFilter
+- javax.ws.rs.core.Response
+- javax.servlet.http.HttpServletResponse
+- javax.ws.rs.core.Response.ResponseBuilder
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The software does not properly verify that the source of data or communication
+is valid. . . An attacker can access any functionality that is inadvertently
+accessible to the source." [CWE-346]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you reduce the security risks related to implementing
+cross-origin resource sharing.
+
+	 
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, '*' indicates that access is allowed for all origins.
+
+//javax.servlet.Filter#doFilter
+public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
+            throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse)res;
+        response.setHeader("Access-Control-Allow-Origin", "*"); // VIOLATION
+        filterChain.doFilter(req, res);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by specifying origins that are safe to access resources.
+
+private static String[] urlwhitelist = {"someUrl.org", "someOtherUrl.com"};
+
+//javax.servlet.Filter#doFilter
+public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
+            throws IOException, ServletException {
+2
+        HttpServletRequest request = (HttpServletRequest)req;
+        HttpServletResponse response = (HttpServletResponse)res;
+
+        // Some method filtering origins
+        String origin = getOrigin(request,urlwhitelist);
+
+        response.setHeader("Access-Control-Allow-Origin", origin); // OK
+        filterChain.doFilter(req, res);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-346: Origin Validation Error
+<A HREF="https://cwe.mitre.org/data/definitions/346.html">https://cwe.mitre.org/data/definitions/346.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+MDN web docs
+Cross-Origin Resource Sharing (CORS)
+<A HREF="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

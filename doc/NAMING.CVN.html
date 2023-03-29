@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use conventional variable names [NAMING.CVN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use conventional variable names [NAMING.CVN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies code that uses local variable names in
+unconventional ways. An error is reported if code does not use local
+variables for their conventional purposes, by default is
+
+b for a byte
+c for a char
+d for a double
+f for a float
+i, j, and k for integers
+l for a long
+o for an Object
+s for a String
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Local variable naming convention table
+  - In "Local variable" column
+    User can input the name of local variable that
+    is reserved to a specific type of local variable
+  - In "Type" column
+    User can input the type of the local variable. Fully
+    qualified name is required, if the local variable is
+    non-primitive type.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Misusing these variable names can lead to confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class CVN {
+    void method () {
+        int b = 1;  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use conventional variable names.
+
+package examples.rules.naming;
+
+public class CVNFixed {
+    void method () {
+        int i = 1;  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

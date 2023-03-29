@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid granting access permission for EJB methods to the 'ANYONE' role [EJB.DPANY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid granting access permission for EJB methods to the 'ANYONE' role [EJB.DPANY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if the permission of EJB methods are granted to the 'ANYONE' role
+in 'ejb-jar.xml'. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If the EJB deployment descriptor contains one or more method permissions that grant access
+to the special 'ANYONE' role, it indicates that access control for the application has not been
+fully thought through or that the application is structured in such a way that reasonable access
+control restrictions are impossible.
+
+Enforcing this rule will help to protect against some of the OWASP 2017 Top 10
+application vulnerabilities including "A5-Broken Access Control".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;ejb-jar&gt;
+    &lt;assembly-descriptor&gt;
+        &lt;method-permission&gt;
+            &lt;role-name&gt;ANYONE&lt;/role-name&gt; &lt;!-- VIOLATION --&gt;
+            &lt;method&gt;
+                &lt;ejb-name&gt;Employee&lt;/ejb-name&gt;
+                &lt;method-name&gt;getSalary&lt;/method-name&gt;
+            &lt;/method&gt;
+        &lt;/method-permission&gt;
+    &lt;/assembly-descriptor&gt;
+&lt;/ejb-jar&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the value in &lt;role-name&gt; tag to other role.
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/1c94a8ab-2613-4247-a89e-15f1e0380f10">https://app.hackedu.com/link/1c94a8ab-2613-4247-a89e-15f1e0380f10</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A01:2021 - Broken Access Control
+<A HREF="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">https://owasp.org/Top10/A01_2021-Broken_Access_Control/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 3.2
+6.5.8 Improper access control
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-269: Improper Privilege Management
+<A HREF="https://cwe.mitre.org/data/definitions/269.html">https://cwe.mitre.org/data/definitions/269.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Privilege Management
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-9: J2EE Misconfiguration: Weak Access Permissions for EJB Methods
+<A HREF="https://cwe.mitre.org/data/definitions/9.html">https://cwe.mitre.org/data/definitions/9.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

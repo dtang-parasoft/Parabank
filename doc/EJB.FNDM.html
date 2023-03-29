@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare finder methods "public" and neither "final" nor "static" [EJB.FNDM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare finder methods "public" and neither "final" nor "static" [EJB.FNDM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Finder methods that are either "final", "static"
+or non-"public". An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import java.rmi.RemoteException;
+import javax.ejb.*;
+
+public class FNDM implements EntityBean {
+    static void ejbFindByCreate(int i){  //VIOLATION
+        //Method Stub
+    }
+    
+    //Stubs for EntityBean methods
+    public void setEntityContext(EntityContext arg0) throws EJBException, RemoteException { }
+    public void unsetEntityContext() throws EJBException, RemoteException { }
+    public void ejbRemove() throws RemoveException, EJBException, RemoteException { }
+    public void ejbActivate() throws EJBException, RemoteException { }
+    public void ejbPassivate() throws EJBException, RemoteException { }
+    public void ejbLoad() throws EJBException, RemoteException { }
+    public void ejbStore() throws EJBException, RemoteException { }
+    public void ejbCreate() throws EJBException { }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the finder method as "public", non-"final", and non-"static".
+
+package examples.rules.ejb;
+
+import java.rmi.RemoteException;
+import javax.ejb.*;
+
+public class FNDMFixed implements EntityBean {
+    public void ejbFindByCreate(int i){  //FIXED  
+        //Method Stub
+    }
+    
+    //Stubs for EntityBean methods
+    public void setEntityContext(EntityContext arg0) throws EJBException, RemoteException { }
+    public void unsetEntityContext() throws EJBException, RemoteException { }
+    public void ejbRemove() throws RemoveException, EJBException, RemoteException { }
+    public void ejbActivate() throws EJBException, RemoteException { }
+    public void ejbPassivate() throws EJBException, RemoteException { }
+    public void ejbLoad() throws EJBException, RemoteException { }
+    public void ejbStore() throws EJBException, RemoteException { }
+    public void ejbCreate() throws EJBException { }    
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Enterprise JavaBeans Tutorial".
+j2eetutorial\doc\Entity.html
+j2eetutorial\doc\Session.html
+
+</PRE>
+</BODY>
+</HTML>

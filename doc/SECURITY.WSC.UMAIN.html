@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid 'main()' methods because they may allow unauthorized access to classes [SECURITY.WSC.UMAIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid 'main()' methods because they may allow unauthorized access to classes [SECURITY.WSC.UMAIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies each main method declared. An error is
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Some main methods might be essential to code correctness and 
+functionality. We recommend that you review each reported 
+main method, then decide whether it makes sense to remove it.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+If a main method is accidentally left in the code, it might allow 
+unauthorized access to a class. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Main methods might be debugging or testing code that is not 
+supposed to be in the final product. If such a main method is left
+in the code, it might allow unauthorized access to the class and 
+increase the code size without adding useful functionality.
+It is best to at least comment out the unused main method, 
+if possible.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class UMAIN {
+    public static void main(String args[]) { //VIOLATION
+        //testdriver code
+    }
+    //...    
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class UMAINFixed {
+    /* FIXED (by commenting the code segment out)
+    public static void main(String args[]) {
+        //testdriver code
+    }
+    */
+    //...
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid DNS lookups for decision making [OWASP2021.A4.DNSL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid DNS lookups for decision making [OWASP2021.A4.DNSL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks if the return value of the 'java.net.InetAddress' method
+'getHostName()' or 'getCanonicalHostName()' is checked against a String for
+validation. A violation is reported for each occurrence.
+See NOTES and SECURITY RELEVANCE for more information.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following String methods are treated as a validation check on the return
+value of 'getHostName()' or 'getCanonicalHostName()':
+    'contains', 'contentEquals', 'endsWith', 'equals', 'equalsIgnoreCase',
+    'matches', 'regionMatches', and 'startsWith'
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Host names are vulnerable to DNS cache poisoning. Therefore, decisions
+should not be based on host names. Although IP addresses may be spoofed, it is
+generally safer to make decisions based on an IP address rather than host name.
+When possible, multiple forms of verification should be used.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class DNSL {
+    boolean isValidAddress(InetAddress address, String validAddress) {
+        return address.getCanonicalHostName().endsWith(validAddress); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use IP addresses instead.
+
+public class DNSLFixed {
+    boolean isValidAddress(InetAddress address, String validIP) {
+        return address.getHostAddress().equals(validIP); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-350: Reliance on Reverse DNS Resolution for a Security-Critical Action
+<A HREF="https://cwe.mitre.org/data/definitions/350.html">https://cwe.mitre.org/data/definitions/350.html</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

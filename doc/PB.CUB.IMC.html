@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure overriding methods are not unintended covariants due to parameter type differences [PB.CUB.IMC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure overriding methods are not unintended covariants due to parameter type differences [PB.CUB.IMC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unintended covariants which try to override parent
+methods. Due to parameter type differences, covariants do not actually
+override their parent methods.
+
+If a method has same name and number of parameters as one of its parent 
+type's methods but the parameter types are different, then it would be
+considered as an unintended covariant.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "static" methods (default as true)
+   When set to true, method would not be flagged if either the parent method
+   or the covariant is "static" 
+-Ignore covariants that have visibility changes (default as false)
+   When set to true, method would not be flagged if the visibility of the 
+   parent method is different from the covariant's.
+-Methods to be ignored (in form of &lt;fully qualified type name&gt; and &lt;method&gt;)
+   Any methods that are considered as covariants of the methods in the list 
+   would not be flagged as error.
+   For example:
+   if "java.lang.Object" and "equals" is added into the list, then any 
+   covariant "equals" method would not be flagged.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Some commonly-used methods (for instance, equals() from java.lang.Object),
+could be overridden. However, if the signature (parameters that are passed in)
+is different from the overridden one, then it could lead to unpredictable
+behavior. Two object references that have different type declarations but refer to
+the same object could generate different results by passing in as parameters to 
+methods with the same name (note that it actually invokes different methods
+with different signatures.) Such behavior could be very dangerous because many
+other classes might depend on the consistencies of those well-known methods.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class IMC {
+    public static void main(String args[]) {
+        Covariant obj1= new Covariant("testing");
+        Covariant obj2= new Covariant("testing");
+        Object obj3= obj2; //notice that obj2 and obj3 both point to the same object
+        System.out.println("obj1== obj2? "+ obj1.equals(obj2)); //return true
+        System.out.println("obj1== obj3? "+ obj1.equals(obj3)); //return false
+    }
+} 
+
+class Covariant {
+    String string;
+    Covariant(String string) {
+        this.string= string;
+    }
+    public boolean equals(Covariant obj) { //VIOLATION
+        return string.equals(obj.string);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class IMCFixed {
+    public static void main(String args[]) {
+        Covariant obj1= new Covariant("testing");
+        Covariant obj2= new Covariant("testing");
+        Object obj3= obj2; //notice that obj2 and obj3 both point to the same object
+        System.out.println("obj1== obj2? "+ obj1.equals(obj2)); //return true
+        System.out.println("obj1== obj3? "+ obj1.equals(obj3)); //return true
+    }
+} 
+
+class Covariant {
+    String string;
+    Covariant(String string) {
+        this.string= string;
+    }
+    public boolean equals(Object obj) { //FIXED
+        if (obj== null || !(obj instanceof Covariant)) {
+            return false;
+        }
+        else {
+            return string.equals(((Covariant)obj).string);
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

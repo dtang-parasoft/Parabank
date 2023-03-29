@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define instance fields in Servlet classes [SERVLET.IF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define instance fields in Servlet classes [SERVLET.IF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instance fields which are defined in Servlet 
+classes.  This rule will flag a violation for each instance field 
+declared in a class which implements the "javax.servlet.Servlet" 
+interface.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The use of instance member variables in Servlet classes is discouraged 
+because only one instance of a Servlet class is created by the J2EE 
+framework and used in a multithreaded way.  Thus, it is probably incorrect
+to use instance member variables.  Local variables should be used instead
+of instance variables.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.http.*;
+
+public class IF extends HttpServlet {
+    private Object o;  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the instance variable to a local variable or a static field, or 
+remove it if it is not necessary.
+
+package examples.rules.servlet;
+
+import javax.servlet.http.*;
+
+public class IFFixed extends HttpServlet {
+    //FIXED- instance variable removed
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure the correct number of arguments for varargs methods with format strings [CERT.IDS06.VAFS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure the correct number of arguments for varargs methods with format strings [CERT.IDS06.VAFS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the API methods with variable arguments and a format
+String have the correct number of arguments. The rule currently checks the
+"format" methods in Formatter, PrintStream, PrintWriter, and String. It also
+checks the "printf" methods in PrintStream and PrintWriter.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Having either too few or too many arguments to a variable argument method with
+a format String is usually a sign of error. The user may have added or removed
+an argument and forgotten to update the format String, or visa versa.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class VAFS {
+    void printString(String string) {
+        PrintStream ps = null;
+        try {
+            ps = new PrintStream("filename");
+            ps.printf("", string);
+        }
+        catch(Exception e) {
+
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;b
+
+public class VAFSFixed{
+    void printString(String string) {
+        PrintStream ps = null;
+        try {
+            ps = new PrintStream("filename");
+            ps.printf("%s", string);
+        }
+        catch(Exception e) {
+
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+Java API - Formatter
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Formatter.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Formatter.html</A>
+
+Java API - PrintStream
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintStream.html">http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintStream.html</A>
+
+Java API - PrintWriter
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintWriter.html">http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintWriter.html</A>
+
+Java API - String
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS06-J. Exclude unsanitized user input from format strings
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS06-J.+Exclude+unsanitized+user+input+from+format+strings">https://wiki.sei.cmu.edu/confluence/display/java/IDS06-J.+Exclude+unsanitized+user+input+from+format+strings</A>
+
+</PRE>
+</BODY>
+</HTML>

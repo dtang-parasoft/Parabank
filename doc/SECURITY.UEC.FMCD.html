@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that each filter mapped in a 'web.xml' file has a corresponding definition [SECURITY.UEC.FMCD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that each filter mapped in a 'web.xml' file has a corresponding definition [SECURITY.UEC.FMCD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each filter mapping in a 'web.xml' file should include a '&lt;filter-name&gt;' element
+with the name of a filter defined within that 'web.xml' file.  A common mistake 
+is for a filter mapping to specify the name of a filter that is missing a 
+definition.  This rule will flag a violation for each '&lt;filter-mapping&gt;' element 
+in a 'web.xml' file which contains a '&lt;filter-name&gt;' element which specifies the 
+name of a filter for which there is no corresponding '&lt;filter&gt;' element in the 
+'web.xml' file.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Filters are often used to prevent common attacks such as URL injection and HTTP 
+request injection.  If you attempt to use a filter to prevent attacks but fail 
+to define the filter correctly, the filter will not be effective in preventing
+attacks.  To ensure security, you must make sure that there is a corresponding
+'&lt;filter&gt;' element for each '&lt;filter-mapping&gt;' element.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example attempts to use a filter to protect against malicious input to the
+servlet 'InputServlet', but the filter will not work because there is no 
+'&lt;filter&gt;' element corresponding to the filter mapping.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+    
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;InputServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.InputServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;InputFilter&lt;/filter-name&gt;  &lt;!-- VIOLATION: InputFilter is missing a definiton. --&gt;
+        &lt;servlet-name&gt;InputServlet&lt;/servlet-name&gt;
+    &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a '&lt;filter&gt;' element for each filter which has a mapping, and make sure that
+the text in the '&lt;filter-name&gt;' element of the '&lt;filter&gt;' element exactly 
+matches the text in the '&lt;filter-name&gt;' element of the '&lt;filter-mapping&gt;' 
+element.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+    
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;InputServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.InputServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    
+    &lt;filter&gt;  &lt;!-- FIXED: Added a definition for InputFilter --&gt;
+        &lt;description&gt;A filter to prevent malicious input&lt;/description&gt;
+        &lt;filter-name&gt;InputFilter&lt;/filter-name&gt;                       
+        &lt;filter-class&gt;examples.rules.servlet.InputFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+    
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;InputFilter&lt;/filter-name&gt;
+        &lt;servlet-name&gt;InputServlet&lt;/servlet-name&gt;
+    &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 34:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

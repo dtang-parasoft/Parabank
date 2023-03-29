@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure "static" "final" fields are immutable [CWE.668.IMM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure "static" "final" fields are immutable [CWE.668.IMM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "static" "final" fields that are mutable. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are many reasons why a field may be "static" "final" and still be 
+considered mutable.  Some of these reasons are:
+
+1.  The field is of an array type.  The individual elements of arrays can be 
+modified even if the array itself is declared as "final".  For instance, 
+"SOME_ARRAY[0]= null;" is legal even if "SOME_ARRAY is a "static" "final" array.
+
+2.  The field is of a type from the Java libraries which is known to have some 
+method that makes it mutable.  Examples of such types are "java.lang.StringBuffer", 
+"java.util.Collection", "java.awt.Point", "java.awt.Dimension", "java.awt.Rectangle",
+and "java.util.Date".
+
+3.  The field is of a type which has a "public" setter method (a "public" method 
+which has a name beginning with "set").
+
+4.  The field is of a type which has a "public" method which either returns a 
+mutable field (based on the tests listed here for mutability) or writes to a 
+field.
+
+5.  The field is of a type which has a field that is either "public" and non-
+"final" or of a mutable type (based on the tests listed here for mutability).
+
+If you are not sure why this rule is flagging a certain "static" "final" field as 
+mutable, consider whether any of the above conditions apply to the type of the 
+field in question.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"A public or protected static final field references a mutable object, which
+allows the object to be changed by malicious code, or accidentally from another
+package." [CWE-607]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Report mutable non-final "static" fields that are not declared "private" (disabled by default)
+With this parameter enabled, the rule reports rule violation when it detects a mutable non-final
+"static" field that is not declared as "private".
+
+- Ignore types (disabled by default)
+This parameter allows you to specify the types that will be ignored. Rule violations
+will not be reported for the listed types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"static" "final" fields are meant to be constants in most situations. However,
+if such fields are mutable, then programmers have to be aware that the states of
+those fields could still be changed despite the "static" "final" modifiers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+import java.util.*;
+
+public class IMM {
+    public static final Set CONSTANT_SET= new HashSet(); //VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The programmer has to carefully assess the usage of such a constant. Use an
+immutable type for the constant object if possible. Otherwise, reduce the 
+accessibility of the constant object to "private", then create an accessor 
+method that returns a deep copy of the object.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-582: Array Declared Public, Final, and Static
+<A HREF="https://cwe.mitre.org/data/definitions/582.html">https://cwe.mitre.org/data/definitions/582.html</A>
+
+CWE-607: Public Static Final Field References Mutable Object
+<A HREF="https://cwe.mitre.org/data/definitions/607.html">https://cwe.mitre.org/data/definitions/607.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+</PRE>
+</BODY>
+</HTML>

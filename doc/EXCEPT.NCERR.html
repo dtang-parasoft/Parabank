@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not catch the 'java.lang.Error' object [EXCEPT.NCERR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not catch the 'java.lang.Error' object [EXCEPT.NCERR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any code that attempts to catch the 'java.lang.Error' 
+object. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The definition of 'java.lang.Error' is very broad. Consequently,  
+if code catches 'java.lang.Error', it might catch some unexpected 
+errors without dealing with them properly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NCERR {
+    public void myMethod() {
+        try {
+            //...
+	} catch (Error e) { //VIOLATION
+        }
+    
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NCERRFixed {
+    public void myMethod() {
+	try {
+            //...
+	} catch (AssertionError e) { //FIXED
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

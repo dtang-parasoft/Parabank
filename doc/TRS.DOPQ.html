@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use DiscardOldestPolicy with PriorityBlockingQueue [TRS.DOPQ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use DiscardOldestPolicy with PriorityBlockingQueue [TRS.DOPQ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a ThreadPoolExecutor used a
+PriorityBlockingQueue with DiscardOldestPolicy.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using DiscardOldestPolicy with a PriorityBlockingQueue causes the highest
+priority task to be discarded. This is most likely unintended behavior and may
+cause confusing results.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class DOPQ {
+    void initExecutor() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(100, 100, 0
+            , TimeUnit.MILLISECONDS, new PriorityBlockingQueue&lt;Runnable&gt;());
+        executor.setRejectedExecutionHandler( //VIOLATION
+            new ThreadPoolExecutor.DiscardOldestPolicy());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class DOPQFixed {
+    void initExecutor() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(100, 100, 0
+            , TimeUnit.MILLISECONDS, new PriorityBlockingQueue&lt;Runnable&gt;());
+        executor.setRejectedExecutionHandler( //FIXED
+            new ThreadPoolExecutor.DiscardPolicy());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 174-175.
+
+</PRE>
+</BODY>
+</HTML>

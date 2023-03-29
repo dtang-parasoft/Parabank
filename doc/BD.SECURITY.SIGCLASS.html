@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not rely on the default automatic signature verification provided by URLClassLoader and java.util.jar [BD.SECURITY.SIGCLASS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not rely on the default automatic signature verification provided by URLClassLoader and java.util.jar [BD.SECURITY.SIGCLASS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the reflection mechanism is used to invoke a method or create
+a new instance of a class with an object obtained from a class that was loaded without
+additional verification of the class certificates. Additional verification involves:
+- programmatically checking the signature by obtaining the chain of certificates from the CodeSource of the class that is being loaded
+- checking whether any of these certificates belong to a trusted signer whose certificate has been securely obtained beforehand and
+stored in a local key store.
+The lists below specify the methods this rule applies to. 
+		
+The list of methods that return a loaded class:
+    Methods from java.lang.ClassLoader (and its subclasses):
+        * loadClass(String name);
+        * loadClass(String name, boolean resolve);
+        * findLoadedClass(String name);
+        * findClass(String name);
+        * findSystemClass(String name);
+    Methods from javax.management.loading.MLet:
+        * loadClass(String name, ClassLoaderRepository clr);
+	
+The list of methods that return a method or a constructor object:
+    Methods from java.lang.Class:
+        * getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes);
+        * getDeclaredMethods();
+        * getEnclosingMethod();
+        * getMethod(String name, Class&lt;?&gt;... parameterTypes);
+        * getMethods();
+        * getConstructor(Class&lt;?&gt;... parameterTypes);
+        * getConstructors();
+        * getDeclaredConstructor(Class&lt;?&gt;... parameterTypes);
+        * getDeclaredConstructors();
+        * getEnclosingConstructor();
+
+The list of methods that are responsible for code execution:
+    Methods from java.lang.reflect.Method:
+        * invoke(Object obj, Object... args);	
+    Methods from java.lang.reflect.Constructor:
+        * newInstance(Object... initargs)
+	
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The default automatic signature verification process is not sufficient. The legitimate JAR file may
+be replaced with a malicious JAR file that contains a different public key along with appropriately
+modified digest values. This can be prevented by additional verification of the class certificates
+validation on loaded class objects.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent an attacker form replacing a legitimate source with malicious software.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+public class Example
+    extends URLClassLoader
+{
+    public Example(URL[] urls)
+    {
+        super(urls);
+    }
+
+    public void invokeClass(String name, String[] args)
+        throws Exception
+    {
+        Class c = loadClass(name);
+        Method m = c.getMethod("main", new Class[] { args.getClass()});
+        m.setAccessible(true);
+        try {
+            m.invoke(null, new Object[] { args}); // VIOLATION
+        } catch (IllegalAccessException e) {
+            System.out.println("Access denied");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Additional verification of the class certificates repairs the example above:
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+
+public class Repair
+    extends URLClassLoader
+{
+    public Repair(URL[] urls)
+    {
+        super(urls);
+    }
+
+    public void invokeClass(String name, String[] args)
+        throws Exception
+    {
+        Class c = loadClass(name);
+        Method m = c.getMethod("main", new Class[] { args.getClass()});
+        m.setAccessible(true);
+        Certificate[] certs = c.getProtectionDomain().getCodeSource().getCertificates();
+        if (certs == null) {
+            // Return, do not execute if unsigned
+            System.out.println("No signature!");
+            return;
+        }
+        KeyStore ks = KeyStore.getInstance("JKS");
+        ks.load(new FileInputStream(System.getProperty("user.home" + File.separator + "keystore.jks")), "loadkeystorepassword".toCharArray());
+        // User is the alias
+        Certificate pubCert = ks.getCertificate("user");
+        // Check with the trusted public key, else throws exception
+        certs[0].verify(pubCert.getPublicKey()); // additional verification 
+        try {
+            m.invoke(null, new Object[] { args}); // NO VIOLATION
+        } catch (IllegalAccessException e) {
+            System.out.println("Access denied");
+        }
+    }
+}
+    
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+SEC06-J. Do not rely on the default automatic signature verification provided by URLClassLoader and java.util.jar
+<A HREF="https://www.securecoding.cert.org/confluence/display/java/SEC06-J.+Do+not+rely+on+the+default+automatic+signature+verification+provided+by+URLClassLoader+and+java.util.jar">https://www.securecoding.cert.org/confluence/display/java/SEC06-J.+Do+not+rely+on+the+default+automatic+signature+verification+provided+by+URLClassLoader+and+java.util.jar</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

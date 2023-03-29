@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid class duplication [CDD.DUPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid class duplication [CDD.DUPT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code with duplicate classes. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Minimal number of duplicated tokens (default value is 150)
+- Ignore identifies (default is off)
+- Ignore string and character literals (default is on)
+- Ignore number literals (default is on)
+- Ignore boolean literals (default is on)
+- Ignore code in deprecated classes (default is on)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Copying and pasting code will increase the cost of code maintenance because each time a modification
+is required, multiple instance of the same code will need to be identified and then modified. Reducing or eliminating the amount
+of duplicated code can prevent this problem.
+
+
+</PRE>
+</BODY>
+</HTML>

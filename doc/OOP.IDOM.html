@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid declaring methods inherited from class "Object" in an interface [OOP.IDOM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid declaring methods inherited from class "Object" in an interface [OOP.IDOM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Methods inherited from the class "Object" should not be declared in an 
+interface.  This rule will flag a violation for each method declared in an 
+interface which has the same signature as one of the methods inherited by all
+classes from class "Object".  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When someone puts the signature of one of the methods declared in class 
+"Object" in an interface, he probably means to enforce that all classes 
+implementing that interface will provide an implementation of that method other
+than the default one inherited from "Object".  However, the compiler will not
+enforce this since the method inherited from "Object" will satisfy the 
+requirement that the class must implement the method declared in the interface.
+In other words, putting a method inherited from "Object" in an interface serves 
+no purpose from the programmer's perspective.  Putting the method in an 
+interface only creates confusion.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Sometimes programmers choose to put methods inherited from "Object" in an 
+interface for the purpose of commenting the methods.  For instance, you may want 
+to do this to specify some additional contract that a method must satisfy.  If
+you choose to follow this coding practice, this rule should not be used.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public interface IDOM { 
+    String toString();  //VIOLATION
+}
+
+class IDOM_b implements IDOM {
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To enforce that all implementing classes must implement their own custom version 
+of some method, you must use either a different name or different parameters 
+than the method defined in class "Object".  If this is not the case, you should
+remove the method from the interface. 
+
+package examples.rules.oop;
+
+public class IDOMFixed { 
+    String toStringSpecial();  //VIOLATION
+}
+
+class IDOMFixed_b implements IDOMFixed {
+    String toStringSpecial(){
+        return super.toString() + " Special";
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

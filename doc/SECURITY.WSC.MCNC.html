@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make your classes noncloneable [SECURITY.WSC.MCNC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make your classes noncloneable [SECURITY.WSC.MCNC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Java's object cloning mechanism allows an attacker to manufacture new
+instances of a class by copying the memory images of existing objects. . .
+Often, this is an unacceptable way of creating new objects."
+[SEI CERT OBJ07-J.]
+
+To improve your code security, you can make your objects noncloneable by
+defining the following method in each of your classes:
+    public final void clone() throws java.lang.CloneNotSupportedException {
+            throw new java.lang.CloneNotSupportedException();
+    }
+
+This rule detects  when a class:
+- does not include the clone() method.
+- includes the clone() method that is not declared "final".
+- includes the "final" clone() method that does not throw 
+  the CloneNotSupportedException.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check classes that have a superclass with a "final" clone()
+method, as this prevents the subclass from implementing a clone() method.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"An attacker can misuse the clone feature to manufacture multiple instances of
+a singleton class, create thread-safety issues by subclassing and cloning
+the subclass, bypass security checks within the constructor, and violate
+the invariants of critical data." [SEI CERT OBJ07-J.]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent an attacker from exploiting Java's object cloning
+mechanism.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the MCNC class does not include the clone() method.
+
+package examples.rules.security.wsc;
+
+public class MCNC {
+
+    // VIOLATION
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, add the "final" clone() method and ensure it throws
+the CloneNotSupportedException to indicate that the object's class
+does not implement the Cloneable interface.
+
+package examples.rules.security.wsc;
+
+public class MCNCFixed {
+
+    public final Object clone() throws CloneNotSupportedException {  // FIXED
+        throw new CloneNotSupportedException();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JavaWorld
+Twelve rules for developing more secure Java code
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ07-J. Sensitive classes must not let themselves be copied
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ07-J.+Sensitive+classes+must+not+let+themselves+be+copied">https://wiki.sei.cmu.edu/confluence/display/java/OBJ07-J.+Sensitive+classes+must+not+let+themselves+be+copied</A>
+
+</PRE>
+</BODY>
+</HTML>

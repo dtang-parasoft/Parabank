@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Properly validate server identity [CWE.287.VSI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Properly validate server identity [CWE.287.VSI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Even if a certificate is well-formed, signed, and follows the chain of trust,
+it may simply be a valid certificate for a different site than the site that
+the software is interacting with. . . In order to ensure data integrity,
+the certificate must be valid and it must pertain to the site that is being
+accessed." [CWE-297]
+
+This rule identifies SMTP SSL connections that fail to properly validate server
+identity. It detects when objects of the following classes are not properly 
+configured:
+- javax.mail.Session
+- classes from the org.apache.commons.mail package:		
+    - Email
+    - SimpleEmail
+    - MultiPartEmail
+    - HtmlEmail
+    - ImageHtmlEmail
+
+This rule assumes that the following configuration is required to properly
+validate server identity:
+
+* javax.mail.Session configuration
+    Properties that are used to create a javax.mail.Session object must have
+    one of the following options set to true:
+        - mail.smtp.ssl.checkserveridentity
+        - mail.smtps.ssl.checkserveridentity
+
+* org.apache.commons.mail package
+    One of the following pairs of methods must be called on objects of
+    the classes from the org.apache.commons.mail package:
+        -  setSSLOnConnect(true) and setSSLCheckServerIdentity(true)
+        -  setStartTLSEnabled(true) and setSSLCheckServerIdentity(true)
+        -  setStartTLSRequired(true) and setSSLCheckServerIdentity(true)
+    
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"If the certificate's host-specific data is not properly checked - such as
+the Common Name (CN) in the Subject or the Subject Alternative Name (SAN)
+extension of an X.509 certificate - it may be possible for a redirection
+or spoofing attack to allow a malicious host with a valid certificate
+to provide data, impersonating a trusted host." [CWE-297]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code security by helping you ensure that server identity
+is validated to prevent man-in-the-middle attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the org.apache.commons.mail.Email is not properly
+configured, because only one of the required methods is called on
+the 'email' object.
+
+public class VSI {
+
+    void sendMail() {
+        // ...
+        Email email = new SimpleEmail(); // VIOLATION
+        email.setSSLOnConnect(true);
+        email.send();
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by properly configuring all the required options.
+
+public class VSI {
+
+    void sendMailRepaired() {
+        // ...
+        Email email = new SimpleEmail(); // FIXED
+        email.setSSLOnConnect(true);
+        email.setSSLCheckServerIdentity(true);
+        email.send();
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/b3f29e32-390c-4de1-8b79-b51f53a281ab">https://app.hackedu.com/link/b3f29e32-390c-4de1-8b79-b51f53a281ab</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-295: Improper Certificate Validation
+<A HREF="https://cwe.mitre.org/data/definitions/295.html">https://cwe.mitre.org/data/definitions/295.html</A>
+
+CWE-297: Improper Validation of Certificate with Host Mismatch
+<A HREF="https://cwe.mitre.org/data/definitions/297.html">https://cwe.mitre.org/data/definitions/297.html</A>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

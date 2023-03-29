@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the 'getRequestedSessionId' method from the 'HttpServletRequest' class [PCIDSS40.6245.HGRSI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the 'getRequestedSessionId' method from the 'HttpServletRequest' class [PCIDSS40.6245.HGRSI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Without sufficient encryption, integrity checking, or other mechanism, any
+input that originates from an outsider cannot be trusted." [CWE-807]
+
+The 'getRequestedSessionId' method of the 'HttpServletRequest' class returns
+a session ID specified by the client, which may not be the same as the ID
+of the current valid session for this request. 
+For this reason, the session ID returned by the 'getRequestedSessionId' method
+cannot be trusted and should only be used by a servlet container (such as
+Apache Tomcat) to verify if the value provided by the client matches the ID
+of the existing session.
+
+This rule detects when the 'getRequestedSessionId' method from
+the 'javax.servlet.http.HttpServletRequest' class is used.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The application uses a protection mechanism that relies on the existence or
+values of an input, but the input can be modified by an untrusted actor in
+a way that bypasses the protection mechanism. . . The consequences will depend
+on the associated functionality, but they can range from granting additional
+privileges to untrusted users to bypassing important security checks.
+Ultimately, this weakness may lead to exposure or modification of sensitive
+data, system crash, or execution of arbitrary code." [CWE-807]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid relying on a session ID that can be modified by
+the end-user in security decisions. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the getRequestedSessionId() method is used
+to obtain the session ID.
+
+    private void method(HttpServletRequest request) {
+        if(isActive(request.getRequestedSessionId())) { // VIOLATION
+        }
+    }
+    private boolean isActive(String isActive) {
+        return true;
+    }
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The session ID is obtained with the getSession() and getId() methods.
+
+    Consider using other methods to get session ID
+
+    private void method(HttpServletRequest request) {
+        if(isActive(a.getSession().getId())) { // FIXED
+        }
+    }
+    private boolean isActive(String isActive) {
+        return true;
+    }
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/e76e1833-8a55-46d7-9519-19584b50ea4a">https://app.hackedu.com/link/e76e1833-8a55-46d7-9519-19584b50ea4a</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A07:2021 – Identification and Authentication Failures
+<A HREF="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-807: Reliance on Untrusted Inputs in a Security Decision
+<A HREF="https://cwe.mitre.org/data/definitions/807.html">https://cwe.mitre.org/data/definitions/807.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

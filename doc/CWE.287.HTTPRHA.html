@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not rely on IP addresses obtained from HTTP request headers for authentication [CWE.287.HTTPRHA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not rely on IP addresses obtained from HTTP request headers for authentication [CWE.287.HTTPRHA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This attack-focused weakness is caused by improperly implemented
+authentication schemes that are subject to spoofing attacks. . .
+If an attacker is able to spoof the IP, they may be able to bypass
+the authentication mechanism." [CWE-290]
+
+Relying on HTTP request headers such as X-Forwarded-For, True-Client-IP,
+and X-Real-IP to identify the remote IP address of the connecting client is
+prone to IP address spoofing, which may allow an attacker to bypass
+authentication. To avoid security attacks, you need to use more secure methods
+of identifying clients, such as configuring appropriate access controls on
+the server.
+
+This rule detects invocations of the following methods:
+- the getHeader(java.lang.String) and getHeaders(java.lang.String) methods
+  from the javax.servlet.http.HttpServletRequest class that are called with
+  one of the following arguments defined as a Sting literal or a final String
+  variable:
+    - X-Forwarded-For
+    - True-Client-IP
+    - X-Real-IP
+- the getRemoteAddr() method from the javax.servlet.ServletRequest class
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"This weakness can allow an attacker to access resources which are not
+otherwise accessible without proper authentication." [CWE-290]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you comply with some security standards and ensure that
+your application is not exposed to common IP spoofing attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+public class HTTPHSB {
+
+    public String getClientIPAddress(HttpServletRequest request) {
+        final String ipAddress = request.getHeader("X-Forwarded-For");
+        return ipAddress;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the HTTP request headers to identify the connecting client.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A07:2021 – Identification and Authentication Failures
+<A HREF="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-290: Authentication Bypass by Spoofing
+<A HREF="https://cwe.mitre.org/data/definitions/290.html">https://cwe.mitre.org/data/definitions/290.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

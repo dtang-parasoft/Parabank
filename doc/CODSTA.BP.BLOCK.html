@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary nested blocks [CODSTA.BP.BLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary nested blocks [CODSTA.BP.BLOCK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies nested blocks. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Nested blocks are most likely left-over code from debugging.
+Since nested blocks could be confusing, they should be
+eliminated whenever possible to create more cleanly structured code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class BLOCK {
+    public void myMethod() {
+        { //VIOLATION
+            System.out.print("Hello ");
+        }
+        System.out.println("World!");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class BLOCKFixed {
+    public void myMethod() {
+        System.out.print("Hello "); //FIXED
+        System.out.println("World!");
+    }
+}
+   
+
+</PRE>
+</BODY>
+</HTML>

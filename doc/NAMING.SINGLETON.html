@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for singleton classes [NAMING.SINGLETON]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for singleton classes [NAMING.SINGLETON]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when a singleton class does not follow the 
+user-defined naming convention (as specified in a regular expression). By
+default, the rule requires that the singleton class name end with "Singleton". 
+
+An error is reported for each occurrence. 
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule had 3 potential errors moved into the rule OOP.SNGL, the one that
+remains is truly a naming rule, as the problem and solution is only with the
+name of the class
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression (default value is "^.+Singleton$")
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps to enforce a naming convention.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+class NCL {  // VIOLATION
+
+    private static NCL _ncl;
+    
+    private NCL() {
+    }
+    
+    public void display() {
+        System.out.println("NCL");
+    }
+    
+    public static synchronized NCL getInstance() {
+        if (_ncl == null) {
+            _ncl = new NCL();
+        }
+        return _ncl;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the class name to follow the convention in class NCLSingleton
+
+package examples.rules.naming;
+
+class NCLSingleton {  // FIXED
+
+    private static NCLSingleton _ncl;
+    
+    private NCLSingleton() {
+    }
+    
+    public void display() {
+        System.out.println("NCLSingleton");
+    }
+    
+    public static synchronized NCLSingleton getInstance() {
+        if (_ncl == null) {
+            _ncl = new NCLSingleton();
+        }
+        return _ncl;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

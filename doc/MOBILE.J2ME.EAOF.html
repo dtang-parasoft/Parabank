@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not access a field excessively [MOBILE.J2ME.EAOF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not access a field excessively [MOBILE.J2ME.EAOF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that accesses a field excessively. An error is
+reported if the threshold value is exceeded. The current threshold value
+for the number of tolerated field accesses is seven. In other words, up
+to 7 accesses of the same field within the same method will be tolerated
+without a warning being issued. From the 8th access onward, a warning will
+be issued for every subsequent access of the field. 
+
+If a particular field is accessed an excessive number of times
+within a method, the field should be buffered in a local variable and
+be accessed through that variable. Accessing an instance member or
+class member always involves the use of the getfield/putfield or
+getstatic/putstatic bytecodes; however, local variables can be
+accessed more easily using the load/store bytecodes.
+
+
+Depending on the use of multi-threading and the visibility of the
+affected field, the use of a local variable instead of individual
+field accesses might actually change the semantics of the code and
+produce semantically incorrect code. Generally, this modification can
+only be applied when it is known that there are no other concurrent
+accesses of the affected field.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Eliminating excessive use of fields will reduce the application code
+size and can potentially increase the execution speed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code generates four read accesses and four write
+accesses of the instance variable value:
+
+package examples.rules.mobile.j2me;
+
+public class EAOF {
+     private int value;
+     public void adjustValue(boolean a, boolean b, boolean c) {
+         if (a) {
+             value += 1;
+         }
+         if (b) {
+             value += 2;
+         }
+         if (c) {
+             value += 3;
+         }
+         if (a || b) {
+             value += 4; // VIOLATION
+         }
+     }
+}
+        
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+By inserting additional statements that buffer the field in a local
+variable, the method's code size is reduced by more than 20%. 
+Execution speed might be improved as well.
+
+package examples.rules.mobile.j2me;
+
+public class EAOFFixed {
+     private int value;
+     public void adjustValue(boolean a, boolean b, boolean c) {
+         int value = this.value; // copy to local variable // FIXED
+         if (a) {
+             value += 1;
+         }
+         if (b) {
+             value += 2;
+         }
+         if (c) {
+             value += 3;
+         }
+         if (a || b) {
+             value += 4;
+         }
+         this.value = value; // write back modified value // FIXED
+     }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Qusay H. Mahmoud, Wireless Software Design Techniques,
+<A HREF="http://www.oracle.com/technetwork/systems/index-156913.html">http://www.oracle.com/technetwork/systems/index-156913.html</A>
+
+</PRE>
+</BODY>
+</HTML>

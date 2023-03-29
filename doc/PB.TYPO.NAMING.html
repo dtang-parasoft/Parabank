@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not give methods and fields the same name as the enclosing class or each other [PB.TYPO.NAMING]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not give methods and fields the same name as the enclosing class or each other [PB.TYPO.NAMING]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that fields and methods do not share the same name as their
+enclosing class. It also checks that fields do not share the same name as a
+member method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-check methods with same name as class
+-check fields with same name as class
+-check fields with same name as member methods
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Fields and methods that share the same name as their enclosing class can lead
+to confusion. In the case of methods, it may even be an error as the method may
+have been intended to be a constructor instead. Fields that share the same name
+as a member method can also cause confusion as to whether a member field or
+method is attempting to be accessed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class NAMING {
+    private NAMING NAMING; //VIOLATION
+    class NAMING_1 {
+        private boolean _field;
+        public void NAMING_1() { //VIOLATION
+            _field = true;
+        }
+    }
+    class NAMING_2 {
+        private boolean _field; //VIOLATION
+        public void _field() {
+            _field = true;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class NAMINGFixed {
+    private NAMING _field; //FIXED
+    class NAMING_1 {
+        private boolean _field;
+        public NAMING_1() { //FIXED
+            _field = true;
+        }
+    }
+    class NAMING_2 {
+        private boolean _field; //FIXED
+        public void fieldMethod() {
+            _field = true;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

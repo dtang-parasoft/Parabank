@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure the HostnameVerifier.verify() method validates the certificate [APSC_DV.001460.HV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure the HostnameVerifier.verify() method validates the certificate [APSC_DV.001460.HV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Certificates should be carefully managed and checked to assure that data are
+encrypted with the intended owner's public key." [CWE-295]
+
+This rule identifies javax.net.ssl.HostnameVerifier implementations where 
+the certificate validation process fails to be enabled.
+The rule detects when the 'verify' method is configured to always return 'true'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+To ensure better protection against improper certificate validation, the rule
+triggers when then 'verify' method is configured to return 'true' and throw
+an exception.
+ 
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When a certificate is invalid or malicious, it might allow an attacker to
+spoof a trusted entity by using a man-in-the-middle (MITM) attack. The software
+might connect to a malicious host while believing it is a trusted host, or
+the software might be deceived into accepting spoofed data that appears to
+originate from a trusted host." [CWE-295]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that certificate validation is enabled for
+the HostnameVerifier class to protect against security attacks. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the certificate is not verified, because
+the 'verify' method always returns 'true'.
+
+    HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+            return true; // VIOLATION
+        }
+    });
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The code is fixed by configuring the 'verify' method to verify that the host name matches
+the server's authentication scheme.
+
+    HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+            try {
+                X509Certificate cert  = (X509Certificate)session.getPeerCertificates()[0];
+                String domainName = getDomainName(cert);
+                return hostname.equals(domainName);
+             } catch (SSLPeerUnverifiedException e) {
+                throw new IllegalStateException("The session does not contain a certificate");
+             }
+        }
+    });
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/08fdb0c1-ac49-4668-b0ba-86d612ee16f1">https://app.hackedu.com/link/08fdb0c1-ac49-4668-b0ba-86d612ee16f1</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-295: Improper Certificate Validation
+<A HREF="https://cwe.mitre.org/data/definitions/295.html">https://cwe.mitre.org/data/definitions/295.html</A>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+RFC-2818 HTTP Over TLS:
+3.1. Server Identity
+<A HREF="https://tools.ietf.org/html/rfc2818">https://tools.ietf.org/html/rfc2818</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000480: The application must enforce approved authorizations for controlling the flow of information within the system based on organization-defined information flow control policies
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

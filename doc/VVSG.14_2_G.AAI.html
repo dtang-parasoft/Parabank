@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary modifiers in an "interface" [VVSG.14_2_G.AAI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary modifiers in an "interface" [VVSG.14_2_G.AAI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of unnecessary modifiers in "interface" members. 
+A parameter allows checking of the "interface" declaration. An error is reported
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Check for "abstract" in interface declaration (default false)
+    Interface declarations are always "abstract," so the keyword is unnecessary
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Interface methods are always "public" and "abstract". Interface fields are
+always "public", "static" and "final".  Methods defined in interfaces are always 
+"public" and "abstract".  Types defined in interfaces are always "public" and 
+"static".  Interface declarations are always "abstract". These modifiers are 
+automatically applied, so there is no need to write them.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public interface AAI {
+    public void method ();  // VIOLATION: useless "public"
+    abstract int getSize ();  // VIOLATION: useless "abstract"
+    static int SIZE = 100;  // VIOLATION: useless "static"
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary modifiers.
+
+package examples.rules.uc;
+
+public interface AAIFixed {
+    void method ();  // FIXED
+    int getSize ();  // FIXED
+    int SIZE = 100;  // FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

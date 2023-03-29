@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing the "this" reference as an argument [EJB.THISARG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing the "this" reference as an argument [EJB.THISARG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that passes "this" as an argument
+to a method call in an "EntityBean" or "SessionBean". An error 
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Concurrency
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Suppose that your enterprise bean needs to pass a reference
+to itself to another bean. You might want to pass the 
+reference, for example, so that the second bean can call 
+the first bean's methods. You can't pass the this reference 
+because it points to the bean's instance, which is running 
+in the EJB container. Only the container can directly invoke
+methods on the bean's instance. Clients access the instance 
+indirectly by invoking methods on the object whose type is 
+the bean's remote interface. It is the reference to this 
+object (the bean's remote reference) that the first bean 
+would pass to the second bean. 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'getEJBObject()' available in SessionContext or EntityContext.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Enterprise JavaBeans Programming restrictions on EJB 
+by Sanjay Mahapatra  -- JavaWorld August 2000
+
+<A HREF="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Session4.html">http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Session4.html</A>
+
+</PRE>
+</BODY>
+</HTML>

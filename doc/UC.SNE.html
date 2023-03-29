@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid empty "synchronized" statements [UC.SNE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid empty "synchronized" statements [UC.SNE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "synchronized" statements with empty bodies.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"An empty synchronized block will wait until nobody else is using
+the synchronizer being specified. While this may be part of the desired
+behavior, because you haven't protected the subsequent code by placing it
+inside the synchronized block, nothing is stopping somebody else from
+modifying whatever it was you were waiting for while you run the subsequent
+code." [CWE-585]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"synchronized" statements are supposed to enclose statements 
+that need to be synchronized. Consequently, empty "synchronized"
+statements are usually unnecessary and should be removed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class SNE
+{
+    public void myMethod () {
+        //...
+        synchronized (this) {
+        //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class SNEFixed
+{
+    public void myMethod () {
+    //...
+        synchronized (this) {
+            //...
+            System.out.println("Synchronizing"); //FIXED
+	}
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-585: Empty Synchronized Block
+<A HREF="https://cwe.mitre.org/data/definitions/585.html">https://cwe.mitre.org/data/definitions/585.html</A>
+
+</PRE>
+</BODY>
+</HTML>

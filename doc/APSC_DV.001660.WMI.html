@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure SOAP messages are digitally signed in WebSphere 'ibm-webservices-ext.xmi' files [APSC_DV.001660.WMI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure SOAP messages are digitally signed in WebSphere 'ibm-webservices-ext.xmi' files [APSC_DV.001660.WMI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if &lt;requiredIntegrity&gt; or &lt;integrity&gt; tags are missing or 
+not configured properly in WebSphere 'ibm-webservices-ext.xmi' files. Omitting 
+these tags will cause the integrity of SOAP message to not be guaranteed. An 
+error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If SOAP messages are digitally signed, the receiver can use the signature to 
+verify the integrity of the message.  That way, the receiver can detect whether 
+the message was modified by a third party or not.
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability "A6-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+ibm-webservices-ext.xmi:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;com.ibm.etools.webservice.wsext:WsExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wsext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi</A>" xmi:id="WsExtension_1151349893397"&gt;
+    .....
+      &lt;serverServiceConfig xmi:id="ServerServiceConfig_1154291002292"&gt;
+        &lt;securityRequestConsumerServiceConfig xmi:id="SecurityRequestConsumerServiceConfig_1154291002292"&gt;
+          &lt;!-- VIOLATION : missing signature --&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154364951677"/&gt;
+          &lt;caller xmi:id="Caller_1154291002292" name="basicAuth" part="" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+          &lt;requiredSecurityToken xmi:id="RequiredSecurityToken_1154291002292" name="requntoken" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>" usage="Required"/&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154303857297" name="reqconf_body" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154303857297" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+          &lt;/requiredConfidentiality&gt;
+        &lt;/securityRequestConsumerServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wsext:WsExtension&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add signature by adding &lt;requiredIntegrity&gt; tag
+
+ibm-webservices-ext.xmi:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;com.ibm.etools.webservice.wsext:WsExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wsext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi</A>" xmi:id="WsExtension_1151349893397"&gt;
+    .....
+      &lt;serverServiceConfig xmi:id="ServerServiceConfig_1154291002292"&gt;
+        &lt;securityRequestConsumerServiceConfig xmi:id="SecurityRequestConsumerServiceConfig_1154291002292"&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154364951677"/&gt;
+          &lt;caller xmi:id="Caller_1154291002292" name="basicAuth" part="" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+          &lt;requiredSecurityToken xmi:id="RequiredSecurityToken_1154291002292" name="requntoken" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>" usage="Required"/&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154303857297" name="reqconf_body" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154303857297" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+          &lt;/requiredConfidentiality&gt;
+          &lt;!-- FIXED : add signature --&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154303857297" name="reqint_body" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154303857298" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+          &lt;/requiredIntegrity&gt;
+        &lt;/securityRequestConsumerServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wsext:WsExtension&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf">http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf</A>
+
+OWASP Top 10 2013 (A6-Sensitive Data Exposure):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001660: Service-Oriented Applications handling non-releasable data must authenticate endpoint devices via mutual SSL/TLS
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

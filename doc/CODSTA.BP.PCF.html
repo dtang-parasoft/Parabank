@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that a class which has only "private" constructors is declared as "final" [CODSTA.BP.PCF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that a class which has only "private" constructors is declared as "final" [CODSTA.BP.PCF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that have only "private" constructors, 
+but are not declared as "final". An error is reported if a class 
+supplies only "private" constructors, but is not declared as a "final" class.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule would not report an error if any inner class extends
+the outer class.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a class supplies only "private" constructors but is not 
+declared as "final," then some class could try to extend it. 
+However, such an inherited class could never implement its
+constructors correctly because it has no access to any of the 
+constructors of its parent class, which only has "private"
+constructors. (It is still possible to extend such a class
+by making an inner class that extends the outer class;
+however, such a relationship is odd and should be avoided.)
+Consequently, it makes more sense to declare that class as final 
+in order to prevent any attempts to extend it.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class PCF { //VIOLATION, only a private ctor presented
+    private PCF() {}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public final class PCF { //FIXED
+    private PCF() {}
+}
+
+</PRE>
+</BODY>
+</HTML>

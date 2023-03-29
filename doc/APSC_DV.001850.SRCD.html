@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that each security role referenced in a 'web.xml' file has a corresponding definition [APSC_DV.001850.SRCD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that each security role referenced in a 'web.xml' file has a corresponding definition [APSC_DV.001850.SRCD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each security role referenced within an '&lt;auth-constraint&gt;' element of a 
+'web.xml' file must have a corresponding '&lt;security-role&gt;' element with the same
+role name.  The '&lt;security-role&gt;' element is the element which defines the 
+security role.  If this element is missing, any resource which is specified to 
+only allow access to that security role will be inaccessible to users who are
+supposed to be in that security role.  A violation will be flagged for each 
+'&lt;auth-constraint&gt;' element which specifies a role name for which there is no 
+corresponding '&lt;security-role&gt;' element. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Failure to properly define security roles will lead to denial of access to 
+anyone who is supposed to be in the specified role. 
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A5-Security Misconfiguration".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This 'web.xml' file references a role called 'admin' in an '&lt;auth-constraint&gt;'
+element but does not contain a corresponding '&lt;security-role&gt;' element to define 
+the 'admin' role.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+                       
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+             &lt;web-resource-name&gt;Administrators Only&lt;/web-resource-name&gt;
+             &lt;description&gt;Only allow administrators access&lt;/description&gt;
+             &lt;url-pattern&gt;/admin/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+    
+        &lt;auth-constraint&gt;
+            &lt;description&gt;Administrator access only&lt;/description&gt;
+            &lt;role-name&gt;admin&lt;/role-name&gt;  &lt;!-- VIOLATION: The "admin" role is not defined. --&gt;
+        &lt;/auth-constraint&gt;
+       
+        &lt;user-data-constraint&gt;
+            &lt;transport-guarantee&gt;INTEGRAL&lt;/transport-guarantee&gt;
+        &lt;/user-data-constraint&gt;  
+    &lt;/security-constraint&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that each security role referenced has a corresponding '&lt;security-role&gt;'
+element.  In this case, add a '&lt;security-role&gt;' element to define the 'admin'
+security role.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+                       
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+             &lt;web-resource-name&gt;Administrators Only&lt;/web-resource-name&gt;
+             &lt;description&gt;Only allow administrators access&lt;/description&gt;
+             &lt;url-pattern&gt;/admin/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+    
+        &lt;auth-constraint&gt;
+            &lt;description&gt;Administrator access only&lt;/description&gt;
+            &lt;role-name&gt;admin&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+       
+        &lt;user-data-constraint&gt;
+            &lt;transport-guarantee&gt;INTEGRAL&lt;/transport-guarantee&gt;
+        &lt;/user-data-constraint&gt;  
+    &lt;/security-constraint&gt;
+
+    &lt;security-role&gt;  &lt;!-- FIXED --&gt;
+        &lt;description&gt;Administrator access&lt;/description&gt;
+        &lt;role-name&gt;admin&lt;/role-name&gt;
+    &lt;/security-role&gt;
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-863: Incorrect Authorization
+<A HREF="https://cwe.mitre.org/data/definitions/863.html">https://cwe.mitre.org/data/definitions/863.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+Cigital Java Security Rulepack # 30:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-000460: The application must enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

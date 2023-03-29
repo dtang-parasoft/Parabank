@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include a message string in JUnit assertions [JUNIT.ASSERT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include a message string in JUnit assertions [JUNIT.ASSERT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit assertions that do not include error message
+strings. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only test classes which meet one of the following conditions:
+
+1. The class extends "junit.framework.TestCase".
+2. The class has at least one method with the "org.junit.Test" annotation.  This
+only applies to JUnit 4.0 and later.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore 'assertEquals()' (default is true)
+   
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When JUnit assertions include error message strings, the results for JUnit test
+case failures contain information about the failure.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class ASSERT extends TestCase {  
+
+    private void testMethod() { // VIOLATION
+        fail();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add an error message string in 'fail()'.
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class ASSERTFixed extends TestCase {
+
+    private void testMethod() { // FIXED 
+        fail("fail message here");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

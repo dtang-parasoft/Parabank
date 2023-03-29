@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect usage of standard API calls that bypass security [CWE.114.APIBS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect usage of standard API calls that bypass security [CWE.114.APIBS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method calls that have the potential to bypass 
+SecurityManager checks.  Certain standard APIs in the core libraries of the Java
+runtime enforce SecurityManager checks, but allow those checks to be bypassed
+depending on the immediate caller's class loader.  Other calls use the immediate
+caller's class loader to find and load the specified library, and calling these
+methods using untrusted objects is dangerous.  It can be dangerous to allow
+untrusted code to have access to any return value that comes from one of these
+methods.
+
+These methods can be used safely, but the objects that call them, the objects
+that are used as parameters, and the objects that they return need to be 
+evaluated and prevented from interacting with untrusted code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+The Java SecurityManager allows applications to implement security policies.
+Bypassing the securityManager is an attack vector that should be prevented, and
+can be prevented if these methods are evaluated carefully or avoided completely.
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability "A9-Using Components with Known Vulnerabilities".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+There are many methods checked by this rule, that fall into several categories:
+
+-The following methods may cause SecurityManager checks to be bypassed if
+depending on the immediate caller's class loader
+
+java.lang.Class.newInstance
+java.lang.Class.getClassLoader
+java.lang.Class.getClasses
+java.lang.Class.getField(s)
+java.lang.Class.getMethod(s)
+java.lang.Class.getConstructor(s)
+java.lang.Class.getDeclaredClasses
+java.lang.Class.getDeclaredField(s)
+java.lang.Class.getDeclaredMethod(s)
+java.lang.Class.getDeclaredConstructor(s)
+java.lang.ClassLoader.getParent
+java.lang.ClassLoader.getSystemClassLoader
+java.lang.Thread.getContextClassLoader
+
+-The following static methods perform tasks using the immediate caller's class 
+loader:
+
+java.lang.Class.forName
+java.lang.Package.getPackage(s)
+java.lang.Runtime.load
+java.lang.Runtime.loadLibrary
+java.lang.System.load
+java.lang.System.loadLibrary
+java.sql.DriverManager.getConnection
+java.sql.DriverManager.getDriver(s)
+java.sql.DriverManager.deregisterDriver
+java.util.ResourceBundle.getBundle
+
+-When calling these methods, language access checks are performed solely against
+the immediate caller, not against each caller in the execution sequence.  The
+immediate caller may have capabilities that other code lacks.
+
+java.lang.Class.newInstance
+java.lang.reflect.Constructor.newInstance
+java.lang.reflect.Field.get*
+java.lang.reflect.Field.set*
+java.lang.reflect.Method.invoke
+java.util.concurrent.atomic.AtomicIntegerFieldUpdater.newUpdater
+java.util.concurrent.atomic.AtomicLongFieldUpdater.newUpdater
+java.util.concurrent.atomic.AtomicReferenceFieldUpdater.newUpdater
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.script.ScriptEngineManager;
+
+public class APIBS {
+    void method(java.lang.Class classs) {
+        classs.getClasses();//VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Verify that the objects interacting with the method call are contained in 
+trusted code, and add a suppression comment.
+
+package examples.rules.security.wsc;
+
+public class APIBSFixed {
+    private void method(java.lang.Class classs) {
+        classs.getClasses(); // parasoft-suppress SECURITY.WSC.APIBS "trusted code"  //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A9-Using Components with Known Vulnerabilities):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-114: Process Control
+<A HREF="https://cwe.mitre.org/data/definitions/114.html">https://cwe.mitre.org/data/definitions/114.html</A>
+
+CWE-470: Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection')
+<A HREF="https://cwe.mitre.org/data/definitions/470.html">https://cwe.mitre.org/data/definitions/470.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#4-5">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#4-5</A>
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#4-6">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#4-6</A>
+
+</PRE>
+</BODY>
+</HTML>

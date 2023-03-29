@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not exit "finally" blocks abruptly [CERT.ERR05.ATSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not exit "finally" blocks abruptly [CERT.ERR05.ATSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+By default, this rule will flag a violation for any case where a "finally" block 
+will be exited by a "throw" statement.  Optionally, it can also be parameterized
+to flag cases where a "finally" block is exited by means of a "return", "break", 
+or "continue" statement or a call to a method or constructor which may throw a 
+checked exception that is not caught within the "finally" block.  Exiting a 
+"finally" block in one of these ways is called an abrupt exit, and abrupt exits 
+can lead to unexpected results.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There is some overlap between this rule and the rule PB.ARCF if you run this 
+rule with the parameters set to check "return" statements.  PB.ARCF checks that
+there are no "return" statements inside "finally" blocks only if there is at 
+least one "return" statement in the corresponding "try" or "catch" blocks.  This
+rule enforces that there are no "return" statements within "finally" blocks at 
+all, so it is more general than PB.ARCF.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Error Handling and Logging
+
+Throwing an exception from within a "finally" block can indicate improper error
+handling and application instability.  "finally" blocks are supposed to contain
+only code to clean up after a "try" block executes.  If you throw an exception 
+from the "finally" block, it indicates that you are not properly recovering from
+any exception which was thrown in the "try" block.  Throwing an exception from a 
+"finally" block could also cause some of the "clean up" code to not be executed.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+What to Check
+-"throw" statements (default true)
+    -allow rethrowing of exceptions from within "finally" blocks (default false)
+        throw statements nested in "catch" blocks are not flagged
+-"return" statements (default false)
+-"break" and "continue" statements (default false)
+-method calls which throw uncaught exceptions (default false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Abrupt exits from "finally" blocks are very likely to lead to bugs.  This is 
+due to the fact that the "finally" block is guaranteed to execute regardless of 
+whether the corresponding "try" block exited normally or abruptly.  The abrupt
+exit from the "finally" block can cause the reason for the abrupt exit from the
+"try" block to be hidden.  For instance, if there is a "return" statement in 
+both a "try" block (or a "catch" block) and a "finally" block, the "return" 
+value in the "finally" block will hide the other return value since the 
+"finally" block is guaranteed to execute.  A similar situation can happen with
+exceptions thrown in "finally" blocks hiding exceptions thrown in "try" or 
+"catch" blocks.  This situation can be very confusing.
+
+Also, "finally" blocks can contain important statements that must be executed. 
+If a "finally" block is exited abruptly, any statements which have not yet been
+reached will not get executed.  This can cause bugs.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, the exception thrown by the user in the "throw" statement will 
+hide the exceptions thrown by either the "BufferedReader" or "FileReader" 
+constructor, which is probably not the correct behavior.
+
+package examples.rules.pb.cub;
+
+import java.io.IOException;
+
+public class ATSF
+{
+    public static void main(String[] args) throws java.io.IOException {
+        java.io.BufferedReader _in = null;
+        try {
+            _in = new java.io.BufferedReader (
+                  new java.io.FileReader (
+                  args[0]));
+        } finally {
+            throw new IOException("Oops");  // VIOLATION: Explicit "throw" in finally
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the statement that causes the abrupt exit from the "finally" block.  In 
+this case, that is the "throw" statement.
+
+package examples.rules.pb.cub;
+
+public class ATSFFixed
+{
+    public static void main(String[] args) throws java.io.IOException {
+        java.io.BufferedReader _in = null;
+        try {
+            _in = new java.io.BufferedReader(new java.io.FileReader(args[0]));
+        } finally {
+            //FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+   Addison-Wesley, 2005, pp. 77-78, 87-89
+   
+2. Cigital Java Security Rulepack # 15:
+   <A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+3. SEI CERT Oracle Coding Standard for Java
+   ERR04-J. Do not complete abruptly from a finally block
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR04-J.+Do+not+complete+abruptly+from+a+finally+block">https://wiki.sei.cmu.edu/confluence/display/java/ERR04-J.+Do+not+complete+abruptly+from+a+finally+block</A>
+
+4. SEI CERT Oracle Coding Standard for Java
+   ERR05-J. Do not let checked exceptions escape from a finally block
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR05-J.+Do+not+let+checked+exceptions+escape+from+a+finally+block">https://wiki.sei.cmu.edu/confluence/display/java/ERR05-J.+Do+not+let+checked+exceptions+escape+from+a+finally+block</A>
+
+</PRE>
+</BODY>
+</HTML>

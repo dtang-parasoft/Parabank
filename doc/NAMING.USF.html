@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use lowercase letters in "final" "static" field names [NAMING.USF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use lowercase letters in "final" "static" field names [NAMING.USF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies "final" "static" fields (i.e. named constants) whose
+names contain lowercase letters. An error is reported if a "final" "static" 
+field name does not consist solely of uppercase letters, underscores and numbers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Conforms to the Java API Language Specification's naming conventions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class USF {
+    public static final int size = 10;  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that the name consists solely of uppercase letters, underscores and
+numbers.
+
+package examples.rules.naming;
+
+public class USFFixed {
+    public static final int SIZE = 10;  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Java API Language Specification", section 6.8.5.
+
+Section 9 of <A HREF="http://java.sun.com/docs/codeconv/html/CodeConventions.doc8.html#367">http://java.sun.com/docs/codeconv/html/CodeConventions.doc8.html#367</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

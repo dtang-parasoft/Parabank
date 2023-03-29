@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure methods use return parameters instead of returning new objects [MOBILE.J2ME.EURP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure methods use return parameters instead of returning new objects [MOBILE.J2ME.EURP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that do not use return parameters instead
+of returning new objects. An error is reported for each occurrence.
+
+Method results that cannot be represented by a primitive type are
+often returned using short-lived utility objects (for example, Point,
+Dimension, or Date). Usually, the method creates a new object that 
+might be quickly discarded, thus straining the memory resources of the
+device as well as the garbage collector. To avoid this undesired behavior,
+the calling method can supply a re-usable "return object", which is then
+"filled in" and returned. No new object is created. This pattern is already
+used by a number of J2SE API methods (for example, 
+java.awt.Component.getBounds(java.awt.Rectangle)). Return objects cannot be
+used if the return type is immutable.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Application Denial of Service
+
+Returning new object might exhaust system resources. See BENEFITS for more
+information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Re-usable return objects reduce overall memory consumption and put
+less strain on the garbage collector.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile.j2me;
+
+import java.awt.Dimension;
+
+public class EURP {
+    public static Dimension getSizeOfRectangle(int x1, int y1, int x2, int y2) {
+        return new Dimension(Math.abs(x1-x2), Math.abs(y1-y2)); // VIOLATION
+    }
+}
+        
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+With a re-usable return object, the above code can be rewritten as follows:
+
+package examples.rules.mobile.j2me;
+
+import java.awt.Dimension;
+
+public class EURPFixed {
+    public static Dimension getSizeOfRectangle(int x1, int y1, int x2, int y2, Dimension returnValue) {
+        returnValue.width = Math.abs(x1-x2);
+        returnValue.height = Math.abs(y1-y2);
+        return returnValue; // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Qusay H. Mahmoud, Wireless Software Design Techniques,
+<A HREF="http://www.oracle.com/technetwork/systems/index-156913.html">http://www.oracle.com/technetwork/systems/index-156913.html</A>
+
+</PRE>
+</BODY>
+</HTML>

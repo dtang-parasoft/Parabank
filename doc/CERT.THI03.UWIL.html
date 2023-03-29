@@ -1,0 +1,233 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'wait()' and 'await()' only inside a loop that tests the liveness condition [CERT.THI03.UWIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'wait()' and 'await()' only inside a loop that tests the liveness condition [CERT.THI03.UWIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls the threading 'wait()' method without 
+an enclosing loop.  It also identifies calls to one of the 'await()' methods 
+declared in the "java.util.concurrent.locks.Condition" interface without 
+an enclosing loop.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+For the 'wait()' method, if you test your liveness condition before you wait, 
+it will not necessarily still be met after your thread is notified.  
+Consequently, you should put the condition test in a loop.  This way, when the 
+thread awakens, the condition will be retested to ensure that it is safe to 
+continue.
+
+For the 'await()' methods of "java.util.concurrent.locks.Condition", the 
+condition the caller intended to wait for might not be the one that actually 
+occurred if the same object is used for multiple conditions.  Thus, the call
+to 'await()' should be placed in a loop which checks which condition occurred.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This program demonstrates the need for calls to 'wait()' to be placed in
+a while loop with the condition that the thread must satisfy in order to
+continue. This way, the woken up thread will check its condition before
+continuing.
+
+In this program there is one thread that puts items in the buffer variable,
+and two other threads that take an item out of the buffer. When a producer
+thread puts an item in the buffer, it will wake up all the consumer threads
+that are waiting to consume an item from the buffer. The consumer threads
+have to check to make sure they don't consume from an empty buffer. In this
+program the consumer threads fail to check this condition when they are
+woken up, and this results in the program exiting.
+
+package examples.rules.trs;
+
+public class UWIL {
+    static class Producer implements Runnable {
+        public void run() {
+            while (true) {
+                int temp = pc.produce();
+                System.out.println("Producing. Buffer has " + temp
+                        + " item(s) in it");
+            }
+        }
+    }
+
+    static class Consumer implements Runnable {
+        public void run() {
+            while (true) {
+                int temp = pc.consume();
+                if (temp &lt; 0) {
+                    System.err.println(
+                            "Error: Cannot consume from an empty buffer.");
+                    System.exit(1); // buffer cannot get negative
+                }
+                System.out.println("Consuming. Buffer has " + temp
+                        + " item(s) in it");
+            }
+        }
+    }
+
+    static ProducerConsumer pc;
+
+    public static void main(String[] args) {
+
+        pc = new ProducerConsumer();
+        new Thread(new Producer()).start();
+        new Thread(new Consumer()).start();
+        new Thread(new Consumer()).start();
+    }
+
+    static class ProducerConsumer {
+        volatile int buffer = 0;
+
+        public synchronized int produce() {
+            buffer++; // put a new item in the buffer
+            notifyAll(); // wake up all the consumers
+            return buffer;
+        }
+
+        public synchronized int consume() {
+            // if the buffer is empty wait for an item
+            try {
+                if (buffer == 0) { //VIOLATION
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                ;
+            }
+            buffer--; // consume an item from the buffer
+            return buffer;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In order to fix the problem, we need to put the call to 'wait()' in a loop.
+That way, every time this thread is woken up, it will check the condition first
+and will continue when the condition is met.
+
+package examples.rules.trs;
+
+public class UWILFixed {
+    static class Producer implements Runnable {
+        public void run() {
+            while (true) {
+                int temp = pc.produce();
+                System.out.println("Producing. Buffer has " + temp
+                        + " item(s) in it");
+            }
+        }
+    }
+
+    static class Consumer implements Runnable {
+        public void run() {
+            while (true) {
+                int temp = pc.consume();
+                if (temp &lt; 0) {
+                    System.err.println(
+                            "Error: Cannot consume from an empty buffer.");
+                    System.exit(1); // buffer cannot get negative
+                }
+                System.out.println("Consuming. Buffer has " + temp
+                        + " item(s) in it");
+            }
+        }
+    }
+
+    static ProducerConsumer pc;
+
+    public static void main(String[] args) {
+
+        pc = new ProducerConsumer();
+        new Thread(new Producer()).start();
+        new Thread(new Consumer()).start();
+        new Thread(new Consumer()).start();
+    }
+
+    static class ProducerConsumer {
+        volatile int buffer = 0;
+
+        public synchronized int produce() {
+            buffer++; // put a new item in the buffer
+            notifyAll(); // wake up all the consumers
+            return buffer;
+        }
+
+        public synchronized int consume() {
+            // if the buffer is empty wait for an item
+            try {
+                while (buffer == 0) { //FIXED
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                ;
+            }
+            buffer--; // consume an item from the buffer
+            return buffer;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+         
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 201 - 203
+
+SEI CERT Oracle Coding Standard for Java
+THI03-J. Always invoke wait() and await() methods inside a loop
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/THI03-J.+Always+invoke+wait%28%29+and+await%28%29+methods+inside+a+loop">https://wiki.sei.cmu.edu/confluence/display/java/THI03-J.+Always+invoke+wait%28%29+and+await%28%29+methods+inside+a+loop</A>
+
+</PRE>
+</BODY>
+</HTML>

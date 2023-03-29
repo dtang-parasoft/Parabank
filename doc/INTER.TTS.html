@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'toString()' or 'String.valueOf()' on Time objects in an Internationalized environment [INTER.TTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'toString()' or 'String.valueOf()' on Time objects in an Internationalized environment [INTER.TTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to 'toString ()' or 'String.valueOf ()' on 
+'Time' objects.  This rule checks objects of type "java.sql.Time",
+"java.sql.Timestamp", and "java.util.TimeZone".  An error is reported for
+each occurrence, with the following exception: an error is not reported if
+a special comment was added to the line of code that does not follow the rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the following special comment to prevent Jtest from reporting
+any INTER rules for a specific line of code:
+
+1. /* NOI18N */
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Time formats differ with region and language.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+import java.sql.Time;
+
+public class TTS {
+    public void printTime (Time t1) {
+        String timeStr = t1.toString ();  // VIOLATION
+        System.out.println (timeStr);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If you use the date-formatting classes, your application can display dates and 
+times correctly around the world.  First, create a formatter with the 
+'getTimeInstance ()' method as follows:
+
+    DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.DEFAULT
+        , Locale.getDefault ());
+
+Second, call 'format ()', which returns a String containing the formatted
+date/time:
+                         
+    Time t1 = new Time (1000);
+    String timeString = timeFormatter.format (t1);
+
+The repaired version of our original example is:
+
+package examples.rules.inter;
+
+import java.sql.Time;
+import java.text.DateFormat;
+import java.util.Locale;
+
+public class TTSFixed {
+    public void printTime (Time t1) {
+        DateFormat timeFormatter = DateFormat.getTimeInstance(
+            DateFormat.DEFAULT, Locale.getDefault ());
+        String timeStr = timeFormatter.format(t1);
+        System.out.println (timeStr);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html">http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html</A>
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/format/dateFormat.html">http://docs.oracle.com/javase/tutorial/i18n/format/dateFormat.html</A>
+
+</PRE>
+</BODY>
+</HTML>

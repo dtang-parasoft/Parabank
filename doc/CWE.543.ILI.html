@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make lazy initializations thread-safe [CWE.543.ILI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make lazy initializations thread-safe [CWE.543.ILI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies lazy initialization of a field that is not enclosed
+by a "synchronized" block or a "synchronized" method. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If lazy initialization is not guarded by the synchronized 
+mechanism, it might fail in a multi-thread environment (as
+a result of preemption or code reordering). For more 
+information, follow the link provided in the Reference section.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class ILI {
+    static Object data= null;
+    private static boolean _initialized = false;
+    
+    public Object getData() {
+        if (data== null) {
+            data= new Object();  //VIOLATION
+            _initialized= true;
+        }
+        return data;
+    }
+    
+    public Object getData2() {
+        if (!_initialized) {  
+            data= new Object();  //VIOLATION
+            _initialized= true;
+        }
+        return data;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class ILIFixed {
+    static Object data;
+    private static boolean _initialized = false;
+    
+    public synchronized Object getData() {  //FIXED
+        if (data== null) {
+            data= new Object();
+            _initialized= true;
+        }
+        return data;
+    }
+    
+    public synchronized Object getData2() {  //FIXED
+        if (!_initialized) {  
+            data= new Object();
+            _initialized= true;
+        }
+        return data;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.cs.umd.edu/~pugh/java/memoryModel/">http://www.cs.umd.edu/~pugh/java/memoryModel/</A>
+
+CWE-543: Use of Singleton Pattern Without Synchronization in a Multithreaded Context
+<A HREF="https://cwe.mitre.org/data/definitions/543.html">https://cwe.mitre.org/data/definitions/543.html</A>
+
+
+SEI CERT Oracle Coding Standard for Java
+MSC07-J. Prevent multiple instantiations of singleton objects
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC07-J.+Prevent+multiple+instantiations+of+singleton+objects">https://wiki.sei.cmu.edu/confluence/display/java/MSC07-J.+Prevent+multiple+instantiations+of+singleton+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

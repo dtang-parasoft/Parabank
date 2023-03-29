@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close JDBC resources in "finally" blocks [JDBC.RRWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close JDBC resources in "finally" blocks [JDBC.RRWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies all method-local JDBC variables of types "Statement" or
+"ResultSet" that are not closed by the method. An error is reported for each 
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.RES.LEAKS.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks only for "Statement" and "ResultSet" variables. Another rule
+(JDBC.CDBC) deals with "Connection" objects. This rule will not check unused 
+resource objects.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Application Denial of Service
+
+If database resources are not closed and released appropriately, attackers might 
+perform an App DOS attack to exhaust database connections, preventing other 
+valid users from getting the connections. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore JDBC connection is created by the following types
+   Default value: 
+     org.springframework.jdbc.core.JdbcTemplate
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Failure to close and release database connections can make other users wait
+for connections for a long time. If you are using the WebSphere Application Server,
+a JDBC resource that is left unclosed will be reaped and returned by the server 
+after a timeout period. As a result, other users will have to wait for a timeout
+to occur, so resources should alway be explicitly closed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+
+public class RRWD {
+    void test0 () {  // VIOLATION: 'close ()' never called for JDBC variables
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DriverManager.getConnection ("some url");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery ("some query");
+        } catch (Exception e) {}
+        finally {
+            try {  // VIOLATION: 'stmt' and 'rs' are not closed. 
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {}
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that your code is structured to close and release JDBC resources in all
+cases, even in exception and error conditions.
+
+package examples.rules.jdbc;
+
+import java.sql.*;
+
+public class RRWDFixed {
+    void test0() {  // FIXED
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DriverManager.getConnection("some url");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("some query");
+        } catch (Exception e) {
+        } finally {
+            try {  // FIXED: 'stmt' and 'rs' closed in "finally" block
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from SERVLET.RRWD(v5.1)
+
+</PRE>
+</BODY>
+</HTML>

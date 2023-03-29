@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare "static" fields in web components [SECURITY.EAB.SF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare "static" fields in web components [SECURITY.EAB.SF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should not contain non-final static fields. This rule will flag a
+violation for each non-final static field in a web component. A class or
+interface is considered a web component if it extends or implements a type from
+the "javax.servlet" package.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Because web components are part of a multi-user, threaded environment (provided 
+by the web server), static fields are likely to be modified in unanticipated
+ways and should not be used (in web components) as sources for data.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore fields of the following types:
+    -Specify fully qualified name.
+    -Any subclasses or implementations will also be ignored.
+
+    (default values)
+    "java.util.logging.Logger"
+    "org.apache.commons.logging.Log"
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Web components should use enterprise beans or databases instead of static 
+fields.  Writing to static fields can result in inconsistency in deployed 
+applications, as some containers will run all instances of an application in a 
+single Java virtual machine, whereas others will run the same application in 
+multiple containers.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import javax.servlet.Servlet;
+
+public class SF implement Servlet {
+    static String myStaticString; //VIOLATION
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use enterprise beans, a database, or an instance field instead of a static field
+to store the necessary information.
+
+package examples.rules.security.eab;
+
+import javax.servlet.Servlet;
+
+public class SFFixed implements Servlet {
+    String myString; //FIXED
+    ...
+}
+
+</PRE>
+</BODY>
+</HTML>

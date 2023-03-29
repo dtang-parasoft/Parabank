@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Simplify methods that return strings that are always concatenated [OPT.STRBUF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Simplify methods that return strings that are always concatenated [OPT.STRBUF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations on methods that return strings that are always 
+appended to StringBuffers.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The returned strings can be appended to StringBuffers directly, or they can 
+first be assigned to local variables and then appended to StringBuffers. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+These methods could be made more memory efficient by adding the StringBuffer as
+a parameter, and appending to it in the method, avoiding the creation of a
+and passing of a temporary variable.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class STRBUF{
+    private String violationMeth() {  //VIOLATION
+        String result = new String("hello");
+        return result;
+    }
+
+    public void violations(){
+        StringBuffer g = new StringBuffer("hello");
+        g.append(violationMeth());
+        String violString = violationMeth();
+        g.append(violString);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add the StringBuffer as a parameter, and append to it in the method
+
+package examples.rules.opt;
+
+public class STRBUFixed {
+    private void violationMeth(StringBuffer appender) {  //FIXED
+        String result = new String("hello");
+        appender.append(result);
+    }
+
+    public void violations(){
+        StringBuffer g = new StringBuffer("hello");
+        violationMeth(g);
+        violationMeth(g);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#object_creation">http://developer.android.com/guide/practices/design/performance.html#object_creation</A>
+
+</PRE>
+</BODY>
+</HTML>

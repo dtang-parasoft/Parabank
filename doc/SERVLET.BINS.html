@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'java.beans.Beans.instantiate()' [SERVLET.BINS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'java.beans.Beans.instantiate()' [SERVLET.BINS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls 'java.beans.Beans.instantiate ()'.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'java.beans.Beans.instantiate ()' method will create a new bean instance
+either by retrieving a serialized version of the bean from disk or creating a
+new bean if the serialized form does not exist.  The problem, from a performance
+perspective, is that each time 'java.beans.Beans.instantiate ()' is called the
+file system is checked for a serialized version of the bean.  As usual, such disk
+activity in the critical path of your web request can be costly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.http.*;
+import java.beans.*;
+
+public class BINS extends HttpServlet {
+    public void doGet (HttpServletRequest request) throws ClassNotFoundException
+        , java.io.IOException
+    {
+        // VIOLATION
+        Beans b = (Beans)Beans.instantiate (this.getClass ().getClassLoader ()
+            , "web_prmtv.Bean");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To avoid the disk overhead, simply use "new" to create the instance.
+
+package examples.rules.servlet;
+
+import javax.servlet.http.*;
+import java.beans.*;
+
+public class BINSFixed extends HttpServlet {
+    public void doGet (HttpServletRequest request) throws ClassNotFoundException
+        , java.io.IOException
+    {
+        Beans b = new Beans ();  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

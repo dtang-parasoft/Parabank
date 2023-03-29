@@ -1,0 +1,75 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enterprise JavaBeans [EJB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enterprise JavaBeans [EJB]
+</STRONG>
+<p>
+<PRE>
+Rules related to Enterprise JavaBeans (EJB).
+
+EJB classes must meet certain requirements, see:
+
+Sun's "Enterprise JavaBeans Developer's Guide".
+file:///C|/j2sdkee/doc/guides/ejb/html/TOC.html
+
+The rules in this category enforce requirements
+from that document.
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="EJB.EJB3.html">Enterprise JavaBeans 3 [EJB.EJB3]</a></code><br>
+<code><a href="EJB.ABCS.html">Do not use Servlet code in EJB classes [EJB.ABCS]</a></code><br>
+<code><a href="EJB.ABFG.html">Do not use Entity Beans as fine-grained objects [EJB.ABFG]</a></code><br>
+<code><a href="EJB.ACL.html">Do not access, use, or create a class loader within a bean class [EJB.ACL]</a></code><br>
+<code><a href="EJB.ADCB.html">Do not use EJB code in java swing or servlet classes [EJB.ADCB]</a></code><br>
+<code><a href="EJB.AIEBC.html">Avoid excessive inter-entity bean communication [EJB.AIEBC]</a></code><br>
+<code><a href="EJB.AJDBC.html">Do not use JDBC code inside of EJB classes [EJB.AJDBC]</a></code><br>
+<code><a href="EJB.AMSC.html">Do not access or modify security configuration objects [EJB.AMSC]</a></code><br>
+<code><a href="EJB.AOTO.html">Avoid one-to-one mapping between session beans and entity beans [EJB.AOTO]</a></code><br>
+<code><a href="EJB.AUS.html">Do not use sockets in EJBs [EJB.AUS]</a></code><br>
+<code><a href="EJB.CDP.html">Declare bean classes "public" [EJB.CDP]</a></code><br>
+<code><a href="EJB.CNDA.html">Do not declare bean classes as "abstract" [EJB.CNDA]</a></code><br>
+<code><a href="EJB.CNDF.html">Do not declare bean classes as "final" [EJB.CNDF]</a></code><br>
+<code><a href="EJB.CRTE.html">Declare 'ejbCreate()' methods  "public", but neither "static" nor "final" [EJB.CRTE]</a></code><br>
+<code><a href="EJB.DPANY.html">Avoid granting access permission for EJB methods to the 'ANYONE' role [EJB.DPANY]</a></code><br>
+<code><a href="EJB.EJBLOAD.html">Do not call finder methods in the 'ejbLoad()' [EJB.EJBLOAD]</a></code><br>
+<code><a href="EJB.FNDM.html">Declare finder methods "public" and neither "final" nor "static" [EJB.FNDM]</a></code><br>
+<code><a href="EJB.IECM.html">Implement one or more 'ejbCreate()' methods in bean classes [EJB.IECM]</a></code><br>
+<code><a href="EJB.IEPM.html">Implement one or more 'ejbPostCreate()' methods in EntityBean classes [EJB.IEPM]</a></code><br>
+<code><a href="EJB.JIO.html">Do not use types from the "java.io" package within bean classes [EJB.JIO]</a></code><br>
+<code><a href="EJB.LNL.html">Avoid loading native libraries in a Bean class [EJB.LNL]</a></code><br>
+<code><a href="EJB.MDBC.html">Implement a no-argument 'ejbCreate()' method for all Message-driven bean classes [EJB.MDBC]</a></code><br>
+<code><a href="EJB.MEC.html">Define a matching 'ejbPostCreate()' method for each 'ejbCreate' method in entity bean classes [EJB.MEC]</a></code><br>
+<code><a href="EJB.MNDF.html">Do not define 'finalize()' method in bean classes [EJB.MNDF]</a></code><br>
+<code><a href="EJB.MRE.html">Throw 'java.rmi.RemoteException' in the methods of remote interface and remote home interface [EJB.MRE]</a></code><br>
+<code><a href="EJB.NFDC.html">Declare a "public" constructor that takes no parameters in bean classes [EJB.NFDC]</a></code><br>
+<code><a href="EJB.NFS.html">Declare all "static" fields in EJB bean classes "final" [EJB.NFS]</a></code><br>
+<code><a href="EJB.PCRTE.html">Declare 'ejbPostCreate()' "public" and neither "static" nor "final" [EJB.PCRTE]</a></code><br>
+<code><a href="EJB.RILH.html">Do not throw 'java.rmi.RemoteException' in a bean's local interface and local home interface [EJB.RILH]</a></code><br>
+<code><a href="EJB.RR.html">Do not declare entity beans as remote [EJB.RR]</a></code><br>
+<code><a href="EJB.RT.html">The return type of EJB finder methods should be the primary key or a collection of primary keys [EJB.RT]</a></code><br>
+<code><a href="EJB.RTC.html">Make the return type "void" for SessionBeans or MessageDrivenBeans' 'ejbCreate()' methods [EJB.RTC]</a></code><br>
+<code><a href="EJB.RTP.html">Make the return type "void" for the 'ejbPostCreate()' method [EJB.RTP]</a></code><br>
+<code><a href="EJB.RUH.html">Reuse EJB homes [EJB.RUH]</a></code><br>
+<code><a href="EJB.SMSN.html">Do not set or create a new SecurityManager in EJBs [EJB.SMSN]</a></code><br>
+<code><a href="EJB.STD.html">Ensure EJB beans include necessary methods and EJB bean and interface classes follow the name format [EJB.STD]</a></code><br>
+<code><a href="EJB.TCE.html">Throw 'javax.ejb.CreateException' in create methods of remote home or local home interfaces [EJB.TCE]</a></code><br>
+<code><a href="EJB.TFE.html">Throw 'javax.ejb.FinderException' in finder methods of remote home or local home interfaces [EJB.TFE]</a></code><br>
+<code><a href="EJB.THISARG.html">Avoid passing the "this" reference as an argument [EJB.THISARG]</a></code><br>
+<code><a href="EJB.THISRET.html">Do not return "this" [EJB.THISRET]</a></code><br>
+<code><a href="EJB.THREAD.html">Avoid starting, stopping, or managing threads in any way in bean classes [EJB.THREAD]</a></code><br>
+<code><a href="EJB.UCIC.html">Cache reusable JNDI resources to minimize the use of expensive operations [EJB.UCIC]</a></code><br>
+<code><a href="EJB.USF.html">Use a Session Facade to manage access to entity beans [EJB.USF]</a></code><br>
+<code><a href="EJB.UVO.html">Use Value Objects to reduce the granularity of calls to the server [EJB.UVO]</a></code><br>
+</BODY>
+</HTML>

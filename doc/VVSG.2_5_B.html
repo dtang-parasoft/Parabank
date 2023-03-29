@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+2.5-B: Unsafe concurrency [VVSG.2_5_B]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+2.5-B: Unsafe concurrency [VVSG.2_5_B]
+</STRONG>
+<p>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="VVSG.2_5_B.AUTG.html">Do not use variables of the unsafe type 'java.lang.ThreadGroup' [VVSG.2_5_B.AUTG]</a></code><br>
+<code><a href="VVSG.2_5_B.CSFS.html">Do not cause deadlocks by calling a "synchronized" method from a "synchronized" method [VVSG.2_5_B.CSFS]</a></code><br>
+<code><a href="VVSG.2_5_B.DCL.html">Avoid unsafe implementations of the "double-checked locking" pattern [VVSG.2_5_B.DCL]</a></code><br>
+<code><a href="VVSG.2_5_B.DIFCS.html">Variable should be used in context of single critical section [VVSG.2_5_B.DIFCS]</a></code><br>
+<code><a href="VVSG.2_5_B.DLOCK.html">Avoid double locking [VVSG.2_5_B.DLOCK]</a></code><br>
+<code><a href="VVSG.2_5_B.INSTLOCK.html">Do not use an instance lock to protect shared static data [VVSG.2_5_B.INSTLOCK]</a></code><br>
+<code><a href="VVSG.2_5_B.LOCK.html">Do not abandon unreleased locks [VVSG.2_5_B.LOCK]</a></code><br>
+<code><a href="VVSG.2_5_B.LORD.html">Ensure that nested locks are ordered correctly [VVSG.2_5_B.LORD]</a></code><br>
+<code><a href="VVSG.2_5_B.RLF.html">Release Locks in a "finally" block [VVSG.2_5_B.RLF]</a></code><br>
+<code><a href="VVSG.2_5_B.SOPF.html">Do not synchronize on "public" fields since doing so may cause deadlocks [VVSG.2_5_B.SOPF]</a></code><br>
+<code><a href="VVSG.2_5_B.THRD.html">Avoid calling unsafe deprecated methods of 'Thread' and 'Runtime' [VVSG.2_5_B.THRD]</a></code><br>
+<code><a href="VVSG.2_5_B.TSHL.html">Do not call 'Thread.sleep()' while holding a lock since doing so can cause poor performance and deadlocks [VVSG.2_5_B.TSHL]</a></code><br>
+<code><a href="VVSG.2_5_B.TSHL2.html">Do not use blocking methods while holding a lock [VVSG.2_5_B.TSHL2]</a></code><br>
+</BODY>
+</HTML>

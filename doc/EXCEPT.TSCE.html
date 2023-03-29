@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Exception messages must meet minimum character requirement [EXCEPT.TSCE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Exception messages must meet minimum character requirement [EXCEPT.TSCE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects exceptions that have been created without a message or with a message
+that doesn't meet the minimum character requirement.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule should help you find exceptions with empty or ineffective messages. You can 
+determine how to handle messages that are not defined by literal and constant string 
+objects. You can also specify the index where message parameters for an exception 
+constructor should be placed for classes you create. 
+
+Set the minimum character length to 1 to find all empty messages. 
+Set the minimum character length to a very large number (e.g. 5000) to find all 
+exceptions in your code and inspect them manually.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Minimum characters of exception message; set to 35 by default
+- Aggressively report violations; disabled by default
+    Enabling will cause messages that are not string literals or static final strings to 
+    be counted as string literals with a length of zero.
+
+- User defined list; disabled by default
+    - Enabling will allow you to define which exception types are flagged for inspection.
+    - Mode
+        "Accept mode" causes all exceptions to be inspected by default. 
+        "Reject mode" causes all exceptions to be ignored by default. 
+    - Acceptance list
+        Lists the exceptions that will be inspected and allows you to specify an index of
+        message parameters for classes you create. 
+    - Rejection list
+        List of exception that will be ignored.
+        
+Additional information
+-   You should specify exception names by their qualified names. 
+-   Use regular expressions on acceptance and rejection lists. 
+-   In "Accept mode" all exceptions except those specified on rejection list will be 
+    inspected.
+-   In "Reject mode" all exceptions will be ignored instead of these specified on 
+    acceptance list.
+-   Acceptance/rejection modes are used to create regular expressions when one list 
+    specifies elements and the other excludes some subclasses.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Writing code that raises exceptions with explanation messages that provide little or no 
+information (e.g. "an error has occurred") is a poor coding practice. Instigating a 
+static analysis rule that flags exceptions with a description message shorter than N 
+characters is a reasonable way to alleviate this problem. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+In general, counting message length is not a solvable problem by static analysis. 
+We focus only on messages specified by string literals and constant strings 
+(i.e., static final) that are declared in the same file where exceptions are created. 
+This rule will count length of:
+(a) string literals
+(b) static final string defined in the same file as the exception
+(c) any concatenations of objects from points (a) and (b)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class TSCE 
+{
+    static final String CashMashineName = "ATM_051";
+    
+    int cardIdtoInt(String sCardId)
+    {
+        int id = -1;
+        try {
+            id = Integer.parseInt(sCardId);
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("Error has occured"); // violation
+        }
+        return id;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Please write a message that meets the minimum character requirements.
+
+package examples.rules.except;
+
+public class TSCEFixed
+{
+    static final String CashMashineName = "ATM_051";
+    
+    int cardIdtoInt(String sCardId)
+    {
+        int id = -1;
+        try {
+            id = Integer.parseInt(sCardId);
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("mashine name " + CashMashineName + " tried to convert invalid card id."); // repair
+        }
+        return id;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

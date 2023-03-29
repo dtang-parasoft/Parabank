@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Manually synchronize on 'synchronized' collections when iterating over them [TRS.SSCI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Manually synchronize on 'synchronized' collections when iterating over them [TRS.SSCI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instances where an iteration over a 'synchronized'
+Collection or Map is not properly synchronized. A Collection or Map is
+considered 'synchronized' if it is assigned the return value of a
+'Collections.synchronizedXXX()' method or is a legacy synchronized class such as
+a Hashtable or Vector. Any views over these 'synchronized' Collections or Maps
+(e.g. "subList" or "entrySet") are also checked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+To prevent false positives, this rule does not check variables which are
+assigned more than one possible value. For example:
+
+class MyList {
+    List _list;
+
+    MyList(boolean makeSynchronized) {
+        _list = (makeSynchronized)
+            ? Collections.synchronizedList(new ArrayList())
+            : new ArrayList();
+    }
+
+    void iterateOverList() {
+        Iterator iterator = _list.iterator();
+        ... 
+    }
+
+In this and similar situations it may be unclear whether the Collection is
+intended or required to be synchronized. Because of this, only straightforward
+cases are checked.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check Hashtable and Vector (default false)
+    Enabling this parameter will check Hashtable and Vector. It should be noted
+    that this parameter may result in false positives. This is because use of a
+    'Collections.synchronizedXXX()' Collection or Map implies it may be used by
+    multiple threads. In contrast, as Hashtable and Vector are legacy classes
+    they may be used in a manner where synchronization is unnecessary. Because
+    of this, violations should be evaluated on a case-by-case basis.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The Javadoc for the 'Collections.synchronizedXXX()' methods specifies that an
+iterator must manually synchronize on the returned Collection or Map. If not
+then the behavior may be non-deterministic. Similar circumstances apply for the
+legacy classes Hashtable and Vector. An iteration over a view of a
+'synchronized' Collection or Map should also synchronize on the original
+Collection or Map. See EXAMPLE for more information.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class SSCI {
+    List _list = Collections.synchronizedList(new ArrayList());
+
+    void iterateList() {
+        Iterator iter = _list.iterator(); //VIOLATION
+        while (iter.hasNext()) {
+            Object o = iter.next();
+            foo(o);
+        }
+    }
+
+    void iterateSubList(int from, int to) {
+        List subList = _list.subList(from, to);
+        Iterator iter = subList.iterator(); //VIOLATION
+        while (iter.hasNext()) {
+            Object o = iter.next();
+            foo(o);
+        }
+    }
+
+    void foo(Object o) {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Manually synchronize on the returned Collection or Map. Note that "subList" is
+synchronized on "_list" and not "subList".
+
+package examples.rules.trs;
+
+public class SSCIFixed {
+    List _list = Collections.synchronizedList(new ArrayList());
+
+    void iterateList() {
+        synchronized(_list) { //FIXED
+            Iterator iter = _list.iterator(); 
+            while (iter.hasNext()) {
+                Object o = iter.next();
+                foo(o);
+            }
+        }
+    }
+
+    void iterateSubList(int from, int to) {
+        List subList = _list.subList(from, to);
+        synchronized(_list) { //FIXED
+            Iterator iter = _list.iterator(); 
+            while (iter.hasNext()) {
+                Object o = iter.next();
+                foo(o);
+            }
+        }
+    }
+
+    void foo(Object o) {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Collections (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html</A>
+
+</PRE>
+</BODY>
+</HTML>

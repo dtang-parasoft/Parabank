@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that files do not contain cyclical dependencies [CERT.DCL00.ACD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that files do not contain cyclical dependencies [CERT.DCL00.ACD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+Ensure that files do not contain cyclical dependencies [GLOBAL.ACD-4]  
+
+ DESCRIPTION  
+Object-oriented programming experts recommend that you avoid cyclical (or 
+"circular") dependencies.  In particular, the experts at Object Mentor (see the 
+REFERENCES section) recommend that you follow the "Acyclic Dependencies 
+Principle: The dependency structure between packages must be a directed acyclic 
+graph (DAG).  That is, there must be no cycles in the dependency structure."  
+This rule will help to enforce the Acyclic Dependencies Principle.
+
+Eclipse will check for cyclical dependencies between projects, but it will not
+catch cyclical dependencies within the same project.  That is, it will not catch
+cases where class A imports class B and class B, in turn, imports class A 
+(unless class B and class A are in different projects).  This rule will catch 
+cases like this where there are cyclical dependencies in the import statements
+of files within the same project.  
+
+
+The rule reports a violation for every file in the shortest import cycle. Fixing
+a violation in any file in a cycle will resolve violations reported for other files
+in the same cycle.
+The number of violations reported on one file is equal to the number of imports
+that lead to cyclical dependencies between classes. 
+
+
+
+ SCOPE LEVEL  FILE
+
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.3
+
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Maximum Depth of Cyclical Dependencies to Detect:
+    -Default value is "5".
+    -This rule would take a long time to run if it was required to find cycles
+     of an unlimited depth.  Because of this, the rule restricts the depth of
+     analysis to 5 files by default.  A depth of analysis of 5 should be enough
+     to catch most cycles.  If you find that the rule is missing some cases,
+     you may want to experiment with increasing the value of this parameter to
+     see if that helps. 
+    
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Eliminating cycles in the dependency structure of a project reduces the number
+of files upon which each class depends.  This means that changes in one file 
+only affect a limited number of other files.  If there are cycles in the 
+dependency structure of a project, it is very easy to run into a situation where
+every file depends upon every other file in the project.  This means that, every
+time one class in the project changes, every other file in the project must 
+change to adapt to the change.  Obviously, this will make the project very 
+unstable.  Following the Acyclic Dependencies Principle will improve the 
+stability of the project. 
+
+See the link in the REFERENCES section for more details.
+
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+File 'ACD.java' in package 'examples.rules.global':
+
+package examples.rules.global;
+
+import examples.rules.global.other_package.ACD_Subclass;
+
+public class ACD {
+    public void method(ACD_Subclass ACD_obj) {
+        ACD_obj.method();
+    }
+}
+
+File 'ACD_Subclass.java' in package 'examples.rules.global.other_package':
+
+package examples.rules.global.other_package;
+
+import examples.rules.global.ACD;
+
+public class ACD_Subclass extends ACD {
+    public void method() {
+        super.method(this);
+    }
+}
+
+As you can see, 'ACD.java' imports 'ACD_Subclass.java' and 'ACD_Subclass.java'
+imports 'ACD.java'.  This creates a confusing dependency cycle between these two
+files.
+ 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+There is no single recommended fix for all violations of this rule because the
+fix depends on the situation.  In this case, the fix is to avoid referencing the
+subclass from the superclass.
+
+File 'ACD_Fixed.java' in package 'examples.rules.global':
+
+package examples.rules.global;
+
+public abstract class ACD_Fixed {
+    public void method(ACD_Fixed ACD_obj) {
+    }
+}
+
+File 'ACD_Fixed_Subclass.java' in package 'examples.rules.global':
+
+package examples.rules.global.other_package;
+
+import examples.rules.global.ACD_Fixed;
+
+public class ACD_Fixed_Subclass extends ACD_Fixed {
+    public void method() {
+        super.method(this);
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+Object Mentor Article "Granularity" (pp. 6-11):
+<A HREF="http://www.objectmentor.com/resources/articles/granularity.pdf">http://www.objectmentor.com/resources/articles/granularity.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+DCL00-J. Prevent class initialization cycles
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/DCL00-J.+Prevent+class+initialization+cycles">https://wiki.sei.cmu.edu/confluence/display/java/DCL00-J.+Prevent+class+initialization+cycles</A>
+
+SEI CERT Oracle Coding Standard for Java
+DCL60-J. Avoid cyclic dependencies between packages
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/DCL60-J.+Avoid+cyclic+dependencies+between+packages">https://wiki.sei.cmu.edu/confluence/display/java/DCL60-J.+Avoid+cyclic+dependencies+between+packages</A>
+
+</PRE>
+</BODY>
+</HTML>

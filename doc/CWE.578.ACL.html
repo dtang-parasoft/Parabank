@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not access, use, or create a class loader within a bean class [CWE.578.ACL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not access, use, or create a class loader within a bean class [CWE.578.ACL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that either creates, accesses, or obtains an object of
+type "java.lang.ClassLoader" in an enterprise bean. An error is reported for
+each occurrence.
+
+A class is considered a bean class if it meets one of the following:
+    1. Implements "javax.ejb.EnterpriseBean" or a subinterface ("EntityBean",
+       "MessageDrivenBean", "SessionBean")
+    2. Has the annotation "javax.ejb.MessageDriven", "java.ejb.Stateful",
+       "javax.ejb.Stateless", or "javax.persistence.Entity"
+    3. Is denoted as an Entity, MessageDriven, Stateful, or Stateless bean in
+       "ejb-jar.xml"
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+See "BENEFITS" section.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to check for ClassLoader usage (default "2")
+    This parameter allows for indirect checking of ClassLoader usage. Specifying
+    a value of "1" will check only for direct usage of a ClassLoader. A value of
+    "2" will check if any of the methods called from the bean use a ClassLoader,
+    and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to the EJB specification (version 2.0), enterprise beans should not 
+create a class loader, obtain the current class loader, or set the context class
+loader.  These functions are reserved for the EJB Container.  Allowing an 
+enterprise bean to use these functions could compromise security and decrease
+the Container's ability to properly manage the runtime environment.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import java.rmi.RemoteException;
+import javax.ejb.EJBException;
+import javax.ejb.EntityBean;
+import javax.ejb.EntityContext;
+import javax.ejb.RemoveException;
+
+public class ACL implements EntityBean {
+    public ClassLoader getClassLoader() {
+        return this.getClass().getClassLoader();  //VIOLATION- accessing the 
+                                                  //ClassLoader
+    }
+
+    //Stubs for EntityBean methods
+    public void ejbLoad() throws EJBException, RemoteException { }
+    public void ejbPassivate() throws EJBException, RemoteException { }
+    public void ejbRemove() throws RemoveException, EJBException, RemoteException { }
+    public void ejbStore() throws EJBException, RemoteException { }
+    public void setEntityContext(EntityContext arg0) throws EJBException, RemoteException { }
+    public void unsetEntityContext() throws EJBException, RemoteException { }
+    public void ejbActivate() throws EJBException, RemoteException { }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid creating, accessing, or obtaining objects of type "java.lang.ClassLoader"
+in the enterprise bean.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Sections 24.1.2 (p. 495) and C.1.2 (p. 539) of the EJB specification (version 2.0).  
+The EJB specification is available online at <A HREF="http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/">http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/</A>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware:
+    <A HREF="http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf">http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf</A>
+
+CWE-578: EJB Bad Practices: Use of Class Loader
+<A HREF="https://cwe.mitre.org/data/definitions/578.html">https://cwe.mitre.org/data/definitions/578.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,226 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the SSL-enabled version of classes when possible [CWE.522.USC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the SSL-enabled version of classes when possible [CWE.522.USC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+SSL connections should be used when possible.  This rule will flag variable 
+declarations where the type of the variable is one of the non-SSL-enabled 
+types in the list below.
+
+non-SSL-enabled type                    equivalent SSL-enabled type
+--------------------                    ---------------------------
+javax.net.ServerSocketFactory           javax.net.ssl.SSLServerSocketFactory
+javax.net.SocketFactory                 javax.net.ssl.SSLSocketFactory
+java.net.HttpURLConnection              javax.net.ssl.HttpsURLConnection
+java.net.ServerSocket                   javax.net.ssl.SSLServerSocket
+java.net.Socket                         javax.net.ssl.SSLSocket
+java.rmi.server.RMIClientSocketFactory  javax.rmi.ssl.SslRMIClientSocketFactory
+java.rmi.server.RMIServerSocketFactory  javax.rmi.ssl.SslRMIServerSocketFactory
+java.security.Permission                javax.net.ssl.SSLPermission
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Note that the types "RMIClientSocketFactory" and "RMIServerSocketFactory" are
+interface types.  If a variable is declared as having one of these interface 
+types, it is possible that the underlying implementation is an SSL-enabled type
+but also possible that it is not.  For violations where variables are declared 
+as having one of these types, you should inspect the underlying implementation
+to ensure that it is an SSL-enabled implementation.  If possible, you may want to
+change the declaration to a concrete SSL-enabled implementation (such as 
+"SslRMIClientSocketFactory" or "SslRMIServerSocketFactory") to ensure that a
+non-SSL-enabled type is not used.  
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Regular network connections can be sniffed by anyone on the network, which could 
+lead to information disclosure.  SSL connections are encrypted, and thus are 
+more secure in regards to casual inspection.
+
+Enforcing this rule will help to protect against the OWASP 2021 Top 10 
+application vulnerability "A2-Cryptographic Failures".
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #4: "Encrypt transmission of cardholder data across 
+open, public networks" and Requirement #6: "Develop and maintain secure 
+systems and applications".  Specifically, this rule helps to check for Issue
+4.1: "Use strong cryptography and security protocols such as SSL/TLS or 
+IPSEC to safeguard sensitive cardholder data during transmission over open,
+public networks" and Issue 6.5.7: "Improper error handling".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.rmi.server.RMIClientSocketFactory;
+import java.rmi.server.RMIServerSocketFactory;
+import java.security.Permission;
+import javax.net.ServerSocketFactory;
+import javax.net.SocketFactory;
+
+public class USC {
+    public void method(){
+        ServerSocketFactory serverFactory; //VIOLATION
+        SocketFactory clientFactory; //VIOLATION
+        ServerSocket server; //VIOLATION
+        Socket client; //VIOLATION
+        HttpURLConnection httpConnection; //VIOLATION
+        RMIClientSocketFactory  rmiClientFactory; //VIOLATION
+        RMIServerSocketFactory  rmiServerFactory; //VIOLATION
+        Permission permission; //VIOLATION
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+import javax.rmi.ssl.SslRMIServerSocketFactory;
+import javax.net.ssl.SSLPermission;
+
+public class USCFixed {
+    public void method(){
+        SSLPermission securePermission; //FIXED
+        SSLServerSocketFactory secureServerFactory; //FIXED
+        SSLSocketFactory secureClientFactory; //FIXED
+        SSLServerSocket secureServer; //FIXED
+        SSLSocket secureClient; //FIXED
+        HttpsURLConnection secureHttpConnection; //FIXED
+        SslRMIClientSocketFactory secureRmiClientFactory; //FIXED
+        SslRMIServerSocketFactory secureRmiServerFactory; //FIXED
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Serialization
+Video: <A HREF="https://vimeo.com/205101080">https://vimeo.com/205101080</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/2ec980bd-8a4c-4893-9382-ecd3e1d1b501">https://app.hackedu.com/link/2ec980bd-8a4c-4893-9382-ecd3e1d1b501</A>
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures">https://owasp.org/Top10/A02_2021-Cryptographic_Failures</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 3.2
+6.5.4 Insecure communications
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-319: Cleartext Transmission of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/319.html">https://cwe.mitre.org/data/definitions/319.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+CWE-523: Unprotected Transport of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/523.html">https://cwe.mitre.org/data/definitions/523.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC00-J. Use SSLSocket rather than Socket for secure data exchange
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC00-J.+Use+SSLSocket+rather+than+Socket+for+secure+data+exchange">https://wiki.sei.cmu.edu/confluence/display/java/MSC00-J.+Use+SSLSocket+rather+than+Socket+for+secure+data+exchange</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

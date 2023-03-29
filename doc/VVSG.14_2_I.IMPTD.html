@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid or enforce usage of '*' form of import statements [VVSG.14_2_I.IMPTD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid or enforce usage of '*' form of import statements [VVSG.14_2_I.IMPTD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses wild cards (*) in "import" statements.
+With the default parameter, an error is reported if the wild card is 
+used when importing a class. The rule can also be configured to report
+an error if the code uses a wild card other than when importing a class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Rule options:
+    -Do not use wild cards when importing a class (default option)
+    -Use wild cards when importing a class
+    -Use customized setting
+          -Use wild card import when number of imported types of same package is greater than 20 (default is 20)
+          -Use single type import when number of used types of same package is less than 2 (default is 2)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Do not use wild cards when importing a class:
+If you are not precise about what you are importing, readers might have a difficult
+time understanding your classes' context and dependencies.  Some people 
+prefer not using "import" at all (thus requiring that every class reference 
+is fully qualified), which prevents all possible ambiguity and reduces the source
+code changes required if the package names change.
+
+Use wild cards when importing a class:
+The import statement allows the use of wildcards when indicating class 
+names.  For example, the statement import java.awt.*; makes all 
+of the classes in the java.awt package available.  The wildcard does not 
+cause code bloat; only the classes you used from the package are compiled 
+into the resulting bytecodes.
+
+By using customized settings, you can fine-tune the parameters to eliminate excessive 
+single type import statements while preserving single type imports (if they 
+are within a reasonable number).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Do not use wild cards when importing a class:
+You need to modify your import statements whenever you start or stop
+using an imported class.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.io.*;  // VIOLATION 
+
+public class IMPTD {
+    void method (InputStream in) {
+        if (in == null) return;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.io.InputStream;  // FIXED
+
+public class IMPTDFixed {
+    void method (InputStream in) {
+        if (in == null) return;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Avoid using wild card when importing class:
+<A HREF="http://g.oswego.edu/dl/html/javaCodingStd.html">http://g.oswego.edu/dl/html/javaCodingStd.html</A>
+
+Enforce using wild card when importing class:
+Section 7.2 of <A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated CODSTA.IMPT
+@deprecated CODSTA.IMPT2
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hard code an absolute pathname when calling a constructor from the 'File' class [PORT.DNHCP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hard code an absolute pathname when calling a constructor from the 'File' class [PORT.DNHCP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the path that is passed to the constructor for 
+'java.io.File' is not an absolute pathname.  A violation will be flagged for
+each call to a 'File' constructor which takes in a path starting in either "/" 
+or "\".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule not only checks 'java.io.File', but also checks the following classes
+   - 'java.io.FileInputStream'
+   - 'java.io.FileOutputStream'
+   - 'java.io.FileReader'
+   - 'java.io.FileWriter'
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using hardcoded pathnames limits the portability of code because it requires
+that the person using the code have the same directory structure as the
+programmer.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+import java.io.*;
+
+public class DNHCP {
+    File f;
+    
+    DNHCP() {
+        f= new File("/home/dannyc/workspace/j2ee/src/share/com/sun/enterprise/deployment"); //VIOLATION   
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not hard code the path passed to "File"'s constructor.
+
+package examples.rules.port;
+
+public class DNHCPFixed {
+    File f;
+    
+    DNHCPFixed(String path) {
+        f= new File(path); //FIXED  
+    }
+}
+  
+  
+
+</PRE>
+</BODY>
+</HTML>

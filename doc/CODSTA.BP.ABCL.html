@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "break" and/or "continue" with labels [CODSTA.BP.ABCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "break" and/or "continue" with labels [CODSTA.BP.ABCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses "break label" and/or "continue label" 
+patterns. An error is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flag "break" with label. (default is true)
+    -Flag "break" in switch cases (default is true)
+    See DRAWBACKS for more information
+-Flag "continue" with label. (default is true)
+    -Flag "continue" in switch cases (default is true)
+    See DRAWBACKS for more information
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Break label" and "continue label" patterns make code more complex and more 
+confusing because these statements operate in the same way as jump statements.
+By following this rule, you make the code less error-prone.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+In some cases a switch statement may be located inside a loop. If the user
+wishes to exit the loop if a specific case is met, then a label may be a
+convenient method for doing so. For example:
+    public String upperCaseFirstWord(String sentence) {
+        StringBuffer sb = new StringBuffer(sentence);
+
+        exit:
+        for (int i = 0; i &lt; sb.length(); i++) {
+            char c = sb.charAt(i);
+            switch(c) {
+                case ' ':
+                    //fall through
+                case '\t':
+                    //fall through
+                case '\n':
+                    break exit;
+                default:
+                    sb.setCharAt(i, Character.toUpperCase(c));
+                    break;
+            }
+        }
+        return sb.toString();
+    }
+In this case it is would be possible to refactor the switch into "if" and "else"
+statements, but in other cases this may not be as plausible and the label use
+may actually improve readability.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class ABCL {
+    public String alternateCapsFirstWord(String sentence) {
+        StringBuffer sb = new StringBuffer(sentence);
+
+        exit:
+        for (int i = 0; i &lt; sb.length(); i++) {
+            if (i % 2 == 0) {
+                switch(c) {
+                    case ' ':
+                        break exit;
+                    default:
+                        sb.setCharAt(i, Character.toLowerCase(c));
+                        break;
+                }
+            }
+            else {
+                switch(c) {
+                    case ' ':
+                        break exit;
+                    default:
+                        sb.setCharAt(i, Character.toUpperCase(c));
+                        break;
+                }
+            }
+        }
+        return sb.toString();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Reorganize the logic of the code segment in order to avoid those patterns.
+
+package examples.rules.codsta.bp;
+
+public class ABCLFixed {
+    public String alternateCapsFirstWord(String sentence) {
+        StringBuffer sb = new StringBuffer(sentence);
+
+        exit:
+        for (int i = 0; i &lt; sb.length(); i++) {
+            char c = sb.charAt(i);
+            if (c == ' ') {
+                break;
+            }
+
+            if (i % 2 == 0) {
+                sb.setCharAt(i, Character.toLowerCase(c));
+            }
+            else {
+                sb.setCharAt(i, Character.toUpperCase(c));
+            }
+        }
+        return sb.toString();
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use Hungarian notation for variables [NAMING.UHN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use Hungarian notation for variables [NAMING.UHN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies variables that are not named according to the
+Hungarian Notation. The Hungarian Notation is based on the principle that a
+field should be named xNAME or NAMEx, where x indicates the component type
+and NAME is the full English descriptor. An error is reported for each 
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Hungarian notation table
+  - In "Scope" column
+    User can specify what scope of variable that he/she wants to check
+  - In "Type" column
+    User can input the type of the variable. Fully-qualified
+    name is required for non-primitive type.
+  - In "Hungarian notation" column
+    User can input the notation of the variable that either
+    want to put at the beginning or at the end of the variable
+    (which is in "prefix/postfix" column)
+  - In "prefix/postfix" column
+    Either put at the beginning or at the end of the variable
+  - In case-sensitive check box column
+    If the box is checked, case-sensitive checking will be activated
+    
+User can have multiple scope names with the same variable type.
+
+For example:
+ Row |         Scope        |   Type   |  Hungarian notation  | prefix/postfix
+ -----------------------------------------------------------------------------
+  1 	 All variable          int            i_                  prefix
+  2   	 field                 int            _i_                 prefix
+  3   	 field                 int            _ii_                prefix
+  4 	 All variable          double         d_                  prefix
+  5   	 field                 double         _d_                 prefix
+  6 	 static field          double         _s_d_               prefix
+  7  	 non-static field      double         __d                 prefix
+  8 	 All variable          long           l_                  prefix
+  9   	 local                 long           l_l                 prefix
+  10	 All variable          short          sh_                 prefix
+  11   	 parameter             short          p_sh_               prefix
+      
+
+If the type have more than one scope names, Jtest will choose the scope name which
+is the closest type of the variable type. For example, "double", its scope name contains
+"all variable", "field", "static field", "non-static field", so if:
+"double" is an static field, the Hungarian notation is "_s_d_" (Row 6)
+"double" is an non-static field, the Hungarian notation is "__d" (Row 7)
+"double" is either local variable or parameter, the Hungarian notation is "d_" (Row 4)
+
+Also, if the table has more than one row which have the same scope names and type names,
+for example row 2 and 3. The old value will be replaced by the new value.
+
+The expected result of the table above will be:
+
+  Type  |       Scope           |   Hungarian notation | prefix/postfix
+-----------------------------------------------------------------------
+  int       static field                   _ii_              prefix
+            non-static field               _ii_              prefix
+            local variable                 i_                prefix
+            parameter                      i_                prefix
+            
+ double     static field                   _s_d_             prefix
+            non-static field               __d               prefix
+            local variable                 d_                prefix
+            parameter                      d_                prefix
+            
+ long       static field                   l_                prefix
+            non-static field               l_                prefix
+            local variable                 l_l               prefix
+            parameter                      l_                prefix
+
+ short      static field                   sh_               prefix
+            non-static field               sh_               prefix
+            local variable                 sh_               prefix
+            parameter                      p_sh_             prefix
+       
+      
+      
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If everyone follows the same naming convention, it will help others to read
+the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class UHN {
+
+    private int _type; // VIOLATION
+
+    public int getType() {
+        return _type;
+    }
+}  
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the variable name to follow the convention.
+
+package examples.rules.naming;
+
+public class UHNFixed {
+
+    private int _typeInt; // OK
+
+    public int getType() {
+        return _typeInt;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A> p.23 3.1.1.1
+
+</PRE>
+</BODY>
+</HTML>

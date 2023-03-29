@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assign loop control variables in the body of a "for" loop [PB.CUB.FLVA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assign loop control variables in the body of a "for" loop [PB.CUB.FLVA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Disallows modification of "for" loop control variables in the body of a "for"
+loop.  A violation will be flagged for each place where a loop control variable 
+(any variable that is used in the loop's condition and updated in one of the 
+loop's updaters) is modified in the body of the loop.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A "for" loop control variable should only be modified in the initialization and
+updater expressions of the "for" loop statement. Modifying it in the loop body 
+makes the code difficult to understand and can lead to subtle bugs.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class FLVA {
+    int method () {
+        int sum = 0;
+        for (int i = 0; i &lt; 100; i++) {
+            i += 3;  // VIOLATION
+            sum += i;
+        }
+
+        return sum;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rewrite code so that the "for" loop control variable doesn't need to be assigned 
+within the loop body.
+
+package examples.rules.pb.cub;
+
+public class FLVAFixed {
+    int method () {
+        int sum = 0;
+        for (int i = 0; i &lt; 100; i += 4) {  // FIXED
+            sum += i;
+        }
+        return sum;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

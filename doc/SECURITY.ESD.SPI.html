@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not interrogate or modify security policy information in a web component [SECURITY.ESD.SPI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not interrogate or modify security policy information in a web component [SECURITY.ESD.SPI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should not interrogate or modify security policy information in
+the container. This rule will flag any call to the method 'getPolicy()' or the
+method 'setPolicy()' from the class 'java.security.Policy' in a web component.
+A class or interface is considered a web component if it extends or implements a
+type from the "javax.servlet" package.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Interrogating the security policy can create security exposures, particularly 
+if the results of the interrogation were to be disseminated outside the 
+container: for example, if they were sent to a Web client. This information 
+would enable a malicious entity to better plan an attack against the container 
+and/or enterprise.
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability "A6-Sensitive Data Exposure".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Security policy information in the container should not be interrogated or 
+modified. This includes the 'java.security.Policy' implementation. The container
+implements security and may use J2SE security mechanisms but may include 
+mechanisms that are not part of J2SE. There is no guarantee that Web components 
+using the J2SE APIs will get the correct or consistent information about the 
+container's security policies. 
+
+-Maximum depth to look for Policy usage (default "2")
+    This parameter allows for indirect checking of "getPolicy()" and 
+    "setPolicy()" usage. Specifying a value of "1" will check only for direct
+    calls to these methods. A value of "2" will check if any of the methods
+    called from the web component call "getPolicy()" or "setPolicy()", and so
+    on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+import javax.servlet.Servlet;
+import java.security.Policy;
+
+public class SPI implements Servlet {
+    public void testMethod() {
+        Policy.getPolicy();     //VIOLATION
+        Policy.setPolicy(null); //VIOLATION
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove any calls to 'getPolicy()' or 'setPolicy()'.
+
+package examples.rules.security.esd;
+
+import javax.servlet.Servlet;
+import java.security.Policy;
+
+public class SPIFixed implements Servlet {
+    public void testMethod(){
+        //FIXED
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A6-Sensitive Data Exposure):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

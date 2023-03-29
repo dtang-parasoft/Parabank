@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure "switch" statements do not contain typos [PB.TYPO.TLS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure "switch" statements do not contain typos [PB.TYPO.TLS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies text labels in "switch" statements. An error is reported
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quick Fix All" feature is not available for this rule because there are
+some cases where Quick Fixing the violation would cause a compile error.  For
+instance, if a label was really meant to be a label instead of a switch case,
+changing the label could cause a compile error.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A label is a line of code that is marked by a label such as 'mark:' and that
+can be jumped to by a "break" statement.  A "case" statement such as 'case 5:'
+is one typo away from being the label "case5:", which will change the behavior
+of the "switch" statement.
+
+Labels that are not typos should not appear in "switch" statements because
+they will not be used.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class TLS {
+    static int method (int i) {
+        switch (i) {
+        case 4:
+        case3:  // VIOLATION: label typo
+            i++;
+            break;
+        case 25:
+        unusedlabel:  // VIOLATION: unused label.
+            break;
+        }
+        return i;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change "case3" to "case 3" and remove the unused label.
+
+package examples.rules.pb.typo;
+
+public class TLSFixed {
+    static int method (int i) {
+        switch (i) {
+        case 4:
+        case 3:  // FIXED
+            i++;
+            break;
+        case 25:
+        // FIXED
+            break;
+        }
+        return i;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

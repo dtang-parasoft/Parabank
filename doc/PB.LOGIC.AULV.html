@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid loop variables which are not used in the condition of the loop [PB.LOGIC.AULV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid loop variables which are not used in the condition of the loop [PB.LOGIC.AULV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused loop variables. An error is
+reported if a loop variable is declared but unused in
+the loop condition.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Do not report any violations for loops containing a "break" 
+ or "return" statement.  (Default is "true")
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Variables declared in the initialization part of the for
+loop are supposed to be the loop variables. This only
+makes sense if they are actually used in the condition part
+of the for loop. An unused loop variable not only indicates
+useless loop variables, but also might indicate that loop
+variables were mistakenly mixed up within multi-level loops.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class AULV {
+    public void myMethod() {
+    for (int i= 0; i&lt; 10; i++) {
+            for (int unusedJ= 0; i&lt; 10; unusedJ++) { //VIOLATION
+                System.out.print(i* unusedJ+ " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class AULVFixed {
+    public void myMethod() {
+    for (int i= 0; i&lt; 10; i++) {
+            for (int j= 0; j&lt; 10; j++) { //FIXED
+                System.out.print(i* j+ " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

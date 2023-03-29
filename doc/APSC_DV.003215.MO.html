@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce the order of annotations and modifiers [APSC_DV.003215.MO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce the order of annotations and modifiers [APSC_DV.003215.MO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not properly order modifiers and 
+annotations. With the default parameters, an error is reported if a declaration 
+does not order its modifiers as follows (from first to last):
+
+annotations
+public/protected/private
+abstract
+static
+final
+transient
+volatile
+synchronized
+native
+strictfp
+
+Note that, by default, annotations must come before any other modifiers.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Sort modifiers based on modifier types
+    You can modify the order of the modifiers.
+-Order of Annotations    
+    Specify whether the annotations should come before or after any other 
+    modifiers. (Default is "before".)
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following coding conventions can improve the integrity and 
+consistency of the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class MO {
+    static public void main(String args[]) {} //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class MOFixed {
+    public static void main(String args[]) {} //FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

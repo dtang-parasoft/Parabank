@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid serializable classes that extend a superclass without a zero-argument constructor [SERIAL.SNNAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid serializable classes that extend a superclass without a zero-argument constructor [SERIAL.SNNAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any serializable class that extends a superclass without a 
+zero-argument constructor. An error is reported if a class that implements 
+java.io.Serializable has one or more non-serializable superclasses that do not
+define no-argument constructors.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+EXAMPLES
+
+package examples.rules.serial;
+
+public class SNNAC implements java.io.Serializable 
+                   extends SNNAC_superClass{ //VIOLATION
+    SNNAC() {
+        super(0);
+    }   
+}
+
+class SNNAC_superClass {
+    SNNAC_superClass(int i) {}
+}
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A parameter is added to control whether the rule:
+1. Only checks for classes that explicitly implement java.io.Serializable 
+OR
+2. Checks for all classes that either explicitly or implicitly implement java.io.Serializable
+
+The default is set as #1 (Checking only classes that explicitly implement java.io.Serializable). 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+During the serialization process, if the target object has any non-serializable
+superclasses, those superclasses' no-argument constructors would be invoked.
+However, if such a constructor is not present, then the serialization process
+will fail.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SNNACFixed implements java.io.Serializable 
+                        extends SNNAC_superClass{ //FIXED
+    SNNAC() {
+        super(0);
+    }
+}
+
+class SNNAC_superClass {
+    SNNAC_superClass() {} //a no-argument constructor is added
+    SNNAC_superClass(int i) {}
+}
+
+</PRE>
+</BODY>
+</HTML>

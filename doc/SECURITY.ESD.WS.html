@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use secure communication with 'wss' (WebSocket Secure) instead of 'ws' [SECURITY.ESD.WS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use secure communication with 'wss' (WebSocket Secure) instead of 'ws' [SECURITY.ESD.WS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Use TLS to securely communicate using 'wss' (WebSocket Secure) instead of
+'ws'." [CWE-1385]
+This rule reports a violation for each occurrence of the protocol prefix
+"ws://".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v2022.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Using the insecure WebSocket protocol leaves the environment vulnerable to
+attacks against Websockets, such as man-in-the-middle attacks.
+Also, insecure Websocket (ws://) connections may be allowed by HTTPS pages, and
+browsers may not show any security warnings if the connection is mixed
+(HTTPS/ws://). [Kulshrestha, 2013]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Securing the transport with WSS prevents attacks against Websockets.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.io.IOException;
+
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketFactory;
+
+public class WSSExample
+{
+    public WebSocket prepareWebSocket() throws IOException
+    {
+
+        WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
+
+        // Create a WebSocket.
+        return factory.createSocket("ws://localhost/endpoint"); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+import java.io.IOException;
+
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketFactory;
+
+public class WSSExample
+{
+    public WebSocket prepareWebSocket() throws IOException
+    {
+        WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
+
+        // Create a WebSocket.
+        return factory.createSocket("wss://localhost/endpoint"); // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-1385: Missing Origin Validation in WebSockets
+<A HREF="https://cwe.mitre.org/data/definitions/1385.html">https://cwe.mitre.org/data/definitions/1385.html</A>
+
+Kulshrestha,  Achin. 2013 "An Empirical Study of HTML5 Websockets and their
+Cross Browser Behaviour for Mixed Content and Untrusted Certificates"
+International Journal of Computer Applications 82, no.6 (November)
+
+</PRE>
+</BODY>
+</HTML>

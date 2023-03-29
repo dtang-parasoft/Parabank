@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid infinite recursion [BD.PB.INFREC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid infinite recursion [BD.PB.INFREC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects infinitely recursive methods. A method is infinitely recursive when every
+path that results from the method being entered leads to a recursive call. This rule also
+detects indirect recursion.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0.8
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    public int binarySearch(int[] tab, int a, int b, int val) // VIOLATION
+    {
+        int index = (a + b) / 2;
+        if (tab[index] &gt; val) {
+            return binarySearch(tab, a, index - 1, val);
+        }
+        return binarySearch(tab, index + 1, b, val);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    public int binarySearch(int[] tab, int a, int b, int val) // NO VIOLATION
+    {
+        int index = (a + b) / 2;
+        if (tab[index] &gt; val) {
+            return binarySearch(tab, a, index - 1, val);
+        } else if (tab[index] &lt; val) {
+            return binarySearch(tab, index + 1, b, val);
+        } else {
+            return index;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

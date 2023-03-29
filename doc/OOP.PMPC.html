@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure 'public' classes have at least one 'public' or 'protected' member [OOP.PMPC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure 'public' classes have at least one 'public' or 'protected' member [OOP.PMPC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "public" class that does not contain a
+"public" or "protected" member. An error is reported for each
+occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+EXAMPLES
+
+package examples.rules.oop;
+
+public class PMPC {  // VIOLATION
+
+    PMPC() {
+    }
+
+    String getClassName() {
+        return getClass().getName();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a class does not contain a "public" or "protected" member,
+there is no reason to make the class "public".  Since none of 
+the members are accessible to the outside world or to 
+subclasses, there is no point in making the class "public".  
+When this happens, the programmer probably meant to give the 
+class a more restrictive access level or to make one of the 
+members "public" or "protected". 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the class to "package-private" (the default accessibility).
+
+package examples.rules.oop;
+
+class PMPCFixed {  // FIXED
+
+    PMPCFixed() {  
+    }
+
+    String getClassName() {  
+        return getClass().getName();
+    }
+}
+    
+
+</PRE>
+</BODY>
+</HTML>

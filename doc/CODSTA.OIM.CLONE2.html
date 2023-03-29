@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the 'clone()' method only to implement 'Cloneable' interface [CODSTA.OIM.CLONE2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the 'clone()' method only to implement 'Cloneable' interface [CODSTA.OIM.CLONE2]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any 'clone()' method that is declared in a class
+that does not implement 'Cloneable'. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a class contains a 'clone()' method which returns an 
+object, the class is preferred to be declared as implementing
+'Cloneable' since it provides a better description of the 
+class's functionalities.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public class CLONE2 {
+    public Object clone() { //VIOLATION
+        //...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public class CLONE2Fixed implements Cloneable {
+    public Object clone() { //FIXED
+        //...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

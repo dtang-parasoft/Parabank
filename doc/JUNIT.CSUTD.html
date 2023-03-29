@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that 'setUp()' and 'tearDown()' methods are implemented correctly [JUNIT.CSUTD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that 'setUp()' and 'tearDown()' methods are implemented correctly [JUNIT.CSUTD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When overriding the 'setUp()' and 'tearDown()' methods of 'junit.framework.
+TestCase', there are several conventions that you must follow in order to assure
+that these methods are implemented correctly.  This rule will check the 
+following conventions:
+
+1.  Any exceptions thrown by the call to 'super.setUp()' should not be caught.
+An exception thrown by the call to 'super.setUp()' should cause the setup to 
+fail and the tests to not be executed.  This means that, instead of catching any
+exceptions which are thrown by a call to 'super.setUp()', you should declare 
+them to be thrown by including "throws Exception" in the declaration of the
+'setUp()' method.  
+
+2.  The call to 'super.setUp()' should be the first statement of the overriding
+version of the 'setUp()' method.  The setup of the superclasses should occur 
+before the setup of the current class. 
+
+3.  The overriding version of the 'tearDown()' method should be enclosed by a
+"try"/"finally" block with a call to 'super.tearDown()' in the body of the 
+"finally" block.  That way, the tear-down method of the parent class will always
+be executed at the end of the execution of the tear-down method for the current
+class (whether or not any exceptions are thrown by the 'tearDown()' method of
+the child class).
+
+This rule will flag a violation for classes which extend 'junit.framework.
+TestCase' and override the 'setUp()' and/or 'tearDown()' methods but which do 
+not follow the conventions mentioned above.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+As mentioned in the "DESCRIPTION" section, there are three parts to this rule.
+The benefits of each part are as follows:
+
+1.  The 'setUp()' method must throw an exception whenever the call to 
+'super.setUp()' throws an exception because no tests should be executed if the 
+setup fails.  If exceptions thrown by the call to 'super.setUp()' are caught, 
+the tests will still be executed even though the setup failed.
+
+2.  The call to 'super.setUp()' must come first in the 'setUp()' method because 
+a test class may use functionality from the superclass.  The superclass should 
+be initialized immediately by calling its 'setup()' method to ensure that 
+functionality from the superclass is not used before it is initialized. 
+
+3.  The call to 'super.tearDown()' should be placed within the "finally" portion
+of a "try" block which encompasses the whole 'tearDown()' method to make sure 
+that the 'tearDown()' method of the superclass is called even if the 
+'tearDown()' method of the subclass throws an exception.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class CSUTD extends CSUTD_Super {
+    protected void setUp() {
+        try {
+            super.setUp();
+        } catch(Exception e) {  //VIOLATION - Exceptions from call to 'super.setUp()'
+                                //should not be caught
+            //Ignore exception.
+        }
+    }
+    
+    protected void tearDown() throws Exception {
+        _str.indexOf('A');
+        super.tearDown();  //VIOLATION - 'super.tearDown()' not called in a "finally"
+                           //block
+    }
+    
+    public void testMethod() {
+        int index = _str.indexOf('A');
+        assertEquals(0, index);
+    }
+}
+
+class CSUTD_Super extends TestCase {
+    static String _str = null;
+    static int _i = 0;
+    
+    protected void setUp() throws Exception {
+        if(_i == 0) {
+            throw new Exception();
+        }
+        
+        _str = "ABC";
+    }
+    
+    protected void tearDown() throws Exception {
+        _str = null;
+        _i = 1;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class CSUTD_Fixed extends CSUTD_Fixed_Super {
+    protected void setUp() throws Exception {  //FIXED - Throw Exception instead
+                                               //of catching it
+        super.setUp();
+    }
+    
+    protected void tearDown() throws Exception {
+        try {
+            _str.indexOf('A');
+        } finally {
+            super.tearDown();  //FIXED - Call 'super.tearDown()' in a "finally"
+                               //block
+        }
+    }
+    
+    public void testMethod() {
+        int index = _str.indexOf('A');
+        assertEquals(0, index);
+    }
+}
+
+class CSUTD_Fixed_Super extends TestCase {
+    static String _str = null;
+    static int _i = 0;
+    
+    protected void setUp() throws Exception {
+        if(_i == 0) {
+            throw new Exception();
+        }
+        
+        _str = "ABC";
+    }
+    
+    protected void tearDown() throws Exception {
+        _str = null;
+        _i = 1;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

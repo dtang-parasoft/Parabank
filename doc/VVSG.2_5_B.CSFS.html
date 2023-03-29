@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cause deadlocks by calling a "synchronized" method from a "synchronized" method [VVSG.2_5_B.CSFS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cause deadlocks by calling a "synchronized" method from a "synchronized" method [VVSG.2_5_B.CSFS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "synchronized" methods that call other "synchronized" methods.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+This rule helps prevent potential deadlock conditions which can cause denial of
+service. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a "synchronized" method calls another "synchronized" method, it means that
+the threads executing this code will try to get a lock on a monitor while
+already holding a lock on a different monitor.  This kind of situation can
+easily lead to circular dependencies and deadlocks, and should thus be avoided
+if possible.  Having a thread holding only a monitor at a time greatly reduces
+the chances of getting into deadlocks.
+
+Note:  If both methods synchronize on the same object or class, then no
+deadlock will occur.  This rule will not flag any violations for cases like 
+this.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some algorithms depend on locking objects in a specific order.  Use extra caution
+when doing this to ensure that the ordering is maintained by all methods trying to
+lock multiple objects.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CSFS {
+    public synchronized void method1() {
+        CSFS myCSFS= new CSFS();
+        myCSFS.method2();
+    }
+    public synchronized void method2() {
+        //deadlock prone
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Try to write the code so that a thread doesn't try to get a lock on a monitor
+while already holding a lock.  One possibility is to use a "synchronized"
+statement to only synchronize the part of the method that really needs to be
+synchronized.  Alternatively, before locking a second object, ensure that it
+is not already locked.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Michael Daconta, Eric Monk, J Keller, Keith Bohnenberger: "Java Pitfalls"
+John Wiley &amp; Sons, ISBN: 0-471-36174-7 pp.50-60.
+
+CWE-833: Deadlock
+<A HREF="https://cwe.mitre.org/data/definitions/833.html">https://cwe.mitre.org/data/definitions/833.html</A>
+
+</PRE>
+</BODY>
+</HTML>

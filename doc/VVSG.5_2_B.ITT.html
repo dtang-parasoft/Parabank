@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Isolate translatable text in resource bundles in an Internationalized environment [VVSG.5_2_B.ITT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Isolate translatable text in resource bundles in an Internationalized environment [VVSG.5_2_B.ITT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies String constants. An error is reported for each
+occurrence, with the following exception: an error is not reported if
+a special comment was added for the String constant.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the following special comments to prevent Jtest from reporting
+violations of this rule:
+
+1. //$NON-NLS-&lt;n&gt;$, where &lt;n&gt; should be replaced by the index of the String
+   constant on that line, indexes start at 1. 
+   e.g // $NON-NLS-1$
+   This comment will prevent Jtest from reporting an error for the first String
+   constant on that line.
+
+2. /* NOI18N */, which will prevent Jtest from reporting any INTER rules on 
+   that line.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check only Strings that contain ASCII alphabetic characters [a-z][A-Z]
+    -Default is "true".
+    -Enabling this parameter will only consider Strings containing one or more
+     alphabetic characters. Strings composed only of non-alphabetic characters
+     such as "12345" or "..." will not be checked.
+
+-Ignore Strings passed to the following methods
+    -The default values in the table are:
+     Type (in regular expression)     Method (in regular expression)
+     ----------------------------     ------------------------------
+     ^java\.io\.PrintStream$          ^print.*$
+     ^java\.lang\.Class$              ^(forName|getDeclaredField|getDeclaredMethod|getField|getMethod)$
+     ^java\.lang\.System$             ^.*$
+     ^java\.lang\.Runtime$            ^.*$
+     ^java\.lang\.String$             ^(index.*|startsWith|endsWith)$
+     ^.*Logger$                       ^.*$
+     ^.*Verbose$                      ^.*$
+     .                                ^(getLogger|verbose)$
+             
+-Ignore String literals which match this regular expression:
+    -Default is "^(\s)*$", which matches all Strings which do not have a
+     non-whitespace character in them.   
+
+-Ignore String literals passed to the constructors of Exceptions
+    -Default is "true".
+    -It is a common practice to pass a String literal to the constructor of an 
+     Exception to give details about the Exception.  Such String literals 
+     usually do not need to be localized since they are not meant to be 
+     displayed to the user.    
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Internationalization is much easier if you put all of your user-visible
+text into resource files that your program reads.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class ITT {
+    public void printHello() {
+        print("hello, how are you today?"); // VIOLATION
+    }
+
+    private void print(String sText) {
+        System.out.println(sText);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the 'ResourceBundle' and associated classes to put text into Properties
+files or classes that can be easily localized.
+
+package examples.rules.inter;
+
+import java.util.*;
+
+public class ITTFixed {
+    public void printHello () {
+        Locale currentLocale = Locale.getDefault ();
+        ResourceBundle labels =
+            ResourceBundle.getBundle ("LabelsBundle"   //$NON-NLS-1$
+                    , currentLocale);
+        String value = labels.getString ("hello_text");  /* NOI18N */
+        print (value);  // FIXED
+    }
+    
+        private void print(String sText) {
+        System.out.println(sText);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://download.oracle.com/javase/tutorial/i18n/intro/checklist.html">http://download.oracle.com/javase/tutorial/i18n/intro/checklist.html</A>
+
+And for more details on 'ResourceBundle':
+<A HREF="http://download.oracle.com/javase/tutorial/i18n/index.html">http://download.oracle.com/javase/tutorial/i18n/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

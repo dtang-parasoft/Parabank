@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use EJB code in java swing or servlet classes [EJB.ADCB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use EJB code in java swing or servlet classes [EJB.ADCB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies EJB code inside java swing or servlet classes.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If an entity bean is called remotely from java swing or a servlet,
+it will cause a number of remote network calls that increase network
+overhead.  Also, session beans are used to implement facades 
+for entity beans; exposing the session bean directly to
+java swing or servlet creates a tight coupling between java
+swing/servlet code and the session bean.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 94
+
+<A HREF="http://www.precisejava.com/javaperf/j2ee/EJB.htm">http://www.precisejava.com/javaperf/j2ee/EJB.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

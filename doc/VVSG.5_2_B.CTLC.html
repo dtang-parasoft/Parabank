@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'Character.toLowerCase(char)' or 'Character.toUpperCase(char)' in an internationalized environment [VVSG.5_2_B.CTLC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'Character.toLowerCase(char)' or 'Character.toUpperCase(char)' in an internationalized environment [VVSG.5_2_B.CTLC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "static" methods 'Character.toLowerCase(char)' and 'Character.toUpperCase(char)' may not
+work in an internationalized environment, so they should not be called in an internationalized
+environment.  This rule will flag a violation for each call to one of these methods.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to their Javadocs, 'Character.toLowerCase(char)' and 'Character.toUpperCase(char)'
+should not be called because these methods will not work in many situations.  These two methods
+cannot perform locale-sensitive mappings, context-sensitive mappings, or 1:M character mappings.
+These methods also cannot handle supplementary characters.  For these reasons, these methods
+should not be used in an internationalized environment.  Using the 'String.toLowerCase()' and
+'String.toUpperCase()' methods is preferred to using the corresponding 'Character' methods.
+
+Calling the 'Character.toLowerCase(int)' and 'Character.toUpperCase(int)' methods is better
+than calling the corresponding methods which have a 'char' parameter because these methods
+handle supplementary characters; however, these methods do not provide all the benefits that
+the 'String.toLowerCase()' and 'String.toUpperCase()' methods provide.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class CTLC {
+    public void charMethod(char ch) {
+        System.err.println("Upper case: "+Character.toUpperCase(ch));  //VIOLATION
+        System.err.println("Lower case: "+Character.toLowerCase(ch));  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the 'String.toLowerCase()' and 'String.toUpperCase()' methods instead of the corresponding
+methods from class 'Character'.
+
+package examples.rules.inter;
+
+public class CTLCFixed {
+    public void charMethod(char ch) {
+        System.err.println("Upper case: "+String.valueOf(ch).toUpperCase());  //FIXED
+        System.err.println("Lower case: "+String.valueOf(ch).toLowerCase());  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/">http://java.sun.com/j2se/1.5.0/docs/api/</A>
+
+SEI CERT Oracle Coding Standard for Java
+STR02-J. Specify an appropriate locale when comparing locale-dependent data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/STR02-J.+Specify+an+appropriate+locale+when+comparing+locale-dependent+data">https://wiki.sei.cmu.edu/confluence/display/java/STR02-J.+Specify+an+appropriate+locale+when+comparing+locale-dependent+data</A>
+
+</PRE>
+</BODY>
+</HTML>

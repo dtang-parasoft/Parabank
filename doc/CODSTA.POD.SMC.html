@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "switch" statements with too many or too few "case" statements [CODSTA.POD.SMC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "switch" statements with too many or too few "case" statements [CODSTA.POD.SMC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "switch" statements with more than 10 cases(by default).
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Minimum "switch" cases (default value is 0)
+-Maximum "switch" cases (default value is 10)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"switch" statements with many "case" statements make code difficult to follow.  
+More importantly, switches with many cases often indicate places where 
+polymorphic behavior could better be used to provide different behavior for
+different types.  Note that although the general principle is to avoid many 
+cases in a switch, the actual cutoff point is arbitrary.
+
+"switch" statements with too few "case" statements may be better represented
+as "if"/"else" statements. 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Look for cleaner ways to invoke the alternative behaviors.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not synchronize on "public" fields since doing so may cause deadlocks [CERT.LCK00.SOPF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not synchronize on "public" fields since doing so may cause deadlocks [CERT.LCK00.SOPF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "synchronized" blocks which synchronize on "public" 
+fields. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Synchronizing on "public" fields can cause deadlock conditions, which can 
+lead to denial of service problems. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check fields with the following accessibilites:
+    -Check "public" fields (default on)
+    -Check non-"private" fields
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you synchronize on a "public" field, it is easy for other classes to
+synchronize on the same field.  This can lead to a deadlock if another class
+acquires the lock on the field and does not release it.  Such deadlocks are
+difficult to detect because the synchronizations often occur in different files. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, other classes can lock on "LOCK_OBJ" since "LOCK_OBJ" is 
+"public".  This could lead to deadlocks.
+
+package examples.rules.trs;
+
+public class SOPF {
+    public static final Object LOCK_OBJ = new Object();
+    private static int _i;
+    
+    public int getAndSetI(int i) {
+        synchronized (LOCK_OBJ) {  //VIOLATION
+            _i = i;
+            return _i;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the accessibility of the lock Object to "private" to prevent other 
+classes from creating deadlocks by locking on the Object.
+
+package examples.rules.trs;
+
+public class SOPF_Fixed {
+    private static final Object LOCK_OBJ = new Object();  //FIXED- Changed to "private"
+    private static int _i;
+    
+    public int getAndSetI(int i) {
+        synchronized (LOCK_OBJ) {
+            _i = i;
+            return _i;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+LCK00-J. Use private final lock objects to synchronize classes that may interact with untrusted code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK00-J.+Use+private+final+lock+objects+to+synchronize+classes+that+may+interact+with+untrusted+code">https://wiki.sei.cmu.edu/confluence/display/java/LCK00-J.+Use+private+final+lock+objects+to+synchronize+classes+that+may+interact+with+untrusted+code</A>
+
+</PRE>
+</BODY>
+</HTML>

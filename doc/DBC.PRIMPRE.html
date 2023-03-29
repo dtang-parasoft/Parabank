@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide a '@pre' contract for all "private" methods [DBC.PRIMPRE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide a '@pre' contract for all "private" methods [DBC.PRIMPRE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "private" method without a '@pre' contract.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If there's no Javadoc comment, Jtest will not report this error.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Pre-conditions check that the client calls the method correctly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class PRIMPRE
+{
+    /**
+     * method setMonth()
+     */
+    private void setMonth (int month) {  // VIOLATION
+        _month = month;
+    }
+    private int _month;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide a '@pre' contract or use '/** @pre $none */' to document the lack of one.
+
+package examples.rules.dbc;
+
+public class PRIMPREFixed
+{
+    /** @pre month &gt;= 1 &amp;&amp; month &lt;= 12 */  // FIXED
+    private void setMonth (int month) {
+        _month = month;
+    }
+    private int _month;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+See the "Design by Contract" section in the Jtest User's Guide.
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 50, 75 - 76
+
+</PRE>
+</BODY>
+</HTML>

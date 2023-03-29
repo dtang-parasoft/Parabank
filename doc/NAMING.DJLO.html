@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare types with the same name as types in the Java platform [NAMING.DJLO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare types with the same name as types in the Java platform [NAMING.DJLO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for types which have the same name as a type in one of the Java 
+platform libraries.  By default, a violation will be flagged for each class, 
+interface, annotation, or enum which has the same name as a type in the 
+"java.lang" package.   
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will check the JDK version that is used to compile each project for 
+types with the same name as a user-defined type.  Thus, it may produce different 
+results when run with different JDK versions.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Packages in the Java platform which should be checked for duplicate type names
+    -Specify the full package names here for packages in the Java platform which
+     should be checked for types with the same name as user-defined types.
+    -The default value is "java.lang".
+    -Entries in this list must follow the Java naming convention for packages 
+     which are part of the Java platform.  For instance, the list will only 
+     accept package names which have one of the prefixes "java", "javax", or 
+     "org".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Defining your own types with the same name as a type in the Java platform can
+be confusing because the user-defined type will hide the Java platform type when 
+the type is accessed using the unqualified name.  This makes the code difficult 
+to read because the reader will assume that all unqualified type names refer to 
+the standard types in the Java platform.  This may not be the case if there is a 
+user-defined type with the same name that is visible.  This is especially true 
+for type names in the "java.lang" package since the "java.lang" package is 
+implicitly imported in every Java file.  Reusing names from the Java platform 
+can also easily lead to bugs.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example looks like it should print out "10", but it really prints out "0" 
+because the user has defined his own class with the name "Integer".
+
+package examples.rules.naming;
+
+class DJLO {
+    public static void main(String[] args) {
+        Integer foo = new Integer(10);
+        System.out.println(foo.intValue());
+    }
+}
+
+class Integer {  //VIOLATION
+    int value;
+
+    Integer(int i) {
+        value = i;
+    }
+
+    public int intValue() {
+        return 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the name of the user-defined type to something unique.
+
+package examples.rules.naming;
+
+class DJLOFixed {
+    public static void main(String[] args) {
+        Integer foo = new Integer(10);
+        System.out.println(foo.intValue());
+    }
+}
+
+class MyInteger {  //FIXED
+    int value;
+
+    MyInteger(int i) {
+        value = i;
+    }
+
+    public int intValue() {
+        return 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+    Addison-Wesley, 2005, pp. 161-163
+
+</PRE>
+</BODY>
+</HTML>

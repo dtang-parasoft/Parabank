@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "URL" objects in "Collections" or "Maps" [PB.API.IUMS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "URL" objects in "Collections" or "Maps" [PB.API.IUMS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"java.net.URL" objects should not be used as elements in "Collections" or as 
+keys in "Maps".  This rule will flag a violation for each case where a type 
+implementing "java.util.Collection" is instantiated with the type parameter 
+"URL" or where a type implementing "java.util.Map" is instantiated with "URL"
+as the key type.  It will also flag a violation for method calls which insert a
+"URL" object into a "Collection" or add a mapping to a "Map" where the key type 
+is a "URL" object.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'equals()' and 'hashCode()' methods of "URL" are poorly implemented.  Their
+values depend on being connected to the internet because they perform domain 
+name resolution.  Thus, if you are not currently connected to the internet, 
+these operations will block.  To prevent these methods from blocking, you should
+use "java.net.URI" instead of "java.net.URL".  The class "java.net.URI" is 
+similar to "java.net.URL", but its 'equals()' and 'hashCode()' methods will not
+block if you are not connected to the internet.
+
+Another confusing thing about the 'equals()' method of "URL" is that, because
+they perform name resolution, two "URL" objects which have completely different
+String representations can still be considered equal.  This may not be what you
+would expect.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example was first presented in the Google Tech Talk shown in the 
+"REFERENCES" section.  The example looks like it should print "5", but it 
+actually prints "4" if you are connected to the internet and will block if you
+are not connected to the internet.  The reason it prints "4" if you are 
+connected to the internet is that "<A HREF="http://javapuzzlers.com">http://javapuzzlers.com</A>" and 
+"<A HREF="http://apache2-snort.skybar.dreamhost.com">http://apache2-snort.skybar.dreamhost.com</A>" resolve to the same IP address even
+though they are different URL's.  If you are not connected to the internet, the
+'equals()' and 'hashCode()' methods of "URL" will block.
+
+package examples.rules.pb.api;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+
+public class IUMS {
+    private static final String[] URL_NAMES = {
+        "<A HREF="http://javapuzzlers.com">http://javapuzzlers.com</A>",
+        "<A HREF="http://apache2-snort.skybar.dreamhost.com">http://apache2-snort.skybar.dreamhost.com</A>",
+        "<A HREF="http://www.google.com">http://www.google.com</A>",
+        "<A HREF="http://javapuzzlers.com">http://javapuzzlers.com</A>",
+        "<A HREF="http://www.parasoft.com">http://www.parasoft.com</A>",
+        "<A HREF="http://www-cse.ucsd.edu/">http://www-cse.ucsd.edu/</A>"
+    };
+    
+    public static void main(String[] args) throws MalformedURLException {
+        Set&lt;URL&gt; favorites = new HashSet&lt;URL&gt;();  //VIOLATION
+        for(String urlName : URL_NAMES)
+            favorites.add(new URL(urlName));  //VIOLATION
+        System.out.println(favorites.size());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use "URI" instead of "URL".  This repaired example will print out "5", which is 
+what it looks like it should print.  Also, this repaired example will not block
+if you are not connected to the internet because the 'equals()' and 'hashCode()'
+methods of "URI" do not perform domain name resolution.
+
+package examples.rules.pb.api;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.Set;
+
+class IUMSFixed{
+    private static final String[] URI_NAMES = {
+        "<A HREF="http://javapuzzlers.com">http://javapuzzlers.com</A>",
+        "<A HREF="http://apache2-snort.skybar.dreamhost.com">http://apache2-snort.skybar.dreamhost.com</A>",
+        "<A HREF="http://www.google.com">http://www.google.com</A>",
+        "<A HREF="http://javapuzzlers.com">http://javapuzzlers.com</A>",
+        "<A HREF="http://www.parasoft.com">http://www.parasoft.com</A>",
+        "<A HREF="http://www-cse.ucsd.edu/">http://www-cse.ucsd.edu/</A>"
+    };
+    
+    public static void main(String[] args) throws URISyntaxException {
+        Set&lt;URI&gt; favorites = new HashSet&lt;URI&gt;();  //FIXED
+        for(String urlName : URI_NAMES)
+            favorites.add(new URI(urlName));  //FIXED
+        System.out.println(favorites.size());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Google Tech Talk, "Java Puzzlers, Episode VI: The Phantom-Reference Menace/
+Attack of the Clone/Revenge of the Shift" by Josh Bloch and William Pugh. July 
+23, 2007.
+
+<A HREF="http://www.youtube.com/watch?v=yGFok5AJAyc">http://www.youtube.com/watch?v=yGFok5AJAyc</A>
+
+</PRE>
+</BODY>
+</HTML>

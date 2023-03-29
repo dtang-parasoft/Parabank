@@ -1,0 +1,218 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close all "java.io.Closeable" resources in a "finally" block [CERT.FIO14.CCR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close all "java.io.Closeable" resources in a "finally" block [CERT.FIO14.CCR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Resources which have a type that implements "java.io.Closeable" should always be
+closed. Local "java.io.Closeable" resources should be opened in a "try" block
+and closed in a corresponding "finally" block. If a local "java.io.Closeable"
+resource is not closed in a "finally" block, there is no guarantee that the resource
+will be closed if there is an exception. An error is reported if a created 
+"java.io.Closeable" is not closed in a "finally" block (or there is no corresponding
+"finally" block).
+
+This rule will not report a violation for fields or for local variables that
+another field depends on. Closing a field or a local variable that another field
+depends on is likely to break the code, as other methods will depend on these
+open resources.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.RES.LEAKS.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not detect unused resource objects.
+
+This rule is similar to OPT.CIO and several other rules that concern closing
+resources. Before JDK 1.5, the "Closeable" interface did not exist, so there
+was no general rule to ensure that all "Closeable" resources are closed in
+a "finally" block.
+The OPT.CIO rule is still included for customers who are not using JDK 1.5 or later,
+whereas this rule (OPT.CCR) benefits users of JDK 1.5 or later. As an additional
+advantage, it checks all types that implement "java.io.Closeable" (including
+user-defined types) instead of just a few I/O resource types.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+See BENEFITS 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignored types (Specify fully qualified names)
+   -The rule will not report any errors for the types specified on the following list.
+   -The default listed types are:
+       -java.io.ByteArrayInputStream
+       -java.io.ByteArrayOutputStream
+       -java.io.CharArrayWriter
+       -java.io.StringBufferInputStream
+       -java.io.StringReader
+       -java.io.StringWriter
+    
+    Objects of these types are not checked because it is guaranteed by the Javadoc
+    that the "close()" method for all these classes except "java.io.StringReader"
+    will have no effect. Although it is not specified by the Javadoc for
+    "java.io.StringReader", failure to close a StringReader object also will not 
+    cause a resource leak.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, therefore optimizations are especially
+important.
+
+If close() is not called to release all local resources before the method returns,
+it may cause a resource leak.
+
+Ensure that your code is structured to close and release all "java.io.Closeable"
+resources in all cases-- even in exception and error conditions. When the close
+statement is included in a finally block, the resource will always be closed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class CCR {
+    public void method(java.io.File f) {
+        java.io.FileInputStream fis = null;
+        try {
+            fis = new java.io.FileInputStream(f);
+            fis.read();
+            fis.close();
+        } catch (java.io.FileNotFoundException e1) {
+            System.out.println("File not found");
+        } catch (java.io.IOException e2) {
+            System.out.println("I/O Exception");
+        }
+        // VIOLATION: "finally" block with the statement 'fis.close()' is
+        // missing
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that all "java.io.Closeable" resources are closed regardless of any
+exceptions which may be thrown if failure to close these resources may result
+in a memory leak. 
+If there already is a "try" block where the resources are being used, add
+a "finally" block after the last "catch" that closes all open "java.io.Closeable"
+resources.
+
+If the "java.io.Closeable" resource is not used in a "try" block, consider putting
+the code that uses that resource into a "try" block if there is any possibility that
+this code will throw an exception. As a result, the resource will be closed in
+a "finally" block which will be executed regardless of whether or not an exception
+is thrown.
+
+package examples.rules.opt;
+
+public class CCRFixed {
+    public void method(java.io.File f) {
+        java.io.FileInputStream fis = null;
+        try {
+            fis = new java.io.FileInputStream(f);
+            fis.read();
+        } catch (java.io.FileNotFoundException e1) {
+            System.out.println("File not found");
+        } catch (java.io.IOException e2) {
+            System.out.println("I/O Exception");
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();  //FIXED
+                } catch (java.io.IOException e) {
+                    System.out.println("I/O Exception");
+                }
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO04-J. Release resources when they are no longer needed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO04-J.+Release+resources+when+they+are+no+longer+needed">https://wiki.sei.cmu.edu/confluence/display/java/FIO04-J.+Release+resources+when+they+are+no+longer+needed</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO14-J. Perform proper cleanup at program termination
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination">https://wiki.sei.cmu.edu/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination</A>
+
+</PRE>
+</BODY>
+</HTML>

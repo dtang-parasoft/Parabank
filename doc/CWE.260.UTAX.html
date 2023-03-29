@@ -1,0 +1,205 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using plain text passwords in Axis2 configuration files [CWE.260.UTAX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using plain text passwords in Axis2 configuration files [CWE.260.UTAX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that plain text passwords are not used in Apache Axis2 
+'services.xml' and 'axis2.xml' files.  For each '&lt;action&gt;' defined within an 
+"InflowSecurity" or "OutflowSecurity" parameter, the rule will check that the 
+password type is not set to "PasswordText".  A violation will be flagged for 
+each '&lt;action&gt;' tag which contains a '&lt;passwordType&gt;PasswordText&lt;/passwordType&gt;' 
+child tag.  By default, a violation will not be flagged if the '&lt;items&gt;' tag 
+also specifies to use "Encrypt" to encrypt the plain text password.  By default,
+a violation will also not be flagged if the '&lt;items&gt;' tag does not specify to 
+use the "UsernameToken" directive.
+
+'services.xml' and 'axis2.xml' files which do not use the Rampart security 
+module (i.e., those which do not contain a '&lt;module ref="rampart" /&gt;' tag) will 
+be ignored.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Using the "UsernameToken" directive with a plain text password and no encryption 
+is dangerous because the password may be stolen by attackers if the message is 
+sent over an insecure channel.  Passwords should always be encrypted before 
+being sent over an insecure channel.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+This rule also helps to enforce the PCI DSS Requirement #8: "Assign a unique ID 
+to each person with computer access."  Specifically, this rule helps to test for 
+Issue 8.4: "Render all passwords unreadable during transmission and storage on 
+all system components using strong cryptography" and Issue 8.5.11: "Use 
+passwords containing both numeric and alphabetic characters."
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Only flag a violation when a plain text password is used with the 
+ 'UsernameToken' directive
+    -Default is "true".
+    -When this parameter is enabled, a violation will only be flagged for 
+     &lt;parameter&gt; tags where the "UsernameToken" directive is specified in the 
+     &lt;items&gt; tag.  The presence of the "UsernameToken" directive indicates a 
+     higher probability that a password is being transmitted in plain text. 
+-Do not flag a violation when a password of type 'PasswordText' is encrypted
+    -Default is "true".
+    -When this parameter is enabled, a violation will not be flagged for
+     &lt;parameter&gt; tags where the "Encrypt" directive is specified in the &lt;items&gt;
+     tag.  When the "Encrypt" directive is present, it indicates that the 
+     password will be encrypted before it is transmitted and, thus, is 
+     relatively safe from attackers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+axis2.xml:
+
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;module ref="rampart" /&gt;
+    
+    &lt;parameter name="OutflowSecurity"&gt;
+        &lt;action&gt;
+            &lt;items&gt;UsernameToken&lt;/items&gt;
+            &lt;user&gt;bob&lt;/user&gt;
+            &lt;passwordCallbackClass&gt;org.apache.rampart.samples.PWCBHandler&lt;/passwordCallbackClass&gt;
+            &lt;passwordType&gt;PasswordText&lt;/passwordType&gt;
+        &lt;/action&gt;
+    &lt;/parameter&gt;
+    
+&lt;/axisconfig&gt;     
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the password type to a more secure type (such as "PasswordDigest") or use
+the "Encrypt" directive to ensure that the password will not be sent in plain 
+text.
+
+axis2.xml:
+
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;module ref="rampart" /&gt;
+
+    &lt;parameter name="OutflowSecurity"&gt;
+        &lt;action&gt;          
+            &lt;user&gt;bob&lt;/user&gt;
+            &lt;items&gt;UsernameToken Encrypt&lt;/items&gt;  &lt;!-- FIXED: Use encryption. --&gt;
+            &lt;passwordCallbackClass&gt;org.apache.rampart.samples.PWCBHandler&lt;/passwordCallbackClass&gt;
+            &lt;passwordType&gt;PasswordText&lt;/passwordType&gt;
+            &lt;signaturePropFile&gt;client.properties&lt;/signaturePropFile&gt; 
+            &lt;signatureKeyIdentifier&gt;DirectReference&lt;/signatureKeyIdentifier&gt; 
+            &lt;encryptionKeyIdentifier&gt;DirectReference&lt;/encryptionKeyIdentifier&gt; 
+            &lt;encryptionUser&gt;service&lt;/encryptionUser&gt; 
+        &lt;/action&gt;
+    &lt;/parameter&gt;
+&lt;/axisconfig&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-256: Unprotected Storage of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+CWE-260: Password in Configuration File
+<A HREF="https://cwe.mitre.org/data/definitions/260.html">https://cwe.mitre.org/data/definitions/260.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.htmll">https://cwe.mitre.org/data/definitions/284.htmll</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+Securing SOAP Messages with Rampart
+<A HREF="http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html">http://ws.apache.org/axis2/modules/rampart/1_3/security-module.html</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC62-J. Store passwords using a hash function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function">https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001740: The application must only store cryptographic representations of passwords
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

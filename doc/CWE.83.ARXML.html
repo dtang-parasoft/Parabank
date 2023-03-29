@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Process XML and HTML with a library instead of raw text [CWE.83.ARXML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Process XML and HTML with a library instead of raw text [CWE.83.ARXML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Creating XML and HTML documents using raw text is error-prone. Instead, it is recommended to use
+libraries for creating XML and HTML, as it allows you to perform security checks. 
+
+"Use well-tested libraries instead of ad hoc code . . . For unusual formats where appropriate
+libraries do not exist, such as configuration files, create classes that cleanly handle all
+formatting and only formatting code. [Secure Coding Guidelines for Java SE]
+
+This rule identifies when XML or HTML is created from raw text. It triggers when it detects:
+- an  XML or HTML tag that is concatenated, assigned to a String, or appended to a String,
+StringBuffer, or StringBuilder
+- a method invocation on a String object that identifies xml tags using the following methods:
+indexOf(), lastIndexOf(), contains(), endsWith(), replaceFirst(), replaceAll() 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+This rule helps you prevent attacks that involve text formats.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves your code quality and security (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class ARXML {
+    private void method(String tags) {
+        String asdf = "asdf";
+        asdf = "&lt;html"+tags;//VIOLATION
+        tags.indexOf("&lt;html&gt;");// VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class ARXMLFixed {
+    private void method(String tags) {
+        String asdf = "asdf";
+        htmlCreate(asdf,"&lt;html", tags);//FIXED
+    }
+    String htmlCreate(String one, String two, String three){
+        String result=null;
+        //validation and replacement
+        return result;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+<A HREF="https://cwe.mitre.org/data/definitions/79.html">https://cwe.mitre.org/data/definitions/79.html</A>
+
+CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)
+<A HREF="https://cwe.mitre.org/data/definitions/80.html">https://cwe.mitre.org/data/definitions/80.html</A>
+
+CWE-81: Improper Neutralization of Script in an Error Message Web Page
+<A HREF="https://cwe.mitre.org/data/definitions/81.html">https://cwe.mitre.org/data/definitions/81.html</A>
+
+CWE-83: Improper Neutralization of Script in Attributes in a Web Page
+<A HREF="https://cwe.mitre.org/data/definitions/83.html">https://cwe.mitre.org/data/definitions/83.html</A>
+
+Secure Coding Guidelines for Java SE
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#3-1">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#3-1</A>
+
+</PRE>
+</BODY>
+</HTML>

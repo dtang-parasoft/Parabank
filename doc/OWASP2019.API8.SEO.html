@@ -1,0 +1,338 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling methods and constructors which do not allow you to specify a character encoding option [OWASP2019.API8.SEO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling methods and constructors which do not allow you to specify a character encoding option [OWASP2019.API8.SEO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The software uses or specifies an encoding when generating output to
+a downstream component, but the specified encoding is not the same as
+the encoding that is expected by the downstream component." [CWE-838]
+
+When possible, a character encoding option should be specified for constructors
+and methods of types which read or write input. Examples of classes which 
+include constructors that allow you to specify an encoding option are 
+"java.io.InputStreamReader" and "java.lang.String".  If you expect input or 
+output to use a character encoding other than the default encoding, you must 
+specify this encoding when creating an object or calling a method of one of 
+these types.  The following constructors have alternatives which allow you to 
+specify the encoding:
+
+constructor                          alternative(s)
+-----------                          --------------
+InputStreamReader(InputStream)       InputStreamReader(InputStream, Charset) or
+                                     InputStreamReader(InputStream, CharsetDecoder) or
+                                     InputStreamReader(InputStream, String)
+OutputStreamWriter(OutputStream)     OutputStreamWriter(OutputStream, Charset) or
+                                     OutputStreamWriter(OutputStream, CharsetEncoder) or
+                                     OutputStreamWriter(OutputStream, String)
+String(byte[])                       String(byte[], String) 
+String(byte[], int, int)             String(byte[], int, int, String)
+
+All of the alternatives listed allow you to specify an additional argument which
+gives the character encoding.
+
+Additionally, the "java.io.FileReader" and "java.io.FileWriter" classes should 
+never be used if you expect input or output to use a character encoding other 
+than the default encoding.  This is because, according to its Javadoc, the 
+"FileReader" class always assumes that input uses the default encoding.  
+According to the Javadoc for the "FileWriter" class, this class also always uses 
+the default character encoding.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violations of this rule should be suppressed if you always plan on using the
+platform default character encoding for input or output.  In this case, it is 
+acceptable to not specify the character encoding.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"An attacker could modify the structure of the message or data being sent to
+the downstream component, possibly injecting commands." [CWE-838]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Methods and Constructors to Avoid (in form of &lt;fully qualified type name&gt;#
+ &lt;method name&gt;(&lt;parameter1 fully qualified type&gt;,&lt;parameter2 fully qualified 
+ type&gt;))
+    -Default values are:
+        -java.io.InputStreamReader#InputStreamReader(java.io.InputStream) 
+         (alternatives: InputStreamReader(InputStream, Charset),
+          InputStreamReader(InputStream, CharsetDecoder), or InputStreamReader(
+          InputStream, String))
+        -java.io.OutputStreamWriter#OutputStreamWriter(java.io.OutputStream)
+         (alternatives: OutputStreamWriter(OutputStream, Charset), 
+          OutputStreamWriter(OutputStream, CharsetEncoder), or 
+          OutputStreamWriter(OutputStream, String))
+        -java.lang.String#getBytes() (alternative: getBytes(String))
+        -java.lang.String#String(byte[]) (alternative: String(byte[], String))
+        -java.lang.String#String(byte[],int,int) (alternative: String(byte[], 
+         int, int, String))
+        -javax.mail.internet.MimeBodyPart#setDescription(java.lang.String) 
+         (alternative: setDescription(String, String))
+        -javax.mail.internet.MimeBodyPart#setText(java.lang.String) (alternative: 
+         setText(String, String))
+        -javax.mail.internet.MimeMessage#setDescription(java.lang.String) 
+         (alternative: setDescription(String, String))
+        -javax.mail.internet.MimeMessage#setSubject(java.lang.String) 
+         (alternative: setSubject(String, String))
+        -javax.mail.internet.MimeMessage#setText(java.lang.String) (alternative: 
+         setText(String, String))
+    -None of the methods and constructors specified in the default values allow
+     the user to specify an encoding option other than the default, but they
+     all have at least one alternative version which takes an extra parameter 
+     that specifies the encoding option.  These alternatives are listed above.
+-Types to Avoid (Fully Qualified Names)
+    -Types in this list should not be used at all if the default character 
+     encoding is not acceptable.  These types do not allow the user to specify 
+     a character encoding other than the default encoding.  A violation will be
+     flagged for each call to one of the constructors of these types.
+    -Default values are:
+        -java.io.FileReader (alternative: Construct an InputStreamReader on a 
+         FileInputStream)
+        -java.io.FileWriter (alternative: Construct an OutputStreamWriter on a 
+         FileOutputStream)
+    
+	
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you enforce a specific encoding to prevent data sent to 
+the downstream component from being modified.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Notice that the method "printOutFile()" attempts to print out the contents of 
+the file "foo.txt" in a message dialog, but it does not specify the same 
+encoding option when creating the InputStreamReader that was used to create the 
+OutputStreamWriter.  This will cause the contents of the file to not be printed 
+out correctly if "UTF-16" is not the default charset.  This test case is 
+supposed to print out the lower-case Greek alphabet, but it will probably print
+out garbage characters because "UTF-16" is not specified as the encoding option
+when creating the "InputStreamReader".  
+
+package examples.rules.inter;
+
+import java.io.*;
+
+import javax.swing.JOptionPane;
+
+public class SEO {
+    private static final String FILE_PATH= "examples/rules/inter/foo.txt";
+
+    public static void main(String[] args) throws IOException {
+        OutputStreamWriter osw= null;
+        FileOutputStream fos= null;
+        try {
+            File f= new File(FILE_PATH);
+            fos= new FileOutputStream(f);
+            osw= new OutputStreamWriter(fos, "UTF-16");
+            // greek lowercase alphabet
+            osw.write("\u03b1\u03b2\u03b3\u03b4\u03b5\u03b6\u03b7\u03b8"+
+                      "\u03b9\u03ba\u03bb\u03bc\u03bd\u03be\u03bf\u03c0"+
+                      "\u03c1\u03c2\u03c3\u03c4\u03c5\u03c6\u03c7\u03c8\u03c9");
+            osw.flush();
+            printOutFile(FILE_PATH);    
+        }
+        catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        finally {
+            if(osw != null){
+                osw.close();
+            }
+            if(fos != null){
+                fos.close();
+            }
+        }
+    }
+
+    private static void printOutFile(String name) throws IOException {
+        FileInputStream fis= null;
+        InputStreamReader isr= null;
+        BufferedReader br= null;
+        try {
+            fis= new FileInputStream(name);
+            isr = new InputStreamReader(fis);  //VIOLATION
+            br = new BufferedReader(isr);
+            while(br.ready()){
+                JOptionPane.showMessageDialog(null, br.readLine());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(br != null){
+                br.close();
+            }
+            if(isr != null){
+                isr.close();
+            }
+            if(fis != null){
+                fis.close();
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If there is a constructor or method available which allows the user to specify 
+the character encoding, use that constructor or method instead.  Specify the 
+appropriate charset for the data being read or written.  For types which do not
+allow you to specify an encoding option (such as "java.io.FileReader"), use an 
+alternate type that does allow you to specify an encoding option (such as 
+"java.io.InputStreamReader"). 
+
+In a real application, you would probably want to get the character encoding 
+from an Eclipse setting.  However, for this simple example, it is adequate to 
+just specify the charset as "UTF-16".  This fixed example will correctly print
+out the lower-case Greek alphabet.
+
+package examples.rules.inter;
+
+import java.io.*;
+
+import javax.swing.JOptionPane;
+
+public class SEOFixed {
+    private static final String FILE_PATH= "examples/rules/inter/foo.txt";
+
+    public static void main(String[] args) throws IOException {
+        OutputStreamWriter osw= null;
+        FileOutputStream fos= null;
+        try {
+            File f= new File(FILE_PATH);
+            fos= new FileOutputStream(f);
+            osw= new OutputStreamWriter(fos, "UTF-16");
+            // greek lowercase alphabet
+            osw.write("\u03b1\u03b2\u03b3\u03b4\u03b5\u03b6\u03b7\u03b8"+
+                      "\u03b9\u03ba\u03bb\u03bc\u03bd\u03be\u03bf\u03c0"+
+                      "\u03c1\u03c2\u03c3\u03c4\u03c5\u03c6\u03c7\u03c8\u03c9");
+            osw.flush();
+            printOutFile(FILE_PATH);    
+        }
+        catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        finally {
+            if(osw != null){
+                osw.close();
+            }
+            if(fos != null){
+                fos.close();
+            }
+        }
+    }
+
+    private static void printOutFile(String name) throws IOException {
+        FileInputStream fis= null;
+        InputStreamReader isr= null;
+        BufferedReader br= null;
+        try {
+            fis= new FileInputStream(name);
+            isr = new InputStreamReader(fis, "UTF-16");  //FIXED
+            br = new BufferedReader(isr);
+            while(br.ready()){
+                JOptionPane.showMessageDialog(null, br.readLine());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(br != null){
+                br.close();
+            }
+            if(isr != null){
+                isr.close();
+            }
+            if(fis != null){
+                fis.close();
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2011 CWE/SANS On the Cusp: Other Weaknesses to Consider
+CWE-838: Inappropriate Encoding for Output Context
+<A HREF="https://cwe.mitre.org/data/definitions/838.html">https://cwe.mitre.org/data/definitions/838.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+</PRE>
+</BODY>
+</HTML>

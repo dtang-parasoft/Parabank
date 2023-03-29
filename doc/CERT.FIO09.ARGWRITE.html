@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not rely on the write() method to output integers outside the range 0 to 255 [CERT.FIO09.ARGWRITE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not rely on the write() method to output integers outside the range 0 to 255 [CERT.FIO09.ARGWRITE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the value that is passed as a parameter to the write(int arg) method
+of the java.io.OutputStream class or any of its subclasses is outside the range 0 to 255.
+
+By default, the rule is parameterized to also trigger when the value of the parameter
+is unknown and may potentially be outside the range (see the PARAMETERS section).
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+When the "Report when value of parameter is unknown" is enabled, the rule detects
+the following cases:
+- the value of the parameter is known to be outside the range 0 to 255
+- the value of the parameter is unknown and may potentially be outside the range 0 to 255
+If disabled, the rule reports only the values that are known to be outside the range.
+This option is enabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid unexpected truncation of the value that is to be written
+to the output stream.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    public static void main(String[] args)
+    {
+        // Any input value &gt; 255 will result in unexpected output
+        System.out.write(Integer.valueOf(args[0])); // VIOLATION
+        System.out.flush();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    public static void main(String[] args)
+    {
+        // Perform range checking 
+        int value = Integer.valueOf(args[0]);
+        if (value &lt; 0 || value &gt; 255) {
+            throw new ArithmeticException("Value is out of range");
+        }
+        System.out.write(value); // NO VIOLATION
+        System.out.flush();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+FIO09-J. Do not rely on the write() method to output integers outside the range 0 to 255  
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO09-J.+Do+not+rely+on+the+write%28%29+method+to+output+integers+outside+the+range+0+to+255">https://wiki.sei.cmu.edu/confluence/display/java/FIO09-J.+Do+not+rely+on+the+write%28%29+method+to+output+integers+outside+the+range+0+to+255</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

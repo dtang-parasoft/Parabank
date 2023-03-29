@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the correct "super" method is invoked [PB.TYPO.CSI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the correct "super" method is invoked [PB.TYPO.CSI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for cases where the wrong "super" method may
+have been called.  If the "super" method called doesn't match the name of the 
+current method and a compatible "super" method with the name of the current 
+method exists, this rule will report a violation.  Violations will only be 
+flagged if none of the "super" methods with the same name as the enclosing 
+method declaration are called in the enclosing method declaration.  
+
+In other words, the rule will flag a violation only if all 3 of the following 
+conditions are met:
+
+1.  There is a method call where "super" is the calling object.
+2.  There is at least one non-"abstract" method in a superclass with the same 
+name as the method declaration in which the call in condition #1 takes place.
+3.  None of the methods in the superclasses with the same name as the enclosing
+method declaration are ever called within that method declaration.
+
+This rule will ignore all calls to methods in superclasses where the "super" 
+keyword is not used explicitly as the calling object.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only flag a violation in cases where replacing the name of the
+"super" method that is currently being called with the name of its suggested 
+replacement will produce valid code.  The suggested replacement method must meet 
+the following three conditions:
+
+1.  The replacement method must not be "private".
+2.  The type of each argument of the "super" method invocation must be 
+assignment compatible to the type of the corresponding parameter in the 
+replacement method.
+3.  The return type of the replacement method must be assignment compatible with 
+that of the "super" method currently being called.
+
+Note that it still may be necessary to add some exception-handling code if the
+suggested replacement method throws an exception that is not thrown by the 
+method currently being called.
+
+This rule may report some false positives.  Sometimes you don't want to call the
+method in the superclass with the same name as the method in which the method
+call takes place.  The code should be examined to determine if each violation is
+a bug or not.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+ 
+It is a common coding practice to call the method with the same name as the 
+enclosing method declaration that is defined in a superclass.  If this is never
+done but some other method from one of the superclasses is called, there is a 
+good chance that the wrong method was used in the "super" method invocation.
+This rule will identify cases like this where the wrong method may have been 
+called.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the example below, the 'containsKey()' method overrides the 'containsKey()'
+method from "HashMap".  Since the method calls the superclass' version of 
+'containsValue()' but never calls the overridden 'containsKey()' method, the 
+rule concludes that the call to 'super.containsValue()' is a bug (which it 
+obviously is).
+
+package examples.rules.pb.typo;
+
+import java.util.HashMap;
+
+public class CSI extends HashMap {
+    public boolean containsKey (Object key) {
+        String lower_case_key = key.toString().toLowerCase();
+        return super.containsValue (lower_case_key);  // VIOLATION: should be 'super.containsKey(...)'
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the method called to a method in a superclass with the same name as the
+enclosing method declaration.  In this case, that method is 'super.containsKey()'.
+
+package examples.rules.pb.typo;
+
+import java.util.HashMap;
+
+public class CSI_Fixed extends HashMap {
+    public boolean containsKey (Object key) {
+        String lower_case_key = key.toString().toLowerCase();
+        return super.containsKey (lower_case_key);  // FIXED: Call 'super.containsKey(...)' 
+                                                    // instead of 'super.containsValue(...)'
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Reuse data sources for JDBC connections [JDBC.DSLV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Reuse data sources for JDBC connections [JDBC.DSLV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that creates method-local DataSource variables.
+An error is reported for each occurrence. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Concurrency
+
+See BENEFITS for more inforation.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A javax.sql.DataSource is obtained from WebSphere Application Server through
+a JNDI naming lookup.  Avoid the overhead of acquiring a javax.sql.DataSource 
+for each SQL access.  This is an expensive operation that will severely impact
+the performance and scalability of the application.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+public class DSLV extends HttpServlet {
+    public void doGet () throws ServletException {
+        DataSource ds = null;  // VIOLATION
+        try {
+            java.util.Hashtable env = new java.util.Hashtable ();
+            env.put (Context.INITIAL_CONTEXT_FACTORY, "jndi.CNInitialContext");
+            Context ctx = new InitialContext (env);
+            ds = (DataSource)ctx.lookup ("jdbc/SAMPLE");
+            ctx.close ();
+        } catch (Exception e) {
+            e.printStackTrace ();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Servlets should acquire the javax.sql.DataSource in the Servlet.init () method
+(or some other thread-safe method) and maintain it in a common location
+for reuse.
+
+package examples.rules.jdbc;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+public class DSLVFixed extends HttpServlet {
+    // caching the DataSource
+    private DataSource ds = null;
+
+    public void init (ServletConfig config) throws ServletException {
+        super.init (config);
+        Context ctx = null;
+        try {
+            java.util.Hashtable env = new java.util.Hashtable ();
+            env.put (Context.INITIAL_CONTEXT_FACTORY, "jndi.CNInitialContext");
+            ctx = new InitialContext (env);
+            ds = (DataSource)ctx.lookup ("jdbc/SAMPLE");
+            ctx.close ();
+        } catch (Exception e) {
+            e.printStackTrace ();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from SERVLET.DSLV(v5.1)
+
+</PRE>
+</BODY>
+</HTML>

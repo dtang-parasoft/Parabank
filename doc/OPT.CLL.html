@@ -1,0 +1,235 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Check the logging level before calling potentially expensive logging operations [OPT.CLL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Check the logging level before calling potentially expensive logging operations [OPT.CLL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Logging methods which may take a long time should only be called if necessary.
+For this reason, you should always check the logging level before calling a 
+logging method if there are other method calls within the logging method's 
+arguments.  Since the method arguments are evaluated regardless of whether or 
+not anything gets logged, checking the logging level before calling a logging
+method can save unnecessary method calls and improve the program's efficiency.
+
+By default, this rule will check for calls to the logging methods of "java.util.
+logging.Logger", and "org.apache.commons.logging.Log",
+"org.apache.log4j.Category"/ "org.apache.log4j.Logger" which have other method
+calls nested within the logging method calls and which are not protected by an
+"if" statement that checks the logging level.  Additional logging methods and
+methods to check the logging level can be specified in the parameters.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Sometimes it may be unnecessary to change the code for violations of this rule
+because the method calls which are nested within the calls to the logging method
+may not be expensive operations.  In this case, the violation should be 
+suppressed.
+    
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Logging levels to check
+    -You may wish to only enforce this rule for calls to logging methods where
+     the logging level is at certain levels.  For instance, there usually is no
+     need to check the logging level before calling the "fatal()" method of 
+     "org.apache.log4j.Category" since the logging level will almost always be
+     low enough that "FATAL" messages will be logged.  The same applies for the 
+     "SEVERE" Level of "java.util.logging.Logger".  This is why "SEVERE" and 
+     "FATAL" are not checked by default.
+    -If the rule cannot determine the logging level of a call to a logging 
+     method (for instance, if this level is stored in a variable), it will not 
+     flag a violation unless the method is specified on the "Customized logging 
+     systems" tab.
+    
+    -Apache Log and Log4j logging Levels which require checking
+        -FATAL (Default is "false".)
+        -ERROR (Default is "true".)
+        -WARN (Default is "true".)
+        -INFO (Default is "true".)
+        -DEBUG (Default is "true".)
+        -TRACE (Default is "true".)
+        
+    -java.util.logging Levels which require checking
+        -SEVERE (Default is "false".)
+        -WARNING (Default is "true".)
+        -INFO (Default is "true".)
+        -CONFIG (Default is "true".)
+        -FINE (Default is "true".)
+        -FINER (Default is "true".)
+        -FINEST (Default is "true".)
+        
+-Customized logging systems
+    -If you use a logging system other than "Log4j" and "java.util.logging", you 
+     should specify your own custom methods for checking the level of a logger 
+     and doing the actual logging here.  This tab allows the rule to work with
+     any logging system.
+    -Calls to the logging methods specified in the "Logging Methods to be 
+     Checked" list must be enclosed within an "if" statement which checks the 
+     logging level using one of the methods specified in the "Level Checking 
+     Methods" parameter.
+     
+    -Level Checking Methods (in form of &lt;regular expression for fully qualified 
+     type&gt;#&lt;regular expression for method name&gt;)
+        -By default, this list is empty.
+        -Example: To add the method "debug()" in the class "examples.rules.opt.
+         CLL" to this parameter list, you could enter "^examples\.rules\.opt\.
+         CLL$#^debug$" (or simply "examples.rules.opt.CLL#debug").
+        
+    -Logging Methods to be Checked (in form of &lt;regular expression for fully 
+     qualified type&gt;#&lt;regular expression for method name&gt;)
+        -By default, this list is empty.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important. 
+
+Checking the logging level before calling logging methods can improve the 
+program's efficiency if there are expensive method calls nested within the calls
+to the logging method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example shows a violation of this rule using both the log4j Logger and the
+Logger in the "java.util.logging" package.
+
+package examples.rules.opt;
+
+import org.apache.log4j.Logger;
+
+public class CLL {
+    static Logger log4j_logger = Logger.getLogger(CLL.class);
+    static java.util.logging.Logger java_util_logger = java.util.logging.Logger.getLogger(
+            CLL.class.getName());
+            
+    public void logMethod() {
+        log4j_logger.debug("Debug message " + print());  //VIOLATION- The "print()"
+                   //method does not need to be called unless the logging level
+                   //is set to "DEBUG" or higher.
+        java_util_logger.finest("Finest message " + print());  //VIOLATION- The "print()"
+                   //method does not need to be called unless the logging level
+                   //is set to "FINEST".
+    }
+    
+    /*
+     * The "print()" method is expensive because it calls "wait(100000)" and
+     * should only be called if absolutely necessary.
+     */
+    private String print() {
+        try {
+            wait(100000);
+        } catch (InterruptedException ie) {
+            //Ignore exception.
+        }
+        
+        return "foo";
+    }    
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Check the logging level before calling any logging methods if the method 
+arguments contain expensive method calls.
+
+package examples.rules.opt;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+public class CLLFixed {
+    static Logger log4j_logger = Logger.getLogger(CLL.class);
+    static java.util.logging.Logger java_util_logger = java.util.logging.Logger.getLogger(
+            CLLFixed.class.getName());
+            
+    public void logMethod() {
+        Level level= log4j_logger.getLevel();
+        if(level.isGreaterOrEqual(Level.DEBUG)){  //FIXED
+            log4j_logger.debug("Debug message " + print());
+        }
+        if(java_util_logger.isLoggable(java.util.logging.Level.FINEST)){  //FIXED
+            java_util_logger.finest("Finest message " + print()); 
+        }
+    }
+    
+    /*
+     * The "print()" method is expensive because it calls "wait(100000)" and
+     * should only be called if absolutely necessary.
+     */
+    private String print() {
+        try {
+            wait(100000);
+        } catch (InterruptedException ie) {
+            //Ignore exception.
+        }
+        
+        return "foo";
+    }  
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

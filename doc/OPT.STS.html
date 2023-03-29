@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary calls to 'String' methods [OPT.STS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary calls to 'String' methods [OPT.STS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule identifies unnecessary method calls on 'java.lang.String' objects. With
+the default settings of the parameters, it only checks for instances where the
+'toString' method is invoked on 'java.lang.String' objects. It also can check 
+for invocations of the 'substring()' method where "0" is passed in as the 
+parameter.  An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check for invocations of 'toString()' on 'java.lang.String' objects (Default 
+ value is "true")
+-Check for calls to 'substring(0)' on 'java.lang.String' objects (Default value 
+ is "false")
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+A 'toString()' method of 'String' returns only the 'String' object itself, so 
+it is completely redundant. Calling the 'substring' method with "0" as the only 
+parameter is also redundant because doing so will return the original string.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class STS {
+    public static String concatString(String str1, String str2) {
+    return str1.toString()+  str2.toString(); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class STSFixed {
+    public static String concatString(String str1, String str2) {
+    return str1 +  str2; //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

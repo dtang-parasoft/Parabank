@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'StringBuffer' instead of 'String' when concatenating strings [OPT.USB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'StringBuffer' instead of 'String' when concatenating strings [OPT.USB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for places where Strings are concatenated, either using the 
+shorthand "+=" operator or using an assignment of the form 's= s + "abc"'.  By
+default, the rule will flag any case where the same String is appended to more
+than once in the same method.  Such cases are candidates for the use of a 
+"StringBuffer" instead of a "String".  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-What to Flag
+    -Only cases where the same String may be appended to more than once (default
+     selection)
+        -If this option is selected, a violation will only be flagged for cases
+         where the same String is appended to using the "+=" operator more than 
+         once in the same method.  This case can happen if the same String is 
+         appended to at more than one place in the code or if the String is 
+         appended to in a loop.  
+        -In a case where an argument to a "StringBuffer" method uses "+"
+         concatenation, this parameter will recommend a change to use the 
+         "StringBuffer" "append()" method a second time.
+         stringbuffer.append("a" + "b") -&gt; stringbuffer.append("a").append("b")
+        -This is the default setting of the parameter because it is not 
+         inefficient to append to a String using either the "+=" operator or the 
+         "=" and "+" operators if this is only done once in a method.  A real 
+         performance gain will only be achieved from using a "StringBuffer" if 
+         that "StringBuffer" is appended to more than once in the same method.
+    -Any case where a String is appended to
+        -If this option is selected, a violation will be flagged for any case
+         where a String is appended to using either the "+=" operator or the "=" 
+         and "+" operators.  The only difference between this and the default 
+         setting of the parameter is that, with this setting, the rule will flag 
+         cases where a String is appended to only once.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Although it is possible to concatenate Strings using the "+=" operator or the 
+"=" and "+" operators, it is much less efficient than using the 'StringBuffer.
+append()' method if you are appending to the same String multiple times.  Use 
+the "StringBuffer" type instead of the "String" type to improve performance.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class USB {
+    public String foobar () {
+        String fruit = "apples";
+        for(int i= 0; i&lt; 1000; i++){
+            fruit += ", bananas";  // VIOLATION
+        }
+        return fruit;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Create a StringBuffer, append the Strings using the 'StringBuffer.append()' 
+method, and then call 'StringBuffer.toString ()'.
+
+Note: If you already know how long the new string will be then give the
+StringBuffer an appropriate initial size to hold all the strings.
+
+package examples.rules.opt;
+
+public class USBFixed {
+    public String betterFoobar () {
+        StringBuffer fruit = new StringBuffer(9006);
+        fruit.append("apples");
+        for(int i= 0; i&lt; 1000; i++){
+            fruit.append(", bananas");  // FIXED
+        }
+        return fruit.toString();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.107 - 109
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison-Wesley, 2001, pp. 155 - 156
+
+</PRE>
+</BODY>
+</HTML>

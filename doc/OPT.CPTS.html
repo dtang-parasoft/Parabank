@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not convert a value to a String by concatenating the empty String [OPT.CPTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not convert a value to a String by concatenating the empty String [OPT.CPTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag any case where a value of a primitive type is converted to 
+a String by concatenation with the empty String.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The software does not correctly convert an object, resource, or structure from
+one type to a different type." [CWE-704]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important. 
+
+It is significantly more efficient to use the static "String.valueOf()" method 
+than it is to concatenate the empty String to a primitive value. It can also
+make it so that there is one fewer String literal in the generated code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class CPTS {
+    void method()
+    {
+        int x = 42; // "int" primitive type
+        String s = "" + x;  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the static "String.valueOf()" method defined in the String class to do the
+conversion instead of concatenating the empty String.
+
+package examples.rules.opt;
+
+public class CPTSFixed {
+    void method()
+    {
+        int x = 42; // "int" primitive type
+        String s = String.valueOf(x);  // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2020 CWE Weaknesses On the Cusp
+CWE-704: Incorrect Type Conversion or Cast
+<A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid infinite recursive method calls [CWE.674.FLRC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid infinite recursive method calls [CWE.674.FLRC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will detect cases where infinite recursion is likely.  There are two
+common cases which lead to infinite recursion:
+
+1.  A method calls itself before executing any other code.  That is, the method
+is called recursively within the first statement of its definition.  This case 
+is guaranteed to lead to an infinite recursion if the code is ever executed.
+
+2.  A method calls itself using the same arguments that were passed as 
+parameters into the method without first modifying the parameters.  This 
+may lead to an infinite recursion if this method call is ever executed.  This
+case will not be flagged by default since it is more difficult to determine 
+whether or not the code will lead to an infinite recursion in this case.
+
+By default, the rule will only check for case #1 described above.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Infinite recursion can easily cause an application to crash.  Secure 
+applications should make sure that all recursions will eventually terminate.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Infinite recursion can be difficult to detect, especially if not all execution
+paths are exercised during testing.  You should make sure that recursion is 
+correctly implemented by checking a base case before executing a recursive call
+and remembering to modify the arguments before calling a method recursively 
+using the same arguments that were passed as parameters.
+
+PARAMETER
+
+-Only check the first statement of each method.
+    -When this parameter is enabled, the rule will only check for recursive 
+     calls within the first statement of a method.  Recursive calls later in the
+     method may or may not result in an infinite recursion depending on the 
+     control flow of the method.  However, recursive calls within the first
+     statement are guaranteed to lead to an infinite recursion because they will
+     always be executed.
+    -By default, this parameter is "on" to reduce noise. 
+-Allow recursive calls within the first statement if the call is in the "then" 
+ or "else" part of a conditional expression. (Default is on.)
+    -When this parameter is enabled, the rule will allow recursive calls within 
+     the first statement of a method in conditional expressions of the form 
+     "a ? b : c" provided that the recursive call appears in the "then" or 
+     "else" portion of the conditional expression.  A violation will be flagged 
+     regardless of the value of this parameter if the recursive call is made in 
+     the conditional part of the conditional expression (the part represented by 
+     "a"). 
+-Ignore calls to potentially overridden methods where the calling object is not 
+ "this". (Default is on.)
+    -If the method being called is non-"static", non-"private", and non-"final" 
+     and the calling object is not "this" (either explicitly or implicitly), it
+     is impossible to determine before runtime which method will be called since 
+     overridden versions of the method may be called.  Which method will be 
+     called depends on the runtime type of the calling object.  For this reason, 
+     the rule cannot determine whether or not "recursive" calls on the first 
+     line where the calling object is not "this" will cause an infinite 
+     recursion in these cases.  By default, such cases will not be flagged as 
+     violations.
+     
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class FLRC {
+    public static void main(String[] args) {
+        System.out.println("3! = "+factorial(3));
+    }
+    
+    public static int factorial(int num) {
+        return num * factorial(num - 1);  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In this case, check for a base case so that the recursion will terminate 
+normally.
+
+package examples.rules.pb.logic;
+
+public class FLRCFixed {
+    public static void main(String[] args) {
+        System.out.println("3! = "+factorial(3));
+    }
+    
+    public static int factorial(int num) {
+        if (num == 0) {                    // FIXED
+            return 1;
+        }
+        
+        return num * factorial(num - 1);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-674: Uncontrolled Recursion
+<A HREF="https://cwe.mitre.org/data/definitions/674.html">https://cwe.mitre.org/data/definitions/674.html</A>
+
+</PRE>
+</BODY>
+</HTML>

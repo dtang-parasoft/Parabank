@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use library methods for string replacements of special characters in HTML and XML [VVSG.2_5_3_B.STREP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use library methods for string replacements of special characters in HTML and XML [VVSG.2_5_3_B.STREP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the java.lang.String.replace() method is called with
+specified string parameters passed as string literals or constant variables.
+The rule must be parameterized to specify the strings the rule will check for
+(see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+In some contexts, manually replacing stings may be error-prone, which affect
+security. For example, incorrect escaping HTML or XML characters may lead to
+XSS attacks.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Report the replace() method called with the following string parameters: -
+   allows you to specify the stings the rule will check for in the parameters
+   of the replace() method. Specify the pairs of stings in the following
+   columns:
+    - Old string - specifies the string passed as the first parameter.
+    - New string - specifies the string passed as the second parameter.
+    By default, the rule identifies the following pairs of parameters:
+	  Old sting    New string
+         "           &amp;quot;
+         '           &amp;apos;
+         &lt;           &amp;lt;
+         &gt;           &amp;gt;
+         &amp;           &amp;amp;
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you replace strings that match a given pattern by using
+a dedicated library rather than manually inserting special characters and
+formatting.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class STREP {
+    private void method() {
+        String asdf = "asdf";
+        asdf.replace("'", "&amp;apos;");//VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using the libraryReplace instead of calling
+the replace() method.
+
+package examples.rules.security.wsc;
+
+public class STREPFixed {
+    private void method() {
+        String asdf = "asdf";
+        libraryReplace(asdf,"'", "&amp;apos;");//FIXED
+    }
+    String libraryReplace(String one, String two, String three){
+        String result=null;
+        //validation and replacement
+        return result;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Secure Coding Guidelines for Java SE 
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html">http://www.oracle.com/technetwork/java/seccodeguide-139067.html</A>
+
+</PRE>
+</BODY>
+</HTML>

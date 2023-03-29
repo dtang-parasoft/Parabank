@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use blocking methods while holding a lock [BD.TRS.TSHL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use blocking methods while holding a lock [BD.TRS.TSHL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where methods that suspend thread execution for a certain time
+(such as Thread.sleep()) are called with a lock held--thus unnecessarily increasing
+resource contention between threads.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps prevent unnecessary resource contention between threads as well as
+thread starvation.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+public class Example
+{
+    private Object _lockVariable;
+
+    public void sleepThenAct()
+        throws InterruptedException
+    {
+        synchronized (_lockVariable) {
+            Thread.sleep(100); // VIOLATION
+            // do something
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Removing the call to sleep() inside the synchronized block repairs the code:
+
+public class Repair
+{
+    private Object _lockVariable;
+
+    public void sleepThenAct()
+        throws InterruptedException
+    {
+        synchronized (_lockVariable) {
+            // do something
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-833: Deadlock
+<A HREF="https://cwe.mitre.org/data/definitions/833.html">https://cwe.mitre.org/data/definitions/833.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK09-J. Do not perform operations that can block while holding a lock
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK09-J.+Do+not+perform+operations+that+can+block+while+holding+a+lock">https://wiki.sei.cmu.edu/confluence/display/java/LCK09-J.+Do+not+perform+operations+that+can+block+while+holding+a+lock</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

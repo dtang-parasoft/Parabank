@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use octal integer literals [PB.TYPO.UOL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use octal integer literals [PB.TYPO.UOL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Integer literals beginning with a "0" are interpreted as octal literals.  This 
+rule will flag all cases where octal literals (literals beginning with a "0") are
+used.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+There is very rarely any reason to use octal literals in a Java program.  Octal 
+literals are often used by accident when the programmer adds an extra "0" to the
+beginning of an integer literal for padding.  This can lead to unexpected bugs.  
+Even if octal literals are used intentionally, it is probably not a good idea
+because it makes the code confusing for anyone who has to read it.  If there is 
+any way to avoid using octal literals, they should be avoided.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This program looks like it should print out "value = 12", but it prints out 
+"value = 10" because "012" is the octal equivalent of decimal "10".
+  
+package examples.rules.pb.typo;
+
+public class UOL {
+    public static void main(String[] args) {
+        int value = 012;  //VIOLATION
+        System.out.println("value = "+value);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove any leading "0"'s to make the octal literal a decimal literal if the 
+literal was accidentally made an octal literal. 
+
+package examples.rules.pb.typo;
+
+public class UOLFixed {
+    public static void main(String[] args) {
+        int value = 12;  //FIXED
+        System.out.println("value = "+value);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+    Addison-Wesley, 2005, pp. 139-141
+
+</PRE>
+</BODY>
+</HTML>

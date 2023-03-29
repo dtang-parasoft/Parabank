@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parenthesize complex expressions in 'print()' or 'println()' statements [PB.CUB.STRCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parenthesize complex expressions in 'print()' or 'println()' statements [PB.CUB.STRCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unparenthesized complex expression that are passed to 'print()' or
+'println()' of 'java.io.PrintStream' as arguments. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+As Java allows string concatenation using the '+' operator, ambiguity could easily arise
+when string concatenation are mixed with other operators (==, != etc.) in a single 
+statement. These ambiguities could sometimes lead to possible bugs. In most cases, 
+these bugs would be revealed at compile time as type incompatibilities. However, 
+'print()' and 'println()' from 'PrintStream' basically accept all primitive types which 
+makes these possible bugs hard to be distinguished until runtime. In order to avoid
+ambiguity, the programmer should parenthesize the expression correspondingly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class STRCC {
+    public static void main(String[] arg) {
+         Object obj = null;
+         System.out.println("Obj is " 
+                          + obj != null ? obj.toString() : "null"); 
+                  //VIOLATION, as the compiler would interpret
+                  //the expression as ("Obj is" + obj) != null, which is not intended
+     }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class STRCCFixed {
+    public static void main(String[] arg) {
+         Object obj = null;
+         System.out.println("Obj is " 
+                          + (obj != null ? obj.toString() : "null"));  //FIXED
+     }
+}
+
+</PRE>
+</BODY>
+</HTML>

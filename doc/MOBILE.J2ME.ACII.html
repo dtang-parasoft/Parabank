@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use anonymous classes as interface implementors [MOBILE.J2ME.ACII]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use anonymous classes as interface implementors [MOBILE.J2ME.ACII]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies anonymous classes used as interface implementors. 
+An error is reported for any  anonymous inner class used to implement an
+interface. 
+
+Anonymous classes have become a popular pattern for
+implementing event listeners or Runnables, even though they are often
+not necessary and incur the overhead of an additional class and an
+additional object creation. Often, the interface can be implemented
+by the enclosing class, and an existing instance of that class can
+be re-used. However, this refactoring can be applied only if the
+anonymous class has an object context and defines no additional
+fields. Additional fields indicate that the anonymous class keeps
+its own object state; in this case a refactoring cannot be easily
+applied.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule typically reduces the number of classes required for an
+embedded application. Re-using an existing instance of the
+enclosing class reduces the number of allocated objects (and
+therefore the strain on memory and the garbage collector). It
+also often improves the readability of the code by eliminating the
+awkwardly-nested syntax of anonymous inner classes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Consider the following code, which incurs the overhead of an
+additional class and an additional object creation to perform a very
+simple task:
+
+package examples.rules.mobile.j2me;
+
+public class ACII extends Frame {
+     private TextField text;
+
+     public ACII() {
+         add(text = new TextField(), "Center");
+         pack();
+         setVisible(true);
+         text.addActionListener(new ActionListener() { // VIOLATION
+             public void actionPerformed(ActionEvent event) {
+                 text.setText("");
+             }
+         });
+     }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The example code can be rewritten without the inner class as:
+
+package examples.rules.mobile.j2me;
+
+public class ACIIFixed extends Frame
+ implements ActionListener { // FIXED
+     private TextField text;
+
+     /**
+      * Creates a new example object.
+      */
+     public ACIIFixed() {
+         add(text = new TextField(), "Center");
+         pack();
+         setVisible(true);
+         text.addActionListener(this); // FIXED
+     }
+
+     public void actionPerformed(ActionEvent event) {
+         text.setText("");
+     }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Eric Giguere, Optimizing J2ME Application Size,
+<A HREF="http://sun.systemnews.com/fullsource?article=6028">http://sun.systemnews.com/fullsource?article=6028</A>
+
+</PRE>
+</BODY>
+</HTML>

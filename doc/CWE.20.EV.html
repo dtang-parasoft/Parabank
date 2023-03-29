@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure validators are enabled in the 'struts-config.xml' [CWE.20.EV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure validators are enabled in the 'struts-config.xml' [CWE.20.EV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if validators are disabled in &lt;action&gt; tags in 'struts-config.xml'.   
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If attribute "validate" is set to "false", it will disable the Struts Validator performed by the form. 
+This may cause security problem because all inputs will not be validated.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;struts-config&gt;
+    &lt;action-mappings&gt;
+        &lt;!-- VIOLATION : validateion is disabled
+        &lt;action path="/jtest" type="com.parasoft.jtest.LoginAction"
+            validate="false"&gt;
+                &lt;forward name="login" path="/login.jsp"/&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;struts-config&gt;
+    &lt;action-mappings&gt;
+        &lt;!-- FIXED : enables the validation check
+        &lt;action path="/jtest" type="com.parasoft.jtest.LoginAction"
+            validate="true"&gt;
+                &lt;forward name="login" path="/login.jsp"/&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+&lt;/struts-config&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-109: Struts: Validator Turned Off
+<A HREF="https://cwe.mitre.org/data/definitions/109.html">https://cwe.mitre.org/data/definitions/109.html</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

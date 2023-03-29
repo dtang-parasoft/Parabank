@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not increment or decrement on the same variable over multiple nested "for" loop statements [PB.LOGIC.JI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not increment or decrement on the same variable over multiple nested "for" loop statements [PB.LOGIC.JI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code where the same loop variable 
+gets incremented or decremented over multiple nested loops. 
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Loop variables that are incremented/decremented over multiple nested
+for loops are most likely mistakenly placed incrementers, and 
+they would result in unexpected looping behaviors. Even if they 
+are intentional, they could still be confusing and potentially 
+result in logical errors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class JI {
+    public void myMethod() {
+        for (int i= 0; i&lt; 10; i++) {
+            for (int j= 9; j&gt;= 0; i--) { //VIOLATION
+                //INFINITE LOOP
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class JIFixed {
+    public void myMethod() {
+        for (int i= 0; i&lt; 10; i++) {
+            for (int j= 9; j&gt;= 0; j--) { //FIXED
+                //LOOPING 100 TIMES
+            }
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

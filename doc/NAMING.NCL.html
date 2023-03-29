@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for classes [NAMING.NCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for classes [NAMING.NCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that do not follow the user-defined
+naming convention (as specified in a regular expression). By default, the
+rule requires that the class name starts with a capital first letter. An 
+error is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Top-level class
+    -regular expression of top-level class
+     (Class names should match the listed regular expression.
+      Default is not set.)
+    -check public top-level class. (default is true)
+    -check package-private top-level class. (default is true)
+
+-Member class
+    -regular expression of member class
+     (Class names should match the listed regular expression.
+      Default is not set.)
+    -check public member class. (default is true)
+    -check protected member class. (default is true)
+    -check package-private member class. (default is true)
+    -check private member class. (default is true)
+
+
+-Local class (class inside method)
+    -regular expression of local class
+     (Class names should match the listed regular expression.
+      Default is not set.)
+    -check package-private local class. (default is true)
+
+-Negate regular expression (Option is available on all tabs.)
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     class matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for class names which do not match the regular expression 
+     specified.
+-Ignore case (Option is available on all tabs.)
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of classes 
+     must match the regular expression specified, including in case. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This helps enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class NCL {  
+
+    class nclinner {  // VIOLATION
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the identifier to follow the convention.
+
+package examples.rules.naming;
+
+public class NCLFixed {  
+
+    class NCLInnerFixed {  // FIXED 
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 6.1.2 of <A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Section 9 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367</A>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare a "public" constructor that takes no parameters [SERVLET.MDC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare a "public" constructor that takes no parameters [SERVLET.MDC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Servlet classes that lack a "public" constructor
+that takes no parameters.  An error is reported for each occurrence.
+Note that if a Servlet class does not define any constructor, it would
+not be flagged, since such a class would have an implicit default constructor 
+that takes no parameter.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The Container invokes no-argument constructor to create an 
+instance of the Servlet class. If such a constructor is not present,
+the Container would be unable to create the Servlet instance.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class MDC extends HttpServlet {
+
+    // VIOLATION : missing default constructor
+    public MDC(String name) { 
+    // do something
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class MDCFixed extends HttpServlet {
+
+    public MDCFixed(String name) { 
+    // do something
+    }
+
+    public MDCFixed() { // FIXED
+    // do something
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Limit the number of lines in "privileged" code blocks [CWE.250.PCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Limit the number of lines in "privileged" code blocks [CWE.250.PCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if the "run()" method of a
+"java.security.PrivilegedAction" or "java.security.PrivilegedExceptionAction"
+implementation contains greater than the specified number of lines.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Privileged code should be kept minimized to improve clarity and reduce chances
+for errors.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check implementations of "java.security.PrivilegedAction" (default on)
+-Check implementations of "java.security.PrivilegedExceptionAction" (default on)
+-Limit number of lines in "run()" method to (default 10)
+    Comments and blank lines are not included in this count.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This code uses the hard-coded salt "ThisIsTheSalt".
+
+package examples.rules.security.eab;
+
+import java.security.PrivilegedAction
+
+public class PCL implements PrivilegedAction {
+    public final Object run() { //VIOLATION
+        List arrayList = new ArrayList();
+        Object[] array = getData();
+
+        for (int i = 0; i &lt; array.length; i++) {
+            Object o = array[i];
+            if (o instanceof SensitiveType) {
+                SensitiveType st = (SensitiveType) o;
+                Object result = sensitiveOperation(st);
+                if (result != null) {
+                    arrayList.add(result);
+                }
+            }
+            else {
+                break;
+            }
+        }
+        return arrayList;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Refactor the code to reduce the number of lines in the privileged code block.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+2022 CWE Weaknesses On the Cusp
+CWE-269: Improper Privilege Management
+<A HREF="https://cwe.mitre.org/data/definitions/269.html">https://cwe.mitre.org/data/definitions/269.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-250: Execution with Unnecessary Privileges
+<A HREF="https://cwe.mitre.org/data/definitions/250.html">https://cwe.mitre.org/data/definitions/250.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+SEC51-J. Minimize privileged code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SEC51-J.+Minimize+privileged+code">https://wiki.sei.cmu.edu/confluence/display/java/SEC51-J.+Minimize+privileged+code</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling, circumventing, or altering implemented security safeguards/countermeasures
+APSC-DV-000510: The application must execute without excessive account permissions
+
+</PRE>
+</BODY>
+</HTML>

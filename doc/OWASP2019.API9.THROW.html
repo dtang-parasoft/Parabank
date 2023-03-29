@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the '@throws' or '@exception' Javadoc tag in methods [OWASP2019.API9.THROW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the '@throws' or '@exception' Javadoc tag in methods [OWASP2019.API9.THROW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any method Javadoc comment whose number of 
+'@throws' tags does not equal the number of exceptions in the "throws" list.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-check "public" methods (default as true)
+-check "protected" methods (default as true)
+-check "package-private" methods (default as true)
+-check "private" methods (default as false)
+-Use this tag for overriding and implementing methods: (default is '@see')
+    -If an overriding or implementing method contains this tag, this method will 
+     not be checked.  
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Commenting your code is a good way to document its behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+import java.io.*;
+
+public class THROW { 
+    /**
+     * method()
+     */
+    public void method () throws IOException {  // VIOLATION
+        System.in.read ();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the '@throws' Javadoc tag for each exception in the "throws" list.
+
+package examples.rules.javadoc;
+
+import java.io.*;
+
+public class THROWFixed {
+    /**
+     * @throws IOException
+     */
+    public void method () throws IOException {  // FIXED
+        System.in.read ();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 119
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.THROW2
+@deprecated JAVADOC.THROW3
+@deprecated JAVADOC.THROW4
+
+</PRE>
+</BODY>
+</HTML>

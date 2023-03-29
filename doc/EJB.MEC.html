@@ -1,0 +1,76 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define a matching 'ejbPostCreate()' method for each 'ejbCreate' method in entity bean classes [EJB.MEC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define a matching 'ejbPostCreate()' method for each 'ejbCreate' method in entity bean classes [EJB.MEC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies entity bean classes that have 'ejbCreate' methods without
+corresponding 'ejbPostCreate' methods. 
+
+An error is reported if an entity bean does not define a corresponding 
+'ejbPostCreate' method for each 'ejbCreate'  method (as required by the 
+Enterprise JavaBeans specification version 2.0).  The rule can also be 
+parameterized to check that an entity bean defines a corresponding 'ejbCreate'
+method for each 'ejbPostCreate' method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check that each 'ejbPostCreate()' method has a corresponding 'ejbCreate()' 
+ method.
+    -Default is false.
+    -By default, the rule only checks that each 'ejbCreate()' method has a 
+     corresponding 'ejbPostCreate()' method.  If this parameter is enabled, the
+     rule will also check the opposite case.  That is, it will check that there
+     are no 'ejbPostCreate()' methods which do not have a corresponding 
+     'ejbCreate()' method.  
+    
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 10.6.5 (p. 192) of the EJB specification (version 2.0).  The EJB 
+specification is available online at <A HREF="http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/">http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/</A>
+
+</PRE>
+</BODY>
+</HTML>

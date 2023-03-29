@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing hardcoded usernames/passwords/URLs to database connection methods [APSC_DV.003110.HCCS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing hardcoded usernames/passwords/URLs to database connection methods [APSC_DV.003110.HCCS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Passing constant values into a database connection method is a security risk.  
+These constant values can include the username, password, and URL for accessing
+the database.  Instead of using constant Strings to connect to a database, the 
+programmer should get database connection Strings from a secure source.  By 
+default, this rule will check the following things:
+   1. this rule will look for any calls to the "getConnection()" method of 
+      "java.sql.DriverManager" where all the arguments are constant Strings.
+   2. this rule will check for the password is hard-coded or not when calling 
+      the "getConnection()" method of "java.sql.DriverManager".
+   3. this rule will check indirect calls to "getConnection()".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Data Security
+
+If constant database connection Strings are found in a method, they probably 
+were accidentally left in the code.  They should be taken out of all production 
+code because leaving these Strings in the code can grant unauthorized users 
+access to data. 
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+This rule also helps to enforce the PCI DSS Requirement #8: "Assign a unique ID 
+to each person with computer access".  Specifically, this rule helps to test for 
+Issue 8.5.8: "Do not use group, shared, or generic accounts and passwords".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Additional Database Connection Methods (in form of &lt;qualified name of declaring 
+ type&gt;#&lt;method name&gt;)
+    -Methods should be added to this list if their source code is not available,
+     if they use a method other than "java.sql.DriverManager.getConnection()" to
+     connect to the database, or if they call "DriverManager.getConnection()" 
+     indirectly at a nested method call level greater than one.
+    -Default value is an empty list.
+    -Example: To add the method "dbConnect()" in the class "HCCS" and the
+     package "examples.rules.security.wsc" to this list, you would enter 
+     "examples.rules.security.wsc.HCCS#dbConnect".
+    
+    
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class HCCS {
+    public void method() {
+        DB db = new DB();
+        Connection conn = db.dbConnect("jdbc:oracle:thin:@localhost:1521/test",
+            "scott", "tiger");                                       //VIOLATION
+    }
+    
+    class DB {
+        public DB() {
+        }
+        
+        public Connection dbConnect(String db_connect_string, String db_userid,
+            String db_password) {
+            try {                
+                Connection conn = DriverManager.getConnection(
+                    db_connect_string, db_userid, db_password);             
+                System.out.println("connected");
+                return conn;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Instead of passing constant String values into the database connection method,
+get the required Strings from a secure source.  You may need to query the user
+for this information.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard:
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-798: Use of Hard-coded Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/798.html">https://cwe.mitre.org/data/definitions/798.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC03-J. Never hard code sensitive information
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information">https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003110: The application must not contain embedded authentication data
+
+</PRE>
+</BODY>
+</HTML>

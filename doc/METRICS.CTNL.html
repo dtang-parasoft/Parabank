@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Number of lines in "class" or "interface" [METRICS.CTNL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Number of lines in "class" or "interface" [METRICS.CTNL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+Counts the total number of lines in a class or interface, including comments,
+blank lines, and "{ }" braces.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest will report an error if the value is greater or equal 500.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Big classes are difficult to understand and maintain. Consider breaking down
+big classes into smaller ones performing related tasks.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+We count from the line containing the class' opening "{" brace to the line
+containing the class' closing "}" brace.
+
+The following class counts as two lines:
+
+package examples.rules.metrics;
+
+public class CTNL {
+}
+
+//As does this one:
+
+class CTNL2
+{
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+By Mark Schroeder "A Practical Guide to Object-Oriented Metrics"
+IT Pro, November/December, 1999.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate shortcut target paths before use [CWE.64.LNK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate shortcut target paths before use [CWE.64.LNK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The shortcut (file with the .lnk extension) can permit an attacker to
+read/write a file that they originally did not have permissions to
+access." [CWE-64]
+
+This rule identifies Windows shortcuts whose targets may be outside of
+the intended control sphere due to inadequate validation when resolving 
+the shortcut target path.
+
+The rule detects when the ShellLink library is used in code and triggers when
+the resolveTarget() method is called on a ShellLink object without validation.
+
+The rule must be parameterized to specify acceptable validating methods (see
+PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"An attacker may be able to traverse the file system to unintended locations
+and read or overwrite the contents of unexpected files. If the files are used
+for a security mechanism then an attacker may be able to bypass the mechanism."
+[CWE-59]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Validating methods" parameter allows you to specify methods the rule will
+assume to be validating methods. Fill in the following columns to configure
+a method:
+    - Type (qualified name in regular expressions)
+        Specifies the qualified name of the class where the validating method
+		is declared. The default is ".*".
+    - Method name (in regular expressions)
+        Specifies the name of the method. The default is ".*[vV]validate.*".
+    - Verify that resolveTarget() is checked by this method
+        If enabled, the rule assumes that the method is used for validation,
+		but it does not require resolveTarget() to be declared inside
+		the method.
+    - Verify that resolveTarget() is declared in this method
+        If enabled, the rule assumes that resolveTarget() must be declared
+		inside the method.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent an attacker from exploiting shortcuts to gain
+unauthorized access to resources.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the resolveTarget() method is called on a ShellLink
+object without validation.
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import mslinks.ShellLink;
+import mslinks.ShellLinkException;
+
+public class LNK
+{
+    public static void main(String[] args) throws IOException, ShellLinkException {
+        ShellLink sl = new ShellLink(new File("somePath"));
+        sl.resolveTarget(); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use a validating method to validate the value returned by
+sl.resolveTarget().
+
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import mslinks.ShellLink;
+import mslinks.ShellLinkException;
+
+public class LNK
+{
+    public static void main(String[] args) throws IOException, ShellLinkException {
+        ShellLink sl = new ShellLink(new File("somePath"));
+        validate(sl.resolveTarget()); // CORRECT
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Weaknesses On the Cusp
+CWE-59: Improper Link Resolution Before File Access ('Link Following')
+<A HREF="https://cwe.mitre.org/data/definitions/59.html">https://cwe.mitre.org/data/definitions/59.html</A>
+
+CWE-64: Windows Shortcut Following (.LNK)
+<A HREF="https://cwe.mitre.org/data/definitions/64.html">https://cwe.mitre.org/data/definitions/64.html</A>
+
+</PRE>
+</BODY>
+</HTML>

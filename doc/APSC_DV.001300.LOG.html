@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing unvalidated binary data to log methods [APSC_DV.001300.LOG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing unvalidated binary data to log methods [APSC_DV.001300.LOG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+Arbitrary data (such as data from external sources) should not be considered
+safe to log into a file. Such data should be filtered or, preferably,
+converted to hex values before logging.
+This rule detects when unvalidated binary data is passed to a logging method.
+
+The rule must be parameterized with a list of logging and validating
+methods.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Validating methods" parameter allows you to specify methods that can
+convert binary data to safe values By default, the return values of
+the following methods are considered to be safe:
+- the "encode(byte[] )" method of com.google.common.io.BaseEncoding type
+- the "toHexString(byte )" method of type java.lang.Integer type
+
+Fill in the following columns to configure additional methods.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Logging methods" parameter allows you to specify logging methods.
+The rule triggers when binary data is passed as a parameter to one of
+these methods. By default, the parameters of the following methods are
+considered to be dangerous:
+- the "*log*" method of "*[Ll]og*" type
+- the "*info*" method of "*[Ll]og*" type
+- the "*warn*" method of "*[Ll]og*" type
+- the "*error*" method of "*[Ll]og*" type
+
+Fill in the following columns to configure additional methods.
+- "Enabled" - enables or disables the logging method. If disabled, the rule
+    does not consider the method to be a logging method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "Dangerous parameters" - specifies which method parameters are dangerous.
+    List 1-based indexes of parameters separated by a comma or use "*" to
+    specify that all method parameters are cleaned.
+
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Logging binary data directly as a sting may result in incomplete log files
+due to string termination.
+This rule helps you ensure that your log files contain the expected data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
+
+public class Example
+{
+    private Logger logger;
+
+    public void messageReceived(InputStream is)
+        throws IOException
+    {
+        byte[] bytes = IOUtils.toByteArray(is);
+        logger.info("Message Received: " + new String(bytes)); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Convert array of bytes to hex value using validation method.
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
+
+public class Repair
+{
+    private Logger logger;
+
+    public void messageReceived(InputStream is)
+        throws IOException
+    {
+        byte[] bytes = IOUtils.toByteArray(is);
+        logger.info("Message Received: " + BaseEncoding.base16().encode(bytes)); // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001290: The application must protect audit information from unauthorized modification.
+APSC-DV-001300: The application must protect audit information from unauthorized deletion.
+
+</PRE>
+</BODY>
+</HTML>

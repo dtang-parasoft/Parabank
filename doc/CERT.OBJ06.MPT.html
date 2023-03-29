@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass user-given mutable objects directly to certain types [CERT.OBJ06.MPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass user-given mutable objects directly to certain types [CERT.OBJ06.MPT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that mutable objects, which are passed as parameters to
+methods, are not passed directly to certain constructors. Instead of passing
+these objects directly, a copy should be made. This way, the objects cannot
+be unexpectedly changed while in use. A violation is flagged for each
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule has similarities to SECURITY.EAB.SMO. SECURITY.EAB.SMO checks if a
+mutable object is stored to a variable, while this rule checks if it is passed
+to a constructor.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability "A4-Insecure Direct Object References".
+
+See BENEFITS section.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.5.4: "Insecure 
+direct object references".
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "public" methods (Default is "true")
+-Check "protected" methods (Default is "false")
+-Check "package-private" methods (Default is "false")
+-What to check
+    -Check arrays (Default is "true")
+    -Check mutable types (Default is "true")
+-Check for values passed to new instances of the following types:
+    Specify types as a regular expression
+
+    "java\.security\.PrivilegedAction" (default)
+    "java\.security\.PrivilegedExceptionAction" (default)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If parameters are passed directly to certain constructors, it may be possible
+for the data to be changed while in use. For example, if a mutable object was
+passed to "privileged" code, it could be altered while in use by the privileged
+code. This could cause erroneous or dangerous behavior. (See the example below.)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import java.util.Date;
+
+public class MPT {
+    public void doPrivilegedAction(Date d) {
+        PrivilegedDateAction pda = new PrivilegedDateAction(d); //VIOLATION
+        ...
+    }
+}
+class PrivilegedDateAction implements PrivilegedAction {
+     PrivilegedDateAction(Date d) {
+         ...
+     }
+     public Object run() {
+         ...
+     }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make a copy of the parameter object using either a constructor or a "clone()" 
+method, and use this copy of the object instead.
+
+package examples.rules.security.eab;
+
+public class MPTFixed {
+    public void doPrivilegedAction(Date d) {
+        Date d2 = new Date(d.getTime());
+        PrivilegedDateAction pda = new PrivilegedDateAction(d2); //FIXED
+        ...
+    }
+}
+class PrivilegedDateAction implements PrivilegedAction {
+     PrivilegedDateAction(Date d) {
+         ...
+     }
+     public Object run() {
+         ...
+     }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  "Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+2.  PCI Data Security Standard:
+    <A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+    
+3.  OWASP Top 10 2013 (A4-Insecure Direct Object References):
+    <A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+4.  SEI CERT Oracle Coding Standard for Java
+    OBJ04-J. Provide mutable classes with copy functionality to safely allow passing instances to untrusted code
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ04-J.+Provide+mutable+classes+with+copy+functionality+to+safely+allow+passing+instances+to+untrusted+code">https://wiki.sei.cmu.edu/confluence/display/java/OBJ04-J.+Provide+mutable+classes+with+copy+functionality+to+safely+allow+passing+instances+to+untrusted+code</A>
+
+5.  SEI CERT Oracle Coding Standard for Java
+    OBJ05-J. Do not return references to private mutable class members
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ05-J.+Do+not+return+references+to+private+mutable+class+members">https://wiki.sei.cmu.edu/confluence/display/java/OBJ05-J.+Do+not+return+references+to+private+mutable+class+members</A>
+
+6.  SEI CERT Oracle Coding Standard for Java
+    OBJ06-J. Defensively copy mutable inputs and mutable internal components
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ06-J.+Defensively+copy+mutable+inputs+and+mutable+internal+components">https://wiki.sei.cmu.edu/confluence/display/java/OBJ06-J.+Defensively+copy+mutable+inputs+and+mutable+internal+components</A>
+
+</PRE>
+</BODY>
+</HTML>

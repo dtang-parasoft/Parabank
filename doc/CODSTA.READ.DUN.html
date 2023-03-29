@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use too many negation operators '!' in a single method [CODSTA.READ.DUN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use too many negation operators '!' in a single method [CODSTA.READ.DUN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any method that uses the negation operator, '!' more than 2 times(by default).
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum negation operator in method (default value is 2)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The negation operator makes code more difficult to read.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class DUN {
+    boolean method (boolean a, boolean b) {  // VIOLATION
+        if (!a)
+            return (!a &amp;&amp; !b);
+        else
+            return !b;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the negation operator if possible.
+
+package examples.rules.codsta.read;
+
+public class DUNFixed {
+    boolean method (boolean a, boolean b) {
+        if (a)
+            return !b;
+        else
+            return (! (a || b) );
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

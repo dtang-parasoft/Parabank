@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Disable LDAP deserialization [APSC_DV.001460.SC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Disable LDAP deserialization [APSC_DV.001460.SC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"The application deserializes untrusted data without sufficiently verifying
+that the resulting data will be valid." [CWE-502]
+
+
+The Lightweight Directory Access Protocol (LDAP) is an open standard protocol
+for accessing distributed directory information services over an IP network.
+Performing LDAP search queries involves using the 'SearchControls' class, for
+example, to determine the scope of search.
+By default, the 'SearchControls' class does not allow deserialization.
+Configuring 'SearchControls' to allow deserialization may enable an attacker
+to execute arbitrary code on the server. For this reason, you must ensure that
+deserialization is disabled in 'SearchControls' instances that are used to
+execute LDAP search queries. You can achieve this in one of the following ways:
+- by ensuring that the 'retobj' parameter is not set to 'true' in the class
+  constuctor.
+- by ensuring that the 'setReturningObjFlag' method is never called on
+  the object of the 'SearchControls' class.
+- by calling the 'setReturningObjFlag' with 'false' as an argument.
+
+This rule identifies instances of the 'SearchControls' class where
+deserialization is enabled. It detects when the 'setReturningObjFlag(true)'
+method is called on an object of the javax.naming.directory.SearchControls
+class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Deserialized data or code can often be modified without using the provided
+accessor functions if it does not use cryptography to protect itself.
+Furthermore, any cryptography would still be client-side security -- which is
+a dangerous security assumption. Data that is untrusted can not be trusted to
+be well-formed. " [CWE-502]
+
+"The impact of deserialization flaws cannot be overstated. These flaws can
+lead to remote code execution attacks, one of the most serious attacks
+possible."  [OWASP Top 10-2017]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent LDAP entry poisoning by disabling deserialization
+for the SearchControls class.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In the following example, deserialization is enabled by calling
+'setReturningObjFlag(true)'.
+
+    private static String example() throws NamingException {
+        InitialDirContext context = new InitialDirContext(new Properties());
+
+        SearchControls searchControls = new SearchControls();
+        searchControls.setReturningObjFlag(true); // VIOLATION
+
+        NamingEnumeration&lt;SearchResult&gt; answers = context.search("dc=Users,dc=test,dc=com", "(uid=userA)", searchControls);
+        return answers.next().getNameInNamespace();
+    }
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To disable deserialization, call 'setReturningObjFlag' with 'false' as
+an argument. Alternatively, you can remove the 'setReturningObjFlag', because
+deserialization is disabled by default.
+
+    private static String example() throws NamingException {
+        InitialDirContext context = new InitialDirContext(new Properties());
+
+        SearchControls searchControls = new SearchControls();
+        searchControls.setReturningObjFlag(false); // FIXED
+
+        NamingEnumeration&lt;SearchResult&gt; answers = context.search("dc=Users,dc=test,dc=com", "(uid=userA)", searchControls);
+        return answers.next().getNameInNamespace();
+    }
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/c66f98a4-954e-475a-9fe2-327c7a0b27dd">https://app.hackedu.com/link/c66f98a4-954e-475a-9fe2-327c7a0b27dd</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-502: Deserialization of Untrusted Data
+<A HREF="https://cwe.mitre.org/data/definitions/502.html">https://cwe.mitre.org/data/definitions/502.html</A>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+"A Journey from JNDI/LDAP Manipulation to Remote Code Execution Dream Land"
+Alvaro Munoz, Oleksandr Mirosh
+<A HREF="https://www.blackhat.com/us-16/briefings.html#a-journey-from-jndi-ldap-manipulation-to-remote-code-execution-dream-land">https://www.blackhat.com/us-16/briefings.html#a-journey-from-jndi-ldap-manipulation-to-remote-code-execution-dream-land</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'addClass()' instead of 'addResource()' to add a mapping to a 'Configuration' [HIBERNATE.CAR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'addClass()' instead of 'addResource()' to add a mapping to a 'Configuration' [HIBERNATE.CAR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for calls to the 'org.hibernate.cfg.Configuration.
+addResource()' method.  Instead of calling this method, it is recommended that
+you use the 'addClass()' method.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using the 'addClass()' method can be better than using the 'addResource()'
+method because it eliminates the need for hardcoded mapping filenames.  If you
+use 'addClass()', Hibernate will look for the mapping file in the classpath
+instead of in one file.
+
+This rule was created for use with Hibernate 3.1.  It is not guaranteed to apply
+to all versions of Hibernate.  You should not enable this rule if it does not
+apply to the version of Hibernate you are using.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.hibernate;
+
+public class CAR{
+    public void initConfig() {
+        Configuration cfg = new Configuration().addResource("Item.hbm.xml");  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.hibernate;
+
+public class CARFixed {
+    public void initConfig() {
+        Configuration cfg = new Configuration().addClass(Item.class);  //FIXED
+    }
+}
+
+class Item{
+    //some implementation of a mapped Item class
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/session-configuration.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/session-configuration.html</A>
+
+</PRE>
+</BODY>
+</HTML>

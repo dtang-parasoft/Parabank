@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Clear sensitive data after use [OWASP2019.API2.CSD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Clear sensitive data after use [OWASP2019.API2.CSD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if sensitive data is not cleared after use. 
+This rule checks "private" fields and local variables which are assigned the
+return value of "java.swing.JPasswordField#getPassword()" or
+"java.io.Console#readPassword()". If the return value of those methods are never
+cleared through use of "java.util.Arrays#fill()" or in a loop then a violation
+is flagged.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule can be used in conjunction with SLR.SDM, which ensures that sensitive
+data is stored in mutable objects.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Sensitive data should be cleared after it is no longer needed to ensure that it
+spends as little time in memory as possible.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class CSD {
+    private char[] password; //VIOLATION
+
+    public void checkPassword() {
+        Console c = System.console();
+        if (c != null) {
+            password = c.readPassword();
+        }
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Clear the "char[]" after use.
+
+package examples.rules.security.esd;
+
+public class CSD_Fixed {
+    private char[] password; //FIXED
+
+    public void checkPassword() {
+        Console c = System.console();
+        if (c != null) {
+            password = c.readPassword();
+        }
+        ...
+        Arrays.fill(password, ' ');
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Console (Java Platform SE 6):
+   <A HREF="http://java.sun.com/javase/6/docs/api/java/io/Console.html">http://java.sun.com/javase/6/docs/api/java/io/Console.html</A>
+
+2. JPasswordField (Java Platform SE 6):
+   <A HREF="http://java.sun.com/javase/6/docs/api/javax/swing/JPasswordField.html">http://java.sun.com/javase/6/docs/api/javax/swing/JPasswordField.html</A>
+
+3. Cigital Java Security Rulepack # 57:
+   <A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+4. OWASP API Security Top 10-2019
+   API2-Broken User Authentication
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+</PRE>
+</BODY>
+</HTML>

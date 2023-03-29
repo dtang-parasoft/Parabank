@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid hard-coding the arguments to certain methods [OWASP2019.API2.AHCA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid hard-coding the arguments to certain methods [OWASP2019.API2.AHCA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+There are certain methods for which the arguments should never be hard-coded 
+because hard-coding these arguments is a security risk.  For instance, any 
+method which takes a username or password as an argument should require the user
+to enter his username or password.  These methods should not accept hard-coded
+constant values because using these values will allow anyone access to sensitive
+data.  This rule will flag a violation for any case where the methods specified
+in the parameter table are passed hard-coded constant values. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Passing constant values to certain methods represents a security risk.  For 
+instance, for the method 'hash()' of the interface "org.owasp.esapi.Encryptor"
+which is included in the parameter list by default, passing a hard-coded 
+constant value as the second argument (the "salt") is a security risk because
+the salt is used to encrypt data and should not be exposed to users.  Passing in
+a constant value for the salt will allow all the developers who work on the code
+to see the salt.  Even worse, anyone with access to the byte code can use 
+"javap -c" to find out the value of the salt.  This method is just one example
+of a method which should not accept hard-coded constant values.  You should 
+customize the parameter table to list all the methods in your application which
+should not be passed hard-coded constant values.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Methods to Check
+    - Method (Specify &lt;qualified name of declaring type&gt;#&lt;method name&gt;(
+      &lt;parameter1 fully qualified type&gt;,&lt;parameter2 fully qualified type&gt;,...)
+        - By default, the method "org.owasp.esapi.Encryptor#hash(java.lang.String,java.lang.String)"
+          is included in the table.  The second argument to this method (the 
+          "salt" argument) should never be a hard-coded constant.
+    - Argument Index to Check ("0"-based)
+        - The default value for the "org.owasp.esapi.Encryptor#hash(java.lang.String,java.lang.String)"
+          method is "1", meaning that the second argument (since the index is 
+          "0"-based, not "1"-based) to this method should not be a hard-coded 
+          constant.
+        - For each method you specify in the "Method" column, you must have a 
+          corresponding table entry in this column to indicate which argument 
+          should not be a hard-coded constant.
+        - If you would like the rule to check multiple arguments for the same 
+          method, you should add multiple rows to the table for that method.  
+          There is currently no way to specify multiple indices for the same 
+          method in one row.
+
+Default Value:
+
+Method                                                            Argument Index to Check ("0"-based)
+------                                                            -----------------------------------
+org.owasp.esapi.Encryptor#hash(java.lang.String,java.lang.String) 1
+     
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This code uses the hard-coded salt "ThisIsTheSalt".
+
+package examples.rules.security.wsc;
+
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encryptor;
+import org.owasp.esapi.errors.EncryptionException;
+
+public class AHCA {
+    public static void main(String[] args) {
+        try {
+            Encryptor instance = ESAPI.encryptor();
+            String hash1 = instance.hash("Foo", "ThisIsTheSalt");  //VIOLATION
+        } catch(EncryptionException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Read the salt from a secure source instead of hard-coding it.  Preferably the 
+salt should be encrypted and stored in a secure location.
+
+package examples.rules.security.wsc;
+
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encryptor;
+import org.owasp.esapi.errors.EncryptionException;
+
+public class AHCA_Fixed {
+    public static void main(String[] args) {
+        try {
+            Encryptor instance = ESAPI.encryptor();
+            String hash1 = instance.hash("Foo", getSalt());  //FIXED
+        } catch(EncryptionException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static String getSalt() {
+        String salt = ""; 
+        
+        //...
+        //Some code should go here to read the salt from a secure source.
+        //...
+        
+        return salt;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard:
+    <A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC03-J. Never hard code sensitive information
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information">https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+</PRE>
+</BODY>
+</HTML>

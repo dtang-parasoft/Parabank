@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not access static members indirectly [CODSTA.POD.IASM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not access static members indirectly [CODSTA.POD.IASM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that static members are not accessed indirectly.  Static 
+methods and fields should be accessed using the name of the type in which they 
+are declared.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Accessing static members indirectly is poor coding style and can lead to 
+confusion.  It may also lead to bugs if new static members with the same names 
+as the static members which are indirectly accessed are added to the types 
+referenced.  This may cause the access to change so that it is accessing a 
+completely different member. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class IASM {
+    static class IASM_a
+    {
+        public static int FOO = 0;
+    }
+
+    class IASM_b extends IASM_a
+    {
+    }
+
+    public int getFoo()
+    {
+        return IASM_b.FOO;  //VIOLATION
+    }
+}
+
+Note: If a field "FOO" is added to IASM_b in this code, it will cause the 
+"getFoo()" method to access the wrong field.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Access static members using the name of the type in which they are declared.
+
+package examples.rules.codsta.pod;
+
+public class IASMFixed { 
+    static class IASM_a
+    {
+        public static int FOO = 0;
+    }
+
+    class IASM_b extends IASM_a
+    {
+    }
+
+    public int getFoo()
+    {
+        return IASM_a.FOO;  //FIXED- changed to direct access
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

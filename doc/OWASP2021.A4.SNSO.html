@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not store non-serializable objects as HttpSession attributes [OWASP2021.A4.SNSO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not store non-serializable objects as HttpSession attributes [OWASP2021.A4.SNSO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-Serializable objects stored as HttpSession attributes.
+Calls to the method "setAttribute(java.lang.String,java.lang.Object)" of the
+interface "javax.servlet.http.HttpSession" are checked for a non-Serializable
+second argument. An argument is considered Serializable if directly or
+indirectly implements the 'java.io.Serializable' interface. See NOTES for more
+information.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule treats arguments as Serializable if they implement directly or
+indirectly the 'java.io.Serializable' interface. This rule may be used in
+conjunction with SERIAL.NSFSC which determines whether implementors of the
+'java.io.Serializable' interface are truly Serializable.
+
+This rule does not attempt to determine the runtime implementation of an
+abstract class or interface argument to the 'setAttribute()' method.
+For example:
+    void addAttribute(HttpSession session, String name, List list) {
+        session.setAttribute(name, list);
+    }
+In this example the argument is of type 'List' which is a Collection. At runtime
+the actual parameter could be a number of implementations. This rule checks the
+specific type declared as being passed to 'setAttribute()' and as 'List' does
+not extend 'java.io.Serializable', a violation is reported in this instance. The
+'Check Collections' parameter can be used to enable or disable reporting of
+violations for this and similar instances.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The application stores a non-serializable object as an HttpSession attribute,
+which can hurt reliability." [CWE-579]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "null" values (default true)
+
+-Check abstract classes (default true)
+    Enabling this parameter will check abstract classes. This will report a
+    violation if the abstract class does not implement 'Serializable'.
+    Collections, Maps, and their implementations are excluded from this
+    parameter and are handled by their own parameters for greater flexibility.
+    See NOTES for more information.
+-Check interfaces (default true)
+    Enabling this parameter will check interfaces. This will report a violation
+    if the interface does not extend 'Serializable'. Collections, Maps, and
+    their subinterfaces are excluded from this parameter and are handled by
+    their own parameters for greater flexibility. See NOTES for more
+    information.
+-Check Collections (default false)
+    Enabling this parameter will check Collections. This will report a violation
+    if the parameter to 'setAttribute()' is 'java.util.Collection' or one of its
+    subinterfaces or implementations. See NOTES for more information.
+-Check Maps (default false)
+    Enabling this parameter will check Maps. This will report a violation if the
+    parameter to 'setAttribute()' is 'java.util.Map' or one of its
+    subinterfaces or implementations. See NOTES for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Applications may utilize multiple JVMs for reliability and performance. In order
+to maintain the appearance of a single application to the user, session
+attributes must be Serializable. Otherwise, they cannot be properly replicated
+across multiple JVMs.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SNSO {
+    public void setSessionAttribute(HttpSession session) {
+        session.setAttribute("SNSO", this); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SNSOFixed implements java.io.Serializable {
+    public void setSessionAttribute(HttpSession session) {
+        session.setAttribute("SNSOFixed", this); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-579: J2EE Bad Practices: Non-serializable Object Stored in Session
+<A HREF="https://cwe.mitre.org/data/definitions/579.html">https://cwe.mitre.org/data/definitions/579.html</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

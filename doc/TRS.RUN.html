@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use synchronization on methods that implement 'Runnable.run()' [TRS.RUN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use synchronization on methods that implement 'Runnable.run()' [TRS.RUN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not apply the "synchronized" modifier
+to the 'run ()' method of a class that implements the 'Runnable' "interface".
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quickfix All" feature is not available for this rule because there are some
+cases where it is not desirable to fix the violation (See the DRAWBACKS section). 
+The user should go through each violation separately and decide whether the 
+quickfix should be used.
+ 
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore methods with "@concurrency" tag values of "concurrent" or "sequential"
+    (default true)
+    Methods with the Design by Contract tag "@concurrency" are assumed to have
+    been analyzed and marked accordingly. Therefore, those with a value of
+    "concurrent" or "sequential" are ignored.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'run ()' method should be "synchronized" if it cannot be safely executed
+concurrently.  Multiple threads can be started for the same object implementing
+the Runnable interface and the method 'run ()' can be executed concurrently.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If the body of the 'run ()' method can be safely executed concurrently, then 
+the method should NOT be "synchronized".  Declaring the method as
+"synchronized" will slow down the program.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class RUN implements Runnable {
+    public void run () {  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the 'run ()' method "synchronized".
+
+package examples.rules.trs;
+
+public class RUNFixed implements Runnable {
+    public synchronized void run () {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.garret.ru/jlint/ReadMe.htm">http://www.garret.ru/jlint/ReadMe.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

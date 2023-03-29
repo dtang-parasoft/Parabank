@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not extend "Collection" and "Map" classes [PB.API.ECMC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not extend "Collection" and "Map" classes [PB.API.ECMC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases where the user attempts to extend classes which implement 
+"java.util.Collection" or "java.util.Map".  An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the programmer attempts to extend a class that implements Collection or Map, it is easy to 
+introduce bugs or break the contract of the Collection/Map.  Instead of extending a Collection/Map,
+the user should use one of the predefined Collections/Maps in the "java.util" package if possible.  
+
+If some customized behavior is required that is not available in any of the Collections/Maps in the 
+"java.util" package, you should use a wrapper class.  In the methods of the wrapper class, you 
+should add the necessary custom behavior and then call the methods of the class being wrapped.  
+Since classes in the "java.util" package are proven to work well, you should rely on these classes 
+as much as possible.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.util.ArrayList;
+
+public class ECMC extends ArrayList {  //VIOLATION
+    public void add(int index, Object element) {
+        //some code
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In this case, you can wrap the "ArrayList" class instead of extending it.  This will allow you to
+add your own behavior while still delegating as much work as possible to "ArrayList".  
+
+package examples.rules.pb.api;
+
+import java.util.ArrayList;
+
+public class ECMC_Fixed {  //FIXED - using a wrapper class for ArrayList instead
+    private ArrayList _arrayList = new ArrayList();
+
+    public void add(int index, Object element) {
+        //Add any necessary customized behavior for the 'add()' method here.   
+        _arrayList.add(index, element);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

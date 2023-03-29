@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'equals()' methods that always return false [PB.LOGIC.EQUS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'equals()' methods that always return false [PB.LOGIC.EQUS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This identifies equals() methods that would always return false. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using an equals() method that always returns false does not make much
+sense because it voids the functionality of the equals() method. The equals()
+method can never return true if the compile-time type of the method
+argument is not assignment-compatible to the compile-time type of the
+object on which the method is invoked. Especially in more complicated
+expressions, it may not always be obvious that two incompatible types
+are being compared. Such an error is very subtle and would not be
+detected by the compiler. Hence, enabling this rule could warn programmers
+of such a subtle but possible bug.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class EQUS {
+
+    private StringBuffer _string;
+
+    public EQUS(String string) {
+        _string = new StringBuffer(string);
+    }
+
+    public boolean isStringEqualTo(String string) {
+        return _string.equals(string); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class EQUSFixed {
+
+    private StringBuffer _string;
+
+    public EQUSFixed(String string) {
+        _string = new StringBuffer(string);
+    }
+
+    public boolean isStringEqualTo(String string) {
+        return _string.toString().equals(string); // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Weaknesses On the Cusp
+CWE-843: Access of Resource Using Incompatible Type ('Type Confusion')
+<A HREF="https://cwe.mitre.org/data/definitions/843.html">https://cwe.mitre.org/data/definitions/843.html</A>
+
+</PRE>
+</BODY>
+</HTML>

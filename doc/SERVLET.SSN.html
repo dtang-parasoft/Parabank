@@ -1,0 +1,191 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that all '&lt;servlet&gt;' elements contain a single non-empty '&lt;servlet-name&gt;' element in 'web.xml' files [SERVLET.SSN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that all '&lt;servlet&gt;' elements contain a single non-empty '&lt;servlet-name&gt;' element in 'web.xml' files [SERVLET.SSN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each '&lt;servlet&gt;' element in a 'web.xml' file should have a single, non-empty
+'&lt;servlet-name&gt;' child element.  If you are not using a schema or DTD file to
+perform validation, it is a common mistake to fail to include a valid 
+'&lt;servlet-name&gt;' child element for each '&lt;servlet&gt;' element.  This rule is 
+useful for cases where you are not using a schema or DTD file or you are using a 
+schema or DTD file which will not catch all errors related to the use of the 
+'&lt;servlet-name&gt;' element.
+
+This rule will catch the following problems related to the use of the '&lt;servlet&gt;'
+and '&lt;servlet-name&gt;' elements in a 'web.xml' file:
+
+1.  A '&lt;servlet&gt;' element which contains no '&lt;servlet-name&gt;' child element:  
+Each servlet in a 'web.xml' file should have a name.
+2.  A '&lt;servlet&gt;' element which contains multiple '&lt;servlet-name&gt;' child
+elements: If multiple names are specified for the same servlet, it is non-
+deterministic which one will be used.  
+3.  An empty '&lt;servlet-name/&gt;' tag: '&lt;servlet-name&gt;' elements should contain an 
+open tag, a text body, and a close tag.  It does not make sense to have an empty
+'&lt;servlet-name/&gt;' tag.
+4.  A '&lt;servlet&gt;' element which has a '&lt;servlet-name&gt;' child element with an 
+empty body or a body consisting entirely of whitespace characters: It does not 
+make sense to have a servlet with an empty name or a name consisting entirely of
+whitespace characters.
+
+A violation will be flagged for each '&lt;servlet&gt;' element in a 'web.xml' file 
+which contains one of the problems listed above.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+We recommend using a schema or DTD file for validation of 'web.xml' files.  If 
+you are using a schema or DTD file, the validator will catch many of the same
+problems which are caught by this rule.  The rule SERVLET.SDTD can be used to 
+enforce the use of a schema or DTD file in all 'web.xml' files.  We recommend 
+using SERVLET.SSN in conjunction with SERVLET.SDTD to find 'web.xml' files which 
+do not make use of a schema or DTD file for validation and which may contain 
+errors because of this.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Failure to specify a correct name for each servlet in a 'web.xml' file may cause
+a denial of access. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This sample 'web.xml' file contains four '&lt;servlet&gt;' elements.  Each of these 
+elements contains a naming problem, and these naming problems will not be caught
+by the validator because no schema or DTD file is being used.
+
+web.xml:
+
+&lt;web-app&gt;
+
+    &lt;description&gt;
+      Sample web.xml file
+    &lt;/description&gt;
+    &lt;display-name&gt;Sample web.xml file&lt;/display-name&gt;
+
+    &lt;servlet&gt;  &lt;!-- VIOLATION: No name --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+  
+    &lt;servlet&gt;
+        &lt;servlet-name/&gt;  &lt;!-- VIOLATION: Empty &lt;servlet-name/&gt; tag --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet1&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+ 
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;   &lt;/servlet-name&gt;  &lt;!-- VIOLATION: &lt;servlet-name&gt; element
+                                   with a body consisting entirely of whitespace --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet2&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt; 
+ 
+    &lt;servlet&gt;  &lt;!-- VIOLATION: Multiple &lt;servlet-name&gt; children --&gt;
+        &lt;servlet-name&gt;ExampleServlet3&lt;/servlet-name&gt;
+        &lt;servlet-name&gt;DuplicateNameExample&lt;/servlet-name&gt;  
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet3&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Fix all the naming problems and use a schema or DTD file so that it will be 
+easier to find similar problems in the future.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> 
+            <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;
+
+    &lt;description&gt;
+      Sample web.xml file
+    &lt;/description&gt;
+    &lt;display-name&gt;Sample web.xml file&lt;/display-name&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;  &lt;!-- FIXED --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+  
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet1&lt;/servlet-name&gt;  &lt;!-- FIXED --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet1&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+ 
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet2&lt;/servlet-name&gt;  &lt;!-- FIXED --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet2&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt; 
+ 
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet3&lt;/servlet-name&gt;  &lt;!-- FIXED --&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet3&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 26:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

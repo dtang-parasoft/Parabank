@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overwriting method parameters before each use [BD.PB.POVR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overwriting method parameters before each use [BD.PB.POVR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a method parameter value is overwritten before it 
+is used on paths for which the parameter already exists.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0.7
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Only parameters that are inside the actual method are analyzed. The rule 
+assumes that parameters used to invoke other methods are used correctly.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Parameters that are always overwritten are indicators of poor quality of 
+code or bug in the program. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is sample code that triggers a violation:
+
+public class Example
+{
+    class StackElement
+    {
+        public StackElement previous;
+
+        public int value;
+
+        public StackElement(StackElement previousElement, int value) // VIOLATION
+        {
+            previous = previousElement;
+            value = previousElement.value;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In the example above improper value is initialized by improper field.
+
+public class Repair
+{
+    public class StackElement
+    {
+        public StackElement previous;
+
+        public int value;
+
+        public StackElement(StackElement previousElement, int value) // NO VIOLATION
+        {
+            this.previous = previousElement;
+            this.value = value;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-563: Assignment to Variable without Use
+<A HREF="https://cwe.mitre.org/data/definitions/563.html">https://cwe.mitre.org/data/definitions/563.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

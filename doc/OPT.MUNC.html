@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary comparisons to "null" [OPT.MUNC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary comparisons to "null" [OPT.MUNC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is designed to detect unnecessary null checks.  That is, it will flag
+as a violation cases where a variable's value is known to be either null or 
+non-null and the variable is compared against the literal "null" anyway.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+It is inefficient and unnecessary to compare a variable against the value "null"
+if it can be determined by looking at the code whether or not the variable will
+be null.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public void foo(){
+    Object o;
+    o= null;
+        
+    for(int i= 0; i&lt;10; i++){
+        if(o== null){  //VIOLATION- o has to be null since it was set to null
+                       //when last used.
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Eliminate the unnecessary comparison.
+
+package examples.rules.opt;
+
+public void foo(){
+    Object o;
+    o= null;
+        
+    for(int i= 0; i&lt;10; i++){
+        //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid use of if statements if they can be replaced with switch statements [OPT.SWIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid use of if statements if they can be replaced with switch statements [OPT.SWIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that has a series of if statements that can be more
+efficient if they are replaced with switch statements.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A series of if statements may be replaced with a switch statement if they are
+linked with consecutive "else if" statements, and the expression that is
+evaluated in each if() statement compares a field access or method invocation 
+with a literal value that is able to be featured in the switch statement's
+"case" statement.  Duplicate variables are allowable between if statements, but
+not between different cases of a switch statement, so these cases are not
+flagged.  Also, if statements can use duplicate literal values as comparisons,
+but case literal values must be unique, so those if statements are not flagged
+either.  If a final "else" statement exists, it will be replaced with the
+"default" case.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Number of consecutive if statements before it should be flagged.
+     The default is 3, the minimum value is 2.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Switch statements are more efficient than unoptimized if statements, since an
+expression is only evaluated once in a switch statement, while it may be
+evaluated several times in a series of if statements.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SWIF{
+    int meth(){
+        if(meth()==0){
+            
+        }else if(meth()==1){
+            
+        }else if(meth()==2){
+            
+        }else{
+            
+        }
+        return 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SWIF_2{
+    int meth(){
+        switch (meth()) {
+            case 0:
+                
+                break;
+            case 1:
+                
+                break;
+            case 2:
+                
+                break;
+            default:
+                
+                break;
+        }
+        return 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

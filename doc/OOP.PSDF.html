@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare "private" or "static" methods as "final" [OOP.PSDF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare "private" or "static" methods as "final" [OOP.PSDF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+By default, this rule flags any methods which are declared either "private" or 
+"static" and which are also declared "final".  The rule can be customized to 
+check only "private" methods or only "static" methods by changing the 
+parameters.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "private" methods
+    -Default is "true".
+    -If this parameter is enabled, a violation will be flagged for any method
+     which is declared both "private" and "final".
+-Check "static" methods
+    -Default is "true".
+    -If this parameter is enabled, a violation will be flagged for any method
+     which is declared both "static" and "final".  
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Declaring a "private" method final is unnecessary due to the fact that "private"
+methods cannot be overridden.  Although "static" methods can technically be
+overridden (according to the Java language specification), they are usually not
+intended to be overridden, so there is also no need to declare them "final". 
+
+There are two possibilities for methods which violate this rule:
+
+1. The "final" keyword is redundant and can be removed.  Although this is not
+technically true for all "static" methods, it is true in almost all practical
+cases.
+2. The method was supposed to be an instance method but was accidentally 
+declared "static" or was supposed to have an accessibility other "private" but 
+was accidentally declared "private".
+
+This rule will catch both of these mistakes.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Declaring a "static" or "private" method "final" helps to emphasize that the 
+method cannot be overridden.  Some people may prefer to declare "static" or 
+"private" methods "final" for this reason.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class PSDF {
+    
+    public static final void foo() {} //VIOLATION
+    
+    private final void bar() {} //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The fix for each case depends on which of the two situations described in the 
+BENEFITS section applies to the case.  One possible fix is to remove the "final" 
+keyword if it is unnecessary.  Another fix is to make the method non-"static" or
+non-"private". 
+
+package examples.rules.oop;
+
+public class PSDF_Fixed {
+    
+    public static void foo() {} //FIXED
+    
+    public final void bar() {} //VIOLATION
+}
+
+</PRE>
+</BODY>
+</HTML>

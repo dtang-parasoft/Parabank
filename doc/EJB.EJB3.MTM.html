@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare multiple "@Timeout" methods [EJB.EJB3.MTM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare multiple "@Timeout" methods [EJB.EJB3.MTM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Stateless and MessageDriven beans which specify more than
+one "@Timeout" method. Methods are treated as a "@Timeout" method if they are
+of the form "void &lt;METHOD&gt; (Timer timer)" and satisfy one of the following:
+    1) The class implements "javax.ejb.TimedObject" and the method name is
+       "ejbTimeout".
+    2) The method is listed as "timeout-method" in the deployment descriptor.
+    3) The method declaration has the "javax.ejb.Timeout" annotation.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class MTM implements MTMInterface { //VIOLATION
+    @Timeout
+    void timeoutMethod(Timer timer) {
+        method1();
+    }
+
+    @Timeout
+    void timeoutMethod2(Timer timer) {
+        method2();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure the bean only has one "@Timeout" method. Remove or merge functionality
+from the excess methods.
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class MTMFixed implements MTMFixedInterface { //FIXED
+    @Timeout
+    void timeoutMethod(Timer timer) {
+        method1();
+        method2();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 167-175.
+
+</PRE>
+</BODY>
+</HTML>

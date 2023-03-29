@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare member classes "static" if possible [OPT.SI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare member classes "static" if possible [OPT.SI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any member class that does not use the embedded
+reference to its enclosing class object, but is not declared as a 
+"static" inner class. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quickfix All" feature is not available for this rule because there
+are some cases where quickfixing the violation would cause a compilation
+error.  For instance, if there is a statement of the form "t.new Inner();"
+where an object is used to invoke a constructor somewhere in the code,
+changing the class "Inner" to "static" would cause a compilation error.
+Violations must be dealt with individually.  
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+A non-static member class inherently obtains a reference
+to its enclosing class; thus, if the inner class does not actually
+use that reference, it could waste memory space and keep
+the outer class object alive longer than necessary. Besides,
+under some circumstances, an extra reference to its 
+enclosing class must be created before the inner class is created.
+All of these problems could be solved by declaring the member class
+as "static".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SI {
+    class InnerClass { //VIOLATION
+        void printSomething() {
+            //...print something
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SIFixed {
+    static class InnerClass { //FIXED
+        void printSomething() {
+            //...print something
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

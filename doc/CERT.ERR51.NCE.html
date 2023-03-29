@@ -1,0 +1,199 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not catch exception types which are too general or are unchecked exceptions [CERT.ERR51.NCE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not catch exception types which are too general or are unchecked exceptions [CERT.ERR51.NCE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses "catch" on exception types which are either
+too general or which are unchecked exception types.  By default, the rule checks 
+for "catch" statements where the exception type is too general (either 
+'Exception', 'RuntimeException', 'Throwable', or 'Error').  The rule can be 
+parameterized to check for "catch" statements where the exception type is an
+unchecked exception (any subclass of 'Error' or 'RuntimeException').  An error
+is reported for each occurrence. The rule also checks 'IOException' for cases
+where it is caught, and the try statement has no possibility of throwing a
+general 'IOException'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Error Handling and Logging
+
+Following this rule may introduce security problems, as exceptions may be left 
+uncaught.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check for general exception types. (default is true)
+    -If this parameter is selected, a violation will be flagged for each 
+     attempt to catch 'Exception', 'RuntimeException', 'Throwable', or 'Error'.
+-Check for unchecked exception types. (default is false)
+    -If this parameter is selected, a violation will be flagged for each 
+     attempt to catch 'RuntimeException', 'Error', or any subclass of either of
+     these types.
+-Check for parent exceptions caught where number of child exceptions thrown is 
+ less than (default is false, 3)
+    -If this parameter is selected, a violation will be flagged for each case
+     where a parent exception of types thrown in the try statement is caught and
+     the number of child exceptions is less than a specified amount. For example
+     if 2 different subclasses of 'IOException' are thrown and the parameter is
+     set to 3 then an error will be flagged.
+-Ignore exceptions with names matching the following regular expression(s):
+    -The rule will not flag a violation if the name of the exception matches one
+     of the regular expressions specified in this list.  Matching is not case
+     sensitive, so differences in case will be ignored.
+    -By default, the list includes "^ignore$", which means that violations will 
+     not be flagged for exception variables with the name "ignore".
+    
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you "catch" an exception type which is too general, then your code may 
+accidentally "catch" errors that were supposed to be caught (or left uncaught) 
+by the caller of the current method.  You should always try to catch the 
+specific subclasses of 'Exception' that your code is meant to handle.
+
+Unchecked exception types (any subclasses of 'Error' or 'RuntimeException') 
+should not be caught because these exceptions are usually thrown in unexpected
+situations.  They generally indicate bugs in the code, so the code should be
+fixed instead of catching the exception.  Common examples include 'NullPointer
+Exceptions' and 'ClassCastExceptions'.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The example below tries to read from an input stream, and so it should try to
+"catch" 'IOException' and deal with it accordingly.
+
+package examples.rules.codsta.epc;
+
+public class NCE {
+    void method () {
+        try {
+            System.in.read();
+        }
+        catch (Exception e1) {  // VIOLATION
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Deal with subclasses of 'Exception', 'RuntimeException', and 'Throwable'
+when handling exceptions.
+
+package examples.rules.codsta;
+
+public class NCEFixed {
+    void method () {
+        try {
+            System.in.read();
+        }
+        catch (java.io.IOException e1) {  // FIXED
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/a5dca4eb-fc0a-48ca-b1ac-d03b6521b3c8">https://app.hackedu.com/link/a5dca4eb-fc0a-48ca-b1ac-d03b6521b3c8</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Nigel Warren, Philiip Bishop: "Java in Practice - Design Styles and Idioms
+for Effective Java".  Addison-Wesley, 1999 p.68
+
+CWE-396: Declaration of Catch for Generic Exception
+<A HREF="https://cwe.mitre.org/data/definitions/396.html">https://cwe.mitre.org/data/definitions/396.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+SEI CERT Oracle Coding Standard for Java
+ERR51-J. Prefer user-defined exceptions over more general exception types
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR51-J.+Prefer+user-defined+exceptions+over+more+general+exception+types">https://wiki.sei.cmu.edu/confluence/display/java/ERR51-J.+Prefer+user-defined+exceptions+over+more+general+exception+types</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@severity-from 4(v8.0)
+
+</PRE>
+</BODY>
+</HTML>

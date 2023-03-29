@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of space character(s) between a postfixed unary operator and its operand [APSC_DV.003215.SBUOP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of space character(s) between a postfixed unary operator and its operand [APSC_DV.003215.SBUOP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+    
+This rule identifies code that contains white space between a unary operator 
+and its operand. It applies to postfix "++" and "--" operators. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Number of spaces before unary operators (default value is 0)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Space between a unary operator and its operand can make code confusing and error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class SBUOP {
+    public void method (int x) {
+        System.out.println("x: " + x ++);  // VIOLATION
+    }
+   
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the space.
+
+package examples.rules.format;
+
+public class SBUOPFixed {
+    public void method (int x) {
+        System.out.println("x: " + x++);  // FIXED
+    }
+   
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 8.2 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#682">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#682</A>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 10 - 13
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use correct syntax in the DbC contracts [DBC.SYNTAX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use correct syntax in the DbC contracts [DBC.SYNTAX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies contracts with syntax errors.
+An error is reported if contract syntax does not conform to Design
+by Contract guidelines.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+import java.io.*;
+
+public class SYNTAX
+{
+    /** @throws an io exception */  // VIOLATION
+
+    FileInputStream openFile (String path)
+        throws java.io.IOException
+    {
+        System.in.read ();
+        return null;
+    }
+
+    /** @throws no exceptions */  // VIOLATION
+
+    static void method () {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the correct syntax for the @throws tag: 
+    /** @throws exception_class_name text */
+
+package examples.rules.dbc;
+
+import java.io.*;
+
+public class SYNTAXFixed
+{
+    /** @throws IOException */  // FIXED
+
+    FileInputStream openFile (String path)
+        throws IOException
+    {
+        System.in.read ();
+        return null;
+    }
+
+    /** @throws $none */  // FIXED
+
+    static void method () {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+See the "Design by Contract" topic in the Reference section
+of the Jtest User's Guide.
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 50, 75 - 76.
+
+</PRE>
+</BODY>
+</HTML>

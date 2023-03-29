@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accidental use of "Thread.interrupted()" [TRS.ATI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accidental use of "Thread.interrupted()" [TRS.ATI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to "interrupted" which are not made by "Thread".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Concurrency
+
+If the intent was to interrupt the thread, then the thread will not get
+interrupted when it should have been. Also, the interrupt status of the thread
+may be erroneously cleared.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The static method "interrupted" clears the status of the thread. If the method
+is invoked in a non-static manner by invoking it from a user-defined Thread then
+the user may have intended to call "interrupt()" or "isInterrupted()" instead
+which are non-static methods.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class ATI {
+    Thread _field = new Thread();
+    void interruptThread() {
+        _field.interrupted(); //VIOLATION
+        System.out.println("Thread interrupted.");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace with "interrupt" if it was a typo. If intended, then replace the call
+with "Thread.interrupted()" to alleviate confusion.
+
+package examples.rules.trs;
+
+public class ATIFixed {
+    Thread _field = new Thread();
+    void interruptThread() {
+        _field.interrupt(); //FIXED
+        System.out.println("Thread interrupted.");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 138-141.
+
+</PRE>
+</BODY>
+</HTML>

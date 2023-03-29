@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inheritance Depth of Class [METRIC.IDOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inheritance Depth of Class [METRIC.IDOC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric measures the ordinal distance from the class to the root 
+of the inheritance tree according to the following rules:
+- Classes that have no base type in source code have an inheritance depth 
+  of class (IDOC) of 1 (these classes implicitly inherit from Object)
+- All other classes have a depth of 1 plus the depth of their super class
+- Binary or system/framework types are not counted except Object type, 
+  are not counted
+- Nothing is reported for interfaces
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This metric primarily evaluates reuse, but it also relates to understandability
+and testability. The depth of a class within the inheritance hierarchy is 
+the maximum length from the class node to the root of the tree and is measured
+by the number of ancestor classes. The deeper a class is in the hierarchy,
+the greater the number of methods and state variables it is likely to inherit,
+which makes predicting its behavior difficult. If the majority of IDOC values
+are below 2, it may mean that the code is not taking full advantage
+of Object Oriented design and inheritance.
+Conversely, industry standards recommend a maximum IDOC value of 5 because
+deeper trees constitute greater design complexity as more methods and classes
+are involved. Although it can be difficult to understand a system with many
+inheritance layers, there is greater potential for reusing tested inherited methods.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+1       class Foo
+        { /**/ }
+ 
+2       class Bar extends Foo
+        { /**/ }
+ 
+3       class Baz extends Bar
+        { /**/ }
+ 
+4       class Greg extends java.util.ArrayList
+        { /**/ }
+
+2       record DefaultRecord(float length, float width) {}
+
+N/A     interface IGarply extends java.io.Serializable
+        { /**/ }
+
+</PRE>
+</BODY>
+</HTML>

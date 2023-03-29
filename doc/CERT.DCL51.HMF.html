@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not give method local variables and parameters the same name as class fields [CERT.DCL51.HMF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not give method local variables and parameters the same name as class fields [CERT.DCL51.HMF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method local variables and parameters 
+with the same name as class fields. An error is reported
+for each occurrence.  By default, both local variables and
+parameters are checked.  The rule can be parameterized to 
+only check one or the other.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When class fields are hidden with method local variables and 
+parameters of the same name, your code may be confusing and
+difficult to read.  It is good practice to use unique names
+for variables.
+
+PARAMETER
+
+-Check parameters (default is true)
+-Check local variables (default is true)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class HMF {
+    public void method (int j) {  // VIOLATION
+        final int i = 5;  // VIOLATION
+        System.out.println (i + j);
+    }
+
+    private int i = 0;
+    private int j = 2;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Give the local variable and parameter a unique name.
+
+package examples.rules.oop;
+
+public class HMFFixed {
+    public void method (int pj) {
+        final int x = 5;  // FIXED
+        System.out.println (x + pj);
+    }
+
+    private int i = 0;
+    private int j = 2;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Michael Daconta, Eric Monk, J Keller, Keith Bohnenberger: "Java Pitfalls"
+John Wiley &amp; Sons, ISBN: 0-471-36174-7 pp.17 - 25
+
+Section 6.3 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#16817">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#16817</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+DCL51-J. Do not shadow or obscure identifiers in subscopes
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/DCL51-J.+Do+not+shadow+or+obscure+identifiers+in+subscopes">https://wiki.sei.cmu.edu/confluence/display/java/DCL51-J.+Do+not+shadow+or+obscure+identifiers+in+subscopes</A>
+
+</PRE>
+</BODY>
+</HTML>

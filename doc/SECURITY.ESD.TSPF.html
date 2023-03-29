@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "transient" fields in serialPersistentFields array [SECURITY.ESD.TSPF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "transient" fields in serialPersistentFields array [SECURITY.ESD.TSPF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "transient" fields which are referenced by a
+"serialPersistentFields" array. This rule flags a violation if the following
+conditions are met:
+    1. The class is Serializable
+    2. "serialPersistentFields" has the proper format of
+       "private static final ObjectStreamField[] serialPersistentFields"
+    3. The field matching the "name" parameter of any of the ObjectStreamField
+       is "transient"
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Fields marked "transient" frequently contain sensitive data. Any field
+containing sensitive data should not be referenced in the
+"serialPersistentFields" array.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class TFP implements Serializable {
+    private int data;
+    private transient String password;
+
+    private static final ObjectStreamField[] serialPersistentFields = {
+        new ObjectStreamField("data", int.class)
+        , new ObjectStreamField("password", String.class) //VIOLATION
+    };
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the offending "transient" field or reevaluate whether the field should be
+"transient".
+
+package examples.rules.security.esd;
+
+public class TSPFFixed implements Serializable {
+    private int data;
+    private transient String password;
+
+    private static final ObjectStreamField[] serialPersistentFields = {
+        new ObjectStreamField("data", int.class) //FIXED
+    };
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+Static Analysis Tools" by Michael Ware
+
+DefiningSerializable Fields for a Class
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/serialization/spec/serial-arch.html#6250">http://docs.oracle.com/javase/1.5.0/docs/guide/serialization/spec/serial-arch.html#6250</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

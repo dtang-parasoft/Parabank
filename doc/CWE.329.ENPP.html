@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure arguments passed to certain methods come from predefined methods list [CWE.329.ENPP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure arguments passed to certain methods come from predefined methods list [CWE.329.ENPP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+There are certain methods whose arguments should always come from 
+a valid source--otherwise, passing such arguments creates a security risk. 
+For instance, the seed used for generating random values must be different each time and
+should not be predictable. If the seed can be guessed or known, then the pseudo-random
+numbers can be determined. 
+
+This rule will flag a violation for any case where the method specified in the
+parameter table is not called with an argument from a valid source
+(also specified in parameter table). 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Passing constant or predictable values to certain methods creates a security risk.
+Use values from valid/verified sources only.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Methods and arguments configuration
+    - Method to be checked (&lt;qualified name of declaring type&gt;#&lt;method name&gt;(&lt;parameter1 fully qualified type&gt;,...)
+      &lt;parameter1 fully qualified type&gt;,&lt;parameter2 fully qualified type&gt;,...)
+        - By default, the following methods are included in the table:
+          - "java.security.SecureRandom#SecureRandom(byte[])"
+          - "java.security.SecureRandom#setSeed(byte[])",
+          - "java.security.SecureRandom#setSeed(long)",
+          - "javax.crypto.spec.IvParameterSpec#IvParameterSpec(byte[])",
+          - "javax.crypto.spec.IvParameterSpec#IvParameterSpec(byte[],int,int)"};  
+    - Argument Index to Check ("0"-based)
+        - The default value for the methods above is "0", meaning that the first argument (since the index is 
+          "0"-based, not "1"-based) to this method should be provided from a valid source.
+        - If you want the rule to check multiple arguments for the same 
+          method, you should add multiple rows to the table for that method.    
+    - Allowed method name (in Regular Expressions)
+        - The regular expression for the methods that are allowed to pass arguments to the method in the first column. 
+
+     
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.security.SecureRandom;
+ 
+public class ENPP {
+    public int generateAccountID() 
+    {
+        byte[] seed = {0x00,0x00,0x00};
+        
+        SecureRandom random = new SecureRandom(seed); //VIOLATION
+        return random.nextInt();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+ 
+import java.security.SecureRandom;
+ 
+public class ENPP {
+    public int generateAccountID() 
+    {
+        SecureRandom random = new SecureRandom(validSeed()); //FIXED
+        return random.nextInt();
+    }
+    
+    public byte[] validSeed()
+    {
+        // provide random and unpredictable byte array here 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/df8fafb9-7832-4910-8dd5-11fa0a603cb7">https://app.hackedu.com/link/df8fafb9-7832-4910-8dd5-11fa0a603cb7</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+CWE-329: Not Using a Random IV with CBC Mode
+<A HREF="https://cwe.mitre.org/data/definitions/329.html">https://cwe.mitre.org/data/definitions/329.html</A>
+
+CWE-336: Same Seed in Pseudo-Random Number Generator (PRNG)
+<A HREF="https://cwe.mitre.org/data/definitions/336.html">https://cwe.mitre.org/data/definitions/336.html</A>
+
+CWE-337: Predictable Seed in Pseudo-Random Number Generator (PRNG)
+<A HREF="https://cwe.mitre.org/data/definitions/337.html">https://cwe.mitre.org/data/definitions/337.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

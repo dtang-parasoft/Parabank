@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Number of lines in a method [METRICS.TNLM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Number of lines in a method [METRICS.TNLM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+Counts the number of lines in a method.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not test "abstract", "native", or any methods that are 
+declared in the interface.
+
+Jtest will report an error if the value is greater or equal 100.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Extremely long methods can be difficult to comprehend and often contain several
+conceptually unrelated functions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+We count from the line containing the class' opening "{" brace to the line
+containing the class' closing "}" brace.
+
+The following class counts as two lines:
+
+package examples.rules.metrics;
+
+public class TNLM {
+    
+    public void method() {
+	System.out.println("test");
+    }
+}
+
+// As does this one:
+class TNLM2 {
+
+    public void method() {
+	System.out.println("test");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Break the method into several methods that each accomplish a single distinct
+function.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+By Mark Schroeder "A Practical Guide to Object-Oriented Metrics"
+IT Pro, November/December, 1999.
+
+</PRE>
+</BODY>
+</HTML>

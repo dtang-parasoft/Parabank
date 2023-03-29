@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure class names reflect classes which they extend [NAMING.ECN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure class names reflect classes which they extend [NAMING.ECN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a class name suggests a specific class is
+extended (directly or indirectly), but it is not. For example, a violation will
+be flagged if a class name ends with "Exception" but does not extend
+"java.lang.Exception". See PARAMETERS.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check the following types and names:
+    Name of class (regular expression)    Extended class (qualified name)
+    "^.*Exception$"                       "java.lang.Exception" (default)
+    "^.*Throwable$"                       "java.lang.Throwable" (default)
+
+    For example, the first table entry will cause class names which match the
+    regular expression "^.*Exception$" (end with "Exception") to flag a
+    violation if they do not also extend, directly or indirectly,
+    "java.lang.Exception".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Fixing this violation can improve readability and prevent confusion.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class ECNException { //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the type was supposed to extend an Exception type, add the missing 'extends' 
+statement to the declaration. Otherwise, change the name of the type so that 
+it does not end in 'Exception'.
+
+package examples.rules.naming;
+
+public class ECNFixedException extends Exception { //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

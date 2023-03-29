@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare "public/protected" methods as inaccessible as possible [CERT.OBJ51.DPPM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare "public/protected" methods as inaccessible as possible [CERT.OBJ51.DPPM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "public" and "protected" methods that are not as
+inaccessible as possible. An error is reported for each occurrence.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Avoid granting more access than is required.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "protected" methods which can be made package-private
+    -Default is "false"
+    -If this parameter is enabled, the rule will only flag a violation on
+     "protected" methods if they can be made "private".
+-Check methods in anonymous classes (Default value is "false")
+-Check methods in local classes (Default value is "false")
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule makes the code more object-oriented and makes its
+dependencies easier to understand.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the method's accessibility or document the reason for the
+excessive accessibility.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-749: Exposed Dangerous Method or Function
+<A HREF="https://cwe.mitre.org/data/definitions/749.html">https://cwe.mitre.org/data/definitions/749.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ51-J. Minimize the accessibility of classes and their members
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ51-J.+Minimize+the+accessibility+of+classes+and+their+members">https://wiki.sei.cmu.edu/confluence/display/java/OBJ51-J.+Minimize+the+accessibility+of+classes+and+their+members</A>
+
+</PRE>
+</BODY>
+</HTML>

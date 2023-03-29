@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid dangling "else" statements [PB.CUB.ADE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid dangling "else" statements [PB.CUB.ADE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies dangling "else" statements. If an 
+"else" statement could conceivably belong to multiple nested
+"if" statements due to the absence of a "{}" block, such as an 
+"else" statement is considered a dangling "else" statement. With
+the default setting of the rule's parameter, an error is reported 
+for each dangling "else" statement.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Only report a violation when the "else" statement is positioned incorrectly.
+    -Turning on this parameter will make the rule only flag cases where the 
+     dangling "else" statement is very likely to be a bug (based on the 
+     positioning of the "if" and "else" keywords).  
+    -An "else" statement should be aligned with the "if" statement to which it
+     corresponds.  If this parameter is enabled, a violation will not be flagged
+     if the "else" keyword begins in the same column as the corresponding "if"
+     keyword.  The exception to this is that a violation will still be flagged 
+     if the "if" keywords from both the outer "if" statement and the inner "if" 
+     statement begin in the same column as the "else" keyword.  
+    -If this parameter is enabled, a violation will also not be flagged if the 
+     "else" keyword appears on the same line as the corresponding "if" keyword.  
+     The exception to this is that a violation will be flagged if the "if" 
+     keywords from both the outer "if" statement and the inner "if" statement 
+     are on the same line as the "else" keyword.  
+    -For instance, if this parameter is enabled, a violation will be flagged
+     for the case
+     
+     if (blah)
+         if (blah)
+             do something;
+     else
+         do another thing;
+         
+     since this case is probably a bug (because the "else" lines up with the 
+     first "if" instead of the inner "if").  However, the rule will not flag 
+     this case with the parameter turned on:
+     
+     if (blah)
+         if (blah)
+             do something;
+         else
+             do do another thing;
+     
+     since the indentation is correct for the semantics of the code here.
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The compiler always associates an "else" with the previous "if"
+unless braces instructed it to do otherwise. If an "if" block 
+is not protected by braces, then the "else" can easily be 
+misdirected to another "if" statement. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The indentation of the following code suggests that the 
+programmer's intent is to decrement i if i &gt;= 5. 
+In our example, the "else" is associated with the second "if", 
+therefore the decrement takes place 'if (i &gt;= 2)'. 
+
+package examples.rules.pb.cub;
+
+public class ADE {
+    void method () {
+        int i = 5;
+        if (i &lt; 5)  // VIOLATION: should have "{ }" braces
+            if (i &lt; 2)
+                i++;
+        else
+            i--;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To force the structure to execute as originally planned, use 
+braces to tell the compiler that the "else" matches the 
+first "if". Or, if the "else" really is meant to be attached to
+the last "if" statement, then change the indentation and add 
+braces to the last "if" statement to remove any ambiguity. 
+
+package examples.rules.pb.cub;
+
+public class ADEFixed {
+    void method () {
+        int i = 5;
+        if (i &lt; 5) {  // FIXED
+            if (i &lt; 2)
+                i++;
+        }
+        else {
+            i--;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

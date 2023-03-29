@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Put declarations only at the beginning of blocks [CODSTA.READ.PDBB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Put declarations only at the beginning of blocks [CODSTA.READ.PDBB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule enforces local variables to be declared only at the beginning
+of blocks. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+One exception to this rule is "for" loop indices.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Not following this rule may confuse the unwary programmer and hamper code
+portability within the scope.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+class PDBB {
+    void foo () {
+        String str = "hello world!";
+        for (int i = 0; i &lt; str.length(); i++) {
+        }
+        Object obj = new Object (); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare local variables at the beginning of the block.
+
+package examples.rules.codsta.read;
+
+class PDBB_Fixed {
+    void foo () {
+        String str = "hello world!";
+        Object obj = new Object (); 
+        for (int i = 0; i &lt; str.length(); i++) {
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 6.3 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#16817">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141270.html#16817</A>
+
+</PRE>
+</BODY>
+</HTML>

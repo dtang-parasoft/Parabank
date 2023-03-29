@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce use of "for" or "while" loops [CODSTA.READ.PFL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce use of "for" or "while" loops [CODSTA.READ.PFL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "while" or "for" loops based on the selected parameter
+option. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+What to enforce
+-Enforce "for" loops
+    -Ignore "while" loops with an 'Iterator.hasNext()' condition (default false)
+-Enforce "while" loops (default choice)
+    -Ignore "for" loops with an updater (default false)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Benefits of "for" loops:
+"for" loops allow you to declare loop-scoped variables in the setup of the
+loop, minimizing the scope of loop-control variables to just the loop body.
+Because these control variables' scope ends after the loop, they cannot
+accidentally be referenced later.  This may help to catch errors that
+commonly result from copying-and-pasting code.
+
+Benefits of "while" loops:
+Some "for" loops may not use an initializer or updater and can be more concisely
+represented as a "while" loop.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+import java.util.*;
+
+public class PFL {
+    public void display (Vector strings) {
+        int i = 0;
+        while (strings != null &amp;&amp; i &lt; strings.size()) {  // VIOLATION
+            System.out.println(i + " : " + (String)strings.elementAt(i));
+            i++;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a "for" loop instead.
+
+package examples.rules.codsta.read;
+
+import java.util.*;
+
+public class PFLFixed {
+    public void display (Vector strings) {
+        for (int i = 0; strings != null &amp;&amp; i &lt; strings.size(); i++) {  // FIXED
+            System.out.println(i + " : " + (String)strings.elementAt(i));
+        }
+    }
+}
+
+/*
+Note: This repaired method has a problem carried over from the original example.
+Every iteration through the loop calls 'strings.size ()'.  If we are certain
+that 'strings' will not be modified during the course of the loop (even by
+another thread), then an efficient fix is the following small change:
+
+    for (int i = 0, n = strings.size(); strings != null &amp;&amp; i &lt; n; i++) {
+                  ^^^^^^^^^^^^^^^^^^^^                     ^^^^^
+By using a second loop-scoped variable 'n' that caches the size value, we
+avoid this unnecessary calculation.
+*/
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 142-143
+
+</PRE>
+</BODY>
+</HTML>

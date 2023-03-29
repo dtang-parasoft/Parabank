@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the 'parse' methods of the numeric classes do not throw unhandled "NumberFormatExceptions" [EXCEPT.NFE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the 'parse' methods of the numeric classes do not throw unhandled "NumberFormatExceptions" [EXCEPT.NFE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'parse' methods of the numeric classes will throw a "NumberFormatException"
+if the "String" passed in as the first argument cannot be parsed as a number of 
+the given type.  If a call to one of these 'parse' methods will possibly throw a
+"NumberFormatException", this exception should be caught or explicitly declared 
+to be thrown.  This rule will check calls to the following methods:
+
+-Integer.parseInt()
+-Short.parseShort()
+-Float.parseFloat()
+-Long.parseLong()
+-Double.parseDouble()
+-Byte.parseByte()
+
+A violation will be flagged for each case where a call to one of these methods 
+is not wrapped in a "try"/"catch" block which will catch a "NumberFormatException" 
+and "NumberFormatException" is not explicitly declared to be thrown from the
+enclosing method declaration.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for cases where it can be determined 
+statically that a "NumberFormatException" will not be thrown.  If all of the
+arguments to the 'parse' method are constants, the rule will try calling the
+corresponding 'parse' method with those arguments as parameters.  If no 
+"NumberFormatException" is thrown, no violation will be reported.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Always handling "NumberFormatExceptions" will prevent unexpected runtime 
+exceptions.  Either the exception should be caught, or it should be explicitly
+declared to be thrown.  Although you cannot force methods which call the 
+enclosing method to handle "NumberFormatExceptions" because they are runtime
+exceptions, declaring them to be thrown will at least alert the calling code to
+the possibility of these exceptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NFE {
+    public static void main(String[] args) {
+        Integer.parseInt("a");  //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Catch the exception, or declare it to be thrown.
+
+package examples.rules.except;
+
+public class NFEFixed {
+    public static void main(String[] args) {
+        try {
+            Integer.parseInt("a");
+        } catch (NumberFormatException nfe) {  //FIXED- "NumberFormatException" is caught
+            //Some code to handle the exception
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

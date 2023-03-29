@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not instantiate the wrapper classes for primitive types [OPT.PRIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not instantiate the wrapper classes for primitive types [OPT.PRIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that instantiates new objects of primitive
+wrapper types.  By default, the rule checks for instantiation of any 
+of the wrapper classes for primitive types, but it can be parameterized 
+to only check for instantiation of certain wrapper classes.  An error is 
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+As of JDK 1.5, each wrapper class provides a static "valueOf()" method which
+takes in an argument of the primitive type corresponding to the wrapper type.
+These methods were introduced partially due to autoboxing/unboxing as well as
+caching of commonly used values.
+
+Boolean is a special case as it has had a static "valueOf()" method since
+JDK 1.4. 'Boolean.TRUE' and 'Boolean.FALSE' are compatible with JDK 1.3 and 
+earlier as well. Additionally, they can save the cost of a static method call.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check arrays of primitive wrappers (Default is "false")
+    Enabling this parameter will cause instantiations of primitive wrapper
+    arrays to be flagged. One drawback is that an array of wrappers may be
+    used purposefully in cases where it is necessary to allow "null" values in
+    the array.
+
+-Types to Check
+    -Boolean (Default is "true")
+    -Byte (Default is "true")
+    -Short (Default is "true")
+    -Integer (Default is "true")
+    -Long (Default is "true")
+    -Float (Default is "true")
+    -Double (Default is "true")
+    -Character (Default is "true")
+    -NOTE: If the compiler compliance level for a project is set to 1.4 or 
+     lower, violations will only be flagged for the type "Boolean".  The types 
+     "Byte", "Short", "Integer", "Long", "Float", "Double", and "Character" can 
+     also be checked if the compliance level is set to 1.5 or later.
+     See NOTES for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Instantiating new objects of primitive wrapper types can be inefficient
+and can even lead to bugs.  The most common case where this can lead
+to a bug is when you call the 'new Boolean("[string]")' constructor.   
+This constructor is dangerous because a careless spelling mistake could 
+flip the 'Boolean' object value without being noticed. Consequently, it 
+is much safer to use 'Boolean.TRUE' or 'Boolean.FALSE' instead.  
+
+Even in cases where violations of this rule are not bugs, it may be
+inefficient to allocate a new object.  You can either use a constant
+defined in the primitive wrapper class (such as 'Boolean.TRUE') or 
+use the static "valueOf()" method which is defined in each of the
+primitive wrapper classes.  Using "valueOf()" may help you avoid the 
+extra work of creating a new object.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class PRIM {
+    Boolean b = new Boolean("true");  //VIOLATION
+
+    public void method(boolean b) {
+        Boolean foo = new Boolean(b);  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If there is a constant defined in the primitive wrapper class that 
+is equivalent to the object you are creating, use that constant 
+instead of calling the constructor.  Otherwise, use the "static" 
+"valueOf()" method that is defined in each of the wrapper classes
+as of JDK 1.5.
+
+package examples.rules.opt;
+
+public class PRIMFixed {
+    Boolean b= Boolean.TRUE;  //FIXED
+    
+    public void method(boolean b) {
+        Boolean foo = Boolean.valueOf(b);  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

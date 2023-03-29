@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use deprecated APIs [PB.API.DPRAPI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use deprecated APIs [PB.API.DPRAPI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when deprecated classes, interfaces, fields, and methods
+are used in code. 
+By default, the rule reports all deprecated classes, interfaces, fields, and
+methods that are marked with the "@deprecated" tag or "@Deprecated" annotation,
+either specified in the J2SE and J2EE APIs or defined by the user.
+
+The rule can be parameterized to modify the default behavior. See PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The code uses deprecated or obsolete functions, which suggests that the code
+has not been actively reviewed or maintained." [CWE-477]
+
+"Using deprecated or obsolete classes or methods in program code can lead to
+erroneous behavior." [SEI CERT Oracle Coding Standard for Java]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Deprecated class/interface list
+    -This parameter allows you to specify additional classes and interfaces
+     that the rule will consider to be deprecated although they are not marked
+     as deprecated.
+    -Use fully qualified names.  For example, to enforce that "java.util.List"
+     is not used, you must add "java.util.List" to the list.
+
+-Deprecated field list
+ (&lt;fully qualified type name&gt;#&lt;field name&gt;)
+    -This parameter allows you to specify additional fields that the rule
+     will consider to be deprecated although they are not marked as deprecated.
+    -For example, to enforce that the "enabled" field of
+     "javax.swing.AbstractAction" is not used, you must add
+     "javax.swing.AbstractAction#enabled" to the list. 
+
+-Deprecated method list
+ (&lt;fully qualified type name&gt;#&lt;method&gt;(&lt;parameter1 type&gt;,&lt;parameter2 type&gt;))
+    -This parameter allows you to specify additional fields that the rule will
+     consider to be deprecated although they are not marked as deprecated.
+    -For example, to enforce that the 'addAll(Collection)' method of
+     "java.util.List" is not used, you must add
+     "java.util.List#addAll(java.util.Collection)" to the list.
+  
+-Check for usage of deprecated APIs in Javadoc "@see" tags
+    -Default is "false".
+    -If this parameter is enabled, the rule will check for references to 
+     deprecated APIs in Javadoc "@see" tags as well as in the code.
+     
+-Ignore user-defined types, methods, and fields
+    -Default is "false".
+    -When this parameter is enabled, the rule will not trigger when user-defined
+     deprecated classes, interfaces, methods, or fields are used in code.
+ 
+-Ignore all types, methods, and fields not listed above
+    -Default is "false".
+    -When this parameter is enabled, the rule will ignore "@deprecated" tags
+     and "@deprecated" annotations and will only report the classes,
+     interfaces, methods, and fields that are specified by the user using
+     the three parameters above. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid code defects and security threats that may be caused
+by using deprecated or obsolete classes, interfaces, methods, and fields.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.awt.*;
+
+public class DPRAPI {
+    private List _list = new List();
+
+    public void addToList (String str) {
+        _list.addItem(str);  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, replace the deprecated 'addItem()' method with the up-to-date
+'add()' method.
+
+
+package examples.rules.pb.api;
+
+import java.awt.*;
+
+public class DPRAPIFixed {
+    private List _list = new List();
+
+    public void addToList (String str) {
+        _list.add(str);  // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-477: Use of Obsolete Functions
+<A HREF="https://cwe.mitre.org/data/definitions/477.html">https://cwe.mitre.org/data/definitions/477.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MET02-J. Do not use deprecated or obsolete classes or methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET02-J.+Do+not+use+deprecated+or+obsolete+classes+or+methods">https://wiki.sei.cmu.edu/confluence/display/java/MET02-J.+Do+not+use+deprecated+or+obsolete+classes+or+methods</A>
+
+</PRE>
+</BODY>
+</HTML>

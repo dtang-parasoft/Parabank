@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'notify()'; use 'notifyAll()' instead so that all waiting threads will be notified [CERT.THI02.ANF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'notify()'; use 'notifyAll()' instead so that all waiting threads will be notified [CERT.THI02.ANF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to 'notify ()'. An error is reported for
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quickfix All" feature is not available for this rule because
+quickfixing violations of this rule changes the semantics of the
+code.  The user should go through each violation to make sure the
+quickfix does the appropriate thing.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Using NotifyAll() is usually safer, but can be expensive. Make the best
+decision based on the application. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Multiple threads may be waiting on the same object.  Using 'notify()' picks one
+of the waiting threads and wakes it up.  There is no way to predict which thread
+will be awakened.  A poor scheduling algorithm could leave some waiting threads
+stalled much longer than others.  Therefore, use 'notifyAll()' to wake up all
+waiting threads. It is also possible to have threads waiting on the same queue
+waiting on different conditions. So, if only a single thread is notified, it may
+simply wait again when another thread in the queue could have progressed.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some resource allocation algorithms depend on single notification.  If all the
+threads are waiting to lock a single resource, then notify only one
+of the threads (if you do not care about scheduling). There may also be more
+context switches incurred from waking threads which may then wait again after
+the lock has been acquired.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class ANF {
+    public synchronized void notifyThread() {
+        notify ();  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace 'notify()' with 'notifyAll()'.
+
+package examples.rules.trs;
+
+public class ANFFixed {
+    public synchronized void notifyThread() {
+        notifyAll ();  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Ken Arnold, James Gosling: "The Java Programming Language Second Edition"
+Addison Wesley, 1997, pp.188-190.
+
+SEI CERT Oracle Coding Standard for Java
+THI02-J. Notify all waiting threads rather than a single thread
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/THI02-J.+Notify+all+waiting+threads+rather+than+a+single+thread">https://wiki.sei.cmu.edu/confluence/display/java/THI02-J.+Notify+all+waiting+threads+rather+than+a+single+thread</A>
+
+</PRE>
+</BODY>
+</HTML>

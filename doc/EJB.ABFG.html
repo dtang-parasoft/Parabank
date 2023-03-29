@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use Entity Beans as fine-grained objects [EJB.ABFG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use Entity Beans as fine-grained objects [EJB.ABFG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Entity Beans used as fine-grained objects. An
+error is reported if the Entity Bean contains more than 5 "public"
+instance methods.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If an Entity Bean contains more than 5 "public" 
+instance methods, it will be considered a fine-grained
+object.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Entity Beans are meant to represent coarse-grained 
+transactional persistent business components. Using a
+remote Entity Bean to represent fine-grained objects
+increases the overall network communication and container
+overhead. This impacts application performance and
+scalability.
+
+Think of a fine-grained object as an object that has little
+meaning without its association to another object (typically a 
+coarse-grained parent object). For example, an item object can
+be thought of as a fined-grained object because it has little 
+value until it is associated with an order object. In this example, 
+the order object is the coarse-grained object and the item object 
+is the fine-grained (dependent) object.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. 2001. p. 67.
+
+</PRE>
+</BODY>
+</HTML>

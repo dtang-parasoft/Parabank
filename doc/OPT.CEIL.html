@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid putting constant expressions inside loops [OPT.CEIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid putting constant expressions inside loops [OPT.CEIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule makes sure that there are no constant expressions which have no side
+effects in the body of a loop.  It will flag any case where there is an infix 
+expression which evaluates to a constant value in the body of a "for", "while",
+or "do" loop.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Constant expressions which have no side effects should not be executed in the 
+body of a loop for efficiency's sake.  It is more efficient to either simplify 
+these expressions or move them outside the body of the loop. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.OPT;
+
+public class CEIL {
+    public static final boolean TRUE= true;
+    public static final boolean FALSE= false;
+    public static final int FOO= 7;
+    
+    public void myMethod(){
+        int[] x= new int[10];
+        int j= 0;
+        
+        for(int i=0; i&lt;10; i++){
+            x[0]= 7+(FOO+9);   //2 VIOLATIONS (one for "FOO+9" and one for 
+                               //"7+(FOO+9)")
+            
+            for(j=0; TRUE||FALSE;){   //VIOLATION
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either simplify the expression or move it outside the body of the loop.
+
+package examples.rules.OPT;
+
+public class CEILFixed {
+    public void myMethod(){
+        int[] x= new int[10];
+        int j= 0;
+        
+        x[0]= 7+(FOO+9);   //FIXED, moved outside the loop
+        for(int i=0; i&lt;10; i++){
+            for(j=0; TRUE;){   //FIXED, simplified
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

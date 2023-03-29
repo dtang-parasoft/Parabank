@@ -1,0 +1,227 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate potentially tainted data before it is used in methods that generate code [CERT.IDS52.TDCODE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate potentially tainted data before it is used in methods that generate code [CERT.IDS52.TDCODE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when potentially tainted data is used in a dynamic evaluation
+call or in a method that constructs code segments.
+
+The rule triggers when tainted data is passed to one of the following methods:
+
+javax.el.ExpressionFactory
+   * createValueExpression(...)
+
+javax.script.ScriptEngine
+   * eval(...)
+   
+ognl.Ognl
+   * getValue(...)
+   * parseExpression(...)
+      
+com.opensymphony.xwork2.ognl.OgnlUtil
+   *getValue(...)
+   
+org.springframework.expression.ExpressionParser
+   *parseExpression(...)
+   
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When software allows a user's input to contain code syntax, it might be
+possible for an attacker to craft the code in such a way that it will alter
+the intended control flow of the software. Such an alteration could lead to
+arbitrary code execution". [CWE-94]
+
+"Code injection attacks can lead to loss of data integrity in nearly all
+cases as the control-plane data injected is always incidental to data recall
+or writing. Additionally, code injection can often result in the execution of
+arbitrary code." [CWE-95] 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent input-based attacks (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, potentially tainted data is passed to
+the parseExpression method without validation.
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+
+public class Example
+{
+    public void example(HttpServletRequest request)
+    {
+        String string = request.getParameter("code");
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression exp = parser.parseExpression(string); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, validate the data before it is used.
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+
+public abstract class Repair
+{
+    public void example(HttpServletRequest request)
+        throws IOException
+    {
+        String string = request.getParameter("code");
+        ExpressionParser parser = new SpelExpressionParser();
+        String validExpression = validate(string);
+        Expression exp = parser.parseExpression(validExpression); // NO VIOLATION
+    }
+
+    abstract String validate(String str);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-94: Improper Control of Generation of Code ('Code Injection')
+<A HREF="https://cwe.mitre.org/data/definitions/94.html">https://cwe.mitre.org/data/definitions/94.html</A>
+
+CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')
+<A HREF="https://cwe.mitre.org/data/definitions/95.html">https://cwe.mitre.org/data/definitions/95.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS52-J. Prevent code injection
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS52-J.+Prevent+code+injection">https://wiki.sei.cmu.edu/confluence/display/java/IDS52-J.+Prevent+code+injection</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

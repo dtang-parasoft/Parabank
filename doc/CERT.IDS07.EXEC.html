@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "Runtime.exec()" [CERT.IDS07.EXEC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "Runtime.exec()" [CERT.IDS07.EXEC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of 'Runtime.exec()'. An error is reported for
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Use of non-portable commands may cause unexpected behavior and have unintended
+security implications. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Calling the 'Runtime.exec()' method to spawn a process and execute an external
+command may not be portable because there is no guarantee how the native
+OS command will behave on different platforms.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+import java.io.IOException;
+
+public class EXEC {
+    public void method(String command) {
+        try {
+            Runtime.getRuntime().exec(command);      // violation, not portable
+        } catch (IOException io) {
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+David Flanagan: "Java in a Nutshell" O'Reilly
+November 1999: Third Edition, p.190-192
+
+SEI CERT Oracle Coding Standard for Java
+IDS07-J. Sanitize untrusted data passed to the Runtime.exec() method
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS07-J.+Sanitize+untrusted+data+passed+to+the+Runtime.exec%28%29+method">https://wiki.sei.cmu.edu/confluence/display/java/IDS07-J.+Sanitize+untrusted+data+passed+to+the+Runtime.exec%28%29+method</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO07-J. Do not let external processes block on IO buffers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO07-J.+Do+not+let+external+processes+block+on+IO+buffers">https://wiki.sei.cmu.edu/confluence/display/java/FIO07-J.+Do+not+let+external+processes+block+on+IO+buffers</A>
+
+</PRE>
+</BODY>
+</HTML>

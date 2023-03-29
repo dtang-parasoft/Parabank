@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify a @Remove method for @Stateful beans [EJB.EJB3.RMSB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify a @Remove method for @Stateful beans [EJB.EJB3.RMSB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "@Stateful" beans which do not specify a "@Remove" method.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Beans without a "@Remove" method have no way to inform the container that the
+bean is no longer needed. This may cause the bean to remain until the session
+ends or times out. Adding a "@Remove" method will prevent unused beans from
+tying up resources.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateful
+public class RMSB implements RMSBInterface { //VIOLATION
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure the bean has a "@Remove" method.
+
+package examples.rules.ejb.ejb3;
+
+@Stateful
+public class RMSBFixed implements RMSBFixedInterface { //FIXED
+    ...
+
+    @Remove
+    void removeMethod() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 101-102.
+
+</PRE>
+</BODY>
+</HTML>

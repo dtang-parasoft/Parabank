@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the wrong index variable to access an array or List element [PB.LOGIC.AMOI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the wrong index variable to access an array or List element [PB.LOGIC.AMOI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+By default, this rule will flag a violation for any case where more than one 
+loop index variable is used to access the same array or "List" within the same 
+loop.  The rule defines a loop index variable as any variable which is used in 
+the loop's condition and updated somewhere in the loop.  The rule only considers 
+index variables for loops which are part of an infix expression in the loop 
+condition.  When there are nested loops, it is usually a bug if more than one of 
+these index variables is used to index the same array or "List".  
+
+This rule checks variables of array types and variables of type "java.util.
+List", as well as any of the concrete implementations of "java.util.List".  This 
+rule will only check the first index of arrays.  If it is a multi-dimensional 
+array, the other indices will be ignored.  A violation will be flagged for each 
+time that a new loop index variable is used to access an array or "List" within 
+a loop if another loop index variable has already been used to index that array 
+or "List" (with the default setting of the parameter).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-What to Flag as a Violation
+    -Flag all cases where multiple index variables are used to access an array 
+     or List within a loop. (default selection)
+    -Only flag cases where the index variable does not match the loop condition.
+        -If this setting of the parameter is selected, the rule will inspect the
+         loop condition to see if it can determine which index should be used to
+         access each array and "List".  For instance, if you have the following 
+         loop:
+         
+         for(int i = 0; i &lt; a.length; i++){
+             for(int j = 0; j &lt; b.length; j++){
+             }
+         }
+ 
+         "i" is obviously meant to be the index variable for the array "a" and 
+         "j" is obviously meant to be the index variable for the array "b".  Any
+         place where the index variable "j" is used to index "a" will be flagged 
+         as a violation, and any place where the index variable "i" is used to 
+         index "b" will also be flagged.
+        -With this setting of the parameter, many fewer errors will be reported.
+         The errors which are reported are more likely to be bugs.  If this rule
+         is reporting too many violations, you should try changing the parameter 
+         to this setting.
+        -It is often not possible for this rule to determine which index 
+         variable goes with which array or "List".  In these cases, the rule 
+         will not flag if this option is selected.  For instance, if the loop's 
+         condition is something other than a comparison to the length of the 
+         array or the size of the "List", the rule cannot determine which array 
+         or "List" is being indexed. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is easy to get confused with nested loops which index belongs to which array 
+or "List".  If two different loop index variables are used within a loop to 
+index the same array or "List", there is likely a bug in one of the array or 
+"List" accesses.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This code has a bug in the declaration "int var2 = a[j] + b[j];".  Since "i" is
+the index for the array "a", the declaration should read "int var2 = a[i] + 
+b[j];".  This rule will find this bug by detecting that a different variable 
+("i") has already been used to index the array "a" at the point of the 
+declaration of "var2".
+ 
+package examples.rules.pb.logic;
+
+public class AMOI {
+    public void method(int[] a, int[] b) {
+        for (int i = 0; i &lt; a.length; i++) {
+            int var1 = a[i];
+            System.err.println("a[i]: " + var1);
+            for (int j = 0; j &lt; b.length; j++) {
+                int var2 = a[j] + b[j];            // VIOLATION- "i" already 
+                                                   // used to index "a"
+                System.err.println("a[i] + b[j]: " + var2);
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that you didn't accidentally use the wrong index variable in each 
+place where the array to which the violation refers is accessed.
+
+package examples.rules.pb.logic;
+
+public class AMOIFixed {
+    public void method(int[] a, int[] b) {
+        for (int i = 0; i &lt; a.length; i++) {
+            int var1 = a[i];
+            System.err.println("a[i]: " + var1);
+            for (int j = 0; j &lt; b.length; j++) {
+                int var2 = a[i] + b[j];            // FIXED
+                System.err.println("a[i] + b[j]: " + var2);
+            }
+        }
+    }
+}
+
+Another repair option is use the new enhanced for loop syntax introduced in 
+Java 5 and avoid indices completely:
+
+package examples.rules.pb.logic;
+
+public class AMOIFixed {
+    public void method(int[] a, int[] b) {
+        for (int aIter:a) {
+            int var1 = aIter;
+            System.err.println("aIter: " + var1);
+            for (int jIter:b) {
+                int var2 = aIter + jIter;            // FIXED
+                System.err.println("aIter + jIter: " + var2);
+            }
+        }
+    }
+}
+CODSTA.READ.AEFS can enforce the usage of either old style for loops, or the new
+Java 5 syntax, and has quickfixes for each.
+
+</PRE>
+</BODY>
+</HTML>

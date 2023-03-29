@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid improper concatenation of characters with numbers [PB.CUB.CNVC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid improper concatenation of characters with numbers [PB.CUB.CNVC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a number is added to a character in a context
+that suggests it was intended to be concatenated.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule flags expressions where the output is ultimately a String.
+For example: hour + ':' + minutes + "PM"
+The rule also flags expressions that are passed to the method "String.valueOf()"
+as it is more likely that a concatenation was desired and not an addition.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A String may be generated with unexpected contents. This may cause confusing
+behavior. If the String was used to log information, incorrect data may be
+logged. If the String was used as a key to a Map, the value may not be
+accessible if a properly concatenated key was used to fetch it at a later time.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class CNVC {
+    public String getTimeString(int hour, int minute) {
+        return String.valueOf(hour + ':' + minute); //VIOLATION
+    }
+
+    public String getLowercaseIntString(char c) {
+        return c + 32 + ""; //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the addition was unintentional, wrap the character in a
+"String.valueOf(char)" or "Character.toString(char)" method call. If the
+addition was intention, cast the character to an integer for clarity.
+
+package examples.rules.pb.cub;
+
+public class CNVCFixed {
+    public String getTimeString(int hour, int minute) {
+        return String.valueOf(hour + String.valueOf(':') + minute); //FIXED
+    }
+
+    public String getLowercaseIntString(char c) {
+        return (int)c + 32 + ""; //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

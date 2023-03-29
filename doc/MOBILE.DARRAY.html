@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid multiple dimension arrays [MOBILE.DARRAY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid multiple dimension arrays [MOBILE.DARRAY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when an array with more than one dimension is 
+created.  In java, creating multi dimensional arrays is the same as creating 
+arrays of arrays, meaning that a [4][x] array is actually 4 individual arrays,
+and a [4][5][x] array is actually 20 different arrays.  Each array that is 
+created has an associated overhead in memory, so the fewer arrays created the 
+better.  A more memory efficient way to create multidimensional arrays is to
+create a larger one dimension array and remember the dimensions.
+
+An error is reported for each new creation of a multidimensional array. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule can help developers optimize their memory management.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class DARRAY {
+    public DARRAY(){
+        super();
+    }
+    void helper(){
+        int[] frray;
+        frray = new int[4];
+        
+        boolean[][] grray;
+        grray = new boolean[5][6]; //VIOLATION
+        grray[3][4]=true;
+        
+        Integer[][][][] hrray;
+        hrray= new Integer[4][4][5][6]; //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change multidimension arrays to single dimension arrays, adjust accesses.
+
+package examples.rules.mobile;
+
+public class DARRAY {
+    public DARRAY(){
+        super();
+    }
+    void helper(){
+        int[] frray;
+        frray = new int[4];
+        
+        boolean[] grray;
+        grray = new boolean[30]; //FIXED
+        grray[3*6+5]=true;
+        
+        Integer[] hrray;
+        hrray= new Integer[480]; //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#object_creation">http://developer.android.com/guide/practices/design/performance.html#object_creation</A>
+
+</PRE>
+</BODY>
+</HTML>

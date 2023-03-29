@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Create a 'serialVersionUID' for all 'Serializable' classes [OWASP2017.A8.DUID]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Create a 'serialVersionUID' for all 'Serializable' classes [OWASP2017.A8.DUID]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any 'Serializable' class that does not declare a serial
+version UID. An error is reported for each occurrence. This rule also identifies
+cases where the serial version UID is not declared "static final long" as they
+will not be used.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If you do not specify a 'serialVersionUID' field, deserialization may fail when 
+the contents of a class change.  This may cause the application to break.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check if serialVersionUID is "private" (default false)
+    The Java API documentation states that serialVersionUID declarations should
+    be declared "private" if possible, as the serialVersionUID only applies to
+    the declaring class.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When you create a 'serialVersionUID' for all 'Serializable' classes, you
+avoid breaking serialization compatibility across different versions
+of your class.  If you do not specify a serial version UID, then one will be
+automatically generated based on the class contents.  If the UID changes in
+a new version of your class, then you cannot deserialize copies of the old
+version, even if the serialized form has not changed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class DUID implements java.io.Serializable {  // VIOLATION
+    public void method () {}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a serial version UID in each class which implements 'java.io.Serializable'.
+Only change the UID when the serialized form of the class has also changed
+and you wish to ensure that old versions cannot be read.
+
+package examples.rules.serial;
+
+public class DUIDFixed implements java.io.Serializable {
+    public void method () {}
+    private static final long serialVersionUID = 1;  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/e6d62024-b747-406f-8bbe-c461212ebd9b">https://app.hackedu.com/link/e6d62024-b747-406f-8bbe-c461212ebd9b</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+Serializable (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/io/Serializable.html">http://java.sun.com/j2se/1.5.0/docs/api/java/io/Serializable.html</A>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 223
+
+SEI CERT Oracle Coding Standard for Java
+SER00-J. Enable serialization compatibility during class evolution
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER00-J.+Enable+serialization+compatibility+during+class+evolution">https://wiki.sei.cmu.edu/confluence/display/java/SER00-J.+Enable+serialization+compatibility+during+class+evolution</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from OPT.DUID(v5.0)
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid 'null' check before 'instanceof' [OPT.NCIO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid 'null' check before 'instanceof' [OPT.NCIO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag cases where a 'null' check immediately precedes an
+'instanceof' check.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks expressions of the following forms:
+    1) obj != null &amp;&amp; obj instanceof Integer
+    2) obj == null || !(obj instanceof Integer)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important. 
+
+The 'instanceof' check will return false if a 'null' object is checked.
+Therefore, a preceding 'null' check is unnecessary and can simplify code if
+removed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class NCIO {
+    public boolean isInteger(Object obj) {
+        return (obj != null &amp;&amp; obj instanceof Integer); //VIOLATION 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary 'null' check.
+
+package examples.rules.opt;
+
+public class NCIOFixed {
+    public boolean isInteger(Object obj) {
+        return (obj instanceof Integer); //FIXED 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+James Gosling, Bill Joy, Guy Steele, Gilad Bracha, Alex Buckley:
+The	Java Language Specification, Java SE 8 Edition.
+15.20.2 Type Comparison Operator instanceof
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the '@concurrency' Javadoc tag on "synchronized" methods and blocks [OWASP2019.API9.SMJT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the '@concurrency' Javadoc tag on "synchronized" methods and blocks [OWASP2019.API9.SMJT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "synchronized" code (i.e., methods and "{ }" blocks)  
+that lacks a Javadoc comment with '@concurrency' tag. 
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The '@concurrency' tag can be followed by one of four valid values:
+    $none - Equivalent to having no tag.
+    concurrent - No synchronization is necessary.
+    guarded - Synchronization is necessary and is provided by the method.
+    sequential - Synchronization is necessary and must be provided by client
+        code using the method.
+For more information see 'The Design by Contract Specification' in REFERENCES.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Ideally, your header will explain how the code maintains thread-safety and how
+the users of the code should avoid threading problems.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class SMJT {
+    /**
+     *  Thread safety is maintained because this method doesn't do anything
+     */
+    public synchronized void method () {  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide the '@concurrency' tag
+
+package examples.rules.javadoc;
+
+public class SMJTFixed {
+    /**
+     *  Thread safety is maintained because this method doesn't do anything
+     *  @concurrency guarded
+     */
+    public synchronized void method () {  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 208-210
+
+2. <A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+3. The Design By Contract Specification:
+<A HREF="../../com.parasoft.xtest.jtest/help/rj_dbc_.htm">Design by Contract Specification</A>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.SMJT2
+@deprecated JAVADOC.SMJT3
+@deprecated JAVADOC.SMJT4
+
+</PRE>
+</BODY>
+</HTML>

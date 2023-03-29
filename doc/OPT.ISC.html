@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not instantiate a class which contains only static fields and methods [OPT.ISC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not instantiate a class which contains only static fields and methods [OPT.ISC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the user avoids instantiating an object of a type which 
+only has static methods and fields.  A violation is flagged for each such 
+instantiation.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will look for non-static methods in the class being instantiated as 
+well as all the other classes and interfaces above it in its hierarchy 
+(excluding class "Object").  If a non-static method or field is found in any 
+superclass or implemented interface, a violation will not be flagged for this 
+rule.
+
+There are some exceptions to this rule as well.  It may be necessary to call the
+constructor of a type which has only static fields and methods if the 
+constructor does something important, such as setting a member variable.  If 
+possible, it would be better to move the actions performed by the constructor 
+into a static method in this case.  If this is not possible, the violation 
+should be suppressed.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+There is no need to instantiate an object which only contains static methods and
+fields since these methods and fields can be accessed directly using the name
+of the class.  Instantiating one of these objects is inefficient.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+class ISC{
+    public static void main(String[] args){
+        A foo= new A();  //VIOLATION
+        foo.meth();
+    }
+}
+
+class A{
+    static int foo;
+    static void meth(){
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not instantiate an object of a type that contains only static methods and
+fields.  If you need to access these fields and/or methods, do so directly using 
+the name of the class.
+
+package examples.rules.opt;
+
+class ISCFixed{
+    public static void main(String[] args){
+        A.meth();  //FIXED
+    }
+}
+
+class A{
+    static int foo;
+    static void meth(){
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

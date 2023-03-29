@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make your classes nonserializeable [CWE.668.SER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make your classes nonserializeable [CWE.668.SER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies classes that do not have a "final" 'writeObject()' method.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will report violations for many of the same cases that the rule 
+SECURITY.OROM will report if the "Check that the 'writeObject()' method is 
+implemented in all serializable classes." parameter for SECURITY.OROM is 
+enabled.  Both rules check that the 'writeObject()' method is implemented; 
+however, they are both included in Jtest because the proposed fix for them is 
+different.  SECURITY.OROM instructs you to provide an actual implementation of 
+the 'writeObject()' method while this rule just instructs you to provide a stub 
+implementation of 'writeObject()' which throws an exception.  It is not 
+necessary to enable both this rule and SECURITY.OROM with the "'writeObject()'"
+parameter enabled.  You should decide whether serializable classes should 
+provide a working implementation of 'writeObject()' or just a stub implementation
+and enable the appropriate rule.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Data Security
+
+Avoid serialization of confidential data. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+By examining a byte-array containing a serialized object, an attacker can
+read the object's internal state, including "private" fields and the internal
+state of any referenced objects.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class SER {
+    public void setValue(int value) {
+        _value = value;
+    }
+    private int _value;
+
+    // VIOLATION : missing writeObject()
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a "final" writeObject() method.
+
+package examples.rules.security.wsc;
+
+import java.io.*;
+
+public class SERFixed {
+    public void setValue(int value) {
+        _value = value;
+    }
+    private int _value;
+
+    private final void writeObject(ObjectOutputStream out)
+        throws IOException {  // FIXED
+            throw new IOException("Object cannot be serialized");
+    }
+
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Statically Scanning Java Code: Finding Security Vulnerabilities.
+John Viega, Gary McGraw, Tom Mutdosch, and Edward W. Felten
+IEEE SOFTWARE September/October 2000
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison-Wesley, 2001, pp. 213-217
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+CWE-499: Serializable Class Containing Sensitive Data
+<A HREF="https://cwe.mitre.org/data/definitions/499.html">https://cwe.mitre.org/data/definitions/499.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated SECURITY.SER2
+
+@severity-from 3(v6.0)
+
+</PRE>
+</BODY>
+</HTML>

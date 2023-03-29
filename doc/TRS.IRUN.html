@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the 'run()' method directly on classes extending 'java.lang.Thread' or implementing 'java.lang.Runnable' [TRS.IRUN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the 'run()' method directly on classes extending 'java.lang.Thread' or implementing 'java.lang.Runnable' [TRS.IRUN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies 'run()' methods that invoke objects extending
+'java.lang.Thread'. There is a parameter to also flag objects implementing
+'java.lang.Runnable'. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quickfix All" feature is unavailable for this rule because 
+there are many cases that do not have a quickfix.  A quickfix is
+only available for violations where the calling object extends
+"java.lang.Thread".  In these cases, the call to 'run()' can be
+replaced with a call to 'start()'.  In all other cases, it is up
+to the user to decide what to do.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Concurrency
+
+Calling 'run()' will only invoke that method; it will not start the thread. 
+This might indicate a bug or erroneous concurrency pattern. 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check classes implementing 'java.lang.Runnable' (default off)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Classes that extend 'java.lang.Thread' or implement 'java.lang.Runnable' should
+only be thread type objects. Consequently, to correctly start a thread, 
+the method 'start()' should be used instead of 'run()'.
+
+
+SECURITY RELEVANCE
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class IRUN {
+    class myThread extends java.lang.Thread {
+    }    
+    public static void main(String args[]) {
+        myThread t= new myThread();
+        t.run(); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class IRUNFixed {
+    class myThread extends java.lang.Thread {
+    }
+    public static void main (String args[]) {
+        myThread t= new myThread();
+        t.start(); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-572: Call to Thread run() instead of start()
+<A HREF="https://cwe.mitre.org/data/definitions/572.html">https://cwe.mitre.org/data/definitions/572.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+THI00-J. Do not invoke Thread.run()
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487912">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487912</A>
+
+</PRE>
+</BODY>
+</HTML>

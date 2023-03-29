@@ -1,0 +1,75 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare fields with uppercase character names as "final" [CODSTA.BP.CFNF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare fields with uppercase character names as "final" [CODSTA.BP.CFNF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any possible constant field that is not 
+declared as "final". If a field's name does not contain any
+lowercase characters, it is considered to be a constant. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a field is meant to be a constant, it should be declared
+as "final".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package rules.examples.codsta.bp;
+
+public class CFNF {
+    public static int MAX= 100; //VIOLATION
+    public static int MIN= 0; //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package rules.examples.codsta.bp;
+
+public class CFNFFixed {
+    public static final int MAX= 100; //FIXED
+    public static final int MIN= 0; //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

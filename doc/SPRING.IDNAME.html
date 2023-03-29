@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using ''name'' and ''id'' simultaneously [SPRING.IDNAME]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using ''name'' and ''id'' simultaneously [SPRING.IDNAME]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies simultaneous usage of the 'id' and 'name' attributes 
+in the &lt;bean/&gt; element within Spring xml configuration files. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Inserting two attributes makes one of them behave like an alias.
+This behavior could confuse other team members.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule makes code easier to understand and maintain.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;bean id="listOrdersController1" name="listOrdersController2" class="org.springframework.samples.jpetstore.web.spring.ListOrdersController" /&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove name:
+
+&lt;bean id="listOrdersController" class="org.springframework.samples.jpetstore.web.spring.ListOrdersController" /&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. Spring Framework Documentation 
+"3.3.1 Naming beans"
+<A HREF="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html#beans-beanname">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html#beans-beanname</A>
+
+</PRE>
+</BODY>
+</HTML>

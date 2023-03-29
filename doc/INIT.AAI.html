@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use array initializers [INIT.AAI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use array initializers [INIT.AAI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag the use of array initializers.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Allow empty array initializers (Default is true.)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Some people prefer initializing arrays element-by-element instead of using array
+initializers.  Initializing arrays element-by-element can make the code easier
+to read.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class AAI {
+    public static void main(String[] args) {
+        int[] a= {1, 2, 3};  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Initialize the array element-by-element instead of using an array initializer.
+
+package examples.rules.init;
+
+public class AAIFixed {
+    public static void main(String[] args) {
+        int[] a= new int[3];  //FIXED
+        a[0]= 1;
+        a[1]= 2;
+        a[2]= 3;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

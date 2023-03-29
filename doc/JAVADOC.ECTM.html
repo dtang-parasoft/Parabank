@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce custom Javadoc tags for methods/annotation member types [JAVADOC.ECTM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce custom Javadoc tags for methods/annotation member types [JAVADOC.ECTM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Javadoc comment of methods and annotation member types that lack the Javadoc
+tag the users specified. An error is reported for each missing tag.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule would not report any violation if the Javadoc is not present,
+since another rule JAVADOC.PJDM would report missing Javadoc.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-check "public" methods/annotation member types (default as true)
+-check "protected" methods/annotation member types (default as false)
+-check "package-private" methods/annotation member types (default as false)
+-check "private" methods/annotation member types (default as false)
+
+-do not check classes with the following string(default as internal)
+If the string is in a single line comment directly before the top level class
+declaration, the c-style block comments will have no effect.
+        //internal
+        public class NOCHECK
+         /*internal*/
+        public class CHECKNORMALLY
+-do not check files within the following packages(default as .*internal.*)
+Files will be ignored if they are in packages that match the regular expression.
+
+-custom Javadoc tags to be enforced
+Users can enter a list of tags they wish to enforce for the methods.
+By default, @since is in the list.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Commenting your code is a good way to document its behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class PJDM {
+   /**
+    * myMethod
+    * @param int i
+    */
+    public void myMethod(int i) {} //VIOLATION: missing @since
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class PJDMFixed {
+    /**
+     * myMethod
+     * @param int i
+     * @since 1.0
+     */
+    public void myMethod(int i) {} //FIXED
+
+}
+
+</PRE>
+</BODY>
+</HTML>

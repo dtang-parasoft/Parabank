@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overriding synchronized methods with non-synchronized methods [CERT.TSM00.OSNS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overriding synchronized methods with non-synchronized methods [CERT.TSM00.OSNS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a non-synchronized method overrides a
+synchronized method. A method is considered synchronized if it satisfies one of
+the following conditions:
+    1) The method declaration has the "synchronized" keyword
+    2) The method has a top-level "synchronized" block in its body
+
+Only methods with top-level "synchronized" blocks are checked as a
+"synchronized" block nested in other statements may indicate that a portion of
+the method requires synchronization, but not necessarily that the method needs
+synchronized on the whole. See BENEFITS and DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore methods which call the method they override (default true)
+    In some cases an overriding method may call the overridden method to perform
+    steps which require synchronization and then perform additional steps which
+    do not require synchronization.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a non-synchronized method overrides a synchronized method it may be an
+indicator of missing concurrency implementation. Failure to synchronize the
+method may lead to unintended behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+In some cases the overridden method may be synchronized solely to perform some
+compound action which the overriding method does not need to perform. In these
+and similar instances the rule may flag a false positive.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class OSNS extends OSNS_Superclass {
+    private Queue _queue = new LinkedList();
+
+    void addIfNotPresent(Object o) { //VIOLATION
+        if (!_queue.contains(o)) {
+            _queue.offer(o);
+        }
+    }
+}
+
+class OSNS_Superclass {
+    private List _list = new ArrayList();
+
+    void addIfNotPresent(Object o) {
+        synchronized(_list) {
+            if (!_list.contains(o)) {
+                _list.add(o);
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Synchronize the method if it was erroneously unsynchronized.
+
+package examples.rules.trs;
+
+public class OSNSFixed extends OSNSFixed_Superclass {
+    private Queue _queue = new LinkedList();
+
+    void addIfNotPresent(Object o) { //FIXED
+        synchronized(_queue) {
+            if (!_queue.contains(o)) {
+                _queue.offer(o);
+            }
+        }
+    }
+}
+
+class OSNSFixed_Superclass {
+    private List _list = new ArrayList();
+
+    void addIfNotPresent(Object o) {
+        synchronized(_list) {
+            if (!_list.contains(o)) {
+                _list.add(o);
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+TSM00-J. Do not override thread-safe methods with methods that are not thread-safe
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/TSM00-J.+Do+not+override+thread-safe+methods+with+methods+that+are+not+thread-safe">https://wiki.sei.cmu.edu/confluence/display/java/TSM00-J.+Do+not+override+thread-safe+methods+with+methods+that+are+not+thread-safe</A>
+
+</PRE>
+</BODY>
+</HTML>

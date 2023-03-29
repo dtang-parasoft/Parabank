@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not abuse exceptions as flow control statements [VVSG.2_3_1_C.AEFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not abuse exceptions as flow control statements [VVSG.2_3_1_C.AEFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "throw" and "catch" statements of the same 
+exception within the same method. Having "throw" and "catch" statements
+of the same exception within the same method is considered  
+abusing an exception as a flow control statement. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a method called in the same "try" block as the "throw" statement is declared
+as throwing a subtype of the caught exception then no violation is flagged.
+This is because the "catch" clause is also applicable to the method with the
+declared exception and the "throw" statement is less likely to be a sign of flow
+control abuse.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Exceptions were originally designed for handling unexpected 
+situations. However, if the same exception is thrown and caught within
+the same method, it indicates that the developer knew that the 
+exception would be thrown and that he could catch it later on in
+the method body. This is similar to a goto statement that
+might promote unreadable code and unorganized structure.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class AEFC {
+    public void myMethod() {
+        try {        
+            while (true) {
+                if (i &lt; 0)
+                    throw new PreventedException(); //VIOLATION
+                //do something
+            }
+        } catch (PreventedException e) {
+            //do something
+        }
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class AEFCFixed {
+    public void myMethod() {
+        while (i &gt;= 0) { //FIXED
+            //do something
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

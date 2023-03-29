@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure method and constructor return values are used [PB.USC.NASSIG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure method and constructor return values are used [PB.USC.NASSIG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused method and constructor return values. An error is
+reported for each occurrence.  By default, the rule will only check method calls
+on immutable  types.  If the type is immutable, the unused return value is much
+more likely to  be a bug.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Data Security
+
+Suppose a user tries to invoke a method to update the state of an object.  If 
+that object is immutable, the state of that object won't be updated, and this 
+method invocation may cause a security problem.
+
+For example :
+
+  public String removeHtmlTag(String htmlString) {
+     /** For security reasons, we remove all '&lt;' and '&gt;' characters to prevent XSS **/
+     htmlString.replaceAll("&lt;", "[");  // no effect
+     htmlString.replaceAll("&gt;", "]");  // no effect
+     return htmlString;
+  }
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+  
+General Tab
+-Check constructor calls (Default is "true")
+-Check method calls (Default is "true")
+    -Only check method calls on immutable types where all of the parameter types
+     are immutable. (Default is "true")
+        -If this parameter is enabled, calls to any method defined in a mutable
+         type will be ignored.  In this case, it is assumed that the method call
+         is updating the state of one of the type's fields.  Also, methods where
+         one of the parameters is not an immutable type will be ignored when
+         this parameter is enabled.  Methods with a mutable parameter type are
+         assumed to be updating the state of this parameter.   
+        -Calls to interface methods will also not be checked when this parameter
+         is enabled. In these cases, the rule cannot determine which concrete 
+         implementation of the interface will be referenced at runtime.  Thus,
+         it will assume that the concrete implementation is mutable and will
+         ignore the method call.
+    -Only check method calls which are used to update the value of immutable 
+     variables. (Default is "false")
+        -Variables of immutable types are updated by returning a new object with 
+         different values for the fields from a method and then storing this new 
+         object in the variable which is of an immutable type.  When such
+         methods are called, it is usually a bug if the return value of the
+         method is ignored.  The return value must be stored, or else the
+         variable will not be updated.  If this parameter is enabled, only such
+         cases where the return values of methods used to update an immutable
+         field are ignored will be flagged.
+-Ignore methods which are not defined in the "java" or "javax" packages. 
+ (Default is "false")
+    -If this parameter is enabled, the rule will ignore all methods which are 
+     not part of the JDK (i.e., all methods which are not defined in packages 
+     with names beginning with either "java." or "javax.").  This will help 
+     prevent false positives from being flagged on user-defined methods.
+
+
+Check/Ignore Tab
+-Specify types and methods/constructors as a Glob expression (use * as wildcard)
+    -Check the following methods and constructors:
+        -Methods which match those included in the check list and not included
+         in the ignore list are flagged when their return values are not used.
+        -Specify types using qualified name and methods or constructors using
+         the definition. For example, the definition for one of the constructors
+         for "java.util.Thread" would be "Thread(java.lang.String)". Or to
+         specify all constructors "Thread*" could be used. 
+    -Ignore the following methods and constructors:
+        -All methods except those included in the ignore list are flagged when
+         their return values are not used.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Establishes a consistent style of method usage, which improves code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class NASSIG {
+
+    public int getInt() {
+        return 1;
+    }
+
+    public void method () {
+        getInt(); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either change the method return type to "void", or assign the return value to a 
+variable.
+
+package examples.rules.pb.usc;
+
+public class NASSIGFixed {
+
+    public int getInt() {
+        return 1;
+    }
+
+    public void method () {
+        int i = getInt(); // FIXED
+        System.out.println("int " + i);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+EXP00-J. Do not ignore values returned by methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP00-J.+Do+not+ignore+values+returned+by+methods">https://wiki.sei.cmu.edu/confluence/display/java/EXP00-J.+Do+not+ignore+values+returned+by+methods</A>
+
+</PRE>
+</BODY>
+</HTML>

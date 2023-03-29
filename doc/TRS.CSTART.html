@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the "start" method of threads from inside a constructor [TRS.CSTART]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the "start" method of threads from inside a constructor [TRS.CSTART]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code where 'start()' is invoked inside 
+the constructors of classes that extend 'java.lang.Thread'. An 
+error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check the following constructors:
+    -Check only classes extending Thread (default true)
+    -Check all classes
+        -When this option is enabled, a violation will be flagged for each
+        'start()' invocation of a thread which is an inner type. By starting
+        an inner type thread in a constructor, a "this" reference escapes and
+        the thread may be able to view an incompletely constructed object.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a class has its 'start()' method invoked inside its constructor,
+it might imply that the developer might simply want to have
+the thread started whenever the constructor is invoked. However,
+if such a class has any inherited classes, those inherited classes
+would actually start this class's thread before the execution
+of their own constructors. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CSTART extends java.lang.Thread{
+    CSTART() {
+        //initialization
+        start(); //VIOLATION    
+    }
+    public void start() {
+        System.out.println("Thread is started");        
+        //some computation
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CSTARTFixed extends java.lang.Thread {
+    CSTARTFixed() {
+        //initialization
+        //FIXED: start() invocation is removed, start() should
+        //       be called by the caller of the constructor 
+        //       instead.
+    }
+    public void start() {
+        System.out.println("Thread is started");        
+        //some computation
+    } 
+}
+/*
+ caller of the constructor:
+ 
+public static void main(String args[]) {
+    Thread thread= new CSTARTFixed();
+    thread.start();
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 39-42.
+
+SEI CERT Oracle Coding Standard for Java
+TSM02-J. Do not use background threads during class initialization
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/TSM02-J.+Do+not+use+background+threads+during+class+initialization">https://wiki.sei.cmu.edu/confluence/display/java/TSM02-J.+Do+not+use+background+threads+during+class+initialization</A>
+
+</PRE>
+</BODY>
+</HTML>

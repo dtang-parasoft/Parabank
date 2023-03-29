@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect usage of 'Date', 'Time' objects and 'System.currentTimeMillis()' method invocations [SECURITY.BV.ADT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect usage of 'Date', 'Time' objects and 'System.currentTimeMillis()' method invocations [SECURITY.BV.ADT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies variable declarations that are 'java.util.Date',
+'java.sql.Date' or 'java.sql.Time' objects, it also searches for
+method invocations of 'System.getCurrentTimeMillis()'. An error is
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+category: Malicious Code
+
+Date and Time objects can be entry points for security attacks.
+System times might also indicate areas where malicious code has been placed.
+By identifying the usage of those elements, you can assess how are they being used,
+and determine whether access to important functionality is based on 'Date' and 'Time'
+objects or system times.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flag java.sql.Time Objects (default is true)
+-Flag java.sql.Date Objects (default is true)
+-Flag java.util.Date Objects (default is true)
+-Flag classes that extend the checked classes above (default is false)
+
+-Flag 'System.currentTimeMillis()' invocations (default is true)
+
+-Classes to be ignored
+ You can provide a list of classes that this rule would ignore. For example,
+ if you create a class that extends java.sql.Time and ensure that class is
+ secured, then you might add that class to the list. This way, the class
+ could be used without getting reported as an error.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+public class ADT {
+    public void weak(){
+        Date d = getCurrentDate();
+        if(d.equals(DEC26) {
+            //do something
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid using Date object or ensure that source code
+which uses Date object is validated appropriately.
+
+</PRE>
+</BODY>
+</HTML>

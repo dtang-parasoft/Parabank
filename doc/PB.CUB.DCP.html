@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the "+" string concatenation operator to concatenate numbers; use it only to add numbers [PB.CUB.DCP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the "+" string concatenation operator to concatenate numbers; use it only to add numbers [PB.CUB.DCP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses the "+" string concatenation operator when
+the value being appended is a basic numeric type (e.g. int).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The "+" operator with a left operand of type "String" will call
+"toString ()" on the right operand unless it is already a String.
+This can cause unintended effects when the right side is a number,
+as in the following example.  The example will print "2+9 = 29" 
+instead of the "2+9 = 11" that might have been intended.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class DCP {
+    public static void main (String args []) {
+        System.err.println ("2+9 = " + 2 + 9);  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either calculate the number before concatenating it to a string, or
+enclose the calculation in parentheses, i.e: "2+9 = " + (2+9).
+
+package examples.rules.pb.cub;
+
+public class DCPFixed {
+    public static void main (String args []) {
+        System.err.println ("2+9 = " + (2 + 9));  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'setSize()' in 'ComponentListener.componentResized()' [PB.API.DNCSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'setSize()' in 'ComponentListener.componentResized()' [PB.API.DNCSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls 'setSize()' in 
+'ComponentListener.componentResized()'. An error is reported for
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'componentResized()' method gets called when the component's size changes.
+If  the 'setSize()' method is invoked from within the 'componentResized()', 
+this can cause an unending sequence of resizing events:
+
+1) User resizes component.
+2) 'componentResized()' gets invoked.
+3) 'componentResized()' invokes 'setSize()'.
+4) 'setSize()' posts a component resized event.
+5) 'componentResized()' gets invoked.
+6) ...
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+
+public class DNCSS extends Component {
+    public void componentResized (ComponentEvent e) {
+        Dimension d = getSize();
+        setSize(d.width - 10, d.height - 10);  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not call the 'setSize()' method inside of the 'componentResized()' method's body.
+
+package examples.rules.pb.api;
+
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+
+public class DNCSSFixed extends Component {
+    public void componentResized (ComponentEvent e) {
+        Dimension d = getSize();
+          // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not create static variables in a servlet [SERVLET.NSIS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not create static variables in a servlet [SERVLET.NSIS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Do not use static variables in a servlet
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Multiple servlets can be created and queried and modified at the same time.  A static
+variable will be shared by all instances of the class, and modified by each instance,
+possibly creating unintended consequences.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Possible undesired information passing, for example: a bank transaction or secure 
+web form.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See the "SECURITY RELEVANCE" section.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.SERVLET;
+
+import java.io.IOException;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+public class NSIS extends GenericServlet{
+    static int depositAccount =3; //VIOLATION
+    static int withDrawalAccount=4; //VIOLATION
+
+    @Override
+    public void service(ServletRequest arg0, ServletResponse arg1)
+            throws ServletException, IOException {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The code needs to be examined, and it needs to be determined whether the static
+variable will be updated by several servlets.  If the variable will be updated by 
+multiple instances, synchronization needs to be implemented, otherwise this
+error can be ignored.
+
+package examples.rules.SERVLET;
+
+import java.io.IOException;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+public class NSIS extends GenericServlet{
+    int depositAccount =3; //FIXED
+    int withDrawalAccount=4; //FIXED
+ 
+    @Override
+    public void service(ServletRequest arg0, ServletResponse arg1)
+            throws ServletException, IOException {
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

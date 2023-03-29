@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'super.finalize()' from 'finalize()' [CERT.MET12.FCF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'super.finalize()' from 'finalize()' [CERT.MET12.FCF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies 'finalize()' methods that do not call 'super.finalize()'.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not report an error if the method is overriding "abstract" finalize() or
+implementing finalize().
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The Java Language Specification states that it is a good practice for
+a finalize() method to call super.finalize()." [CWE-568]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If that call is not made, the superclasses' finalize methods will not be
+invoked.  You should make this call -  even if the parent class doesn't define
+'finalize ()' - for two reasons.  First, this allows a parent class that uses
+'finalize ()' to be added to your class without modifying your code.
+Second, following this rule habituates you to always calling
+'super.finalize ()' so that you don't accidentally forget to call it when your
+class has a parent with a 'finalize ()' method.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+public class FCF {
+    protected void finalize () throws Throwable {  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a call to 'super.finalize()'.
+
+package examples.rules.gc;
+
+public class FCFFixed {
+    protected void finalize () throws Throwable {
+        super.finalize();  // FIXED   
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"The Java Programming Language" by Ken Arnold and James Gosling, page 49.
+
+CWE-568: finalize() Method Without super.finalize()
+<A HREF="https://cwe.mitre.org/data/definitions/568.html">https://cwe.mitre.org/data/definitions/568.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MET12-J. Do not use finalizers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers">https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers</A>
+
+</PRE>
+</BODY>
+</HTML>

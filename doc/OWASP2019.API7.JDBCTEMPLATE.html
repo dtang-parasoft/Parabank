@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using native JDBC [OWASP2019.API7.JDBCTEMPLATE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using native JDBC [OWASP2019.API7.JDBCTEMPLATE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule verifies how JDBC is used. Spring Framework applications should use JdbcTemplate.
+A violation is reported for each usage of the following methods:
+- java.sql.DriverManager: getConnection
+- java.sql.Connection: createStatement
+- java.sql.Statement: executeQuery
+- java.sql.Connection: close
+and for the declaration of:
+- org.springframework.jdbc.core.simple.SimpleJdbcTemplate
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule also verifies usage of SimpleJdbcTemplate. This class is not recommended for use since Spring Framework 3.0.1; see:
+<A HREF="https://jira.springsource.org/browse/SPR-6858">https://jira.springsource.org/browse/SPR-6858</A>
+<A HREF="https://jira.springsource.org/browse/SPR-6922?page=com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel#issue-tabs">https://jira.springsource.org/browse/SPR-6922?page=com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel#issue-tabs</A>
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The J2EE standard forbids the direct management of connections. It requires
+that applications use the container's resource management facilities to obtain
+connections to resources. Every major web application container provides pooled
+database connection management as part of its resource management framework.
+Duplicating this functionality in an application is difficult and error prone."
+[CWE-245]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Avoid using SimpleJdbcTemplate (Since Spring Framework 3.0.1 is deprecated)
+    -this option causes the rule to look for calls to the SimpleJdbcTemplate class; it is enabled by default
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using JDBCTemplate is more convenient and it automatically perform some additional actions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import test.test.Bean;
+
+public class BeanImpl implements Bean {
+
+    JdbcTemplate jdbcTemplate;
+
+    SimpleJdbcTemplate simpleJdbcTemplate; // Error message: Avoid using deprecated SimpleJdbcTemplate class
+
+    public void nativeJdbc() {
+
+        // Load the JDBC driver
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error loading driver: " + e);
+        }
+
+        // Define the Connection URL
+        String host = "dbhost.yourcompany.com";
+        String dbName = "someName";
+        int port = 1234;
+        String oracleURL = "jdbc:oracle:thin:@" + host + ":" + port + ":"
+                + dbName;
+
+        // Establish the connection
+        String username = "jay_debesee";
+        String password = "secret";
+
+        try {
+            //Error message: Avoid using native jdbc to open connection
+            Connection connection = DriverManager.getConnection(oracleURL, username, password); 
+
+            //Create a Statement
+            //Error message: Avoid using native jdbc to prepare statement
+            Statement statement = connection.createStatement();
+
+            //Execute a Query or update
+            //Error message: Avoid using native jdbc to execute statement
+            String query = "SELECT col1, col2, col3 FROM sometable";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            //Process the Results
+            while (resultSet.next()) {
+                // ...
+            }
+
+            //Close connection
+            //Avoid using native jdbc to close connection
+            connection.close();
+        } catch (SQLException e) {
+            // ...
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change to JdbcTemplate as described in "12. Data access with JDBC"
+<A HREF="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/jdbc.html#jdbc-JdbcTemplate">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/jdbc.html#jdbc-JdbcTemplate</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Spring Documentation "12. Data access with JDBC"
+<A HREF="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/jdbc.html#jdbc-JdbcTemplate">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/jdbc.html#jdbc-JdbcTemplate</A>
+
+<A HREF="https://jira.springsource.org/browse/SPR-6858">https://jira.springsource.org/browse/SPR-6858</A>
+
+<A HREF="https://jira.springsource.org/browse/SPR-6922?page=com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel#issue-tabs">https://jira.springsource.org/browse/SPR-6922?page=com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel#issue-tabs</A>
+
+CWE-245: J2EE Bad Practices: Direct Management of Connections
+<A HREF="https://cwe.mitre.org/data/definitions/245.html">https://cwe.mitre.org/data/definitions/245.html</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+</PRE>
+</BODY>
+</HTML>

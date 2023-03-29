@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the correct method calls on "java.util.concurrent.locks.Condition" objects [TRS.WOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the correct method calls on "java.util.concurrent.locks.Condition" objects [TRS.WOC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Instead of using the 'wait()', 'notify()', and 'notifyAll()' methods inherited
+from class "Object", "java.util.concurrent.locks.Condition" objects use methods
+named 'await()', 'signal()', and 'signalAll()'.  This rule will flag a violation
+for each case where the 'wait()', 'notify()', or 'notifyAll()' method is called
+on a "java.util.concurrent.locks.Condition" object. 
+
+method defined in java.lang.Object   corresponding method in 
+                                     java.util.concurrent.locks.Condition
+----------------------------------   ------------------------------------
+wait()                               await()
+notify()                             signal()
+notifyAll()                          signalAll()
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When the 'wait()', 'notify()', or 'notifyAll()' method is called on an instance 
+of "java.util.concurrent.locks.Condition", the programmer usually intended to 
+use the 'await()', 'signal()', or 'signalAll()' method instead.  These methods
+are usually the proper ones to call on an implementation of "java.util.
+concurrent.locks.Condition".   
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example is a slightly modified version of the example code given in the
+documentation for the "Condition" interface.  There are three places in this 
+code where the incorrect method is called.
+  
+package examples.rules.trs;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class WOC {
+    final Lock lock = new ReentrantLock();
+    final Condition notFull = lock.newCondition();
+    final Condition notEmpty = lock.newCondition();
+    final Object[] items = new Object[100];   
+    int putptr, takeptr, count;
+    
+    public void put(Object x) throws InterruptedException {
+        lock.lock();
+        try {
+            while (count == items.length) {
+                notFull.wait();  //VIOLATION
+            }
+            items[putptr] = x;
+            if (++putptr == items.length) {
+                putptr = 0;
+            }
+            ++count;
+            notEmpty.notify();  //VIOLATION
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    public Object take() throws InterruptedException {
+        lock.lock();
+        try {
+            while (count == 0) {
+                notEmpty.await();
+            }
+            Object x = items[takeptr];
+            if (++takeptr == items.length) {
+                takeptr = 0;
+            }
+            --count;
+            notFull.notifyAll();  //VIOLATION
+            return x;
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use one of the 'await()' methods instead of 'wait()', 'signal()' instead of 
+'notify()', and 'signalAll()' instead of 'notifyAll()'.
+
+package examples.rules.trs;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class WOC_Fixed {
+    final Lock lock = new ReentrantLock();
+    final Condition notFull = lock.newCondition();
+    final Condition notEmpty = lock.newCondition();
+    final Object[] items = new Object[100];   
+    int putptr, takeptr, count;
+    
+    public void put(Object x) throws InterruptedException {
+        lock.lock();
+        try {
+            while (count == items.length) {
+                notFull.await();  //FIXED - Call 'await()' instead of 'wait()'
+            }
+            items[putptr] = x;
+            if (++putptr == items.length) {
+                putptr = 0;
+            }
+            ++count;
+            notEmpty.signal();  //FIXED - Call 'signal()' instead of 'notify()'
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    public Object take() throws InterruptedException {
+        lock.lock();
+        try {
+            while (count == 0) {
+                notEmpty.await();
+            }
+            Object x = items[takeptr];
+            if (++takeptr == items.length) {
+                takeptr = 0;
+            }
+            --count;
+            notFull.signalAll();  //FIXED - Call 'signalAll()' instead of 
+                                  //'notifyAll()'
+            return x;
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

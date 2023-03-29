@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary "instanceof" evaluations [OPT.UISO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary "instanceof" evaluations [OPT.UISO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unnecessary "instanceof" evaluations. An error is reported
+if "instanceof" is used on variables whose static type is the type being checked
+for.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+The result of the "instanceof" expression is always true in this case.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class UISO {
+    public UISO () {}
+}
+
+class Dog extends UISO {
+    void method (Dog dog, UISO u) {
+        Dog d = dog;
+        if (d instanceof UISO)  // VIOLATION
+            System.out.println("Dog is a UISO"); 
+        UISO uiso = u;
+        if (uiso instanceof Object)  // VIOLATION
+            System.out.println("uiso is an Object"); 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary "instanceof" evaluations:
+
+package examples.rules.opt;
+
+public class UISOFixed {
+    public UISOFixed () {}
+}
+
+class DogFixed extends UISOFixed {
+    void method () {
+        DogFixed d;
+        System.out.println ("DogFixed is a UISOFixed");  // FIXED
+        System.out.println ("UISOFixed is a UISOFixed");  // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

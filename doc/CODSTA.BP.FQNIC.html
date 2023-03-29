@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Reference interface constants with their declaring interface names [CODSTA.BP.FQNIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Reference interface constants with their declaring interface names [CODSTA.BP.FQNIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies interface constants that are not
+referenced with its declaring interface name. An error is
+reported for each occurrence.
+
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Java 5.0 introduced static import construct. With static 
+import, it is OK to reference an interface constant without
+its declaring interface name.
+
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+To avoid using prefixes when referencing interface constants,
+programmers sometimes make the referencing classes implement 
+the interfaces in order to have inherited access to those
+constants. This practice, called the Constant Interface 
+Antipattern, is not recommended. 
+
+This is considered as bad Java programming practice because 
+when a class implements an interface, it becomes part of the
+class's public API. Implementation details, such as using 
+the static members of another class, should not leak into 
+public APIs. 
+
+Any simple name access to interface constant from outside of
+its declaring scope is an indication of such a bad 
+programming practice.
+
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.awt.Color;
+
+public class FQNIC implements Color {
+    public static final Color DEFAULT_COLOR= BLACK; //VIOLATION
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+import java.awt.Color;
+
+public class FQNICFixed {
+    public static final Color DEFAULT_COLOR= Color.BLACK; //FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

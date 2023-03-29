@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call ''String.toCharArray()'' unnecessarily [OPT.STCA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call ''String.toCharArray()'' unnecessarily [OPT.STCA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Calling the "toCharArray()" method of the class "String" is a costly operation
+and should be avoided if possible.  The reason why the "toCharArray()" method is
+inefficient is because the method reallocates the entire character array stored
+in the String.  There are some cases where this is necessary, but the 
+"toCharArray()" method is often misused in practice.  This rule will flag local
+variables which are assigned by a call to "toCharArray()" that meet 
+these conditions:
+
+1.  The local variable is not passed to another method nor returned from the
+    method.  
+    
+2.  There is at least one access to an element of the array in the method.
+
+If these conditions are met, there is a good chance that the call to 
+"toCharArray()" is unnecessary.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This optimization is more effective on Strings of shorter length. As the length
+of the String increases sometimes the conversion to a character array becomes
+beneficial. The following test suggests that the optimization is beneficial
+for Strings of approximately 125 characters or less.
+
+Processor: Intel Core 2 Duo E8500 3.16GHz
+Iterations: 100 million
+
+Length (chars)      Optimized (ms)       Unoptimized (ms)       Improvement (%)
+    200                 61783               59928                   -3.10
+    175                 53756               52338                   -2.71
+    150                 46119               45761                   -0.78
+    125                 38638               40601                    4.83
+    100                 31110               32840                    5.27
+    75                  23613               26371                   10.46
+    50                  15430               19186                   19.58
+    25                   7949               12952                   38.63
+    10                   3491                8074                   56.76
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+The "toCharArray()" method is inefficient and often misused.  If it is possible
+to rewrite the code without using this method, it is worth doing so.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Since there are some cases where it is impossible to avoid calling 
+"toCharArray()", this rule may flag some false positives.  All violations should
+be reviewed.  If the call to "toCharArray()" is necessary, the violation should
+be suppressed. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This is just one of many examples of how "toCharArray()" can be misused.
+
+package examples.rules.opt;
+
+public class STCA {
+    public static int indexOfFirstWhitespace(String string, int from) {
+        char[] chars = string.toCharArray ();  //VIOLATION
+        int length = chars.length;
+        for (int i = from; i &lt; length; i++) {
+            if (Character.isWhitespace (chars [i]))
+                 return i; 
+        }
+        return -1;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The code shown above can be rewritten using the "String.length()" and 
+"String.charAt()" methods, which are much more efficient alternatives to 
+converting the String to a "char" array.
+
+package examples.rules.opt;
+
+public class STCAFixed {
+    public static int indexOfFirstWhitespace(String string, int from) {
+        int length = string.length();  //FIXED
+        for (int i = from; i &lt; length; i++) {
+            if (Character.isWhitespace (string.charAt(i)))  //FIXED
+                 return i; 
+        }
+        return -1;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

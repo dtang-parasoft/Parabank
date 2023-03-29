@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare an interface both @Local and @Remote [EJB.EJB3.RLI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare an interface both @Local and @Remote [EJB.EJB3.RLI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies interfaces which have both @Local and @Remote annotations.
+There are many differences between @Local and @Remote calls. @Local involves
+pass-by-reference while @Remote involved pass-by-value. Parameters for @Remote
+calls must also be Serializable. Declaring an interface as both should also be
+avoided for clarity, even if not explicitly disallowed by an implementation of
+the EJB3 specification.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Local
+@Remote
+public interface RLI { //VIOLATION
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make separate @Local and @Remote interfaces or remove the erroneous annotation.
+
+package examples.rules.ejb.ejb3;
+
+@Local
+public interface RLIFixedLocal { //FIXED
+    ...
+}
+
+@Remote
+public interface RLIFixedRemote { //FIXED
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 89-90.
+
+JSR 220: Enterprise JavaBeans, Version 3.0
+EJB Core Contracts and Requirements, Section 3.2.3
+
+</PRE>
+</BODY>
+</HTML>

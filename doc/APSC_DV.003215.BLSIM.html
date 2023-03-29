@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of blank line(s) to separate "imports" from different packages [APSC_DV.003215.BLSIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of blank line(s) to separate "imports" from different packages [APSC_DV.003215.BLSIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not have the specified number of blank line(s) to separate
+"import" statements from different packages. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Number of blank lines (default value is 2)
+-Ignore adjacent imports if they are from subpackages of the same package
+    -Default is "false".
+    -If this parameter is enabled, the rule will not flag a violation for 
+     adjacent imports if they are in different subpackages of the same package 
+     (or if one import is from the top-level package and the other is from a 
+     subpackage of this package).  For instance, if there are adjacent imports 
+     from the "java.util" and the "java.util.logging" package, the rule will not 
+     flag a violation since "java.util.logging" is a subpackage of "java.util".  
+     When this parameter is enabled, the rule will ignore adjacent imports when 
+     the first two segments of their package names (i.e., everything up to the 
+     second dot in the package name) are the same. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+import java.util.*;
+import java.awt.Window;  //  VIOLATION 
+import java.awt.Frame;
+
+class BLSIM {
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a blank line to separate the "import" statements from different packages.
+
+package examples.rules.format;
+
+import java.util.*;
+
+import java.awt.Window;  // FIXED
+import java.awt.Frame;
+
+class BLSIMFixed {
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

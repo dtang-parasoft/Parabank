@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Restore prior object state on method failure [BD.PB.REVOBJ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Restore prior object state on method failure [BD.PB.REVOBJ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the state of an object that changed has not been reverted on method failure
+(in the event of an exception). If the state of an object at the end of a method is inconsistent
+with the state of this object at the beginning of the method, a violation is reported on the path where 
+an exception occurs.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Objects in general should (and security-critical objects must) be maintained in a consistent state even 
+when exceptional conditions arise."
+[SEI CERT Oracle Coding Standard for Java, ERR03-J. Restore prior object state on method failure]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you keep object consistency.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+public class Example
+{
+    private int length;
+
+    static public final int PADDING = 2;
+
+    protected int getVolumePackage(int weight)
+    {
+        length += PADDING;
+        try {
+            if (length &lt;= PADDING) {
+                throw new IllegalArgumentException();
+            }
+            int volume = length;
+            length -= PADDING;// Revert
+            return volume;
+        } catch (Throwable t) {
+
+            return -1; // Non-positive error code       
+        }
+    } // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Restore the "length" value in the catch clause: 
+
+public class Repair
+{
+    private int length;
+
+    static public final int PADDING = 2;
+
+    protected int getVolumePackage(int weight)
+    {
+        length += PADDING;
+        try {
+            if (length &lt;= PADDING) {
+                throw new IllegalArgumentException();
+            }
+            int volume = length;
+            length -= PADDING;// Revert
+            return volume;
+        } catch (Throwable t) {
+            length -= PADDING;
+            return -1; // Non-positive error code       
+        }
+    } // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+ERR03-J. Restore prior object state on method failure
+<A HREF="https://www.securecoding.cert.org/confluence/display/java/ERR03-J.+Restore+prior+object+state+on+method+failure">https://www.securecoding.cert.org/confluence/display/java/ERR03-J.+Restore+prior+object+state+on+method+failure</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

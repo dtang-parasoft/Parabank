@@ -1,0 +1,203 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid integer overflows [VVSG.2_5_4_F.INTOVERF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid integer overflows [VVSG.2_5_4_F.INTOVERF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An integer overflow or wraparound occurs when an integer value is incremented
+to a value that is too large to store in the associated representation. When
+this occurs, the value may wrap to become a very small or negative number."
+[CWE-190]
+
+Similarly, an integer underflow or wraparound occurs when an integer value is
+decremented to a value that is too small to store in the associated
+representation. As a result, the value may wrap to become a very large number.
+
+You can prevent overflows and underflows by ensuring that arithmetic operations
+yield values that are within the range that can be stored in the associated
+representation (i.e. they are not larger than the maximum or lower than
+the minimum of the representable value) and by avoiding casts to a smaller
+type.
+
+This rule detects when an integer overflow or underflow occurs in integer
+arithmetic operations or when integral values are cast to a smaller type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"While [wraparound] may be intended behavior in circumstances that rely on
+wrapping, it can have security consequences if the wrap is unexpected. This is
+especially the case if the integer overflow can be triggered using
+user-supplied inputs. This becomes security-critical when the result is used to
+control looping, make a security decision, or determine the offset or size in
+behaviors such as memory allocation, copying, concatenation, etc." [CWE-190]
+
+"This weakness can sometimes trigger buffer overflows which can be used to
+execute arbitrary code. This is usually outside the scope of a program's
+implicit security policy." [CWE-191]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+'Aggressive mode' - With this parameter enabled, the rule triggers when
+an integer overflow occurs when the integer is being cast to a type that is
+at least the same size as the operand type or when the cast value is -1.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+By default, the rule does not report an integer overflow if the integer is
+cast to a type that is at least the same size as the operand type 
+or if the cast value is -1. The rule can be parameterized to enable
+reporting of such cases (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unintended integer wraparound that can lead to
+undefined behavior, memory corruption, or security attacks (see SECURITY
+RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the sum of variables 'a' and 'b' is returned as int 
+type. As a result, an integer overflow occurs, because the value returned 
+(4000000000) exceeds the maximum value for a variable of type int (2147483647).
+
+public class Example
+{
+    int testArithmetic()
+    {
+        int a = 2000000000;
+        int b = 2000000000;
+        return a + b; // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using a variable of type 'long' that can store the sum
+of variables 'a' and 'b'.
+
+public class Repair
+{
+    long testArithmetic()
+    {
+        long a = 2000000000;
+        long b = 2000000000;
+        return a + b; // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Numeric Errors
+Video: <A HREF="https://vimeo.com/238779116">https://vimeo.com/238779116</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf</A>
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-190: Integer Overflow or Wraparound
+<A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+CWE-191: Integer Underflow (Wrap or Wraparound)
+<A HREF="https://cwe.mitre.org/data/definitions/191.html">https://cwe.mitre.org/data/definitions/191.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

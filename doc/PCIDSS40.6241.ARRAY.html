@@ -1,0 +1,216 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unvalidated input in array indexes [PCIDSS40.6241.ARRAY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unvalidated input in array indexes [PCIDSS40.6241.ARRAY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects array access operations that may result in out of bounds access due
+to using unvalidated input in array indexes. A violation is triggered if input that can 
+contain arbitrary data is not checked for being within array bounds prior to being used 
+in array index.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+By default, the rule checks the parameters of the following functions:
+- the "validate*" function 
+   
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Application of this rule helps to prevent the serious problem of accessing arrays 
+outside of their bounds. This helps to ensure robustness of the application as a 
+whole.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+import javax.servlet.http.HttpServletRequest;
+
+public class Example
+{
+    void displayCustomerInfo(HttpServletRequest req, Customer[] aCustomers)
+    {
+        String sCustomerId = req.getParameter("customerId");
+        int id = Integer.parseInt(sCustomerId);
+        Customer customer = aCustomers[id]; // VIOLATION
+        // display customer info
+    }
+
+    class Customer
+    {
+        // ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In order to get rid of the violation, an index value check should be introduced:
+
+import javax.servlet.http.HttpServletRequest;
+
+public class Repair
+{
+    void displayCustomerInfo(HttpServletRequest req, Customer[] aCustomers)
+    {
+        String sCustomerId = req.getParameter("customerId");
+        int id = Integer.parseInt(sCustomerId);
+        if (id &gt;= 0 &amp;&amp; id &lt; aCustomers.length) {
+            Customer customer = aCustomers[id]; // NO VIOLATION
+            // display customer info
+        }
+    }
+
+    class Customer
+    {
+        // ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="https://cwe.mitre.org/data/definitions/119.html">https://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-125: Out-of-bounds Read
+<A HREF="https://cwe.mitre.org/data/definitions/125.html">https://cwe.mitre.org/data/definitions/125.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="https://cwe.mitre.org/data/definitions/787.html">https://cwe.mitre.org/data/definitions/787.html</A>
+
+CWE-129: Improper Validation of Array Index
+<A HREF="https://cwe.mitre.org/data/definitions/129.html">https://cwe.mitre.org/data/definitions/129.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicated validation files [STRUTS.STRUTS2.S2DVF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicated validation files [STRUTS.STRUTS2.S2DVF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if more than one Struts action has the same name in a 
+single struts XML file. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+The Struts validator will arbitrarily choose a validation form if more than one 
+validation form corresponds to the same action name. If two actions share the 
+same name, their validation files will also share the same name (The 
+validation files have the name '&lt;ActionName&gt;-validation.xml'). The Struts 
+validator will then arbitrarily choose between the two validation files.  This 
+will cause a security problem because the input validation may choose the wrong 
+validation file.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "<A HREF="http://struts.apache.org/dtds/struts-2.0.dtd">http://struts.apache.org/dtds/struts-2.0.dtd</A>"&gt;
+
+&lt;struts&gt;
+       .....       
+       &lt;action name="register" class="com.parasoft.jtest.RegisterPageAction"&gt;
+            &lt;result&gt;/register.jsp&lt;/result&gt;
+       &lt;/action&gt;   
+       &lt;!-- VIOLATION : duplicated action name --&gt;
+       &lt;action name="register" class="com.parasoft.jtest.LoginAction"&gt;
+            &lt;result&gt;/login.jsp&lt;/result&gt;
+       &lt;/action&gt;   
+       
+       .....       
+&lt;/struts&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rename the action.
+
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "<A HREF="http://struts.apache.org/dtds/struts-2.0.dtd">http://struts.apache.org/dtds/struts-2.0.dtd</A>"&gt;
+
+&lt;struts&gt;
+       .....
+       &lt;action name="register" class="com.parasoft.jtest.RegisterPage"&gt;
+            &lt;result&gt;/register.jsp&lt;/result&gt;
+       &lt;/action&gt; 
+       &lt;!-- FIXED : Rename the action. --&gt;
+       &lt;action name="login" class="com.parasoft.jtest.LoginAction"&gt;
+            &lt;result&gt;/login.jsp&lt;/result&gt;
+       &lt;/action&gt;   
+       
+       .....
+&lt;/struts&gt;
+
+</PRE>
+</BODY>
+</HTML>

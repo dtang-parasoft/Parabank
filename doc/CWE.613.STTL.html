@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that sessions are configured to time out in 'web.xml' files [CWE.613.STTL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that sessions are configured to time out in 'web.xml' files [CWE.613.STTL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when a 'web.xml' file fails to include a properly
+configured session expiration time.
+A session expiration time should specified with the '&lt;session-timeout&gt;'
+element included in the '&lt;session-config&gt;' element and the timeout value
+must be greater than 0.
+
+The rule detects the following cases:
+- the main '&lt;web-app&gt;' element does not include the '&lt;session-config&gt;' element
+- the '&lt;session-config&gt;' element is included, but it does not contain
+  the '&lt;session-timeout&gt;' element
+- the specified timeout value is negative
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The lack of proper session expiration may improve the likely success of
+certain attacks. For example, an attacker may intercept a session ID, possibly
+via a network sniffer or Cross-site Scripting attack. . . In another scenario,
+a user might access a web site from a shared computer (such as at a library,
+Internet cafe, or open work environment). Insufficient Session Expiration could
+allow an attacker to use the browser's back button to access web pages
+previously accessed by the victim." [CWE-613]
+
+This rule helps you ensure proper session expiration.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    
+    &lt;session-config&gt;
+        &lt;session-timeout&gt;-1&lt;/session-timeout&gt;  &lt;!-- VIOLATION --&gt;
+    &lt;/session-config&gt;
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ExampleServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;examples.rules.servlet.ExampleServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    
+    &lt;session-config&gt;
+        &lt;session-timeout&gt;30&lt;/session-timeout&gt;  &lt;!-- FIXED --&gt;
+    &lt;/session-config&gt;
+&lt;/web-app&gt;
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/8f4ad673-52bc-4340-8026-9ab534af8096">https://app.hackedu.com/link/8f4ad673-52bc-4340-8026-9ab534af8096</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A07:2021 – Identification and Authentication Failures
+<A HREF="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-613: Insufficient Session Expiration
+<A HREF="https://cwe.mitre.org/data/definitions/613.html">https://cwe.mitre.org/data/definitions/613.html</A>
+
+Cigital Java Security Rulepack # 29:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+APSC-DV-002390: XML-based applications must mitigate DoS attacks by using XML filters, parser options, or gateways
+
+</PRE>
+</BODY>
+</HTML>

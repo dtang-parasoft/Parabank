@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify 'RUNTIME' as the retention policy when using the '@Documented' annotation [JAVADOC.SRRP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify 'RUNTIME' as the retention policy when using the '@Documented' annotation [JAVADOC.SRRP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When using the "java.lang.annotation.Documented" annotation, it is required to
+specify "RUNTIME" as the retention policy (using an annotation such as 
+"@Retention(value=RetentionPolicy.RUNTIME)").  This rule will flag a violation
+for each place where the "@Documented" annotation is used without specifying
+"RUNTIME" as the retention policy.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Javadoc loads its information from class files using a virtual machine.  To 
+ensure that this VM gets the information to produce the Javadoc from the class 
+files, "RetentionPolicy.RUNTIME" must be specified as the retention policy.  
+That way, the annotation will be kept in the compiled class file and loaded by 
+the VM.  Javadoc can then pick the annotation up and add it to the class's HTML 
+documentation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc; 
+
+import java.lang.annotation.Documented;
+
+@Documented               //VIOLATION
+public @interface SRRP {
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add the annotation "@Retention(RetentionPolicy.RUNTIME)" to the declaration.
+
+package examples.rules.javadoc; 
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Documented @Retention(RetentionPolicy.RUNTIME)         //FIXED
+public @interface SRRP {
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www-128.ibm.com/developerworks/library/j-annotate2.html">http://www-128.ibm.com/developerworks/library/j-annotate2.html</A>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

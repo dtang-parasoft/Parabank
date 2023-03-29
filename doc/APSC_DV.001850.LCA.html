@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include an appropriate '&lt;login-config&gt;' element to specify the type of authentication to be performed in 'web.xml' files [APSC_DV.001850.LCA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include an appropriate '&lt;login-config&gt;' element to specify the type of authentication to be performed in 'web.xml' files [APSC_DV.001850.LCA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When using 'auth-constraint' elements to control access to resources in a 
+'web.xml' file, you must also include a 'login-config' element to specify the 
+type of user authentication to be performed.  The four recognized types of user 
+authentication are:
+
+- BASIC 
+- FORM
+- DIGEST
+- CLIENT-CERT
+  
+This rule will flag a violation for each 'web.xml' file which includes at least 
+one 'auth-constraint' element but which either does not contain a 'login-config' 
+element or contains a 'login-config' element which specifies an authentication 
+method which is not one of the four recognized authentication methods.  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If you omit the 'login-config' element from a 'web.xml' file which is supposed
+to perform access control or if you include an incorrect 'login-config' element, 
+it may be possible for unauthorized users to access sensitive resources.  To 
+ensure that proper access control is performed, you should always include a 
+'login-config' element which specifies one of the four recognized types of user 
+authentication listed in the "DESCRIPTION" section.
+
+Enforcing this rule will help to protect against some of the the OWASP 2013 Top 10 
+application vulnerability including:
+
+A2-Broken Authentication and Session Management
+A5-Security Misconfiguration
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This sample 'web.xml' file attempts to use 'BASIC' user authentication, but the
+authentication will not work because 'BASIC' is misspelled as 'BASEC'.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;security-constraint&gt;
+    
+        &lt;web-resource-collection&gt;
+             &lt;web-resource-name&gt;SecretResources&lt;/web-resource-name&gt;
+             &lt;description&gt;Secret resources only to be accessed by a select few&lt;/description&gt;
+             &lt;url-pattern&gt;/secret/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+    
+        &lt;auth-constraint&gt;
+            &lt;description&gt;Secret Access&lt;/description&gt;
+            &lt;role-name&gt;secret&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+       
+    &lt;/security-constraint&gt;
+
+    &lt;login-config&gt;
+        &lt;auth-method&gt;BASEC&lt;/auth-method&gt;  &lt;!-- VIOLATION: typo, should be 'BASIC' --&gt;
+    &lt;/login-config&gt;
+                           
+    &lt;security-role&gt;
+        &lt;description&gt;Secret&lt;/description&gt;
+        &lt;role-name&gt;secret&lt;/role-name&gt;
+    &lt;/security-role&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that the 'web.xml' file includes a 'login-config' element and that the 
+authentication method specified is either 'BASIC', 'FORM', 'DIGEST', or 
+'CLIENT-CERT'.  In this example, fix the spelling error by changing 'BASEC' to 
+'BASIC'.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;    
+     
+    &lt;security-constraint&gt;
+    
+        &lt;web-resource-collection&gt;
+             &lt;web-resource-name&gt;SecretResources&lt;/web-resource-name&gt;
+             &lt;description&gt;Secret resources only to be accessed by a select few&lt;/description&gt;
+             &lt;url-pattern&gt;/secret/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+    
+        &lt;auth-constraint&gt;
+            &lt;description&gt;Secret Access&lt;/description&gt;
+            &lt;role-name&gt;secret&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+       
+    &lt;/security-constraint&gt;
+
+    &lt;login-config&gt;
+        &lt;auth-method&gt;BASIC&lt;/auth-method&gt;  &lt;!-- FIXED --&gt;
+    &lt;/login-config&gt;
+                           
+    &lt;security-role&gt;
+        &lt;description&gt;Secret&lt;/description&gt;
+        &lt;role-name&gt;secret&lt;/role-name&gt;
+    &lt;/security-role&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013:
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 3.2
+6.5.8 Improper access control
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-862: Missing Authorization
+<A HREF="https://cwe.mitre.org/data/definitions/862.html">https://cwe.mitre.org/data/definitions/862.html</A>
+
+Cigital Java Security Rulepack # 33:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-000460: The application must enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

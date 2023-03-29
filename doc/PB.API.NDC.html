@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define direct or indirect subclasses of 'Error' and 'Throwable' [PB.API.NDC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define direct or indirect subclasses of 'Error' and 'Throwable' [PB.API.NDC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies direct and indirect subclassing of 'Error' and 'Throwable'.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Error Handling
+
+Potential erroneous exception handling. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The class 'java.lang.Error' is meant only for covering abnormal Java Virtual Machine
+conditions.  If you define a direct or indirect subclass of class
+'Error', it is implied that the error is also an abnormal Java Virtual
+Machine condition, which is not the case.  Exception handling of 'Error' is not
+checked by the Java compiler, so erroneous exception handling may not be
+noticed.
+        
+The class 'java.lang.Throwable' is the super class of 'java.lang.Exception' and
+'java.lang.Error'. User-defined exceptions should always be defined as
+subclasses of 'java.lang.Exception'.
+        
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+        
+package examples.rules.pb.api;
+        
+public class NDC extends Error {  // VIOLATION
+    public NDC (String s) {
+        super(s);
+    }
+}
+        
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the class to extend Exception.
+        
+package examples.rules.pb.api;
+        
+public class NDCFixed extends Exception {  // FIXED
+    public NDCFixed (String s) {
+        super(s);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

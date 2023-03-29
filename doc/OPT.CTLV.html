@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use a "private" field that is accessed in only one method; change it to a local variable [OPT.CTLV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use a "private" field that is accessed in only one method; change it to a local variable [OPT.CTLV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "private" field that is accessed in only
+one method. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The fact that a private field is only accessed by a single
+method often indicates that the field can be replaced by a
+local variable. However, there are several cases where a
+field is accessed in only one method, but can NOT be
+converted to a local variable.
+For example:
+
+public class Example {
+
+    private int counter;
+
+    public int count() {
+
+        return counter++;
+    }
+}
+
+The rule takes these cases into account and will only flag an
+error if it is safe to convert the field to a local variable.
+To avoid reporting false positives and slowing down testing,
+the rule implementation uses inexact heuristics
+for excluding certain fields from being flagged. There are a
+small number of cases where OPT.CTLV will not detect a field
+that could be converted to a local variable. However, this
+is the tradeoff for not reporting annoying false positives.
+Often, fields that are flagged by OPT.CTLV can be
+completely removed, without replacing them by a local
+variable. To better detect such cases, OPT.CTLV can be
+combined with other rules, such as INIT.SF, INIT.CSI, UC.AUV,
+and UC.AVNR.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore fields which are used in a constructor.
+    -Default is true.  This means that, by default, the rule will not flag an
+     error for any field used in a constructor even if that field is not used in
+     another method or constructor.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important. 
+
+If a field is used by only one method, you can save memory and 
+system resources by moving the field to a local variable.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class CTLV {
+
+    private int index;
+    private int number;  // VIOLATION
+
+    public CTLV (int i) {
+        index = i;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getNumber() {
+        return number; 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the field 'number' to local variable
+
+package examples.rules.opt;
+
+public class CTLVFixed {
+
+    private int index;
+
+    public CTLVFixed(int i) {
+        index = i;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getNumber() {
+    int number = 12;  // FIXED
+        return number; 
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the "if" check for lazy initialization uses the correct operator [INIT.AULI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the "if" check for lazy initialization uses the correct operator [INIT.AULI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The lazy initialization pattern is:
+
+if(some_variable == null) {
+    some_variable = some_value;
+}
+
+A common mistake when using this pattern is to accidentally use "!=" instead of
+"==" when comparing the variable to "null".  Comparing a variable to "null"
+using "!=" and then assigning the variable a value is a suspicious pattern that
+is usually a bug.  This rule will flag a violation for all cases where code uses
+the lazy initialization pattern with the comparison operator "!=" instead of
+"==".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule has a Quick Fix to change the "!=" operator to "==", but the "Quick Fix
+All" feature is not available.  Although most violations of this rule are bugs,
+it is possible that the rule will occasionally flag on correct code.  Thus, we
+require that you review all of the violations individually instead of
+Quick Fixing them all at once.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using the lazy initialization pattern with "!=" instead of "==" is almost always
+a bug.  There is usually no reason to assign a variable a value only in the case
+that it already has a non-"null" value.  Doing this usually just indicates that
+you accidentally typed the wrong operator.  You should at least inspect all such
+cases to make sure the code is correct.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class AULI {
+    private static String _value;
+
+    /**
+     * This method gets the value held in the field "_value", initializing it if
+     * it has not already been initialized.
+     */
+    public static String getValue() {
+        if (_value != null) {  //VIOLATION- Operator should be "=="
+            _value = "Foo";
+        }
+        return _value;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getValue());
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the comparison operator from "!=" to "==".
+
+package examples.rules.init;
+
+public class AULIFixed {
+    private static String _value;
+
+    /**
+     * This method gets the value held in the field "_value", initializing it if
+     * it has not already been initialized.
+     */
+    public static String getValue() {
+        if (_value == null) {  //FIXED
+            _value = "Foo";
+        }
+        return _value;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getValue());
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

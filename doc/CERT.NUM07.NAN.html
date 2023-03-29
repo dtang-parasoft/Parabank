@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid comparisons to Double.NaN or Float.NaN [CERT.NUM07.NAN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid comparisons to Double.NaN or Float.NaN [CERT.NUM07.NAN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies floating point numbers that are compared to Double.NaN or
+Float.NaN for equality using  "==" or "!=".  An error is reported for each
+occurrence. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Comparing against "NaN" for equality can lead to unexpected results because the
+comparison "value == Float.NaN" will always return false even if "value" 
+happens to be "NaN".  
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class NAN {
+    int method(double d, double d1) {
+        if (d == Double.NaN) {  // VIOLATION
+            return 1;
+        } else if (d1 == Double.NaN) {  // VIOLATION
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the "isNaN" functions from the Float and Double classes to check for "NaN".
+The "Double.compare(double, double)" and "Float.compare(float, float)" also work
+as expected when used to check for "NaN" values.
+
+package examples.rules.pb.num;
+
+public class NANFixed {
+    int method(double d, double d1) {
+        if (Double.isNaN(d)) {  // FIXED
+            return 1;
+        } else if (Double.compare(d1, Double.NaN) == 0) {  // FIXED
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+James Gosling, Bill Joy, Guy Steele, Gilad Bracha, Alex Buckley:
+The	Java Language Specification, Java SE 8 Edition.
+4.2.3 Floating-Point Types, Formats, and Values
+
+Double (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Double.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Double.html</A>
+
+Float (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Float.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Float.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+NUM07-J. Do not attempt comparisons with NaN
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM07-J.+Do+not+attempt+comparisons+with+NaN">https://wiki.sei.cmu.edu/confluence/display/java/NUM07-J.+Do+not+attempt+comparisons+with+NaN</A>
+
+</PRE>
+</BODY>
+</HTML>

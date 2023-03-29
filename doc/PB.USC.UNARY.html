@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the unary operator '+' [PB.USC.UNARY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the unary operator '+' [PB.USC.UNARY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies usages of the unary operator '+'. An error
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The unary operator '+' can be omitted as any value without the 
+unary operator '+' would be implicitly recognized as 
+positive. Besides, the unary operator '+' could sometimes 
+indicate possible bugs that could not be detected at the
+compiler level. For example, value += 1 might accidentally
+be written as value =+ 1, which is syntactically correct, 
+but has completely different semantics.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class UNARY {
+    public int incrementByTwo(int i) {
+        return i=+ 2; //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class UNARYFixed {
+    public int incrementByTwo(int i) {
+        return i+= 2; //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

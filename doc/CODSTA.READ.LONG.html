@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid having a lower-case "l" or the number "1" at the end of a "long" integer constant [CODSTA.READ.LONG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid having a lower-case "l" or the number "1" at the end of a "long" integer constant [CODSTA.READ.LONG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "long" integer constants that end in a lowercase 'l' 
+instead of an uppercase 'L'.  It also identifies "int" constants which are in
+places where a "long" integer is expected and which end in the number "1".  An 
+error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Flag "long" integer constants which end in a lower-case "l"  (Default is on.)
+-Flag constants which end in the number "1" where a "long" integer is expected
+(Default is off.)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Integer constants are "long" if they end in 'L' or 'l'.  'L' is preferred
+over 'l' because 'l' (lowercase 'L') can easily be confused with '1'
+(the number one).
+
+Similarly, it is not recommended to have an "int" constant that 
+ends in the number "1" in situations where a "long" is expected.  This
+is because this can easily be confused with a long constant that ends 
+in a lowercase letter 'l' by the person reading the code.  In situations
+like this where a long constant is expected and the constant ends in the
+number "1", it is best to put an "L" at the end of the constant instead 
+of relying on implicit type conversions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class LONG {
+    public long getLongNumber () {
+        long temp = 23434l;  // VIOLATION
+        long temp2 = 234341;  // VIOLATION
+        return temp;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the 'l' uppercase.
+
+package examples.rules.codsta.read;
+
+public class LONGFixed {
+    public long getLongNumber () {
+        long temp = 23434L;  // FIXED
+        long temp2 = 234341L;  // FIXED
+        return temp;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Ken Arnold, James Gosling: "The Java Programming Language Second Edition"
+Addison Wesley, 1997, pp.108
+
+</PRE>
+</BODY>
+</HTML>

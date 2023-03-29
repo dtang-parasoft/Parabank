@@ -1,0 +1,236 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid Time-of-check Time-of-use (TOCTOU) Race Condition [CWE.362.TOCTOU]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid Time-of-check Time-of-use (TOCTOU) Race Condition [CWE.362.TOCTOU]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Time of Check to Time of Use (TOCTOU) is a race condition that may allow a resource to be changed
+between when it is checked and when it is used. This may result in unexpected behaviors and lead to security attacks. 
+Although Java throws a runtime exception when the checked resource has been modified before use, it is strongly
+recommended to handle TOCTOU to avoid unexpected behaviors and ensure security. 
+
+This rule limits the interleaving of operations to prevent a resource from changing between when it is checked
+and when it is used. The rule must be parametrized.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+The TOCTOU race condition may enable an attacker to gain unauthorized access to resources or cause
+denial of service. 
+    
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Pairs of methods" table allows you to specify pairs of methods that should be checked by the rule.
+Specify the methods using the following pattern:
+&lt;fully qualified type name&gt;#&lt;method name&gt;(&lt;parameter1 fully qualified type&gt;,&lt;parameter2 fully qualified type&gt;))
+The default values are java.io.File#canWrite() and java.io.FileWriter#FileWriter(java.io.File).
+
+The "Maximum number of method calls between the pairs of methods" parameter allows you to specify the maximum number
+of method calls between the pairs of methods specified in the "Pairs of methods" table.
+The default number is 3.
+
+The "Blocking methods" parameter allows you to list methods that should not be called between the pairs of methods specified
+in the "Pairs of methods" table, as their execution is prolonged and may block the process.
+The default values are java.lang.Thread#sleep(long) and java.lang.Thread#sleep(long,int).
+Specify the methods using the following pattern:
+&lt;fully qualified type name&gt;#&lt;method name&gt;(&lt;parameter1 fully qualified type&gt;,&lt;parameter2 fully qualified type&gt;)).
+
+The rule reports a violation when:
+- the number of method calls between the pair of methods specified in the "Pairs of methods" table exceeds the specified maximum number,
+- a method specified in the "Blocking methods" table is called between the pairs of methods specified in the "Pairs of methods" table.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Helps to avoid unexpected states and prevents security attacks.
+
+
+    
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+ /* This reference program was developed in June 2009 as part of the Software
+ * Assurance Metrics And Tool Evaluation (SAMATE) project.
+ * We would appreciate acknowledgment if the software is used.
+ * The SAMATE project website is: <A HREF="http://samate.nist.gov">http://samate.nist.gov</A>
+ */
+import java.io.*;
+import java.util.logging.Logger;
+ 
+ 
+public class TimeOfCheckTimeOfUse_367
+{
+    public TimeOfCheckTimeOfUse_367()
+    {
+        try
+        {
+            // Try to open the given file
+            File f = new File( "Z:/TCG_Java_Test_Cases/367_TOCTOU_java/myfile.txt" );
+
+            if( f.canWrite() == false )
+            {
+                // Try to cause the currently executing thread to sleep
+                try
+                {
+                    // BUG
+                    // The state of the file may change in the meantime
+                    Thread.sleep( 1000 );
+                }
+                catch (InterruptedException e)
+                {
+                    final Logger logger = Logger.getAnonymousLogger();
+                    String exception = "Exception " + e;
+                    logger.warning( exception );
+                }
+
+                // Create the file if it didn't exist before the sleep function
+                FileWriter fw = new FileWriter( f ); //VIOLATION
+                fw.close();
+             }
+        }
+        catch ( IOException e )
+        {
+            final Logger logger = Logger.getAnonymousLogger();
+            String exception = "Exception " + e;
+            logger.warning( exception );
+        }
+    }
+
+    public static void main( String argv[] )
+    {
+        new TimeOfCheckTimeOfUse_367();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+ /* This reference program was developed in June 2009 as part of the Software
+ * Assurance Metrics And Tool Evaluation (SAMATE) project.
+ * We would appreciate acknowledgment if the software is used.
+ * The SAMATE project website is: <A HREF="http://samate.nist.gov">http://samate.nist.gov</A>
+ */
+ 
+import java.io.*;
+import java.util.logging.Logger;
+ 
+ 
+public class TimeOfCheckTimeOfUse_good_367
+{
+    public TimeOfCheckTimeOfUse_good_367()
+    {
+        try {
+            // Try to open the given file
+            File f = new File( "Z:/TCG_Java_Test_Cases/367_TOCTOU_java/myfile.txt" );
+
+            if( f.canWrite() == false ) {
+                // Try to cause the currently executing thread to sleep
+                try {
+                   // The state of the file may change in the meantime
+                   Thread.sleep( 1000 );
+                }
+                catch (InterruptedException e)
+                {
+                    final Logger logger = Logger.getAnonymousLogger();
+                    String exception = "Exception " + e;
+                    logger.warning( exception );
+                }
+
+                // Verify the state hasn't changed
+                if( f.canWrite() == false )
+                {
+                    // Create the file if it didn't exist before the sleep function
+                    FileWriter fw = new FileWriter( f ); //FIXED
+                    fw.close();
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            final Logger logger = Logger.getAnonymousLogger();
+            String exception = "Exception " + e;
+            logger.warning( exception );
+        }
+    }
+
+    public static void main( String argv[] )
+    {
+        new TimeOfCheckTimeOfUse_good_367();
+    }
+}
+
+    
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SAMATE cases repository (test case Id: 2096)
+<A HREF="http://samate.nist.gov/SRD/view_testcase.php?tID=2096">http://samate.nist.gov/SRD/view_testcase.php?tID=2096</A>
+
+SAMATE cases repository (test case Id: 2122)
+<A HREF="http://samate.nist.gov/SRD/view_testcase.php?tID=2122">http://samate.nist.gov/SRD/view_testcase.php?tID=2122</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')
+<A HREF="https://cwe.mitre.org/data/definitions/362.html">https://cwe.mitre.org/data/definitions/362.html</A>
+
+CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition
+<A HREF="https://cwe.mitre.org/data/definitions/367.html">https://cwe.mitre.org/data/definitions/367.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001995: The application must not be vulnerable to race conditions
+
+</PRE>
+</BODY>
+</HTML>

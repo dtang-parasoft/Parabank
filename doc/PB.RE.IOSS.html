@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the "fromIndex" argument of 'indexOf()' when necessary [PB.RE.IOSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the "fromIndex" argument of 'indexOf()' when necessary [PB.RE.IOSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A common mistake when using the 'String.indexOf()' method and passing the result
+to the 'String.substring()' method is to forget to use the optional second 
+argument (the "fromIndex" argument) of 'String.indexOf()' for the second parameter
+to 'substring()'.  Usually, the intended use of 'indexOf()' when combined with 
+'substring()' is to find the position of one character, then to find the position 
+of another character starting at the position of the first character, and finally 
+to use 'substring()' to get the portion of the String between those two characters.
+However, if you forget to specify the "fromIndex" argument for a value which is
+passed as the second argument to 'substring()', this may result in a 
+"StringIndexOutOfBoundsException".  This rule will flag a violation for cases 
+where the one-argument version of 'String.indexOf()' is called and one of the 
+following situations applies:
+
+1. The result of the call to 'indexOf()' is passed directly in the second argument 
+to 'substring()'.  
+
+2. The result of the call to 'indexOf()' is stored in a variable which is passed
+in the second argument to 'substring()'. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If the first argument to 'substring()' is a constant which evaluates to 0 or less, 
+no violation will be flagged for the second parameter.  If the first argument is 
+0, the call to 'substring()' will not generate an exception unless the second 
+parameter is negative.  If the first argument is negative, the call to 'substring()'
+will generate an exception no matter what.  For these reasons, no violations are
+flagged for these cases.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Always specifying the "fromIndex" argument before passing the results of calls
+to 'String.indexOf()' to 'String.substring()' when necessary will help ensure 
+that unexpected exceptions do not happen.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Because the call to "source.indexOf('}')" does not specify the "fromIndex" 
+argument, a "StringIndexOutOfBoundsException" will be thrown from the 'main()'
+method.
+
+package examples.rules.pb.re;
+
+public class IOSS {
+    public static String extractBody(String source) {
+        int start = source.indexOf('{');
+        if (start == -1)
+            return null;
+        int end = source.indexOf('}');  //VIOLATION- should specify "fromIndex" argument
+        if (end == -1)
+            return null;
+        return source.substring(start + 1, end);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(extractBody("abc {body}"));
+        // StringIndexOutOfBoundsException will be thrown here:
+        System.out.println(extractBody("abc } {body}"));
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify the "fromIndex" argument for the second call to 'indexOf()'.
+
+package examples.rules.pb;
+
+class IOSSFixed{
+    public static String extractBody(String source) {
+        int start = source.indexOf('{');
+        if (start == -1)
+            return null;
+        int end = source.indexOf('}', start);  //FIXED
+        if (end == -1)
+            return null;
+        return source.substring(start + 1, end);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(extractBody("abc {body}"));
+        System.out.println(extractBody("abc } {body}"));
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

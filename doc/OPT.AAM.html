@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Change non-"private" members to "private" in anonymous classes [OPT.AAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Change non-"private" members to "private" in anonymous classes [OPT.AAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Anonymous classes should not have any "public" or "protected" members. 
+This rule will flag a violation for each field or method (if it is not overriding 
+method and not implementing method) which is declared "public" or "protected" inside an anonymous class.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+In an anonymous class, since all the non-overriding methods and non-implementing methods or fields
+cannot be accessed outside the class, it is unnecessary to declare those members as non-private.
+This rule will detect all these members in order to avoid any typo which misspell the overriding
+method name.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class AAM {
+
+    public Product getProduct() {
+        return new Product() {
+        
+            public String version = "8.2";  // VIOLATION
+            
+            public String getVersion() {  // VIOLATION
+                return version;
+            }
+            
+            public String getName() {
+                return "Jtest " + getVersion();
+            }
+        };
+    }
+}
+
+interface Product {
+
+    public String getName();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the accessibility of getVersion() to "private" and version field declaration to "private"
+
+package examples.rules.opt;
+
+public class AAMFixed {
+
+    public Product getProduct() {
+        return new Product() {	    
+        
+            private String version = "8.2";  // FIXED
+        
+            private String getVersion() {  // FIXED
+                return version;
+            }
+            
+            public String getName() {
+                return "Jtest " + getVersion();
+            }
+        };
+    }
+}
+
+interface Product {
+
+    public String getName();
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+@deprecated CODSTA.BP.PPAC
+
+</PRE>
+</BODY>
+</HTML>

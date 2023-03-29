@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare SerialVersionUID in classes that do not implement Serializable [SERIAL.SRLZ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare SerialVersionUID in classes that do not implement Serializable [SERIAL.SRLZ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Reports error if serialVersionUID is declared, but the class is not Serializable
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A given class will be serializable if it implements serializable itself, or if
+a parent class or a class that the given class extends is serializable.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The serialVersionUID field being declared indicates that the user intended to 
+create a serializable class, which they failed to do.  This rule alerts them to
+the fact.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.SERIAL;
+
+import java.io.Serializable;
+
+public class SRLZ_2 implements SRLZ_Interface{ //VIOLATION
+    private static final long serialVersionUID = 13;
+
+    public int compareTo(Object o) {
+        return 0;
+    }
+
+    private class SRLZ_3 implements Serializable{
+        private static final long serialVersionUID = 13;
+    }
+}
+
+interface SRLZ_Interface extends Comparable { //VIOLATION
+    public static final long serialVersionUID = 13;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+EitherSerializable or remove the reference to serialVersionUID
+
+package examples.rules.SERIAL;
+
+import java.io.Serializable;
+
+public class SRLZ_2 implements SRLZ_Interface, Serializable { //FIXED
+    private static final long serialVersionUID = 13;
+
+    public int compareTo(Object o) {
+        return 0;
+    }
+
+    private class SRLZ_3 implements Serializable{
+        private static final long serialVersionUID = 13;
+    }
+}
+
+interface SRLZ_Interface extends Comparable { //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

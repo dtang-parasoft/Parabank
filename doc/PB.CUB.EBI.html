@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid erroneously placing statements outside blocks [PB.CUB.EBI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid erroneously placing statements outside blocks [PB.CUB.EBI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "if", "else", "for", "while", and "do" statements missing
+'{' and '}'. If multiple statements share the same indentation on the following
+lines, then the user may have intended for them to be encompassed in a block.
+However, as the '{' and '}' are not present, only the first of the statements
+will be encompassed.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following rules are complementary and may be used in conjunction:
+    -MISC.BLK, will suggest the user always enclose "if", "else", "for", 
+        "while", and "do" statements with '{' and '}'. Following this rule will
+        prevent this erroneous behavior from occurring.
+    -PB.TYPO.EB, catches the case where a control statement has an empty body.
+    -FORMAT.IND, flags cases of confusing or poor indentation.
+	
+	
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"In lightly tested or untested code, this error may be introduced it into
+a production environment and provide additional attack vectors by creating
+a control flow path leading to an unexpected state in the application.
+The consequences will depend on the types of behaviors that are being
+incorrectly executed." [CWE-483]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "if" statements (default as true)
+-Check "else" statements (default as true)
+-Check "for" statements (default as true)
+-Check "while" statements (default as true)
+-Check "do-while" statements (default as true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule can identify cases where a user added a statement following a single
+pre-existing statement, intending it to be included in a block. However as the
+'{' and '}' are missing, the statement will not be executed as part of that
+block.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class EBI {
+    void method(String[] strs) {
+        int i = 0;
+        while (i &lt; strs.length)
+            i++;
+            System.out.println(strs[i]); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class EBI {
+    void method(String[] strs) {
+        int i = 0;
+        while (i &lt; strs.length) {
+            i++;
+            System.out.println(strs[i]); //FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-483: Incorrect Block Delimitation
+<A HREF="https://cwe.mitre.org/data/definitions/483.html">https://cwe.mitre.org/data/definitions/483.html</A>
+
+</PRE>
+</BODY>
+</HTML>

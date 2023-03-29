@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not write to static fields from non-static methods [CODSTA.EPC.WSIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not write to static fields from non-static methods [CODSTA.EPC.WSIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that static fields are not written to from instance methods.
+A violation will be flagged for each write to a static field within an instance
+method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are some cases where it is difficult or impossible to avoid modifying a
+static variable from an instance method.  However, it is generally a bad idea to
+do this when it is not necessary since it can lead to confusion.  In cases where
+violating this rule is necessary, the violation should be suppressed.
+
+This rule will not flag cases where a static variable of the same type as the
+enclosing class is modified within an instance method.  It is common practice
+to use a static field to track an instance of the enclosing class.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check for write accesses
+    -Only to static fields that are declared in the same class (default option)
+        -If this option is selected, the rule will only flag write accesses to
+         static fields which are declared in the class in which they are written 
+         to.  Write accesses to fields from other classes will be ignored.
+    -To any static fields   
+        -If this option is selected, any write accesses to static fields will
+         be flagged (regardless of where the field is declared).
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is tricky to ensure that a static variable has the correct value if  multiple 
+instances of a class are all modifying its value.  Because of this, it is 
+considered bad practice to write to a static field from an instance method.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+public class WSIM {
+    private static int _countInvs;
+
+    WSIM(){
+         _countInvs= 0;
+    }
+
+    public void login(){
+        _countInvs++;  //VIOLATION
+        //log in code
+    }
+    
+    public int getCount(){
+        return _countInvs;
+    }
+}
+
+Note that the variable "_countInvs" here is used to keep track of the number of
+times the user calls the "login()" method.  The value of the variable 
+"_countInvs" will depend on the number of instances of the class "WSIM" as well
+as the number of times each instance calls the "login()" method.  This works 
+fine if there is only a single instance of the class "WSIM", but it can lead
+to confusion if there are multiple instances.  What was probably meant here is
+to keep track of the number of times each instance of the class logs in, which 
+should be done with an instance variable.  If this is not the case, the methods
+"login()" and "getCount()" should be made static to make it more clear that 
+they are accessing/modifying static variables.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that the variable being modified was supposed to be "static" and that
+the method modifying it was supposed to be non-"static".  Either make the method 
+that modifies the static field "static" or change the static variable to an 
+instance variable.
+
+package examples.rules.codsta.epc;
+
+public class WSIMFixed {
+    private int _countInvs;  //FIXED- changed field to non-"static"
+
+    WSIMFixed(){
+         _countInvs= 0;
+    }
+
+    public void login(){
+        _countInvs++;  //VIOLATION
+        //log in code
+    }
+    
+    public int getCount(){
+        return _countInvs;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

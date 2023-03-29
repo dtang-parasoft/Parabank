@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not instantiate variables in a loop body [OPT.LOOP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not instantiate variables in a loop body [OPT.LOOP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that instantiates variables in a loop body.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will attempt to not flag cases where the variable may be stored to an
+array or collection. In these instances it may be desirable to instantiate
+variables in a loop.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Temporary object creation inside a loop can increase memory management overhead.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class LOOP {
+    public void method(int max) {
+        for (int i = 0; i &lt; max; i++) {
+            StringBuffer sb = new StringBuffer();  // VIOLATION
+            sb.append("loop: ");
+            sb.append(i);
+            System.out.println(sb.toString());
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the variable outside of the loop and reuse it.
+
+package examples.rules.opt;
+
+public class LOOPFixed {
+    public void method(int max) {
+        StringBuffer sb = new StringBuffer();  // FIXED
+        for (int i = 0; i &lt; max; i++) {
+            sb.append("loop: ");
+            sb.append(i);
+            System.out.println(sb.toString());
+            sb.setLength(0);  // FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

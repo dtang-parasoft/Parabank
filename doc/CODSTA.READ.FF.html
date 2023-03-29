@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare "private" constant fields "final" [CODSTA.READ.FF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare "private" constant fields "final" [CODSTA.READ.FF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "private" constant fields that are not declared "final".  
+An error is reported for fields that are initialized during their declaration 
+and have values that do not change throughout the class but are not declared 
+"final".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for classes with at least one "native" 
+method declaration since the values of the fields may be changed in the class' 
+"native" methods. Fields within "private" or package-private inner classes are
+also checked.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Declaring constant fields to be "final" helps to ensure that their values will
+never be changed.  If the fields are not declared "final", the values of these
+fields may later be changed either accidentally or maliciously by a hacker.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore fields with mutable types
+    -Default is "false".
+    -To avoid conflicts with the rule 'PB.CUB.IMM: Ensure "static" "final" 
+     fields are immutable', you should enable this parameter.  The rule 
+     PB.CUB.IMM requires that all "static final" fields also be immutable.  This 
+     rule (MISC.FF) identifies "private" fields that can be declared "final".  
+     By default, it will flag on fields of both mutable and immutable types.  
+     Thus, it is possible that MISC.FF will conflict with PB.CUB.IMM.  If you 
+     have PB.CUB.IMM and MISC.FF enabled, you should also enable this parameter 
+     to avoid conflicts.
+    -This parameter is not enabled by default because the test for mutability 
+     can be slow in certain cases.   
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Final fields are less expensive to access, which is especially helpful for
+mobile platforms with reduced resources.
+
+These values are constants, so adding "final" makes it explicit that these 
+values will not change.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class FF {
+    private int size = 5;  // violation
+    private int method (int x) {
+        return x + size;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the constant field to be "final".
+
+package examples.rules.codsta.read;
+
+public class FFFixed {
+    private final int size = 5;  // FIXED
+    private int method (int x) {
+        return x + size;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of space character(s) after the opening parenthesis "(" of a conditional statement [APSC_DV.003215.SAP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of space character(s) after the opening parenthesis "(" of a conditional statement [APSC_DV.003215.SAP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies opening parentheses in conditional statements that are not
+followed by the required number of space characters. With the default parameters,
+an error is reported if any parenthesis that appears in the header of a 'for'
+loop, an 'if' statement, an 'else' statement, a 'while' loop, a 'switch' statement,
+or a 'catch' statement is not followed by a single ' ' space character.
+
+There is also a parameter where the user can specify whether or not to make an
+exception for the common idiom 'for (;;)'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Number of spaces after the opening parenthesis in a conditional statement
+ (default value is 1)
+-Ignore rule for the special case "for(;;)" (default is true)
+   -When this parameter is true, a "for" statement of the form "for(;;)..."
+    (with no spaces around the semicolons) will be ignored regardless of the
+    setting of the other parameter.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class SAP {
+    public void method () {
+        for (  int i = 0;i &lt; 10;i++) {  // VIOLATION
+            System.out.println ("i: " + i);
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place a single space after the opening parenthesis of each conditional
+statement.
+
+package examples.rules.format;
+
+public class SAPFixed {
+    public void method () {
+        for ( int i = 0;i &lt; 10;i++) {  // FIXED
+            System.out.println ("i: " + i);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

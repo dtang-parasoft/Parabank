@@ -1,0 +1,243 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure all exceptions are either logged with a standard logger or rethrown [OWASP2019.API10.LGE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure all exceptions are either logged with a standard logger or rethrown [OWASP2019.API10.LGE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Using a logging mechanism to track caught exceptions allows you to
+obtain information about the possible security vulnerabilities and 
+appropriately fix code defects. Exceptions that are caught but are
+not logged should be rethrown. 
+If you want to handle an exception without logging or rethrowing it,
+it is a good practice to leave an appropriate comment in your code.
+
+By default, this rule detects 'catch' clauses that do not include
+one of the following:
+- a call to a logging method
+- a 'throw' statement that rethrows the exception
+
+The rule can be parameterized (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Exploitation of insufficient logging and monitoring is the bedrock of nearly
+every major incident. Attackers rely on the lack of monitoring and timely
+response to achieve their goals without being detected." [OWASP Top 10-2017]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Acceptable Loggers (Specify fully qualified names)
+    -Allows you to specify classes the rule will consider to be loggers.
+     A call to a method of a logging class specified here or any of its
+     subclasses will be treated as a call to a logger.
+    -By default, "java.util.logging.Logger" and "org.apache.log4j.Logger" are
+     specified.
+
+-Logging method name in regular expression
+    -Allows you to specify custom logging methods. A call to a method specified
+     here will be treated as a call to a logger.
+    -Use regular expressions to specify the method names. 
+    -By default, "^log.*" is specified.  As a result, any method whose name 
+     starts with "log" is recognized as a logging method.
+ 
+-Catch clause should contain
+    -Logging method - The rule will trigger when the 'catch' block does not
+     contain a call to a logger.
+    -Logging method or 'throw' exception statement (default) - The rule will
+     trigger when the 'catch' block contains neither a call to a logger nor 
+     a statement that rethrows the exception.
+    -Logging method, comment, or 'throw' exception statement - The rule will
+     trigger when the 'catch' block contains neither a call to a logger nor
+     a statement that rethrows the exception, and there is  no comment that
+     this is expected.
+    
+-Check if the exception is passed into the logging method call
+    -If enabled, the rule will trigger when the logging method that is called
+     in the 'catch' block' does not take the caught exception as an argument.
+     This allows you to ensure that information about the exception is passed
+     to the logging method.
+    - This parameter is disabled by default.
+     
+-Check if the exception passed to the logging method is complete
+    -If enabled, the rule will trigger when the exception information passed
+     to the logging method is incomplete.
+    -This parameter is disabled by default.
+
+-Check if the caught exception is passed to a new exception or rethrown
+    -If enabled, the rule will trigger when the caught exception is neither
+     rethrown from the 'catch' block nor passed to the new exception that is
+     thrown.
+    -This parameter is disabled by default.		
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that information about caught exceptions is logged,
+which improves protection against vulnerabilities and facilitates fixing code
+defects.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.uehl;
+
+import java.io.*;
+
+public class LGE {
+    
+    public void getObject(String fileName) {
+        try {
+            ObjectInputStream in= new ObjectInputStream(new FileInputStream(fileName));
+            Object obj= in.readObject();
+        } 
+        catch (FileNotFoundException e) {  //VIOLATION, no logging method
+        } 
+        catch (IOException e) {  //VIOLATION, no logging method
+            System.err.println(e.getMessage()); 
+        }
+        catch (ClassNotFoundException e) {  //VIOLATION, no logging method
+        } 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.uehl;
+
+import java.io.*;
+import java.util.Date;
+
+public class LGEFixed {
+
+    public void myMethod() {
+        try {
+            ObjectInputStream in= new ObjectInputStream(new FileInputStream("in.obj"));
+            Object obj= in.readObject();
+        } 
+        catch (FileNotFoundException e) { 
+            log("FileNotFound "+ e.getMessage()  //FIXED
+                , (new Date(System.currentTimeMillis())).toString());  
+        } 
+        catch (IOException e) {
+            throw new IOException("IOException " + e.getMessage()); //FIXED
+        }
+        catch (ClassNotFoundException e) {
+            log("ClassNotFound "+e.getMessage()  //FIXED
+                , (new Date(System.currentTimeMillis())).toString());
+        }
+    }
+    
+    public void log(String exceptionMessage, String date) {      
+        //Log the exception.
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/65b908dd-c19c-4daa-98c5-b8789e10aeb8">https://app.hackedu.com/link/65b908dd-c19c-4daa-98c5-b8789e10aeb8</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A09:2021 – Security Logging and Monitoring Failures
+<A HREF="https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/">https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/</A>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+CWE-390: Detection of Error Condition Without Action
+<A HREF="https://cwe.mitre.org/data/definitions/390.html">https://cwe.mitre.org/data/definitions/390.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR00-J. Do not suppress or ignore checked exceptions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR00-J.+Do+not+suppress+or+ignore+checked+exceptions">https://wiki.sei.cmu.edu/confluence/display/java/ERR00-J.+Do+not+suppress+or+ignore+checked+exceptions</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

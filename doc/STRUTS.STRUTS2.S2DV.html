@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicated validators [STRUTS.STRUTS2.S2DV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicated validators [STRUTS.STRUTS2.S2DV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if more than one validator class has the same name in a 
+'validators.xml' file. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Struts will arbitrarily choose one of the validators if more than one validation 
+form has the same name. This will cause a security problem because the result 
+may be unexpected.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;!DOCTYPE validators PUBLIC
+        "-//OpenSymphony Group//XWork Validator Config 1.0//EN"
+        "<A HREF="http://www.opensymphony.com/xwork/xwork-validator-config-1.0.dtd">http://www.opensymphony.com/xwork/xwork-validator-config-1.0.dtd</A>"&gt;
+
+&lt;validators&gt;
+   &lt;validator name="passwordValidator" class="com.parasoft.jtest.login.PasswordValidator"/&gt;
+   &lt;!-- VIOLATION : duplicated validator name --&gt;
+   &lt;validator name="passwordValidator" class="com.parasoft.jtest.common.PasswordValidator"/&gt;
+&lt;/validators&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rename the second validator form.
+
+&lt;?xml version="1.0" ?&gt;
+&lt;!DOCTYPE validators PUBLIC
+        "-//OpenSymphony Group//XWork Validator Config 1.0//EN"
+        "<A HREF="http://www.opensymphony.com/xwork/xwork-validator-config-1.0.dtd">http://www.opensymphony.com/xwork/xwork-validator-config-1.0.dtd</A>"&gt;
+
+&lt;validators&gt;
+   &lt;validator name="passwordValidator" class="com.parasoft.jtest.login.PasswordValidator"/&gt;
+   &lt;!-- FIXED : rename the validator --&gt;
+   &lt;validator name="commonPasswordValidator" class="com.parasoft.jtest.common.PasswordValidator"/&gt;
+&lt;/validators&gt;
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that the logging level checked matches the level of the called logging method [OWASP2019.API10.LLM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that the logging level checked matches the level of the called logging method [OWASP2019.API10.LLM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A common practice when using logging systems is to check whether a certain log
+message is of a high enough severity level to be logged before actually calling 
+the method to log the message.  That way, you will not incur the overhead of 
+evaluating the method parameters and calling the log method if the message will
+not be logged with the current settings of the logger anyway.  The rule OPT.CLL 
+helps to enforce the use of this optimization.  
+
+A common mistake when attempting to implement the optimization explained in the
+above paragraph is for the logging level of the method called to log the message 
+to not match the logging level specified in the method called to check whether 
+the message will be logged.  For instance, you may have some code like the 
+following code for the "Log4j" system:
+
+if(logger.isDebugEnabled()) {
+    logger.warn(expensiveMethod());
+}
+
+Here, the programmer tried to ensure that "expensiveMethod()" will only be 
+called when necessary by guarding the call "logger.warn(expensiveMethod())" with
+the condition "logger.isDebugEnabled()".  However, it does not make sense to 
+check whether the "DEBUG" logging level is enabled when logging a message with 
+the logging level "WARN".  Either the condition should be changed to "logger.
+isWarnEnabled()", or the logging method call should be changed to "logger.debug(
+expensiveMethod())".
+
+A violation will be flagged for each case where someone attempted to implement
+the optimization described in the first paragraph but most likely made a mistake
+in doing so.  That is, a violation will be flagged for each case where the 
+condition of an "if" statement does not match the logging method called within 
+that "if" statement.  The rule will test code written for the "java.util.logging.
+Logger" and "org.apache.log4j.Logger" logging systems.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using this rule will help to detect a common mistake when using logging systems
+that can either prevent important logging messages from being logged or lead to 
+inefficiencies.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the method "incorrectUtil()" below, the logging level checked is "INFO", but 
+the log message "Warning message" is logged with the level "WARNING".  This is 
+an example using the "java.util.logging.Logger" logging system, but the rule 
+also works with the "Log4j" logging system.
+
+package examples.rules.pb.logic;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class LLM {  
+    static Logger _utilLogger= Logger.getLogger("examples.rules.pb.LLM");
+    
+    public static void main(String[] args) {
+        LLM myLLMObj= new LLM();
+        _utilLogger.setLevel(Level.WARNING);
+        myLLMObj.incorrectUtil();
+    }
+    
+    public void incorrectUtil() {
+        if(_utilLogger.isLoggable(Level.INFO)){  //VIOLATION
+            _utilLogger.warning("Warning message");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+There are two possible fixes for this bug:
+
+1.  Change the logging level that is checked so that it matches the level of the 
+logging method which is called 
+
+OR 
+
+2.  Change the logging method which is called so that its logging level matches 
+the logging level which is checked in the condition.
+
+Here, fix #1 is demonstrated.
+
+package examples.rules.pb.logic;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class LLMFixed {  //FR65501
+    static Logger _utilLogger= Logger.getLogger("examples.rules.pb.LLM");
+    
+    public static void main(String[] args) {
+        LLMFixed myLLMObj= new LLMFixed();
+        _utilLogger.setLevel(Level.WARNING);
+        myLLMObj.incorrectUtil();
+    }
+    
+    public void incorrectUtil() {
+        if(_utilLogger.isLoggable(Level.WARNING)){  //FIXED
+            _utilLogger.warning("Warning message");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+</PRE>
+</BODY>
+</HTML>

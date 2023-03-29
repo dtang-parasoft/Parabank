@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare "for" loops with an initializer, conditional, and updater statements [CWE.835.PCIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare "for" loops with an initializer, conditional, and updater statements [CWE.835.PCIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Requires that a "for" statement makes use of its initializer, conditional, and
+updater arguments.
+
+The initializer is the first argument in the "for" parameter list,
+e.g. 'for (int i = 0; ...; ...)'.
+
+The conditional is the second argument in the "for" parameter list,
+e.g. 'for (...; i &lt; 10; ...)'.
+
+The updater is the third argument in the "for" parameter list,
+e.g. 'for (...; ...; i++)'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The program contains an iteration or loop with an exit condition that cannot
+be reached, i.e., an infinite loop. If the loop can be influenced by an attacker,
+this weakness could allow attackers to consume excessive resources such as CPU
+or memory." [CWE-835]
+	
+	
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check initializer (default false)
+    Enabling this parameter will check if the initializer is present.
+
+-Check conditional (default true)
+    Enabling this parameter will check if the conditional is present.
+
+-Check updater (default true)
+    Enabling this parameter will check if the updater is present.
+
+-Ignore "for" loops with 'Enumeration' or 'Iterator' method "has..." as condition. (default true)
+    For example, 'for (Enumeration e = v.elements(); e.hasMoreElements() ; )'
+    would not be flagged if this parameter is enabled.
+
+-Ignore infinite "for" loops in form of 'for (;;)' (default false)
+    To create infinite loops, some users might prefer 'for (;;)' to 'while (true)'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A properly written for loop has an ending condition and an increment
+expression stated in the "for" statement. If the increment or the condition
+check are missing, a for loop should not be used.  If the condition and the
+increment are in the body of the loop, this is poor style.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class PCIF {
+    void method (int i) {
+        for (; i &lt; 1000; ) {  // VIOLATION: increment is done in the loop
+            i++;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Check if the condition or the increment expressions are missing or are simply
+embedded in the loop body.  If the expression is missing, either replace it
+or replace the "for" statement with a "while" statement.
+
+package examples.rules.codsta.read;
+
+public class PCIFFixed {
+    void method (int i) {
+        while (i &lt; 1000) {  // FIXED
+            i++;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2020 CWE Weaknesses On the Cusp
+CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')
+<A HREF="https://cwe.mitre.org/data/definitions/835.html">https://cwe.mitre.org/data/definitions/835.html</A>
+
+</PRE>
+</BODY>
+</HTML>

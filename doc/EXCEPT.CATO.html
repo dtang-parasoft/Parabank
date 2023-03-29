@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Catch all "Throwable" objects which may be thrown in the body of certain methods [EXCEPT.CATO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Catch all "Throwable" objects which may be thrown in the body of certain methods [EXCEPT.CATO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If unexpected "Throwable" objects are thrown from certain methods, it may cause
+undesirable behavior.  This rule will make sure that implementations of the
+methods specified in the parameter table wrap all code which may cause a 
+"Throwable" object to be thrown (including method calls, constructor calls,
+and "throw" statements) in a "try"/"catch" block which catches objects of type
+"java.lang.Throwable".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Methods to be Checked
+    -By default, only "java.lang.Runnable#run()" is in the list.
+    -Add methods to this list if implementations of these methods (including
+     overriding versions in subclasses and implementations of interface methods)
+     should not be allowed to throw any exceptions.
+    -The table has two columns.  In the "Type (Fully Qualified Name)" column,
+     you should specify the fully qualified name of the declaring type of the
+     method you want to check.  In the "Method Name and Parameters (Specify 
+     fully qualified type names)" column, you should specify the name of the
+     method with the fully qualified type name for all the parameters in 
+     parentheses.  No spaces are allowed.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When code throws unexpected, uncaught "Throwable" objects (either Exceptions or 
+Errors), bad results can happen.  For instance, if the "run()" method of a 
+thread object throws an exception, it may cause the thread to die silently.  
+There are some method implementations which should never be allowed to throw 
+"Throwable" objects.  The only way to ensure that methods cannot throw an object 
+(including unchecked Exceptions and Errors) is to wrap all the code which may 
+throw a "Throwable" objects in a "try"/"catch" block which catches the type 
+"Throwable".  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class CATO implements Runnable {
+    public void run() {
+        String s= null;
+        System.err.println(s.length());  //VIOLATION- Calling "length()" will 
+                                         //cause a NullPointerException
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Wrap the code which may throw an Exception in a "try"/"catch" block which catches
+the "Throwable" type.  In the "catch" block, you should handle the exception.  
+It this is not possible, it should at least be logged. 
+
+package examples.rules.except;
+
+public class CATOFixed implements Runnable {
+    static Logger _logger = Logger.getLogger("examples.rules.except");  //$NON-NLS-1$
+
+    public void run() {
+        String s = null;
+        try {
+            System.err.println(s.length());
+        } catch (Throwable t) {  //FIXED- Catch any possible Exceptions or Errors
+                                 //which may be thrown in the method.
+            //Some exception handling code
+            _logger.severe("Throwable: " + t.getClass());
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

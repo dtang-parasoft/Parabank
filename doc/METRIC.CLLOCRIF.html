@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Comment/Logical Lines in Files [METRIC.CLLOCRIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Comment/Logical Lines in Files [METRIC.CLLOCRIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Ratio of Comments to Number of Logical Lines in files metrics report the ratio of comment lines
+to logical lines of code.
+
+See "Number of Comment Lines" metrics for the definition of comments. 
+See "Number of Logical Lines" metrics for the definition of logical lines.
+
+This metric measures the proportion of comment lines to logical lines of code in files.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Metric  Code
+comment logic.
+
++1              // comment
+                import java.util.ArrayList;
+                public class Foo
+                {
++1      +1          private int _qux = 5; // comment
+                    private int _garply;
+         
+                    public void bar(int i, int j)
+                    {
++1                      // comment
+        +1              i = 5;
+        +2              ArrayList al = new ArrayList(); al.add(i);
+                    }
+                }
+        
+Ratio: 0.75
+
+</PRE>
+</BODY>
+</HTML>

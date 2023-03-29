@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unsigned timestamps in WebSphere 'ibm-webservices-ext.xmi' files [APSC_DV.001850.WUTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unsigned timestamps in WebSphere 'ibm-webservices-ext.xmi' files [APSC_DV.001850.WUTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if there is an &lt;addTimestamp&gt; tag in a WebSphere 
+'ibm-webservices-ext.xmi' file but there is no digital signature for that 
+timestamp. Any unsigned timestamp is vulnerable to replay attacks. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If a timestamp is not signed, an attacker can intercept the SOAP message, modify 
+the timestamp, and send the message to the receiver at a later time (when the
+message is harmful). Since the timestamp has been altered, the receiver has no
+way of telling that the message is stale.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+ibm-webservices-ext.xmi:
+
+&lt;com.ibm.etools.webservice.wsext:WsExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wsext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi</A>" xmi:id="WsExtension_1151349893397"&gt;
+    .....
+      &lt;serverServiceConfig xmi:id="ServerServiceConfig_1154318793611"&gt;
+        &lt;securityRequestConsumerServiceConfig xmi:id="SecurityRequestConsumerServiceConfig_1154318793611"&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154366255282"/&gt;
+          &lt;caller xmi:id="Caller_1154366255282" name="basicAuth" part="" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+          &lt;requiredSecurityToken xmi:id="RequiredSecurityToken_1154366255282" name="requntoken" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>" usage="Required"/&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154366569664" name="conf_con" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569664" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569665" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="usernametoken"/&gt;
+          &lt;/requiredConfidentiality&gt;
+          &lt;!-- VIOLATION : missing digital sign --&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154369393184" name="int_con1" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393184" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393185" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="securitytoken"/&gt;
+          &lt;/requiredIntegrity&gt;
+        &lt;/securityRequestConsumerServiceConfig&gt;
+        &lt;securityResponseGeneratorServiceConfig xmi:id="SecurityResponseGeneratorServiceConfig_1154318793611"&gt;
+          &lt;confidentiality xmi:id="Confidentiality_1154318793611" name="conf_gen" order="2"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793613" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="conf_gen_body" keyword="bodycontent"/&gt;
+          &lt;/confidentiality&gt;
+          &lt;integrity xmi:id="Integrity_1154318793611" name="int_req1" order="1"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793614" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="int_req_body" keyword="body"/&gt;
+          &lt;/integrity&gt;
+        &lt;/securityResponseGeneratorServiceConfig&gt;
+      &lt;/serverServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wsext:WsExtension&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a digital signature for the &lt;addTimestamp&gt; tag.
+
+ibm-webservices-ext.xmi:
+
+&lt;com.ibm.etools.webservice.wsext:WsExtension xmi:version="2.0" xmlns:xmi="<A HREF="http://www.omg.org/XMI">http://www.omg.org/XMI</A>" xmlns:com.ibm.etools.webservice.wsext="<A HREF="http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi">http://www.ibm.com/websphere/appserver/schemas/5.0.2/wsext.xmi</A>" xmi:id="WsExtension_1151349893397"&gt;
+    .....
+      &lt;serverServiceConfig xmi:id="ServerServiceConfig_1154318793611"&gt;
+        &lt;securityRequestConsumerServiceConfig xmi:id="SecurityRequestConsumerServiceConfig_1154318793611"&gt;
+          &lt;addTimestamp xmi:id="AddTimestamp_1154366255282"/&gt;
+          &lt;caller xmi:id="Caller_1154366255282" name="basicAuth" part="" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>"/&gt;
+          &lt;requiredSecurityToken xmi:id="RequiredSecurityToken_1154366255282" name="requntoken" uri="" localName="<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#UsernameToken</A>" usage="Required"/&gt;
+          &lt;requiredConfidentiality xmi:id="RequiredConfidentiality_1154366569664" name="conf_con" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569664" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="bodycontent"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154366569665" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="usernametoken"/&gt;
+          &lt;/requiredConfidentiality&gt;
+          &lt;!-- FIXED : add digital signature for the timestamp --&gt;
+          &lt;requiredIntegrity xmi:id="RequiredIntegrity_1154369393184" name="int_con1" usage="Required"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393184" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="body"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393185" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="securitytoken"/&gt;
+            &lt;messageParts xmi:id="MessageParts_1154369393186" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" keyword="timestamp"/&gt;
+          &lt;/requiredIntegrity&gt;
+        &lt;/securityRequestConsumerServiceConfig&gt;
+        &lt;securityResponseGeneratorServiceConfig xmi:id="SecurityResponseGeneratorServiceConfig_1154318793611"&gt;
+          &lt;confidentiality xmi:id="Confidentiality_1154318793611" name="conf_gen" order="2"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793613" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="conf_gen_body" keyword="bodycontent"/&gt;
+          &lt;/confidentiality&gt;
+          &lt;integrity xmi:id="Integrity_1154318793611" name="int_req1" order="1"&gt;
+            &lt;messageParts xmi:id="MessageParts_1154318793614" Dialect="<A HREF="http://www.ibm.com/websphere/webservices/wssecurity/dialect-was">http://www.ibm.com/websphere/webservices/wssecurity/dialect-was</A>" name="int_req_body" keyword="body"/&gt;
+          &lt;/integrity&gt;
+        &lt;/securityResponseGeneratorServiceConfig&gt;
+      &lt;/serverServiceConfig&gt;
+    .....
+&lt;/com.ibm.etools.webservice.wsext:WsExtension&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf">http://www.redbooks.ibm.com/redbooks/pdfs/sg247257.pdf</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

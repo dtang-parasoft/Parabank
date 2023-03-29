@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not expose @AroundInvoke method in business interface [EJB.EJB3.EAII]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not expose @AroundInvoke method in business interface [EJB.EJB3.EAII]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a method annotated with "@AroundInvoke" is
+exposed in the business interface. These methods are automatically invoked by
+the container and should not be exposed to clients.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class EAII implements EAIIInterface {
+    @AroundInvoke
+    public void method(InvocationContext ic) throws Exception { //VIOLATION
+        ...
+    }
+}
+
+@Remote
+interface EAIIInterface {
+    public void aroundInvokeMethod(InvocationContext ic) throws Exception;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the method from the interface.
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class EAIIFixed implements EAIIFixedInterface {
+    @AroundInvoke
+    public void method(InvocationContext ic) throws Exception {
+        ...
+    }
+}
+
+@Remote
+interface EAIIFixedInterface {
+    //FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 162-163.
+
+</PRE>
+</BODY>
+</HTML>

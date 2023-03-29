@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place the 'main()' method last [CODSTA.ORG.PML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place the 'main()' method last [CODSTA.ORG.PML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes whose last method is not the 'main()' method.
+An error is reported if a class's 'main()' method is not its last method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule helps enforce stylistic conventions across a project.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+public class PML {
+    public static void main (String args[]) {  // VIOLATION
+        System.out.println("Hello, world.");
+    }
+    public void foo () {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+List the 'main()' method last within the "class" definition.
+
+package examples.rules.codsta.org;
+
+public class PMLFixed {
+    public void foo () {
+    }
+    public static void main (String args[]) {  // FIXED
+        System.out.println("Hello, world.");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

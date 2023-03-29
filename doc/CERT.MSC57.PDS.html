@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide "default:" for each "switch" statement [CERT.MSC57.PDS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide "default:" for each "switch" statement [CERT.MSC57.PDS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "switch" statement that does not have a "default"
+statement. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The code does not have a default case in a switch statement, which might lead
+to complex logical errors and resultant weaknesses. This flaw represents
+a common problem in software development, in which not all possible values for
+a variable are considered or handled by a given process. Because of this,
+further decisions are made based on poor information, and cascading failure
+results. This cascading failure may result in any number of security issues,
+and constitutes a significant failure in the system." [CWE-478]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Often, the "case" statements in a switch are the only logical options,
+so a "default" statement should be added to catch any options that
+are outside the accepted range of inputs.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb;
+
+public class PDS {
+    void method (int i) {
+        switch (i) {  // VIOLATION: missing default label
+        case 0:
+            System.out.println ("Zero");
+            break;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a "default" statement.
+
+package examples.rules.pb;
+
+public class PDSFixed {
+    void method (int i) {
+        switch (i) {
+        case 0:
+            System.out.println ("Zero");
+            break;
+        default:  // FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 7.8 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#472">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#472</A>
+
+CWE-478: Missing Default Case in Switch Statement
+<A HREF="https://cwe.mitre.org/data/definitions/478.html">https://cwe.mitre.org/data/definitions/478.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC57-J. Strive for logical completeness
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC57-J.+Strive+for+logical+completeness">https://wiki.sei.cmu.edu/confluence/display/java/MSC57-J.+Strive+for+logical+completeness</A>
+
+</PRE>
+</BODY>
+</HTML>

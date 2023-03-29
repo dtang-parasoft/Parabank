@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid declaring "transient" fields in non-serializable classes [SERIAL.FT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid declaring "transient" fields in non-serializable classes [SERIAL.FT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies that "transient" fields are declared in a non-serializable 
+class. An error is reported for each occurrence.
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is either a typo which forget to implement 'java.io.Serializable' or 
+this "transient" field declaration will only make the code more confusing 
+and no other effect.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class FT {
+
+    private transient String field1; // VIOLATION
+    private String field2;
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Implements 'java.io.Serializable'
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class FTFixed implements Serializable {  // FIXED
+
+    private transient String field1;
+    private String field2;
+}
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-200: Information Exposure
+<A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+CWE-212: Improper Cross-boundary Removal of Sensitive Data
+<A HREF="https://cwe.mitre.org/data/definitions/212.html">https://cwe.mitre.org/data/definitions/212.html</A>
+
+</PRE>
+</BODY>
+</HTML>

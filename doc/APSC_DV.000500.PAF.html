@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare subclasses of 'PrivilegedAction', 'PrivilegedExceptionAction', and 'PrivilegedActionException' "final" [APSC_DV.000500.PAF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare subclasses of 'PrivilegedAction', 'PrivilegedExceptionAction', and 'PrivilegedActionException' "final" [APSC_DV.000500.PAF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a class is non-"final" and satisfies one of the
+following:
+    1. The class extends "java.security.PrivilegedActionException"
+    2. The class implements "java.security.PrivilegedAction"
+    3. The class implements "java.security.PrivilegedExceptionAction"
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+"Privileged" classes and interfaces are used to interact with sensitive data and
+operations. A subclass or implementation should be declared "final" to prevent
+an attacker from creating a subclass and gaining access to sensitive
+information.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check implementations of "java.security.PrivilegedAction" (default on)
+-Check implementations of "java.security.PrivilegedExceptionAction" (default on)
+-Check subclasses of "java.security.PrivilegedActionException" (default on)
+-Ignore subclasses which are enclosed by a "final" outer class (default on)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.PrivilegedAction;
+
+public class PAF implements PrivilegedAction { //VIOLATION
+    public Object run() {
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.PrivilegedAction;
+
+public final class PAFFixed implements PrivilegedAction { //FIXED
+    public Object run() {
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling, circumventing, or altering implemented security safeguards/countermeasures
+APSC-DV-000510: The application must execute without excessive account permissions
+
+</PRE>
+</BODY>
+</HTML>

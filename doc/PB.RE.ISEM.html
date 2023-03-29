@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'String.equals(constant)' or 'String.equalsIgnoreCase(constant)' [PB.RE.ISEM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'String.equals(constant)' or 'String.equalsIgnoreCase(constant)' [PB.RE.ISEM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies method calls where the caller is a variable and
+the parameter is either a literal or a constant expression
+which evaluates to a literal, such as stringVar.equals("literal").  An 
+error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There is a case where the argument to the .equals method is multiple elements
+concatenated together with the + operator.  If the first of these elements is 
+a String literal or a constant that evaluates to a String literal, then the
++ operator is guaranteed to deliver a string.  Otherwise, there is no
+guarantee that the + operator will produce a string.  Only the case in which
+there is a guarantee that the expression will be a string will be flagged by 
+this rule.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Error Handling
+
+Avoid 'NullPointerException' being thrown. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check non-String object (default off)
+    When active this parameter will also check other objects and attempt to
+    discern if they are constant or not. The rule checks if the argument is a
+    "static" "final" field. Types included in the ignore list parameter are not
+    checked. For example: "method(param).equals(Boolean.TRUE)" could transpose
+    "method(param)" and "Boolean.TRUE" to avoid having to check null.
+-Ignore the following types and their subtypes (Specify fully qualified name)
+    "java.util.Collection", "java.util.Map" (default)
+    -These types are ignored by default because they may not be truly constant.
+    Items can be added to, changed, or removed from a final Collection.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Suppose you have a String variable 'str'.  If you call 'str.equals ("literal")'
+or 'str.equalsIgnoreCase("literal")', then you have to first check to ensure 
+that 'str' is not null.  If instead you reverse the call to 
+'"literal".equals (str)' or '"literal".equalsIgnoreCase(str)', then you can 
+avoid checking for null, making your code more concise.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class ISEM {
+    public boolean isHello (String str) {
+        return (str != null &amp;&amp; str.equals("Hello"));  // VIOLATION
+     }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class ISEMFixed {
+
+    public boolean isHello (String str) {
+        return "Hello".equals (str);  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

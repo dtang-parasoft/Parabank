@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only call "final" methods from specified code blocks in non-"final" classes [SECURITY.WSC.CFM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only call "final" methods from specified code blocks in non-"final" classes [SECURITY.WSC.CFM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a non-"final" method is called from a specified
+method or "synchronized" statement of a non-"final" class. This rule can be used
+to perform security checks of code blocks which run privileged or sensitive
+code. See PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Non-"final" classes which perform privileged or sensitive actions should avoid
+calling non-"final" methods from certain code blocks. Only "trusted" methods
+should be called from privileged code and by allowing only calls to "final"
+methods there are extra protections that the method being called is the expected
+one.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Where to check for non-"final" method invocations
+-Check invocations made from within method declarations: (default on)
+    Enabling this method will check for any non-"final" method calls made from
+    within one of the method declarations listed below. Methods overriding one
+    of the methods listed below are also checked.
+    
+    -Check invocations made from within the following method declarations:
+          Type (qualified name)                       |  Method (name)
+        ----------------------------------------------|-----------------
+          "java.lang.Object"                          |  "clone"
+          "java.security.PrivilegedAction"            |  "run"
+          "java.security.PrivilegedExceptionAction"   |  "run"
+
+-Check invocations made from within "synchronized" blocks (default on)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.PrivilegedAction;
+
+public class CFM implements PrivilegedAction {
+    public Object run() {
+        nonFinalMethod(); //VIOLATION
+        ...
+    }
+
+    void nonFinalMethod() {
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the class "final" or the called method as "final".
+
+package examples.rules.security.wsc;
+
+import java.security.PrivilegedAction;
+
+public class CFM implements PrivilegedAction {
+    public Object run() {
+        nonFinalMethod();
+        ...
+    }
+
+    final void nonFinalMethod() { //FIXED
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+    
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling 'assert' methods in catch blocks [JUNIT.CBA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling 'assert' methods in catch blocks [JUNIT.CBA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The JUnit framework provides features that allow you to trace exceptions and
+verify that an expected exception is thrown. The available exception-handling
+features depend on the version of the framework. For example, in JUnit 4, you
+can add the 'expected' parameter to the @Test annotation, while in JUnit 5 you
+can wrap the exception in the assertThrows() method. 
+It is recommended to use the framework's built-in features rather than
+the assert methods to assert exceptions in JUnit tests.
+
+This rule detects when an 'assert' method is used in a catch block within
+a JUnit test case.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check JUnit 3 test methods (disabled by default)
+    -With this parameter enabled, the rule checks for assert in catch blocks
+     inside test methods whose names start with "test".
+-Check JUnit 4 test methods (enabled by default)
+    -With this parameter enabled, the rule checks for asserts in catch blocks
+     inside test methods marked with the '@Test' annotation.
+-Check JUnit 5 test methods (enabled by default)
+    -With this parameter enabled, the rule checks for asserts in catch blocks
+     inside test methods marked with one of the following annotations: @Test,
+     @TestFactory, @TestTemplate, @ParameterizedTest, @RepeatedTest.
+	 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that exceptions are properly handled in JUnit tests.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the assertTrue() method is used to assert
+an exception in a JUnit 4 test case.
+
+package examples.rules.junit;
+
+import org.junit.*;
+
+public class CBA {  
+    @Test
+    public void nullTest() {
+        try {
+            Object o = null;
+            int code = o.hashCode();
+        }
+        catch (NullPointerException npe) {
+            Assert.assertTrue(true); //VIOLATION
+            return;
+        }
+        Assert.assertTrue(false);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding the 'expected' parameter to the @Test
+annotation instead of using the assertTrue() method.
+
+package examples.rules.junit;
+
+import org.junit.*;
+
+public class CBAFixed extends TestCase {
+    @Test(expected=NullPointerException.class)
+    public void nullTest() {
+        Object o = null;
+        int code = o.hashCode();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Test (JUnit API)
+<A HREF="http://junit.sourceforge.net/javadoc/org/junit/Test.html">http://junit.sourceforge.net/javadoc/org/junit/Test.html</A>
+
+JUnit FAQ
+<A HREF="http://junit.sourceforge.net/doc/faq/faq.htm#tests_7">http://junit.sourceforge.net/doc/faq/faq.htm#tests_7</A>
+
+</PRE>
+</BODY>
+</HTML>

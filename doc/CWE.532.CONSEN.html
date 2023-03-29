@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not log confidential or sensitive information [CWE.532.CONSEN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not log confidential or sensitive information [CWE.532.CONSEN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies usage of certain phrases in string literals used in 
+specified logging methods.  The literal will be flagged if it is in the 
+definition of a logging method or passed in as a parameter.  Custom methods and
+qualified names can be specified, as can the strings to flag.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Some information, such as Social Security numbers (SSNs) and passwords, are
+highly sensitive. This information should not be kept for longer than necessary,
+nor where it may be seen, even by administrators. For instance, it should not 
+be sent to log files and its presence should not be detectable through
+searches.
+
+Enforcing this rule will help to protect against the OWASP 2017 Top 10
+application vulnerability "A3-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+String Literals:
+    -Regular expressions representing sensitive data:
+        -Defaults are ".*ssn.*" and ".*pass.*" 
+Loggers
+    -Acceptable Loggers (Specify fully qualified names)
+        -A call to a method of a logging class specified here will be treated
+         as a call to a logger.
+        -By default, "java.util.logging.Logger" and "org.apache.log4j.Logger"
+         are checked.
+    -Logging method name in regular expression
+        -Custom logging methods are sometimes used to perform additional actions
+         each time an event is logged. Methods specified here will be treated as
+         a call to a logger.
+        -You can insert names that would be recognized as logging methods.
+         The name is represented as a regular expression. By default, "log" is 
+         recognized as a logging method. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class CONSEN_1 {
+    void logger(){
+        String search = "password";//VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class CONSENFixed {
+    void custommethod(){
+        String search = "password";//FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/382cd4ae-4c3e-4af8-8816-02b2a687e25a">https://app.hackedu.com/link/382cd4ae-4c3e-4af8-8816-02b2a687e25a</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+PCI Data Security Standard 3.2
+6.5.4 Insecure communications
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-200: Information Exposure
+<A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+CWE-213: Intentional Information Exposure
+<A HREF="https://cwe.mitre.org/data/definitions/213.html">https://cwe.mitre.org/data/definitions/213.html</A>
+
+CWE-359: Exposure of Private Information ('Privacy Violation')
+<A HREF="https://cwe.mitre.org/data/definitions/359.html">https://cwe.mitre.org/data/definitions/359.html</A>
+
+2021 CWE Weaknesses On the Cusp
+CWE-532: Insertion of Sensitive Information into Log File
+<A HREF="https://cwe.mitre.org/data/definitions/532.html">https://cwe.mitre.org/data/definitions/532.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+Secure Coding Guidelines for Java SE
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#2-2">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#2-2</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO13-J. Do not log sensitive information outside a trust boundary
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO13-J.+Do+not+log+sensitive+information+outside+a+trust+boundary">https://wiki.sei.cmu.edu/confluence/display/java/FIO13-J.+Do+not+log+sensitive+information+outside+a+trust+boundary</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000650: The application must not write sensitive data into the application logs
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-002440: The application must protect the confidentiality and integrity of transmitted information
+APSC-DV-002570: The application must generate error messages that provide information necessary for corrective actions without revealing information that could be exploited by adversaries
+
+</PRE>
+</BODY>
+</HTML>

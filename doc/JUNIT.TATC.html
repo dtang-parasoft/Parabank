@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use '@Test' annotation instead of extending 'TestCase' [JUNIT.TATC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use '@Test' annotation instead of extending 'TestCase' [JUNIT.TATC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects classes that extend the junit.framework.TestCase class
+to facilitate migration from JUnit 3 to a higher version of the framework.
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+See also the JUNIT.ETCTA rule.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Only check files which import from the org.junit package (default false)
+    With this parameter enabled, the rule will only check files that include
+	import of the org.junit package. 
+	
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you migrate from JUnit 3 to JUnit 4 or higher formatting,
+which allows for greater flexibility in naming methods and may improve
+readability.
+In addition, it allows you to introduce a consistent format across all test
+cases to improve clarity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class TATC extends TestCase { //VIOLATION
+    public void testMethod() {
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import org.junit.Test;
+
+public class TATC_Fixed { //FIXED
+    @Test
+    public void method() {
+        ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

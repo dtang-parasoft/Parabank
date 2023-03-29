@@ -1,0 +1,207 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Keep all access control methods centralized to enforce consistency [OWASP2019.API5.CACM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Keep all access control methods centralized to enforce consistency [OWASP2019.API5.CACM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies access control methods which are called outside of their 
+centralized locations.  An error is reported for each occurrence.
+
+Instead of calling access control methods directly, a wrapper method should be
+used which calls the method that does the actual access control.  The methods
+which do the actual access control are specified in the "Access control method
+names" parameter.  The wrapper methods which are allowed to call these methods
+directly are specified in the "Centralized access control method names" 
+parameter.  If a method not specified in this parameter calls one of the methods
+specified in the "Access control method names" parameter, an error is flagged.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule can be further parameterized with naming conventions by the 
+application architect to enforce centralization of access control methods in 
+an application.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Access Control
+
+Access control should be centralized so that it can be validated as consistent.
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability, including:
+
+A5-Security Misconfiguration
+A7-Missing Function Level Access Control
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and applications".
+Specifically, this rule helps to test for Issue 6.5.2: "Broken access control" .
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Access control method names (in regular expressions)
+ [qualified name of declaring type#method name]
+    -The method calls which should be centralized.
+    -Default values are:
+        javax.servlet.*ServletRequest.*#getRemoteUser.*
+        javax.servlet.*ServletRequest.*#isUserInRole.*
+        java.security.Principal#getUserPrincipal.*
+        javax.security.auth.Subject#doAs.*
+        javax.security.auth.Subject#getPrincipals.*
+        javax.security.auth.Subject#get.*Credentials.*
+        javax.security.auth.Subject#getSubject.*
+        
+
+-Centralized access control method names (in regular expressions)
+ [qualified name of declaring type#method name]
+    -The method declarations in which the target methods can be invoked 
+     (centralized).
+    -Default value is:
+        .*Servlet.*#doGet.*
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An access control method centralization rule can be used to enforce a single point
+of failure and prevents new implementations of this critical functionality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class CACM_AccessControlServlet {
+   
+    public void doGet(String s) {
+        HttpServletRequest req = null;
+        req.isUserInRole(s);
+    }
+    public void nonAccessControlMethod(String s) {
+        HttpServletRequest req = null;
+        req.isUserInRole(s);    //VIOLATION
+    }
+}
+
+class CACM_NonAccessControlClass {
+    public void accessControlMethod(String s) {
+        HttpServletRequest req = null;
+        req.isUserInRole(s); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not call access control methods from methods not specified in the 
+"Centralized access control method names" parameter.  Call one of the wrapper 
+methods specified in the "Centralized access control method names" parameter 
+instead.
+
+package examples.rules.security.wsc;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class CACM_AccessControlServletFixed {
+   
+    public void doGet(String s) {
+        HttpServletRequest req = null;
+        req.isUserInRole(s);
+    }
+    public void nonAccessControlMethod(String s) {
+        doGet(s);    //FIXED
+    }
+}
+
+class CACM_NonAccessControlClass {
+    public void accessControlMethod(String s) {
+        CACM_AccessControlServletFixed servlet = new CACM_AccessControlServletFixed();
+        servlet.doGet(s); //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013:
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API5-Broken Function Level Authorization
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa5-broken-function-level-authorization.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa5-broken-function-level-authorization.md</A>
+
+PCI Data Security Standard:
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+</PRE>
+</BODY>
+</HTML>

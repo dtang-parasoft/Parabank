@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using custom MessageDigest implementations [CWE.327.ACMD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using custom MessageDigest implementations [CWE.327.ACMD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"The use of a broken or risky cryptographic algorithm is an unnecessary risk
+that may result in the exposure of sensitive information." [CWE-327]
+
+The java.security.MessageDigest class provides applications with message digest
+algorithms (hash functions) to calculate cryptographic hash values.
+
+Using standard algorithms from the built-in MessageDigest class allows you to
+ensure that hash values are correctly calculated. For this reason, you should
+avoid implementing custom cryptographic algorithms form classes that extend
+the MessageDigest class.
+
+This rule detects classes that extend the java.security.MessageDigest class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"The use of a non-standard algorithm is dangerous because a determined attacker
+may be able to break the algorithm and compromise whatever data has been
+protected. Well-known techniques may exist to break the algorithm." [CWE-327]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you ensure that the cryptographic algorithms you use are safe
+and reliable to protect your passwords and other sensitive information.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In the following example, the CustomMessageDigest extends the MessageDigest
+class.
+
+CustomMessageDigest extends MessageDigest { //VIOLATION
+    @Override
+    protected byte[] engineDigest() {
+        [...]
+        return [...];
+    }
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Modify your implementation to use one of the built-in algorithms. 
+
+    public void hash() {
+        MessageDigest sha256Digest = MessageDigest.getInstance("SHA256");
+        sha256Digest.update(password.getBytes());
+    }
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-327: Use of a Broken or Risky Cryptographic Algorithm
+<A HREF="https://cwe.mitre.org/data/definitions/327.html">https://cwe.mitre.org/data/definitions/327.html</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+
+</PRE>
+</BODY>
+</HTML>

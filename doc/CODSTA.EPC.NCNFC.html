@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call methods that might cause unexpected NullPointerExceptions during constructor execution [CODSTA.EPC.NCNFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call methods that might cause unexpected NullPointerExceptions during constructor execution [CODSTA.EPC.NCNFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls methods which might cause
+unexpected NullPointerExceptions during constructor execution. 
+An error is reported for each occurrence. 
+
+Calling a non-final, non-private method within a constructor
+of a non-final class could cause a NullPointerException to be thrown
+during execution. For example, if a class extends 
+that class and overrides the non-final and non-private method, 
+it would first chain call its ancestors' constructors when the
+child class invokes its constructor. Then, within the body of 
+its parent's constructor, an overridden method (which might refer
+to something in an inherited class that is not yet created or called)  
+could throw a NullPointerException.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule might report many errors. These are most likely potential errors;
+every reported error may not point to broken code.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This error could not be detected by a compiler. However, it is important
+to note because developers typically do not
+intend to have such NullPointerExceptions thrown.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+
+public class NCNFC {
+    public static void main(String args[]) {
+        NCNFC_child test= new NCNFC_child();
+    }
+    public NCNFC() {
+        System.out.println(myMethod()); //VIOLATION
+    }
+    public String myMethod() {
+        return "this is NCNFC";
+    }
+   
+}
+class NCNFC_child extends NCNFC {
+    private String bData;
+    public NCNFC_child() {
+    }
+    public String myMethod() {
+        return bData.intern();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+public class NCNFCFixed {
+    public static void main(String args[]) {
+        NCNFC_child test= new NCNFC_child();
+    }
+    public NCNFCFixed() {
+        //FIXED
+    }
+    public String myMethod() {
+        return "this is NCNFC";
+    }
+   
+}
+class NCNFC_child extends NCNFCFixed {
+    private String bData;
+    public NCNFC_child() {
+    }
+    public String myMethod() {
+        return bData.intern();
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

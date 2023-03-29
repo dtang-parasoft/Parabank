@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implement interface methods non-trivially or declare them "abstract" [OOP.IIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implement interface methods non-trivially or declare them "abstract" [OOP.IIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Disallows a class from implementing an "interface" by 
+declaring empty 'no-op' methods. 
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you create empty versions of an interface's methods, 
+authors of subclasses can inherit your empty implementation 
+without any errors or warnings from the compiler. If you
+declare the methods "abstract" instead, subclasses will not 
+compile unless they have an implementation of their base 
+class' "abstract" methods. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+abstract public class IIN implements B {
+    public void f () {
+        int i = 9;
+        i = 10;
+    }
+
+    public void g () {}  // VIOLATION
+    abstract public void h ();
+}
+
+interface B {
+    public void f ();
+    public void g ();
+    public void h ();
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The programmer may have forgotten to provide a proper body for
+the offending method, or did not mean to declare this method. 
+In either case it should be declared to be abstract. 
+
+package examples.rules.oop;
+
+abstract public class IINFixed implements B {
+    public void f () {
+        int i = 9;
+        i = 10;
+    }
+
+    abstract public void g ();  // FIXED
+    abstract public void h ();
+}
+
+interface B {
+    public void f ();
+    public void g ();
+    public void h ();
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://g.oswego.edu/dl/html/javaCodingStd.html">http://g.oswego.edu/dl/html/javaCodingStd.html</A>
+
+</PRE>
+</BODY>
+</HTML>

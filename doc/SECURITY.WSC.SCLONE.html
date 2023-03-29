@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce 'SecurityManager' checks in methods of 'Cloneable' classes [SECURITY.WSC.SCLONE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce 'SecurityManager' checks in methods of 'Cloneable' classes [SECURITY.WSC.SCLONE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags the following cases in Cloneable classes:
+   1. 'SecurityManager' is checked in constructors, but not in the 'clone()'
+      method.
+   2. 'SecurityManager' is checked in the 'clone()' method, but not in the
+      non-"private" constructors.
+
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+'SecurityManager.checkXXX()' is used to check for permission before performing 
+an unsafe or sensitive operation. If a constructor of a Cloneable class has a
+SecurityManager check, it means that the class contains sensitive data and needs
+to check permission before class creation. Therefore, similar SecurityManager
+checks should be made in 'clone()' methods as this is another way to create an
+instance of a class.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for 'SecurityManager' checks (default value 1)
+-Check indirect 'SecurityManager' checks in super constructor(s) (default is off)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class SCLONE implements Cloneable {
+
+    public SCLONE() {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new ClassPermission("SCLONE"));
+        }
+    }
+    
+    public Object clone() throws CloneNotSupportedException {
+        return (SCLONE)super.clone();  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add SecurityManager check in 'clone()' method
+
+package examples.rules.security.wsc;
+
+public class SCLONE_Fixed implements Cloneable {
+
+    public SCLONE_Fixed() {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new ClassPermission("SCLONE_Fixed"));
+        }
+    }
+    
+    public Object clone() {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new ClonePermission("SCLONE_Fixed"));  // FIXED
+        }
+        return (SCLONE_Fixed)super.clone();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

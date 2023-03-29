@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide an '@invariant' contract for all getter methods [DBC.IGM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide an '@invariant' contract for all getter methods [DBC.IGM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any class without a '@invariant' contract for "getter" method
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+All accessor methods to the class should have specification using invariant contracts
+because those methods may be called at any time.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+/**
+ * class IGM
+ */
+public class IGM {  // VIOLATION
+
+    public int getSize () {  
+        return _size;
+    }
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide an '@invariant' contract for the getSize() method.
+
+package examples.rules.dbc;
+
+/** 
+ * @invariant (getSize() &gt;= MIN_GETSIZE &amp;&amp; getSize() &lt;= MAX_GETSIZE)
+ */
+public class IGMFixed {  // FIXED
+    /**
+     * Automatically generated variable: MIN_GETSIZE
+     */
+    private static final int MIN_GETSIZE = 0;
+    
+    /**
+     * Automatically generated variable: MAX_GETSIZE
+     */
+    private static final int MAX_GETSIZE = 100;
+    
+    public int getSize () {
+        return _size;
+    }
+    private int _size;
+}
+
+</PRE>
+</BODY>
+</HTML>

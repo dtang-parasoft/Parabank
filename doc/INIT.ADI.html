@@ -1,0 +1,191 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid explicitly initializing fields which have already been initialized by a superclass' constructor [INIT.ADI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid explicitly initializing fields which have already been initialized by a superclass' constructor [INIT.ADI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects the problem of "double initialization" of fields.  There are 
+many different examples of double initialization.  Two cases which are likely to
+lead to bugs are:
+
+1.  A field is explicitly initialized in its declaration and also initialized by 
+a call to a superclass' constructor.  First, the superclass' constructor will be
+called.  Note that the call to the superclass' constructor could be implicit 
+since "super()" will automatically be called for constructors which do not have 
+an explicit call to the superclass' constructor.  The superclass will then call 
+an "abstract" or interface method that is overridden or implemented in the 
+subclass.  This allows the superclass to initialize fields in the subclass.  If 
+the field is also explicitly initialized in its declaration, it is usually a 
+bug.  The value to which the field is explicitly initialized in its declaration 
+will overwrite the value to which it is initialized in the constructor (since 
+the superclass' constructor is executed before the initializations in the 
+current class).  Overwriting the value to which the field is initialized in the 
+superclass' constructor is usually not what was intended.  For a concrete 
+example of this, see the "EXAMPLE" section below.
+
+2.  A field that is a member of some class is initialized by a call to a 
+superclass' constructor and then also initialized by the class' own constructor.
+Since the superclass' constructor is executed before the constructor of the
+class which declares the field, this will lead to the value that the superclass'
+constructor initialized the field to being overwritten.  This is similar to how 
+the value to which the field gets initialized is overwritten in Case #1 as 
+described above.  
+
+This rule will flag a violation for each field which is both explicitly 
+initialized either in the field's declaration or in a constructor and also 
+initialized by a call to a superclass' constructor.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth of checking allowed
+    -The default value is 7, which is enough to catch most errors without making 
+     the rule too slow.
+    -A constructor may call another method or constructor, which may call 
+     another method or constructor, and so on.  To find all the fields which are
+     initialized, this rule needs to analyze all the called methods; however, 
+     the rule would be too slow if all such method calls were analyzed to an 
+     unlimited depth.  This parameter allows you to specify a maximum depth to 
+     prevent the rule from taking too long while analyzing nested method calls.
+    -You should only adjust this parameter if you find that the rule is taking 
+     too long or missing some errors.  If the rule is taking too long, you 
+     should decrease the value of the parameter.  If it is missing some errors,
+     you should increase the value.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The double initialization situation described in the "DESCRIPTION" section is 
+often a bug.  It is easy to get confused about what value the field will have
+when a field is explicitly initialized either in its constructor or in its 
+declaration and also initialized by the constructor of a superclass.  Even if a
+particular case of double initialization is not a bug, it is still pointless to
+initialize the same field twice.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, the 'init()' method is called before "a" is explicitly 
+initialized to "null".  This means that the explicit initialization to "null"
+will overwrite the initialization to "foo".  It looks like the code should print
+out "foo", but it actually prints out "null" because the initialization is 
+overwritten. 
+
+package examples.rules.init;
+
+public class ADI extends ADI_a {  
+    private String a = null;  //VIOLATION- The field "a" is also initialized
+                      //by the 'init()' method from the superclass' constructor
+    public ADI() {
+        super();  //VIOLATION
+    }   
+    public void init() {
+         a = "foo";
+    }
+    
+    public static void main(String[] args) {
+        ADI ADI_Obj = new ADI();
+        System.err.println(ADI_Obj.a);
+    }
+}
+
+abstract class ADI_a {
+    public ADI_a() {
+        init();
+    }
+    abstract void init();
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The best repair in this case is to remove the explicit initialization of the 
+field in the declaration.  Explicitly initializing a field in the declaration 
+that has already been initialized is likely a bug.
+
+package examples.rules.init;
+
+public class ADIFixed extends ADI_a {
+    private String a;  //FIXED- removed the explicit initialization of "a"
+    public ADIFixed() {
+        super(); 
+    }
+    public void init() {
+         a = "foo";
+    }
+    
+    public static void main(String[] args) {
+        ADIFixed ADI_Obj = new ADIFixed();
+        System.err.println(ADI_Obj.a);
+    }
+}
+
+abstract class ADI_a {
+    public ADI_a() {
+        init();
+    }
+    abstract void init();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

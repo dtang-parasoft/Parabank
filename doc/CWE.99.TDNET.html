@@ -1,0 +1,339 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against network resource injection [CWE.99.TDNET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against network resource injection [CWE.99.TDNET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases of probable network resource injection. It reports
+a violation when possibly tainted data that represents a network resource property
+(such as  host name, IP-address, port number, path or query string) is passed as a
+parameter to a method that can allocate a resource directly or can create a resource
+descriptor (like URL or URI) that is to be used for the allocation.
+
+When an application permits user input (or input from an unverified data source) to define
+a resource used by the application, and does not validate such data before it is used,
+this data can be manipulated to execute or access different resources.
+
+This rule triggers when tainted data is passed to the following 'dangerous' methods:
+
+java.net.DatagramPacket
+   * setPort(int port)
+   * constructor(s) that accept port number
+
+java.net.DatagramSocket
+   * connect(InetAddress address, int port)
+   * constructor(s) that accept port number
+
+java.net.DatagramSocketImpl
+   * connect(InetAddress address, int port)
+   * bind(int port, InetAddress addr)
+
+java.net.InetSocketAddress
+   * createUnresolved(String host, int port)
+   * constructor(s) that accept port number
+
+java.net.MulticastSocket
+   * constructor(s) that accept port number
+
+java.net.ServerSocket
+   * constructor(s) that accept port number
+
+java.net.Socket
+   * constructor(s) that accept port number
+
+java.net.SocketImpl
+   * connect(String host, int port)
+   * connect(InetAddress address, int port)
+   * bind(InetAddress host, int port)
+
+java.net.URI
+   * resolve(String str)
+   * create(String str)
+   * constructor(s) that accept port number
+
+java.net.URL
+   * constructor(s) that accept port number
+
+java.net.URLStreamHandler
+   * setURL(URL u, String protocol, String host, int port, String authority,
+            String userInfo, String path, String query, String ref)
+   * parseURL(URL u, String spec, int start, int limit)
+
+java.net.InetAddress
+   * getAllByName(String host)
+   * getByAddress(String host, byte[] addr)
+   * getByAddress(byte[] addr)
+   * getByName(String host)
+
+java.net.NetworkInterface
+   * getByName(String name)
+
+java.rmi.activation.Activatable
+   * all exportObject(...) methods that accept port number
+   * constructor(s) that accept port number
+
+java.rmi.registry.LocateRegistry
+   * all getRegistry(...) methods that accept port number
+   * all createRegistry(...) methods that accept port number
+
+java.rmi.server.RMIClientSocketFactory
+   * createSocket(String host, int port)
+
+java.rmi.server.RMIServerSocketFactory
+   * createServerSocket(int port)
+
+java.util.logging.SocketHandler
+   * constructor(s) that accept port number
+
+javax.net.ServerSocketFactory
+   * all createServerSocket(...) methods that accept port number
+
+javax.net.SocketFactory
+   * all createSocket(...) methods that accept port number
+
+javax.net.ssl.SSLSocket
+   * constructor(s) that accept port number
+
+javax.net.ssl.SSLServerSocket
+   * constructor(s) that accept port number
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+If an unvalidated resource property can be used by an application, an attacker may
+gain direct access to the resources of the system that the application is running on
+(see the EXAMPLE section), or force the application to execute other remote resources--
+thus changing the behavior of the application in a way that the developer did not intend.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Applying this rule helps your ensure that the application can resist attacks based
+on changing network resources identifiers.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+The following example shows that an application creates a server socket using a port number
+that has been received form an HTTP request, but has not been validated. A user who uses a proxy
+can modify the port and obtain a direct socket connection to the server.
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import javax.servlet.http.HttpServletRequest;
+
+public class Example
+{
+    void runServerSocket(HttpServletRequest request)
+        throws IOException
+    {
+        String sPort = request.getParameter("port");
+        int port = Integer.parseInt(sPort);
+        ServerSocket serverSocket = new ServerSocket(port); // VIOLATION
+        Socket socket = serverSocket.accept();
+        // ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Validate data prior to its usage:
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Repair
+{
+    void runServerSocket(HttpServletRequest request)
+        throws IOException
+    {
+        String sPort = validate(request.getParameter("port"));
+        int port = Integer.parseInt(sPort);
+        ServerSocket serverSocket = new ServerSocket(port); // NO VIOLATION
+        Socket socket = serverSocket.accept();
+        // ...
+    }
+
+    public abstract String validate(Object obj);
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Introduction to Injection Attacks
+Video: <A HREF="https://vimeo.com/262069083">https://vimeo.com/262069083</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/05d42613-615c-4da5-8860-02c827e2cd02">https://app.hackedu.com/link/05d42613-615c-4da5-8860-02c827e2cd02</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A10:2021 - Server-Side Request Forgery (SSRF)
+<A HREF="https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/">https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/</A>
+
+OWASP Top 10 2017 (A1-Injection):
+<A HREF="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html">https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-918: Server-Side Request Forgery (SSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/918.html">https://cwe.mitre.org/data/definitions/918.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-601: URL Redirection to Untrusted Site ('Open Redirect')
+<A HREF="https://cwe.mitre.org/data/definitions/601.html">https://cwe.mitre.org/data/definitions/601.html</A>
+
+CWE-99: Improper Control of Resource Identifiers ('Resource Injection')
+<A HREF="https://cwe.mitre.org/data/definitions/99.html">https://cwe.mitre.org/data/definitions/99.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted.
+APSC-DV-002400: The application must restrict the ability to launch Denial of Service (DoS) attacks against itself or other information systems.
+APSC-DV-002520: The application must protect from canonical representation vulnerabilities.
+APSC-DV-002530: The application must validate all input.
+APSC-DV-002560: The application must not be subject to input handling vulnerabilities.
+
+Tags: OWASP, PCI-DSS, CWE
+
+</PRE>
+</BODY>
+</HTML>

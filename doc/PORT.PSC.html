@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "File.pathSeparator" or "File.pathSeparatorChar" instead of the corresponding literals [PORT.PSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "File.pathSeparator" or "File.pathSeparatorChar" instead of the corresponding literals [PORT.PSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Instead of using the String literals ";" or ":" or the character literals
+';' or ':', "File.pathSeparator" (for Strings) or "File.pathSeparatorChar" (for 
+characters) should be used if the literal is intended as a path-separator.  This 
+rule will flag as a violation any use of the literals ":",";",':', and ';' where 
+these literals could be replaced with either "File.pathSeparator" or 
+"File.pathSeparatorChar".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule may flag some false positives because the rule cannot tell where a
+character or String literal is intended as a path-separator and where a literal
+is being used for a different purpose.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using the constants "File.pathSeparator" (for Strings) or 
+"File.pathSeparatorChar" instead of the equivalent literals helps increase
+the portability of the code.  This is because the path-separator character is 
+system-dependent.  On Windows systems, it is ";".  On UNIX systems, it is ":".
+Using "File.pathSeparator" and "File.pathSeparatorChar" ensures that your code
+will work on any platform.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example assumes that the rule is being run on a Windows system.  
+
+package examples.rules.port; 
+
+class PSC{
+    private static final String ex= "This"+";"+   //VIOLATION
+                                           ';';   //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.port; 
+
+class PSCFixed{
+    private static final String ex= "This"+File.pathSeparator+       //FIXED
+                                           File.pathSeparatorChar;   //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

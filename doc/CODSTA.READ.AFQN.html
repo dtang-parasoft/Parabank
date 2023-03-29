@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use fully qualified type names [CODSTA.READ.AFQN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use fully qualified type names [CODSTA.READ.AFQN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Instead of using the fully qualified name for types (the package name and type 
+name), just the name of the type should be used.  Using just the simple type 
+name will require the type to be imported.  This rule will flag a violation for 
+any case where a fully qualified type name is used in a situation in which the 
+simple name of the class could have been used instead.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are some exceptions to the general rule that simple type names should be 
+used instead of fully qualified names.  For instance, fully qualified type names
+may be necessary to avoid ambiguity when there are two types with the same name
+used within a file.  The rule will not flag a violation in cases like this.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore qualified names in Javadoc (default true)
+    Enabling this parameter will ignore qualified names in Javadoc.
+    For example, the following would be ignored with this parameter enabled.
+    /**
+     * {@link java.util.Collection}
+     */
+    void method() {
+    }
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using simple type names instead of the fully qualified names for types makes the
+code easier to read and less cluttered.  
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If you follow this rule, you will need more import statements.  Importing an  
+additional type may be unnecessary overhead if the type is used only sparingly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class AFQN {
+    public void createDate() {
+        java.util.Date date = new java.util.Date(System.currentTimeMillis());  // 2 VIOLATIONS- The
+                                               // fully qualified type name "java.util.Date" is used
+                                               // instead of the simple type name "Date".
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Import the type and use the type's simple name (just the class name) instead of
+its fully qualified name (package and class name)
+
+package examples.rules.codsta.read;
+
+import java.util.Date;
+
+public class AFQNFixed {
+    public void method() {
+        Date date = new Date(System.currentTimeMillis());  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

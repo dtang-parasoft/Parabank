@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the correct signature for the 'suite()' method in JUnit test classes [JUNIT.UPSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the correct signature for the 'suite()' method in JUnit test classes [JUNIT.UPSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The signature for the "suite()" method for JUnit test classes should match the
+following:
+
+public static Test suite();
+
+With the default settings of the parameters (all options selected), the rule 
+will flag a violation if there is a potential typo in the name of the "suite()" 
+method or if there is a method which has the name "suite" but which does not 
+meet any of the following conditions:
+
+1. The method must be "public".
+2. The method must be "static".
+3. The method must have 0 parameters.
+4. The method must have the return type "junit.framework.Test".
+
+The user can control what is checked by the rule by changing the parameter 
+settings.  This rule will only check classes which extend "junit.framework.
+TestCase".  
+
+The rule determines if a method name is a potential typo for the "suite()" 
+method using the same rules followed by the rule PB.IMO.  That is, it will flag 
+a violation if a method signature matches that of the "suite()" method and has 
+a name which differs from "suite" by only one character or only in case.  See
+the example below.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will only test classes which meet one of the following conditions:
+
+1. The class extends "junit.framework.TestCase".
+2. The class has at least one method with the "org.junit.Test" annotation.  This
+only applies to JUnit 4.0 and later.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check that the method name does not contain a typo (default is true)
+-Check that the method is declared "public" (default is true)
+-Check that the method is declared "static" (default is true)
+-Check that the method has no parameters (default is true)
+-Check that the return type is "junit.framework.Test" (default is true)
+         
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The test runner for JUnit tests expects the "suite()" method defined by a user 
+to have the signature shown in the "DESCRIPTION" section.  If the "suite()" 
+method does not have this signature, the test runner may be unable to use it.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+public class UPSS extends TestCase {
+    public static Test suitw() {          //VIOLATION- typo: "suitw" should be "suite"
+        TestSuite suite= new TestSuite();
+        suite.addTest(new UPSS());
+        return suite;
+    }
+}
+
+class UPSS_2 extends TestCase {
+    public Test suite() {                 //VIOLATION- should be "static"
+        TestSuite suite= new TestSuite();
+        suite.addTest(new UPSS_2());
+        return suite;
+    }   
+} 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure the name of the method is spelled correctly and that the signature 
+matches that given in the "DESCRIPTION" section above.
+
+package examples.rules.junit;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+public class UPSSFixed extends TestCase {
+    public static Test suite() {           //FIXED
+        TestSuite suite= new TestSuite();
+        suite.addTest(new UPSSFixed());
+        return suite;
+    }
+}
+
+class UPSS_2Fixed extends TestCase {
+    public static Test suite() {           //FIXED
+        TestSuite suite= new TestSuite();
+        suite.addTest(new UPSS_2Fixed());
+        return suite;
+    }   
+} 
+
+</PRE>
+</BODY>
+</HTML>

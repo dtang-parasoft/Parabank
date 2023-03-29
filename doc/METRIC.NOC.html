@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Number of Classes [METRIC.NOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Number of Classes [METRIC.NOC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric counts the number of classes per class. 
+Anonymous classes and enumerations are not counted as classes.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.2.2
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
++1      public class NOC
+        {
++1          class InternalClass
+            {
+                // ...
+            }
+
+            void test()
+            {
+                SomeAbstractClass anonymousClass = new SomeAbstractClass()
+                {
+                    void method()
+                    {
+                        // ...
+                    }
+                };
+            }
+        }
+
++1      class OtherClass
+        {
+
+        }
+
+        enum EnumeratedObjects 
+        {
+            // ...
+        }
+
++1      abstract class SomeAbstractClass
+        {
+        // ...
+        }
+
+
+Total: 4
+
+</PRE>
+</BODY>
+</HTML>

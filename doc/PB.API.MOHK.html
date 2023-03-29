@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using objects with dangerous implementations of 'equals()' or 'hashCode()' as keys in hashed data structures [PB.API.MOHK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using objects with dangerous implementations of 'equals()' or 'hashCode()' as keys in hashed data structures [PB.API.MOHK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that objects with dangerous implementations of 'equals()' and
+'hashCode()' are not used as keys in Maps or inserted into Sets.  The rule
+considers an 'equals()' or 'hashCode()' implementation to be dangerous if it 
+accesses any non-"final" or mutable field.   
+
+This rule will flag a violation for each call to the 'put()' method of 
+'java.util.Map' and each call to the 'add()' method of 'java.util.Set' where the 
+type of the key or element has a dangerous 'equals()' or 'hashCode()' 
+implementation.  The rule will also check the following concrete implementations 
+of the 'java.util.Set' and 'java.util.Map' interfaces: 'java.util.HashMap', 
+'java.util.Hashtable', and 'java.util.HashSet'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using an object that accesses non-"final" or mutable fields in its 'equals()' or
+'hashCode()' implementation as the key in a 'Map' or an entry in a 'Set' is 
+likely to lead to bugs if the 'Map' or 'Set' uses hash codes to perform lookups.  
+If the element is inserted into the hashed data structure and modified in a way 
+that changes the result of the 'hashCode()' or 'equals()' methods, future 
+lookups which attempt to find the element in the hashed data structure are 
+likely to fail.  This is probably not the expected behavior.
+
+If the 'hashCode()' and 'equals()' methods access only "final" immutable fields,
+the results of calling the 'hashCode()' and 'equals()' methods will never 
+change.  
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Since the standard way to access Maps and Sets is using the 'Map' and 'Set'
+interfaces (rather than a concrete implementation of one of these interfaces),
+it is often impossible to tell before runtime whether the underlying 
+implementation is some hashed data structure (such as 'java.util.HashMap' or 
+'java.util.HashSet') or some other implementation which does not use hashing 
+(such as 'java.util.TreeSet' or 'java.util.TreeMap').  Because the rule does not 
+perform any flow analysis, it may flag some false positives if the underlying 
+concrete implementation is not one of the hashed data structures.  Since the 
+hashed data structures are the most commonly used, such false positives should 
+be rare.  Violations which do not apply to the implementation of 'Map' or 'Set' 
+you are using should be suppressed.   
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Notice that the first call to 'System.out.println()' below will print out 
+"FOUND", but the second call will print out "null".  Since a field of "copyObj"
+is changed, the object can no longer be found in the map.
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class MOHK {
+    public static void main(String[] args) {
+        Map map= new HashMap();
+        MyMutableObject mutObj= new MyMutableObject(0);
+        map.put(mutObj, "FOUND");  //VIOLATION
+        MyMutableObject copyObj= new MyMutableObject(0);
+        System.out.println(map.get(copyObj));
+        copyObj._a = 1;
+        System.out.println(map.get(copyObj));
+    }
+    
+    static class MyMutableObject {
+        public int _a;
+        
+        public MyMutableObject(int value) {
+            _a= value;
+        }
+        public int hashCode() {
+            return _a;
+        }
+        
+        public boolean equals(Object o) {
+            if(!o.getClass().equals(MyMutableObject.class)){
+                return false;
+            }
+            return this._a == ((MyMutableObject)o)._a;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either change the declarations of all the fields used in the 'equals()' and 
+'hashCode()' methods of the key's type to make them immutable (Declaring them 
+"final" works for primitive types.) or change the 'equals()' and 'hashCode()' 
+methods so that they only use those fields that are immutable.
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class MOHKFixed {
+    public static void main(String[] args) {
+        Map map= new HashMap();
+        MyImmutableObject immutObj= new MyImmutableObject(0);
+        map.put(immutObj, "FOUND");
+        MyImmutableObject copyObj= new MyImmutableObject(0);
+        System.out.println(map.get(copyObj));
+        //It's no longer legal to change the value of "_a"
+    }
+    
+    static class MyImmutableObject {
+        private final int _a;  //FIXED- Declare the field "final" so that it is
+                               //immutable.
+        
+        public MyImmutableObject(int value) {
+            _a= value;
+        }
+        
+        public int hashCode() {
+            return _a;
+        }
+        
+        public boolean equals(Object o) {
+            if(!o.getClass().equals(MyImmutableObject.class)){
+                return false;
+            }
+            return this._a == ((MyImmutableObject)o)._a;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

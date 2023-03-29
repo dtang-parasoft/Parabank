@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Blank Lines in Files [METRIC.NOBLIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Blank Lines in Files [METRIC.NOBLIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Number of Blank Lines metrics count how many lines do not have code or comments.
+A blank line is an empty line or line that has only whitespaces.
+This metric counts the number of blank lines in files. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+        /* Copyright
++1      
+         */
++1         
+        import java.io.Serializable;
++1      
+        /**
+         * comment
+         */
+        public class Foo
+        {
++1        
+        }
+ 
+Total: 4
+
+</PRE>
+</BODY>
+</HTML>

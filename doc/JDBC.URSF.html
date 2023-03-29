@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use instance of RowSetFactory to create a RowSet object [JDBC.URSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use instance of RowSetFactory to create a RowSet object [JDBC.URSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies cases where a RowSet object is not created using the RowSetFactory class.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Java SE 7 and later have RowSet 1.1 with a new layer for JDBC RowSet implementations. 
+Using the javax.sql.rowset factory eliminates code dependency on the underlying JRE implementation 
+and allows you finetune the implementation when necessary.
+ 
+NOTE
+A RowSetFactory implementation must be provided; do not use this rule 
+if the JDBC driver does not include a RowSetFactory implementation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+JdbcRowSet rowSet = new JdbcRowSetImpl(); // VIOLATION
+        
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+RowSetFactory rowSetFactory = RowSetProvider.newFactory();
+JdbcRowSet rowSet = rowSetFactory.createJdbcRowSet(); // FIXED
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://docs.oracle.com/javase/tutorial/jdbc/basics/jdbcrowset.html#rowsetfactory">http://docs.oracle.com/javase/tutorial/jdbc/basics/jdbcrowset.html#rowsetfactory</A>
+
+</PRE>
+</BODY>
+</HTML>

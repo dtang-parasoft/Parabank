@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit casts from integer data types to floating point data types [CERT.NUM13.AIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit casts from integer data types to floating point data types [CERT.NUM13.AIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Implicit casts from integer data types to floating point data types can be 
+dangerous, especially when they are unexpected.  This rule will flag a violation
+for all cases where an "int" value is implicitly cast to a "float" value and all
+cases where a "long" value is implicitly cast to either a "double" value or a 
+"float" value.  This can happen when integer values are passed to methods which 
+take floating point arguments and when integer values are assigned to floating
+point variables.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The range of values that can be represented by the "int" and "long" types is not
+the same as the range of values that can be represented by the "float" and 
+"double" types.  Both the "int" and "float" data types are 32-bit data types, 
+but the range of values that can be represented by the "float" data type is
+smaller than the range that can be represented by the "int" type.  This is 
+because eight of the bits in the "float" data type are used to represent the
+exponent.  This makes casts from "int" values to "float" values dangerous 
+because the "int" value may be too large or too small to be represented as a 
+"float".  This is especially true for implicit casts where the programmer may
+not expect the cast to happen and, thus, may not realize that overflow is 
+possible.
+
+Casts from "long" values to "double" values are also dangerous because 11 bits
+of a "double" value are used to represent the exponent.  This rule will warn you
+of any implicit casts from floating point values to integer values which may 
+cause overflow.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example was first presented in the Google Tech Talk shown in the 
+"REFERENCES" section.  The comparison "Math.round(i) != i" looks like it should
+evaluate to "false", but it actually evaluates to "true" in most cases.  This is
+because there is an implicit cast of the value "i" to a "float" value.  There is
+no 'round()' method in the class "Math" which takes an argument of type "int",
+but there is a 'round()' method which takes an argument of type "float".  
+Because of this, the "int" value "i" is implicitly cast to a "float".  Since 
+many "int" values are either too large or too small to be represented as "float"
+values, the comparison will usually evaluate to "true".  This means that the
+code will usually print out "Ground Round" even though it looks like it should
+not.  
+
+package examples.rules.pb.num;
+
+import java.util.Random;
+
+public class AIC {  
+    public static void main(String[] args) {
+        Random rnd= new Random();
+        int i = rnd.nextInt();
+        if(Math.round(i) != i) {  //VIOLATION
+            System.out.println("Ground Round");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If you know that the "int" or "long" value is not too large nor too small to be 
+represented as a "float" or "double", you should add an explicit cast to 
+indicate that you know about the cast and that it is safe.  
+
+For implicit casts from "int" to "float", you may want to consider explicitly
+casting the "int" to a "double" if this is possible.  This is the recommended
+fix in this case.
+
+package examples.rules.pb.num;
+
+import java.util.Random;
+
+public class AICFixed {
+    public static void main(String[] args) {
+        Random rnd= new Random();
+        int i = rnd.nextInt();
+        if(Math.round((double) i) != i) {  //FIXED- Cast to a "double" instead
+                                           //of implicitly casting to a "float"
+            System.out.println("Ground Round");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Google Tech Talk, "Java Puzzlers, Episode VI: The Phantom-Reference Menace/
+Attack of the Clone/Revenge of the Shift" by Josh Bloch and William Pugh. July 
+23, 2007.
+
+<A HREF="http://www.youtube.com/watch?v=yGFok5AJAyc">http://www.youtube.com/watch?v=yGFok5AJAyc</A>
+
+SEI CERT Oracle Coding Standard for Java
+NUM13-J. Avoid loss of precision when converting primitive integers to floating-point
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM13-J.+Avoid+loss+of+precision+when+converting+primitive+integers+to+floating-point">https://wiki.sei.cmu.edu/confluence/display/java/NUM13-J.+Avoid+loss+of+precision+when+converting+primitive+integers+to+floating-point</A>
+
+</PRE>
+</BODY>
+</HTML>

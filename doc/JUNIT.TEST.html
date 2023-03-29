@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make sure all methods have at least one JUnit test method [JUNIT.TEST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make sure all methods have at least one JUnit test method [JUNIT.TEST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects methods that do not have corresponding JUnit test methods. 
+
+The rule assumes the following pattern of test method names:
+test&lt;method name&gt;[optional number]
+For example, test methods for the getInt method may include testGetInt(),
+testGetInt1(), and testGetInt10().
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check interfaces, abstract methods, and JUnit test 
+classes. 
+The rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+ 
+  
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-JUnit test class pattern
+   -The pattern for JUnit test classes to specify where JUnit test classes
+    are located.
+
+-Class config
+   -Check "public" classes (default is true)
+   -Check "protected" classes (default is true)
+   -Check package-private classes (default is true)
+   -Check "private" classes
+   -Ignore class list (in regular expression) - a list of classes the rule
+    will not analyze.
+   
+NOTE: If you configure the 'Class config' option to skip a class from analysis,
+none of the methods inside the class will be tested by this rule.
+
+-Method config
+   -Check "public" methods (default is true)
+   -Check "protected" methods (default is true)
+   -Check package-private methods (default is true)
+   -Check "private" methods
+   -Ignore method list (in regular expression) - a list of methods the rule
+    will not analyze.
+   
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that all methods are tested to increase code
+coverage and verify that your code is defect-free.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+public class TEST {
+
+    /**
+     * increment num + 1
+     */
+    public int incOne(int num) { // VIOLATION : missing test method
+        return num++; 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// create a JUnit test class
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class TESTTest extends TestCase {
+
+    public void testIncOne() {  // FIXED
+    
+        TEST t = new TEST();
+        assertEquals(2, incOne(1));
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

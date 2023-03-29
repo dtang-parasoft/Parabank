@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Comment empty blocks [CODSTA.READ.CEB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Comment empty blocks [CODSTA.READ.CEB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Empty blocks should have comments explaining why they were left empty.  This 
+rule will flag a violation for any empty block which does not contain a comment
+in its body.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore the bodies of non-"public" constructors 
+    -Default is "true".
+    -It is common practice to provide non-"public" constructors with empty 
+     bodies to prevent the class from having a default "public" constructor or 
+     to limit which types can construct the class in some other way.  For this
+     reason, the rule will not flag on the bodies of non-"public" constructors 
+     by default.
+-Ignore the bodies of implementations of interface methods
+    -Default is "true".
+    -Because the methods of all interfaces which are implemented by a class must 
+     be implemented, it is common practice to implement these methods with an 
+     empty body.  For this reason, the rule will not flag on the bodies of 
+     implementations of interface methods by default.
+-Ignore the bodies of overriding methods
+    -Default is "false".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If an empty block is not commented, it can be unclear whether the block was
+intentionally left empty or whether there was supposed to be some code in the
+block which was never implemented.  A comment should be added to the block 
+explaining why it was left empty.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class CEB {
+    int posNum, negNum;
+
+    public CEB()
+    {                       // VIOLATION
+    }
+
+    public void setField(int i)
+    {
+        if (i &lt; 0)
+        {
+            negNum = i;
+        }
+        else if (i == 0)
+        {                   // VIOLATION
+            ;
+        }
+        else
+        {
+            posNum = i;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a comment to the empty block explaining why it is empty.
+
+package examples.rules.codsta.read;
+
+public class CEBFixed {
+    int posNum, negNum;
+    
+    public CEBFixed()
+    {                       // FIXED
+        // not yet implemented
+    }
+    
+    public void setField(int i)
+    {
+        if (i &lt; 0)
+        {
+            negNum = i;
+        }
+        else if (i == 0)
+        {                   // FIXED
+            // intentionally left empty- do nothing in case of "0"
+        }
+        else
+        {
+            posNum = i;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

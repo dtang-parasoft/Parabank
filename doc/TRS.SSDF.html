@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Synchronize access to "static" SimpleDataFormats [TRS.SSDF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Synchronize access to "static" SimpleDataFormats [TRS.SSDF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a static 'java.text.SimpleDateFormat' field is
+accessed in an unsynchronized manner. A violation is reported for each
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Fields which are "public", "protected", "package-private" or otherwise
+accessible by an external class (e.g: getter or setter) will always be a
+violation. This is because an unknown external class may access it
+in an unsynchronized way.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to the SimpleDateFormat documentation:
+  "Date formats are not synchronized. It is recommended to create separate
+  format instances for each thread. If multiple threads access a format
+  concurrently, it must be synchronized externally."
+It may be possible using "static" SimpleDateFormats which are accessed by
+multiple threads to have one thread alter the SimpleDataFormat and have another
+thread read an unexpected value. This could lead to runtime errors or unintended
+behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.text.SimpleDateFormat;
+
+public class SSDF {
+    //VIOLATION
+    private static SimpleDateFormat _format = new SimpleDateFormat();
+
+    public Date parse(String text, ParsePosition pos) {
+        return _format.parse(text, pos);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure all access to the 'SimpleDataFormat' is synchronized or alternatively
+convert it to an instance field.
+
+package examples.rules.trs;
+
+import java.text.SimpleDateFormat;
+
+public class SSDFFixed {
+    private static SimpleDateFormat _format = new SimpleDateFormat();
+
+    public Date parse(String text, ParsePosition pos) {
+        synchronize(_format) {
+            return _format.parse(text, pos);
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SimpleDateFormat (Java 8 Platform SE 7.0)
+<A HREF="https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html</A>
+
+</PRE>
+</BODY>
+</HTML>

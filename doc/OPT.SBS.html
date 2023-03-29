@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'StringBuilder' instead of 'StringBuffer' when synchronization is not required [OPT.SBS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'StringBuilder' instead of 'StringBuffer' when synchronization is not required [OPT.SBS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for 'StringBuffer' local variables. A violation is flagged for
+each occurrence. See BENEFITS 
+
+Mobile platforms have reduced resources, optimizations are especially important. and DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+'StringBuilder' was introduced in JDK 1.5, so only projects with a compliance
+level of Java 1.5 or later are checked.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+'StringBuilder' has better performance than 'StringBuffer'. Upon acquiring a
+lock, all variables from a thread's working memory will be flushed. If the
+thread has a large memory footprint, then the BENEFITS 
+
+Mobile platforms have reduced resources, optimizations are especially important. of this rule may be more
+apparent.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If the 'StringBuffer' requires synchronization, then changing it to a
+'StringBuilder' could cause erroneous or unintended behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SBS {
+    private String getDelineatedString(List&lt;Object&gt; objects) {
+        StringBuffer sb = new StringBuffer(); //VIOLATION
+        for (Object o : objects) {
+            if (sb.length() &gt; 0) {
+                sb.append(", ");
+            }
+            sb.append(o.toString());
+        }
+        return sb.toString();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class SBSFixed {
+    private String getDelineatedString(List&lt;Object&gt; objects) {
+        StringBuilder sb = new StringBuilder(); //FIXED
+        for (Object o : objects) {
+            if (sb.length() &gt; 0) {
+                sb.append(", ");
+            }
+            sb.append(o.toString());
+        }
+        return sb.toString();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+StringBuilder (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/StringBuilder.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/StringBuilder.html</A>
+
+VM Spec Threads and Locks
+<A HREF="http://java.sun.com/docs/books/jvms/second_edition/html/Threads.doc.html">http://java.sun.com/docs/books/jvms/second_edition/html/Threads.doc.html</A>
+
+</PRE>
+</BODY>
+</HTML>

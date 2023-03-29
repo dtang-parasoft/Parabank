@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused Javadoc tags [OWASP2019.API9.DPMT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused Javadoc tags [OWASP2019.API9.DPMT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused Javadoc tags in method comments. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not report an error for any Design by Contract (DbC) tags.
+
+The "Quick Fix All" feature is not available for this rule because removing the
+unused Javadoc tag is often not a good fix.  Many times, the reason why the
+Javadoc tag is unused is because the user changed the method definition but
+forgot to update the Javadoc.  In these cases, the Quick Fix should not be
+applied.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check unused @param tags (default is true)
+-Check unused @return tags (default is true)
+-Check unused @throws and @exception tags (default is true)
+    -ignore @throws and @exception tags of 'RuntimeException' (default is true)
+        If enabled, the rule would check the exceptions used by the tags.
+        If they are any of the runtime exceptions, then no violation would be
+        reported even if they are not declared in "throws" clauses.
+-Check unused @see and @link tags (default is true)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Leaving unused Javadoc tags in methods can lead to confusion. In general,
+documentation that does not reflect the actual code behavior may cause
+confusion and bugs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class DPMT {
+
+    /**
+     * @param id1
+     * @return int
+     */ // VIOLATION
+    public void setId (String id) {
+        _id = id;
+    }
+    private String _id;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change '@param id1' to @param id.
+Remove '@return int'.
+
+package examples.rules.javadoc;
+
+public class DPMTFixed {
+
+    /**
+     * @param id is set as the new id.
+     */  // FIXED
+    public void setId (String id) {
+        _id = id;
+    }
+    private String _id;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

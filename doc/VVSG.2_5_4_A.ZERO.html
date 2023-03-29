@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid division by zero [VVSG.2_5_4_A.ZERO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid division by zero [VVSG.2_5_4_A.ZERO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects execution paths where zero may potentially be used as a denominator
+in a division operation. Division by zero may lead to throwing ArithmeticException,
+which may cause unexpected behaviors at runtime. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sensitive mode" parameter allows you to enable reporting violations
+when divisors are possibly equal to zero.
+With this option enabled, Flow Analysis detects not only when the actual division
+by zero occurs, but also when it may (but may not) occur. This results in more
+violations being reported.
+
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps avoid divide-by-zero errors and unexpected results at runtime.  
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which will trigger a violation:
+
+public class Example
+{
+    int test(boolean condition, int value)
+    {
+        return value / getValue(condition); // VIOLATION
+    }
+
+    int getValue(boolean condition)
+    {
+        return condition ? 10 : 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Whenever there is a chance that zero may occur in a denominator,
+it is necessary to use additional methods to ensure that the denominator
+is not zero.
+
+The following code excerpt will not trigger a violation: 
+
+public class Repair
+{
+    int test(boolean condition, int value)
+    {
+        int denominator = getValue(condition);
+        if (denominator != 0) {
+            return value / denominator; // NO VIOLATION
+        } else {
+            int defaultDenominator = 5;
+            return value / defaultDenominator; // NO VIOLATION
+        }
+    }
+
+    int getValue(boolean condition)
+    {
+        return condition ? 10 : 0;
+    }
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Numeric Errors
+Video: <A HREF="https://vimeo.com/238779116">https://vimeo.com/238779116</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-369: Divide By Zero
+<A HREF="https://cwe.mitre.org/data/definitions/369.html">https://cwe.mitre.org/data/definitions/369.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+NUM02-J. Ensure that division and remainder operations do not result in divide-by-zero errors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM02-J.+Ensure+that+division+and+remainder+operations+do+not+result+in+divide-by-zero+errors">https://wiki.sei.cmu.edu/confluence/display/java/NUM02-J.+Ensure+that+division+and+remainder+operations+do+not+result+in+divide-by-zero+errors</A>
+
+Java Platform, Standard Edition (Java SE) 8
+ArithmeticException
+<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/ArithmeticException.html">https://docs.oracle.com/javase/8/docs/api/java/lang/ArithmeticException.html</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

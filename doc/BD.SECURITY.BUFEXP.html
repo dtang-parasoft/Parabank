@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not expose data wrapped by a buffer to untrusted code [BD.SECURITY.BUFEXP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not expose data wrapped by a buffer to untrusted code [BD.SECURITY.BUFEXP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when data wrapped by a buffer is exposed. Buffer classes defined
+in the java.nio package, such as IntBuffer, CharBuffer, and ByteBuffer, define a variety
+of wrap() methods that wrap an array of the corresponding primitive data type into a buffer
+and return the buffer as a Buffer object. Likewise, the duplicate() and slice() methods 
+create additional buffers that are backed by the original buffer's backing array. 
+Modifications to the returned buffer will cause the original array to be modified and vice 
+versa.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule simply checks if wrapped array or duplicated buffer is returned. It is not always
+a problem as it can be intended behaviour. Also, duplicating the buffer which is already a 
+read-only buffer is not dangerous, but violation will be reported in such case.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+category: Exposing Sensitive Data
+
+Exposing buffers created using the wrap(), duplicate() or slice() methods may allow an untrusted
+caller to alter the contents of the original data.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives being reported. In this mode, Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps to keep your code secure from malicious attacks.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+import java.nio.CharBuffer;
+
+public class Example
+{
+    private char[] dataArray;
+
+    public CharBuffer getBufferCopy()
+    {
+        return CharBuffer.wrap(dataArray); // VIOLATION
+    }
+
+    CharBuffer cb;
+
+    public CharBuffer getBufferDuplicate()
+    {
+        return cb.duplicate(); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, return a read-only view of the buffer:
+
+import java.nio.CharBuffer;
+
+public class Repair
+{
+    private char[] dataArray;
+
+    public CharBuffer getBufferCopy()
+    {
+        return CharBuffer.wrap(dataArray).asReadOnlyBuffer(); // NO VIOLATION
+    }
+
+    CharBuffer cb;
+
+    public CharBuffer getBufferDuplicate()
+    {
+        return cb.asReadOnlyBuffer(); // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO05-J. Do not expose buffers or their backing arrays methods to untrusted code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO05-J.+Do+not+expose+buffers+or+their+backing+arrays+methods+to+untrusted+code">https://wiki.sei.cmu.edu/confluence/display/java/FIO05-J.+Do+not+expose+buffers+or+their+backing+arrays+methods+to+untrusted+code</A>
+
+Tags: PCI-DSS, CERT
+
+</PRE>
+</BODY>
+</HTML>

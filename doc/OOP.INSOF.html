@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "instanceof" only on interfaces [OOP.INSOF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "instanceof" only on interfaces [OOP.INSOF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "instanceof" operator should usually be used to test if some Object is an 
+instance of an interface type rather than an instance of a class. This rule 
+identifies the use of "instanceof" where the operand on the right-hand side of 
+the "instanceof" is of a "class", "enum", or annotation type. An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore usages of "instanceof" in 'equals()' methods
+    -Default is "false".
+    -Some experts recommend using "instanceof" within implementations of the 
+     'equals()' method to test whether or not the Object being passed in as a 
+     parameter is of the same type as the Object on which the 'equals()' method 
+     is called.  This is an exception to the general rule that you should only
+     use the "instanceof" operator on interface types.  If you follow the coding
+     practice of using "instanceof" within 'equals()' implementations, you 
+     should enable this parameter so that the rule will not flag violations 
+     within 'equals()' implementations.  In this case, there is no way to avoid
+     using "instanceof" on a specific class type.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Interface-based design is generally recommended because it allows for the 
+flexible inclusion of different implementations of features.  Writing code
+that is dependent only on knowing which "interface" an Object implements is in
+keeping with this philosophy.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Sometimes you absolutely need to check for a specific implementation of an 
+"interface".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class INSOF {
+    private void method (Object o) {
+        if (o instanceof ClassBase) { }   // VIOLATION
+    }
+}
+
+class ClassBase { }
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use "instanceof" on an "interface" that the "class" "implements".  If the class 
+does not implement any interfaces, then modify it to implement an "interface"
+that encompasses the "public" methods of the class.
+
+package examples.rules.oop;
+
+public class INSOFFixed {
+    private void method (Object o) {
+        if (o instanceof InterfaceBase) { }   // FIXED
+    }
+}
+
+class ClassBase implements InterfaceBase {}  // FIXED
+interface InterfaceBase {}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Craig Larman, Rhett Guthrie: "Java 2 Performance and Idiom Guide"
+Prentice Hall PTR, 2000.  pp.20
+
+</PRE>
+</BODY>
+</HTML>

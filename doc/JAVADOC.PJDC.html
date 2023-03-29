@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide Javadoc comments and descriptions for types [JAVADOC.PJDC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide Javadoc comments and descriptions for types [JAVADOC.PJDC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "class" or "interface" that lacks Javadoc comments
+or descriptions within the Javadoc comments.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quick Fix All" feature is not always available for this rule because some
+of the Quick Fixese require user input.  These cases must be Quick Fixed
+individually.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check if javadoc comment is missing (default as true)
+-Check if javadoc description is missing (default as false)
+    Javadoc should give a brief description of the commenting class or interface.
+
+-check "public" types (default as true)
+-check "protected" types (default as false)
+-check "package-private" types (default as false)
+-check "private" types (default as false)
+
+-Ignore types with fully qualified names (in regular expression)
+    Allows you to provide a list of class, interfaces, enum, annotation to ignore.
+    If a class or interface has a fully qualified name that matches any of the
+    regular expressions, it will be exempt from this rule. For example, if
+    ".*internal.*" is added to the list, then any class or interface that has
+    "internal" as a part of its fully qualified name would not be identified
+    as a rule violation-- even if it does not have Javadoc.
+
+-Ignore member types (default as false)
+    Prevents this rule from checking member type declarations. "Member type" refers
+    to a class, interface, enum, annotation that is declared directly within another type declaration.
+
+-Ignore local classes (default as false)
+    Prevents this rule from checking local type declarations. "Local classes" refers
+    to a class that is declared directly within another method declaration.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Commenting your code is a good way to document its behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class PJDC {   // VIOLATION
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide Javadoc comments for each "class", "interface".
+
+package examples.rules.javadoc;
+
+/** Comments about this class
+ */
+public class PJDCFixed {   // FIXED
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison-Wesley, 2001, pp. 136 -139
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#385">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#385</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.MCJCH
+@deprecated JAVADOC.MCJCH2
+@deprecated JAVADOC.MCJCH3
+@deprecated JAVADOC.MCJCH4
+@deprecated JAVADOC.PJDCC
+@deprecated JAVADOC.PJDCC2
+@deprecated JAVADOC.PJDCC3
+@deprecated JAVADOC.PJDCC4
+
+</PRE>
+</BODY>
+</HTML>

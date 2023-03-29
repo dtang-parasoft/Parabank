@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use JUnit 4 annotations when migrating tests to JUnit 5 [JUNIT.RPL5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use JUnit 4 annotations when migrating tests to JUnit 5 [JUNIT.RPL5]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The following are topics that you should be aware of when migrating existing
+JUnit 4 tests to JUnit Jupiter.
+- @Before and @After no longer exist; use @BeforeEach and @AfterEach instead.
+- @BeforeClass and @AfterClass no longer exist; use @BeforeAll and @AfterAll
+  instead.
+- @Ignore no longer exists: use @Disabled or one of the other built-in
+   execution conditions instead."
+[JUnit 5 User Guide, 3.2. Migration Tips]
+
+This rule detects when JUnit 4 annotations are used in code. By default,
+rule reports the following annotations:
+- org.junit.Test
+- org.junit.Before
+- org.junit.BeforeClass
+- org.junit.After
+- org.junit.AfterClass
+- org.junit.Ignore
+
+You can customize the list of JUnit 4 annotations the rule will detect and
+their JUnit 5 counterparts; see PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not recognize the framework version and assumes that the analyzed
+tests are written in JUnit 5. 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Replace the following JUnit 4 annotations:
+	This parameter specifies the JUnit 4 annotations the rule detects and their
+	corresponding JUnit 5 annotations that should be used as a replacement. 
+	Note: The JUnit 5 annotations you configure will be displayed as part of
+	the rule output message to guide you through the migration process. 
+	The following values are configured by default:
+     org.junit.Test: org.junit.jupiter.api.Test
+     org.junit.Before: org.junit.jupiter.api.BeforeEach
+     org.junit.BeforeClass: org.junit.jupiter.api.BeforeAll
+     org.junit.After: org.junit.jupiter.api.AfterEach
+     org.junit.AfterClass: org.junit.jupiter.api.AfterAll
+     org.junit.Ignore: org.junit.jupiter.api.Disabled
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule facilitates the migration process from JUnit 4 to JUnit 5 by helping
+you ensure that tests are annotated with JUnit 5 annotations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the test method is annotated with
+the JUnit 4 annotation @BeforeClass.
+
+import org.junit.BeforeClass;
+import java.io.File;
+
+public class Replace5Test {
+
+    private File tempFile = null;
+
+   @BeforeClass // VIOLATION
+   public void setUpClass()
+   { tempFile = File.createTempFile("somefile", ".txt"); }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use the JUnit 5 annotation @BeforeAll.
+
+import org.junit.jupiter.api.BeforeAll;
+import java.io.File;
+
+public class Replace5Test {
+
+private File tempFile = null;
+
+    @BeforeAll // FIXED
+    public void setUpClass()
+    { tempFile = File.createTempFile("somefile", ".txt"); }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JUnit 5 User Guide
+3.2. Migration Tips
+<A HREF="https://junit.org/junit5/docs/5.5.2/user-guide/#migrating-from-junit4-tips">https://junit.org/junit5/docs/5.5.2/user-guide/#migrating-from-junit4-tips</A>
+
+</PRE>
+</BODY>
+</HTML>

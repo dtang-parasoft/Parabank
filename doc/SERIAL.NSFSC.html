@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure Serializable classes are correct [SERIAL.NSFSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure Serializable classes are correct [SERIAL.NSFSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies incorrect Serializable classes. Classes are 
+considered to be serializable if they explicitly or implicitly implement
+'java.io.Serializable'. However, serialization might still fail if classes
+are not 'completely serializable'. To be 'completely serializable',
+a class must satisfy all of the following requirements:
+
+1. It must explicitly or implicitly implement java.io.Serializable. That is, 
+   either the class itself must implement Serializable or a sub-interface
+   of Serializable or the class's superclasses must implement Serializable.
+2. All the local fields must be of COMPLETELY SERIALIZABLE types 
+   or the fields must be primitive, static or transient.
+3. All the superclasses must be COMPLETELY SERIALIZABLE or none of
+   their fields can be non-static non-transient. 
+
+An error is reported if all of those requirements are not satisfied.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check only classes that are explicitly stated as serializable (default is true)
+
+This parameter controls whether classes that implicitly implement
+Serializable are checked. If the checking covers any class that implements
+Serializable (either implicitly or explicitly), a large number of classes 
+might be reported as rule violations. 
+
+-Check non-serializable superclasses as well (default is true)
+
+This parameter controls whether non-serializable superclasses are checked.
+A serializable class that has a non-serializable superclass would
+not have its inherited fields serialized correctly. However, you might
+want to skip this check because you might already expect that no field from 
+non-serializable superclasses would be serialized.
+
+-Check superclasses even if they are expected to have no field to be 
+ serialized under current implementation (default is false)
+ 
+This parameter controls whether superclasses that do not implement
+java.io.Serialzable and have no field to be serialized (no existing fields or
+fields that are all transient or static) are checked. If the implementations
+of those superclasses remain unchanged, it would not cause serialization 
+problems. However, they might still pose potential risks because more fields
+might be added to those classes later on, and those fields might cause
+serialization failures.
+ 
+-Ignore classes whose source code could not be found (default is true)
+
+This parameter controls whether classes whose source code cannot be found are
+checked. Some classes might cause serialization problems, but if their source
+code is not available, it is almost impossible to fix the problem.
+Notice that some classes in Java standard class libraries 
+might seem to cause errors during serialization by just inspecting
+the enclosing fields. However, most of those classes would ensure
+the correctness of serialization through other mechanisms. Consequently, rule
+violations should not be reported for those classes.
+
+-Check for Maps and Collections which may contain elements which are not 
+ serializable (default is false)
+ 
+Even if a 'Map' or 'Collection' object which is a field of a 'Serializable' class 
+itself implements 'Serializable', this field may still not be completely 
+serializable.  This is because all of the objects which are stored within that 
+'Map' or 'Collection' must also implement the 'Serializable' interface in order for 
+the serialization to work correctly.  When this parameter is enabled, the rule
+will check for situations matching the following descriptions:
+
+    1. A class implementing 'Serializable' has a field which implements the 
+       'java.util.Collection' or 'java.util.Map' interface from the Java 
+       Collections API and the 'java.io.Serializable' interface.
+    2. An element is added to the 'Collection' or 'Map' described in the 
+       previous requirement which has a type which does not implement 'Serializable'.
+    3. The rule will only scan the file containing the field declaration for 
+       elements which do not implement 'Serializable'.  It will not catch cases 
+       where an element is added to this field from a method in a class in a 
+       different file.
+
+-Extra list of classes to be skipped
+
+This parameter allows you to define a list of classes that you want skipped
+(for whatever reason) during the checking.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Serialization is a complicated process that might involve hundreds of classes.
+If all of those classes are not checked completely and carefully, 
+it's very likely that the serialization will fail (that is, some of the fields will
+not be serialized correctly). These serialization problems are subtle enough
+that they could be overlooked during compilation or even runtime. 
+This rule can be used to ensure that every single field will be 
+serialized appropriately (as intended). Note that one rule violation reported
+for a class does not necessarily mean that the class will have  
+serialization problems; however, it does mean that the class is, at least,
+potentially vulnerable to serialization problems. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class NSFSC implements java.io.Serializable{
+    NonSerializable obj= new NonSerializable(); //VIOLATION
+}
+
+class NonSerializable {
+    int i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class NSFSCFixed implements java.io.Serializable{
+    SerializableClass obj= new SerializableClass(); //FIXED
+}
+
+class SerializableClass implements java.io.Serializable{
+    int i;
+}
+
+</PRE>
+</BODY>
+</HTML>

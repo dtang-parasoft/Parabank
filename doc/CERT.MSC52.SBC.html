@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use a "switch" statement with a bad "case" [CERT.MSC52.SBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use a "switch" statement with a bad "case" [CERT.MSC52.SBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "switch" statement with a bad "case". An error is 
+reported if a "case" statement in a "switch" does not have a "break", or 
+/* falls through */, or "return" to stop the control flow from going into
+the next "case".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The program omits a break statement within a switch or similar construct,
+causing code associated with multiple conditions to execute. This can cause
+problems when the programmer only intended to execute code associated with one
+condition. . . This weakness can cause unintended logic to be executed and
+other unexpected application behavior." [CWE-484]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore last "switch" case (default true)
+-Ignore "case" statements with empty bodies (default true)
+   -If this option is enabled, a violation will not be flagged for any "case"
+    statement with nothing besides whitespace in its body.  
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a "case" statement does not have a "break", or /* falls through */,
+or "return"  statement at the end of its code block, then control will 
+continue into the next case. This may seem fine for the final case,
+but this safety is lost if more cases are added later.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class SBC {
+    int method (int i) {
+        int x = 0;
+        switch (i) {
+        case 1:
+            x = 10;
+            break;
+        case 2:  // VIOLATION
+            x = 20;
+        default:
+            a = 40;
+            break;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add the missing "break", or /* falls through */, or "return".
+
+package examples.rules.pb.cub;
+
+public class SBCFixed {
+    void method (int i) {
+        int x = 0;
+        switch (i) {
+        case 1:
+            x = 10;
+            break;
+        case 2:
+            x = 20;
+            break;  // FIXED
+        default:
+            x = 40;
+            break;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-484: Omitted Break Statement in Switch
+<A HREF="https://cwe.mitre.org/data/definitions/484.html">https://cwe.mitre.org/data/definitions/484.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC52-J. Finish every set of statements associated with a case label with a break statement
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC52-J.+Finish+every+set+of+statements+associated+with+a+case+label+with+a+break+statement">https://wiki.sei.cmu.edu/confluence/display/java/MSC52-J.+Finish+every+set+of+statements+associated+with+a+case+label+with+a+break+statement</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@severity-from 1(v6.0)
+
+</PRE>
+</BODY>
+</HTML>

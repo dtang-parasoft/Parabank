@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the '@version' tag in type Javadoc comments [JAVADOC.MVJDT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the '@version' tag in type Javadoc comments [JAVADOC.MVJDT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes, interface, enum, annotation that have Javadoc comments but 
+lack the '@version' Javadoc tag. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+/**
+ * class MVJDT
+ */
+public class MVJDT {  // VIOLATION
+    void method() {}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide the '@version' tag.
+
+package examples.rules.javadoc;
+
+/** @version 1.0
+ */
+public class MVJDTFixed {  // FIXED
+    void method() {}
+}
+
+</PRE>
+</BODY>
+</HTML>

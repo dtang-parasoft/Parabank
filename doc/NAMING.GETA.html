@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow a naming convention for getter methods [NAMING.GETA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow a naming convention for getter methods [NAMING.GETA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies getter methods whose names do not follow the user-defined
+naming convention (as specified in a regular expression).  By default, the rule 
+requires that the name of each getter method begin with "get".  An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression
+    -Getter method names should match this regular expression.  
+    -The default is "^get.", which enforces that the names of getter methods 
+     begin with "get".)
+-check public method. (default is true)
+-check protected method. (default is true)
+-check package-private method. (default is true)
+-check private method. (default is false)
+-Negate regular expression (default is false)
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     getter method matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for getter method names which do not match the regular expression
+     specified.
+-Ignore case (default is false)
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of getter 
+     methods must match the regular expression specified, including in case. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using the 'get' prefix makes it clear that the method is an accessor that 
+returns the value of the field.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Adding the extra 'get' requires extra typing and makes calling the accessor take 
+extra screen space.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class GETA {
+    public int method () {  // VIOLATION
+        return _count;
+    }
+    private int _count = 100;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the getter method's name to 'get&lt;Field name&gt;'.
+
+package examples.rules.naming;
+
+public class GETAFixed {
+    public int getCount () {
+        return _count;
+    }
+    private int _count = 2;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 2.1.1 of
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

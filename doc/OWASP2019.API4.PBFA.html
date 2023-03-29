@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure sufficient protection against multiple failed authentication attempts [OWASP2019.API4.PBFA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure sufficient protection against multiple failed authentication attempts [OWASP2019.API4.PBFA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The software does not implement sufficient measures to prevent multiple failed
+authentication attempts within in a short time frame, making it more susceptible
+to brute force attacks." [CWE-307]
+
+A brute-force attack is an attempt to crack a password or passphrase using
+a trial-and-error approach. By submitting a large number of values within
+a short time frame, an attacker may eventually guess correctly and gain access
+to the account they target.
+To avoid this, ensure that sufficient mechanisms that prevent multiple failed
+authentication attempts are implemented in your application's code or on
+the server side.
+This rule identifies code that should be inspected to verify that such
+prevention measures are implemented in Spring applications.
+
+The rule analyzes the workspace and checks for code to inspect in the following
+hierarchy:
+
+1. Classes that contain one of the following:
+ - an object of the AuthenticationFailureBadCredentialsEvent class
+ - an implementation of ApplicationListener&lt;AuthenticationFailureBadCredentialsEvent&gt;
+   that provides custom onApplicationEvent.
+
+2. If none of the above is found in the code, the rule checks for implementations
+   of the org.springframework.security.web.authentication.AuthenticationFailureHandler
+   interface that has a custom implementation of the onAuthenticationFailure method.
+
+3. If none of the above is found in the code, the rule checks for classes that
+   implement the 'configure()' method with a parameter of org.springframework.security
+   type.
+
+4. If none of the above is found in the code, the rule checks for classes with
+   the 'public static void main()' method that contains one of the following:
+ - an invocation of 'run()' method from the org.springframework.boot.SpringApplication
+   class
+ - creation of a subclass of AbstractApplicationContext  
+
+Once you verify that your code ensures sufficient prevention against multiple
+authentication attempts, can suppress the finding to prevent it from being
+reported in the subsequent analysis runs.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This static analysis rule performs on the global scope and collects data from
+your workspace to generate the results.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"An attacker could perform an arbitrary number of authentication attempts using
+different passwords, and eventually gain access to the targeted account."
+[CWE-307]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that your Spring application is protected against
+brute-force attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'AuthenticationFailureEventListener' class uses
+an object of the 'AuthenticationFailureBadCredentialsEvent' class.
+
+@Component
+public class AuthenticationFailureEventListener implements ApplicationListener&lt;AuthenticationFailureBadCredentialsEvent&gt; { // VIOLATION
+
+    public void onApplicationEvent( AuthenticationFailureBadCredentialsEvent e) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Verify that an appropriate mechanism that prevents multiple failed
+authentication attempts is implemented in your application or on the server
+and then suppress the violation to prevent it from being reported in
+the subsequent analysis runs.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.8 Improper access control
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-307: Improper Restriction of Excessive Authentication Attempts
+<A HREF="https://cwe.mitre.org/data/definitions/307.html">https://cwe.mitre.org/data/definitions/307.html</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

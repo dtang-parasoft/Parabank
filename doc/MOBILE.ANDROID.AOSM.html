@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always override 'onSaveInstanceState()' [MOBILE.ANDROID.AOSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always override 'onSaveInstanceState()' [MOBILE.ANDROID.AOSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation if a class which extends 'android.app.Activity',
+didn't override 'onSaveInstanceState()'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In the Android mobile platform, when another application pop up over your application, 
+the 'onSaveInstanceState()' will be called and then your application will be killed.
+Therefore, if your application didn't override the 'onSaveInstanceState()' and save 
+your data manually, your data in the application will be lost when the application 
+is killed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile.android;
+
+import android.app.*;
+
+public class AOSM extends Activity { // VIOLATION : didn't override onSaveInstanceState()
+
+    // an anrodid activity
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile.android;
+
+import android.app.*;
+import android.os.*;
+
+public class AOSMFixed extends Activity {
+
+    public void onSaveInstanceState(Bundle bundle) {  // FIXED
+        // save your data
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/seamlessness.html#drop">http://developer.android.com/guide/practices/design/seamlessness.html#drop</A>
+
+</PRE>
+</BODY>
+</HTML>

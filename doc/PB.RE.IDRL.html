@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Check whether or not "readLine()" returned null before dereferencing the return value [PB.RE.IDRL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Check whether or not "readLine()" returned null before dereferencing the return value [PB.RE.IDRL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks to make sure that the result of a call to "readLine()" is not
+dereferenced without first checking that the call to "readLine()" did not
+return "null".  A violation is flagged for each place where a method call is made
+on the result of a call to "readLine()" immediately after the call to 
+"readLine()" (such as "a.readLine().method()").
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"readLine" will return null if the end of the stream has been reached.  Thus,
+a method should never be called on the result of a call to "readLine()" without
+first checking that the call did not return "null".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+import java.io.*;
+
+public class IDRL {
+    public static void main(String[] args){
+        BufferedReader br= new BufferedReader(new StringReader("Some string"));
+        try{
+            System.err.println(br.readLine().substring(0, 10));  //VIOLATION
+        }
+        catch(Exception e){}
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Check that the call to "readLine()" did not return "null" before calling a 
+method on the result.
+
+package examples.rules.pb.re;
+
+import java.io.*;
+
+public class IDRLFixed {
+    public static void main(String[] args){
+        BufferedReader br= new BufferedReader(new StringReader("Some string"));
+        try{
+            String line= br.readLine();
+            if(line!= null){
+                System.err.println(line.substring(0, 10));  //FIXED
+            }
+        }
+        catch(Exception e){}
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

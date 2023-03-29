@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'isEmpty()' for Collections and Maps instead of comparing 'size()' to 0 [CODSTA.READ.SIE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'isEmpty()' for Collections and Maps instead of comparing 'size()' to 0 [CODSTA.READ.SIE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a Collection or Map calls 'size()' and compares
+the result to '0'.  These calls can generally be replaced with a call to
+'isEmpty()'. See NOTES and BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Assuming a List 'list', this rule checks the following comparisons:
+    1) list.size() != 0, 0 != list.size()
+    2) list.size() == 0,  0 == list.size()
+    3) list.size() &gt; 0
+    4) 0 &lt; list.size()
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using 'Collection.isEmpty()' instead of 'Collection.size() == 0' may improve
+readability as the method name 'isEmpty' provides information about the check
+that is being performed. Also, comparing 'size()' to '0' is just repeating
+functionality that is already present in the 'isEmpty()' method.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+import java.util.List;
+
+public class SIE {
+    public int sum(List&lt;Integer&gt; list) {
+        int sum = 0;
+        if (list.size() &gt; 0) { //VIOLATION
+            for (Integer integer : list) {
+                sum += integer;
+            }
+        }
+        return sum; 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+import java.util.List;
+
+public class SIEFixed {
+    public int sum(List&lt;Integer&gt; list) {
+        int sum = 0;
+        if (!list.isEmpty()) { //FIXED
+            for (Integer integer : list) {
+                sum += integer;
+            }
+        }
+        return sum; 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Reasons to call .isEmpty on collections
+<A HREF="https://dzone.com/articles/reasons-call-isempty">https://dzone.com/articles/reasons-call-isempty</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not set custom security managers outside of the 'main' method [SECURITY.BV.DSSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not set custom security managers outside of the 'main' method [SECURITY.BV.DSSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any invocation of 'System.setSecurityManager' 
+outside 'main' if it loads a custom Security Manager. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+category: Code Quality
+
+Enforce code access control.
+
+Enforcing this rule will help to protect against the OWASP Top 10  2013
+application vulnerability "A2-Broken Authentication and Session Management".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Loading a custom Security Manager could allow vulnerabilities.
+The Security Manager should be set at an easily accessible
+location (such as in the main method).  Setting the Security Manager
+in a different location or at an arbitrary location is
+suspicious.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+public class DSSM {
+    public void someMethod(){
+        System.setSecurityManager( //VIOLATION
+            new SecurityManager(){
+                public void checkPermission(Permission perm) {}
+                //...
+            });
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+public class DSSMFixed {
+    public void static main(String[] args){
+        System.setSecurityManager( //FIXED
+            new SecurityManager(){
+                public void checkPermission(Permission perm) {}
+            //...
+            });
+    }
+}
+
+Don't set SecurityManager outside of main so that the 
+SecurityManager can be easily scrutinized.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A2-Broken Authentication and Session Management):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+</PRE>
+</BODY>
+</HTML>

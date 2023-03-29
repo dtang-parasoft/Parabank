@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure threads are named [TRS.NAME]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure threads are named [TRS.NAME]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule ensures that threads (or a subclass of Thread) are initialized with a 
+name. It also ensures that constructors for subclasses of Thread call the super 
+constructor to initialize a name. The rule also flags instantiations of threads
+where the constructor gives the thread a default name.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Do not allow constant String literals for thread names (default false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Having thread names is important for debugging.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class Name {
+    Thread t = new Thread(); //VIOLATION
+    
+    class subThread extends Thread {
+        subThread() { //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Initialize threads with a name and call a super constructor that initializes
+name.
+
+package examples.rules.trs;
+
+public class NameFixed {
+    Thread t = new Thread("thread"); //FIXED
+    
+    class subThread extends Thread {
+        subThread() { //FIXED
+            super("name");
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not change the input streams of 'java.lang.System' in a web component [PCIDSS40.6242.SIS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not change the input streams of 'java.lang.System' in a web component [PCIDSS40.6242.SIS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should not change the input streams of  'java.Lang.System'. This
+rule will flag any call to the method 'System.setIn()' in a web component. A
+class or interface is considered a web component if it extends or implements a
+type from the "javax.servlet" package. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Changing the input streams of 'System' is a suspicious security pattern.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for "System.setIn()" calls (default "2")
+    This parameter allows for indirect checking of "System.setIn()" calls.
+    Specifying a value of "1" will only check for direct calls to
+    "System.setIn()". A value of "2" will check if any of the methods called
+    from the web component call "System.setIn()", and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Changing the input streams of 'System' is something that is typically not 
+necessary for a web application.  Doing so also indicates a suspicious security 
+pattern.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import javax.servlet.Servlet;
+
+public class SIS implements Servlet {
+    public void testMethod() {
+        System.setIn(null); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove any calls to the 'setIn()' method.
+
+package examples.rules.security.eab;
+
+import javax.servlet.Servlet;
+
+public class SISFixed implements Servlet {
+    public void testMethod() {
+        //FIXED
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Methods shall not call themselves, either directly or indirectly [BD.PB.RECFUN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Methods shall not call themselves, either directly or indirectly [BD.PB.RECFUN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a method calls itself, including indirect recursion.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0.8
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    int binarySearch(int[] tab, int a, int b, int val) // VIOLATION
+    {
+        int index = (a + b) / 2;
+        if (tab[index] &gt; val) {
+            return binarySearch(tab, a, index - 1, val);
+        } else if (tab[index] &lt; val) {
+            return binarySearch(tab, index + 1, b, val);
+        } else {
+            return index;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    int binarySearch(int[] tab, int a, int b, int val) // NO VIOLATION
+    {
+        while (a &lt;= b) {
+            int index = (a + b) / 2;
+            if (tab[index] &gt; val) {
+                b = index - 1;
+            } else if (tab[index] &lt; val) {
+                a = index + 1;
+            } else {
+                return index;
+            }
+        }
+        return -1;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid extending certain classes (custom rule) [PB.API.AECC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid extending certain classes (custom rule) [PB.API.AECC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that none of the classes specified in the parameter list are
+subclassed.  By default, nothing is checked.  The rule is provided as a 
+customizable rule allowing the user to specify which types should not be 
+subclassed.  A violation will be flagged for each type which extends one of the
+types specified in the parameter list.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is a general version of the rules PB.NDC, PB.NXRE, and PB.EHM.  This
+rule is provided because these rules are not customizable.   While PB.NDC, 
+PB.NXRE, and PB.EHM check that 'java.lang.Error', 'java.lang.RuntimeException', 
+'java.lang.Throwable', 'java.util.HashMap', and 'java.util.Hashtable' are not
+subclassed, you may know of other classes which should not be subclassed.  This
+rule provides an easy way of checking that these classes are not subclassed.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Types which should not be subclassed (Specify fully qualified type names)
+    -By default, the list is empty.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+There are some cases where subclassing a class is likely to lead to bugs (See 
+the "NOTES" section for some examples of this).  While separate rules are 
+provided for some of the most common cases of this, this rule provides a way
+for the user to specify additional classes which should not be subclassed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example assumes that "java.util.Vector" has been added to the parameter
+list.  
+
+package examples.rules.pb.api;
+
+public class AECC extends Vector {  //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid extending any of the classes in the parameter list.  The specific repair
+will depend on the situation, but one possibility is to use a wrapper class 
+instead of extending a class.
+
+package examples.rules.pb.api;
+
+public class AECCFixed{  //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

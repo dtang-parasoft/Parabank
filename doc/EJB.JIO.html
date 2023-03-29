@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use types from the "java.io" package within bean classes [EJB.JIO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use types from the "java.io" package within bean classes [EJB.JIO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses the "java.io" package in an enterprise bean.  
+The rule will flag a violation for each case within an enterprise bean where a
+method is called on a type from the "java.io" package or a new instance of a
+"java.io" type is created. An error is reported for each occurrence.
+
+A class is considered a bean class if it meets one of the following:
+    1. Implements "javax.ejb.EnterpriseBean" or a subinterface ("EntityBean",
+       "MessageDrivenBean", "SessionBean")
+    2. Has the annotation "javax.ejb.MessageDriven", "java.ejb.Stateful",
+       "javax.ejb.Stateless", or "javax.persistence.Entity"
+    3. Is denoted as an Entity, MessageDriven, Stateful, or Stateless bean in
+       "ejb-jar.xml"
+
+	   
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The program violates the Enterprise JavaBeans (EJB) specification by using
+the java.io package. . . The specification justifies this requirement in
+the following way: 'The file system APIs are not well-suited for business
+components to access data. Business components should use a resource manager
+API, such as JDBC, to store data.'" [CWE-576]
+	   
+	   
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to check for "java.io" usage (default "2")
+    This parameter allows for indirect checking of method calls and
+    instantiations of types from the "java.io" package. Specifying a value of
+    "1" will only check for direct usage of the "java.io" package. A value of
+    "2" will check if any of the methods called from the web component in turn
+    use the "java.io" package, and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that the java.io package is not used in
+enterprise beans.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import java.io.*;
+import java.rmi.RemoteException;
+import javax.ejb.*;
+
+public class JIO implements SessionBean { 
+    public int exampleMethod() throws FileNotFoundException, IOException {
+        InputStream is= new FileInputStream("C://foo");  //VIOLATION
+        return is.read();  //VIOLATION
+    }
+    
+    //Stubs for SessionBean methods
+    public void ejbActivate() throws EJBException, RemoteException { }
+    public void ejbPassivate() throws EJBException, RemoteException { }
+    public void ejbRemove() throws EJBException, RemoteException { }
+    public void setSessionContext(SessionContext arg0) throws EJBException, RemoteException { }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid calling methods from the "java.io" package and instantiating types from
+the "java.io" package in enterprise beans. Consider using a resource manager
+API, such as JDBC, to store the necessary data instead of the file system API.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Sections 24.1.2 (p. 494) and C.1.2 (p.538) of the EJB specification (version 2.0).
+The EJB specification is available online at <A HREF="http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/">http://download.oracle.com/otndocs/jcp/7294-ejb-2.0-fr2-spec-oth-JSpec/</A>
+
+CWE-576: EJB Bad Practices: Use of Java I/O
+<A HREF="https://cwe.mitre.org/data/definitions/576.html">https://cwe.mitre.org/data/definitions/576.html</A>
+
+</PRE>
+</BODY>
+</HTML>

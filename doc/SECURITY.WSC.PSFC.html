@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare fields as "public" "static" "final" 'Collection' or 'Map' objects [SECURITY.WSC.PSFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare fields as "public" "static" "final" 'Collection' or 'Map' objects [SECURITY.WSC.PSFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "public" "static" "final" fields that implement the
+"java.util.Collection" or "java.util.Map" interfaces. An error is reported for
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+See BENEFITS section.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "unmodifiable" Collections and Maps (default false)
+    Wrapping a Collection or Map in a corresponding "unmodifiable" method from
+    "java.util.Collections" can prevent elements from being added or removed.
+    However, if the elements of the Collection or Map are themselves modifiable
+    then it may be possible for them to be altered. Enabling this parameter will
+    cause Collections or Maps which have been wrapped by an "unmodifiable"
+    method to also be flagged.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Any Collection or Map object that is declared as "static" "final" is intended to
+be a constant object. The object contents are not supposed to be modified by the
+outside class. However, if these objects are declared as "public", any outside
+class could add or remove elements from them. Thus, to ensure that the object is
+accessible to the outside class without having to worry about undesirable
+modifications, the object should be declared "private". A "public" method that
+returns a copy of the object could also be provided if an external class needed
+access.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class PSFC {
+    public static final Map table= new Hashtable(); //VIOLATION
+    //...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class PSFCFixed {
+    private static final Map table= new Hashtable(); //FIXED
+    //...
+    public static Hashtable getTableCopy() {
+        return (Hashtable)table.clone();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Collections (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html</A>
+
+</PRE>
+</BODY>
+</HTML>

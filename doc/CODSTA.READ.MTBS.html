@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Minimize "try" block size [CODSTA.READ.MTBS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Minimize "try" block size [CODSTA.READ.MTBS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "try" blocks which contain excess lines of code, which do
+not throw exceptions.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Flag "try" blocks where percent of statements throwing exceptions is less than
+ (default 25)
+-Ignore "try" blocks with number of statements less than (default on, 20)
+-Ignore "try" blocks with exceptions thrown inside loop bodies
+-Ignore "try" blocks with exceptions thrown inside conditionals
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rules can improve readability by clarifying which sections of
+code may throw exceptions. It will also aid in reducing the number of lines
+skipped when an exception is thrown and may allow for easier recovery.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+public class MTBS {
+    public String method_1() {
+        int a = 0;
+        try { //Violation
+            a = System.in.read();
+            a += 5;
+               .
+               .
+               .
+            a = a &lt;&lt; 2;
+            return String.valueOf(a);
+        }
+        catch(Exception e) {
+            return null;
+        }
+        return String.valueOf(a);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Refactor the code to remove excess segments from the "try" block.
+
+package examples.rules.codsta.read;
+public class MTBSFixed {
+    public String method_1() {
+        int a = 0;
+        try { //Fixed
+            a = System.in.read();
+        }
+        catch(Exception e) {
+            return null;
+        }
+        a += 5;
+           .
+           .
+           .
+        a = a &lt;&lt; 2;
+        return String.valueOf(a);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

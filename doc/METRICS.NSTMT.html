@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Number of statements in a method [METRICS.NSTMT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Number of statements in a method [METRICS.NSTMT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+Counts the number of statements per method.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest will report an error if the value is greater or equal 50.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Extremely long methods can be difficult to comprehend and often contain several
+conceptually unrelated functions.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Break the method into several methods so that each accomplishs a single distinct
+function.
+
+</PRE>
+</BODY>
+</HTML>

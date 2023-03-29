@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary "$NON-NLS" and "NOI18N" comments [INTER.UNLS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary "$NON-NLS" and "NOI18N" comments [INTER.UNLS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for "//$NON-NLS-&lt;n&gt;$" (where a number is substituted for the
+"&lt;n&gt;") and "/* NOI18N */" comments which have no corresponding String literal or 
+which are unnecessary for some other reason.  The number in a "//$NON-NLS-&lt;n&gt;$" 
+comment is supposed to correspond to the index of a String literal on that same 
+line.  This rule will report a violation in the following three situations:
+
+1. The number in the "//$NON-NLS-&lt;n&gt;$" comment is greater than the number of 
+String literals on the line. 
+
+2. There is a "/* NOI18N */" comment on a line on which there are no String 
+literals.  "/* NOI18N */" comments are used to indicate that the String literals 
+on a line do not need to be internationalized, so there is no need to include 
+such a comment on a line with no String literals.
+
+3. There is a "//$NON-NLS-&lt;n&gt;" comment on a line on which there also is a 
+"/* NOI18N */" comment.  Since the "/* NOI18N */" comment indicates that no 
+internationalization is necessary for the line, no "//$NON-NLS-&lt;n&gt;" comments are
+necessary for lines which have a "/* NOI18N */" comment.
+
+A violation will be reported for each occurrence of one of these situations.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A violation will not be reported for "//$NON-NLS-&lt;n&gt;$" and "/* NOI18N */" 
+comments which appear within the body of a C-style or Javadoc comment or on a 
+line containing no code other than a single-line comment (or "//" comment).  
+Usually, a comment appearing in such a place means that code was commented out.  
+The "//$NON-NLS-&lt;n&gt;$" or "/* NOI18N */" comments may be needed if the code is 
+uncommented.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When a "//$NON-NLS-&lt;n&gt;$" or "/* NOI18N */" comment does not have a corresponding 
+String literal, it usually indicates that a String literal was removed from the 
+line without removing the corresponding comment.  The comment should be removed 
+to clean up the code and to prevent bugs in case another String literal is later 
+added to that line. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class UNLS {
+    private static String HELLO_WORLD = "Hello World";  //$NON-NLS-1$
+
+    public void hello() {
+        System.out.println(HELLO_WORLD);  //$NON-NLS-1$ //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary comment.
+
+package examples.rules.inter;
+
+public class UNLSFixed {
+    private static String HELLO_WORLD = "Hello World";  //$NON-NLS-1$
+
+    public void hello() {
+        System.out.println(HELLO_WORLD);  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

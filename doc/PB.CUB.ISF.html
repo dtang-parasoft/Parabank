@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect "private" "static" fields which may have mistakenly been declared "static" [PB.CUB.ISF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect "private" "static" fields which may have mistakenly been declared "static" [PB.CUB.ISF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "private" non-"final" fields that are meant to be instance 
+fields but are declared as "static" by mistake. 
+
+The rule considers any "static" field which meets the following criteria to be
+an instance field which may have been mistakenly declared "static":
+
+1.  The field is assigned by either a constructor or a non-"static" initializer.
+
+2.  The field is never accessed in a "static" context.  That is, it is never 
+accessed using the name of its declaring type or using its unqualified name in a 
+"static" method or "static" initializer.  
+
+3.  The field is accessed at least once in a non-"static" context somewhere in 
+the declaring class.  That is, it is accessed using an instance of the declaring 
+class, using the "this" keyword, or using its unqualified name in a non-"static" 
+method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If any instance field is mistakenly declared as "static", then all the instances 
+of the same type would share the same field instead of their own unique ones.  
+This may not have been what was intended.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class ISF {
+    private static String _id; //VIOLATION
+   
+    public ISF(String id) {
+        _id= id;
+    }
+    
+    public String getId() {
+        return _id;
+    }
+    
+    public void setId(String newId) {
+        _id= newId;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Inspect the static field and decide if it is meant to be an instance field 
+instead.
+
+package examples.rules.pb.cub;
+
+public class ISF_Fixed {
+    private String _id; //FIXED
+   
+    public ISF_Fixed(String id) {
+        _id= id;
+    }
+    
+    public String getId() {
+        return _id;
+    }
+    
+    public void setId(String newId) {
+        _id= newId;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

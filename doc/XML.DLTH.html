@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid debug levels which are too high in Tomcat's 'server.xml' [XML.DLTH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid debug levels which are too high in Tomcat's 'server.xml' [XML.DLTH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if the debug level is too high in Tomcat's 'server.xml' 
+file.  An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If the debug level is too high, more log messages will be written to the log 
+file, including some sensitive data like usernames and passwords.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+   - Maximum debug level (by default, maximum debug level is 2)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;Server&gt;
+&lt;!-- VIOLATION: debug level is too high --&gt;
+&lt;Realm className="com.parasoft.jtest.LoginRealm"
+       resourceName="Login"
+       debug="5"/&gt;
+&lt;/Server&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" ?&gt;
+&lt;Server&gt;
+&lt;!-- FIXED: lower the debug level --&gt;
+&lt;Realm className="com.parasoft.jtest.LoginRealm"
+       resourceName="Login"
+       debug="2"/&gt;
+&lt;/Server&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+</PRE>
+</BODY>
+</HTML>

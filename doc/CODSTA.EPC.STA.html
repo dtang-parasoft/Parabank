@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the same generic type variable for multiple method arguments [CODSTA.EPC.STA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the same generic type variable for multiple method arguments [CODSTA.EPC.STA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags method declarations which use the same type argument for more
+than one method parameter. Arrays of a type argument are counted as their
+element type.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks projects with a compiler compliance of JDK 1.5 or later as
+varargs were introduced in JDK 1.5.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using the same type argument for multiple method parameters is usually a sign of
+error prone coding. An assumption is often made that the parameters will be
+restricted to the same type or that one must be a subtype of the other. However,
+the compiler will instead infer a common supertype. This allows method calls
+to proceed which the method design may not have anticipated. As a result, this
+can lead to ClassCastExceptions or ArrayStoreExceptions if assumptions are made
+about the method. See EXAMPLE for more information.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, "testMethod()" is called with a 'String' and an 'int'. It may
+be assumed that by specifying "T" for both method parameters that they are
+required to be the same type. However, the compiler instead infers a common
+supertype and allows the method call.
+
+package examples.rules.codsta.epc;
+
+public class STA {
+    public static void main(String[] args) {
+        testMethod("hi", 5);
+    }
+
+    public static &lt;T&gt; void testMethod(T t0, T t1) { //VIOLATION
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use two type variables instead, with one extending the other. This enforces a
+relationship between the two type arguments.
+
+package examples.rules.codsta.epc;
+
+public class STAFixed {
+    public static void main(String[] args) {
+        testMethod("hi", 5);
+    }
+
+    public static &lt;T, S extends T&gt; void testMethod(T t, S s) { //FIXED
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Java Generics FAQs - Programming With Java Generics by Angelika Langer
+<A HREF="http://www.angelikalanger.com/GenericsFAQ/FAQSections/TechnicalDetails.html#FAQ404">http://www.angelikalanger.com/GenericsFAQ/FAQSections/TechnicalDetails.html#FAQ404</A>
+
+</PRE>
+</BODY>
+</HTML>

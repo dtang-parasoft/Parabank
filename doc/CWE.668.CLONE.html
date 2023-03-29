@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make your 'clone()' method "final" for security [CWE.668.CLONE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make your 'clone()' method "final" for security [CWE.668.CLONE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies classes that implement the Cloneable "interface", 
+but do not have a "final" 'clone()' method. An error is reported for each 
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You should be careful when using the quickfix for this rule because the quickfix may 
+cause compile errors.  The quickfix is to declare the 'clone()' method "final".  While 
+this should be OK in most cases, it will cause a compile error if the 'clone()' method 
+is overridden.  Since 'clone()' methods should not be overridden, all overriding 
+'clone()' methods defined in subclasses should probably be removed.  This must be done 
+manually.  Since the quickfix may cause compile errors, the "Quickfix All" option is 
+not available for this rule.  You should review each violation and decide what to do if 
+the 'clone()' method is overridden. 
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Enforce code access control. Seee BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a class does not implement the 'Cloneable' interface, or if it implements 
+the interface with a non-final 'clone ()' method, then attackers can create
+their own subclass that implements 'Cloneable' with a 'clone ()' method that
+does not call a constructor, possibly changing the behavior of the cloned
+object.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class CLONE implements Cloneable {
+    public Object clone () throws CloneNotSupportedException {  // VIOLATION
+        CLONE cl = (CLONE) super.clone ();
+        cl._field = _field;
+        return cl;
+    }
+    private int _field = 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare as "final" either the entire class or just the 'clone ()' method.
+
+package examples.rules.security.wsc;
+
+public class CLONEFixed implements Cloneable {
+    public final Object clone () throws CloneNotSupportedException {  // FIXED
+        CLONEFixed cl = (CLONEFixed) super.clone ();
+        cl._field = _field;
+        return cl;
+    }
+    private int _field = 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Statically Scanning Java Code: Finding Security Vulnerabilities.
+John Viega, Gary McGraw, Tom Mutdosch, and Edward W. Felten
+IEEE SOFTWARE September/October 2000
+
+Joshua Bloch : "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 45-52
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+CWE-491: Public cloneable() Method Without Final ('Object Hijack')
+<A HREF="https://cwe.mitre.org/data/definitions/491.html">https://cwe.mitre.org/data/definitions/491.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MET06-J. Do not invoke overridable methods in clone()
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487921">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487921</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ04-J. Provide mutable classes with copy functionality to safely allow passing instances to untrusted code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ04-J.+Provide+mutable+classes+with+copy+functionality+to+safely+allow+passing+instances+to+untrusted+code">https://wiki.sei.cmu.edu/confluence/display/java/OBJ04-J.+Provide+mutable+classes+with+copy+functionality+to+safely+allow+passing+instances+to+untrusted+code</A>
+
+</PRE>
+</BODY>
+</HTML>

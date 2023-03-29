@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling specified methods from web components and EJBs [SECURITY.EAB.ACWC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling specified methods from web components and EJBs [SECURITY.EAB.ACWC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+There are certain methods which should not be called from web components
+(servlets) and EJBs. This parameterizable rule will flag a violation if a method
+specified in the parameters is called.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Using a large "Depth" value may significantly slow down execution of the rule.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Use of certain methods may be considered unsafe in web components or EJBs.
+Furthermore, certain methods should be avoided as they are considered bad
+practice or not advised by the Java API. For example, Sockets should be avoided
+in web applications as they are prone to error and other alternatives exist.
+Using unexpected or inappropriate methods may result in unpredictable behavior
+which can lead to loss of security.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to check [1-5] (default "2")
+    This represents the depth to which method calls should be flagged.
+    A method called directly from a type will be caught by a depth value of "1".
+    If the type calls a method of another class, which in turn calls an
+    offending method this will be caught by a depth value of "2" and so on.
+    Note that using a large depth value may significantly slow down execution of
+    the rule.
+
+Web components
+-Check web components (default true)
+    Check the following: (default)
+    -------------------------------------------------------------------
+    | Package            | Type to check | Method to flag (Type#Name) |
+    ---------------------+---------------+-----------------------------
+    |                    |               |                            |
+    -------------------------------------------------------------------
+
+    "Package" and "Type to check" both refer to the web component to be checked.
+    "Package" is specified as a qualified name and "Type to check" is specified
+    as a regular expression. Subclasses or implementations of a specified type
+    will be checked.
+    For example:
+        "javax.servlet.http" / ".*" / ".*"
+    would check all classes which subclass or implement any type in the package
+    "javax.servlet.http". If it was desired to only check cookies then the
+    following could be used:
+        "javax.servlet.http" / "Cookie" / ".*"
+
+    "Method to flag (Type#Name)" is specified as a regular expression. The
+    method to be checked should be specified as the qualified name of the type
+    containing the method followed by a "#" and the name of the method. The
+    specified method will be flagged each time it is called from a type matching
+    the "Package" and "Type to check" parameters.
+    For example:
+        "javax.servlet" / ".*" / "java\.lang\.ClassLoader#.*"
+    will flag any ClassLoader method called from a web component.
+
+EJBs
+-Check EJBs (default true)
+    Check the following: (default)
+    ----------------------------------
+    | Method to flag (Type#Name)     |
+    ---------------------------------+
+    |                                |
+    ----------------------------------
+
+    Unlike web components "Package" and "Type to check" parameters are not
+    present as an EJB may use an annotation or deployment descriptor instead of
+    subclassing or implementing a particular type.
+
+    "Method to flag (Type#Name)" is specified as a regular expression. The
+    method to be checked should be specified as the qualified name of the type
+    containing the method followed by a "#" and the name of the method. The
+    specified method will be flagged each time it is called from an EJB.
+    For example:
+        "java\.lang\.ClassLoader#.*"
+    will flag any ClassLoader method called from an EJB.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example assumes the following was specified as a parameter:
+    "javax.servlet" / ".*" / "java\.net\.Socket#.*"
+
+package examples.rules.security.eab;
+
+public class ACWC implements Servlet {
+    void closeSocket(Socket s) {
+        try {
+            s.close(); //VIOLATION
+        }
+        catch (IOException ioe) {
+            //empty
+        }
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Evaluate if the code should be moved elsewhere or an alternative used instead
+and remove the offending code.
+
+package examples.rules.security.eab;
+
+public class ACWC_Fixed implements Servlet {
+    //FIXED
+    ...
+}
+
+</PRE>
+</BODY>
+</HTML>

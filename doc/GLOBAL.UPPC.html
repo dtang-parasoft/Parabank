@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid globally unused "public/protected" types [GLOBAL.UPPC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid globally unused "public/protected" types [GLOBAL.UPPC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused "public" and "protected" types. An error is reported
+for each occurrence.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quickfix All" feature is not available for this rule because the user
+should determine whether each class should be removed separately instead of
+automatically removing them all.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Unused public code might be triggered /accessed by attackers. The code may
+implement features that bypass security.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Do not report an error for classes with a main method. (Default is "true")
+-Classes used in XML files
+    -Sometimes classes are not used directly within other Java code, but they
+     are still necessary because they are referenced by some framework within an
+     XML file.  For instance, Eclipse plug-in classes may be referenced within a
+     "plugin.xml" file.  Servlet classes may be referenced within a "web.xml"
+     file.
+    -The three columns in this table are:
+        -Description: This column is used to identify what type of class the
+         corresponding file pattern and XPath expression are designed to find.
+         This column is not read by Jtest and only serves to help the user label
+         the rows of the table.  Thus, anything can be entered in this column.
+        -File Pattern (Glob Expression):
+         The format of this Glob expression is "&lt;project name&gt;/&lt;file name&gt;".
+         Project name is optional, so if it is not provided, any file matching
+         the "file name" expression, regardless of project will be matched.
+         Both "project name" and "file name" are treated as individual glob
+         expressions. They should be separated by a '/' character, only if
+         "project name" is specified. For example: "org.eclipse.*/plugin.xml"
+         would match any "plugin.xml" file in a project starting with
+         "org.eclipse".
+         This Glob expression is used to describe the names of the XML files
+         within a project for which the corresponding XPath expression should
+         be applied to try to find usages of classes.
+             -Glob expressions are a simplified version of regular expressions.
+              They use the convention that a "*" matches zero or more instances
+              of any character and that a "?" matches one instance of any
+              character.  In standard regular expressions, ".*" is used to match
+              zero or more instances of any character, and "." is used to match
+              one instance of any character.
+             -If you are unfamiliar with how Glob expressions work, you should
+              consult the Javadoc for Apache's GlobCompiler:
+              <A HREF="http://jakarta.apache.org/oro/api/org/apache/oro/text/GlobCompiler.html">http://jakarta.apache.org/oro/api/org/apache/oro/text/GlobCompiler.html</A>
+        -XPath Expression: The XPath expression is used to identify where
+         references to the corresponding class type will be found in the XML
+         files.  This expression will be applied to all the XML files in a
+         project matching the regular expression specified in the second column.
+         The rule will look for all matches of a fully qualified type name to
+         the nodes returned by this expression and will consider all such
+         matches to be valid uses of the corresponding class.
+    -The default values of this parameter are:
+
+     Description       | File Pattern            | XPath Expression
+                       | (Glob Expression)       |
+     ----------------------------------------------------------------------------
+     Eclipse plug-ins  | plugin.xml              | /plugin/extension//@class
+     Servlets          | web.xml                 | /web-app/servlet/servlet-class/text()
+     Listener          | web.xml                 | /web-app/listener/listener-class/text()
+
+     These default values tell the rule to look for references to Eclipse plug-
+     in classes in the "class" attributes of "plugin.xml" files and to look for
+     references to servlet and listener classes in the bodies of "servlet-class" 
+     and "listener-class" tags in "web.xml" files.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+These unused entities usually point to either:
+
+1) Old code that is no longer needed.  This makes the code more difficult to
+   understand.
+
+2) A logical flaw (if the entity needs to be used, but other classes incorrectly
+   avoid using it).
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unused type or document the reason for its existence.
+
+</PRE>
+</BODY>
+</HTML>

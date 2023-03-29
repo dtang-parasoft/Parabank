@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow class name conventions defined for implemented interfaces [NAMING.IMPLS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow class name conventions defined for implemented interfaces [NAMING.IMPLS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks the naming conventions for classes implementing interfaces.
+You can configure it to check conventions for different interfaces.
+It reports violation for each class name that does not follow the defined convention.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Configure expected name for class implements interface" table has three column:
+
+- first "Check hierarchy"
+This field specifies whether you want to check the entire hierarchy or only one parent class. 
+The default is checked.
+
+- second "Expected class name"
+The regular expression that the name of a class which implements the specified interface
+(configured in the third column) should follow. You can use here fully qualified class name too.
+
+- third "Fully qualified name of interface" 
+The interface whose whose implementations should follow this naming convention.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule enforces naming conventions classes that implement interfaces such as Controller, Model and others.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Create a Test Configuration with this rule, and add row to the parameterized table in the rule configuration. 
+Check the first column. In second column, add the regular expression ^.*Entity$. In third, add 
+examples.rules.naming.Entity. Then, run this Test Configuration on the following example:
+
+a) simple example 
+
+package examples.rules.naming;
+
+public interface Entity {  
+ 
+}
+
+public class Person implements Entity {  // VIOLATION
+
+}
+
+b) Extended example with hierarchy:
+
+package examples.rules.naming;
+
+public interface Entity {  
+ 
+}
+
+public interface SpecialEntity extends Entity {  
+ 
+}
+
+public class Person implements Entity {  // VIOLATION
+
+}
+
+
+public class Worker extends Person { // VIOLATION because Person implements Entity interface
+
+}
+
+public class Manager implements SpecialEntity { // VIOLATION because SpecialEntity extends Entity interface
+
+}
+
+c) example without hierarchy (for this test you must uncheck the "check hierarchy" option):
+
+package examples.rules.naming;
+
+public interface Entity {  
+ 
+}
+
+public interface SpecialEntity extends Entity {  
+ 
+}
+
+public class Person implements Entity {  // VIOLATION
+
+}
+
+
+public class Worker extends Person { // NO VIOLATION because Worker class does not implement Entity
+
+}
+
+public class Manager implements SpecialEntity { // NO VIOLATION because Manager class does not directly inherit Entity
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Change example to:
+
+a) 
+package examples.rules.naming;
+
+public class Entity {  
+ 
+}
+
+public class PersonEntity implements Entity {  // NO VIOLATION
+
+}
+
+b) 
+
+package examples.rules.naming;
+
+public interface Entity {  
+ 
+}
+
+public interface SpecialEntity extends Entity {  
+ 
+}
+
+public class PersonEntity implements Entity {  // NO VIOLATION
+
+}
+
+
+public class WorkerEntity extends PersonEntity { // NO VIOLATION
+
+}
+
+public class ManagerEntity implements SpecialEntity { // NO VIOLATION
+
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'String.length() == 0' instead of 'String.equals("")' [OPT.EES]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'String.length() == 0' instead of 'String.equals("")' [OPT.EES]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the programmer uses 'String.length() == 0' instead of
+'String.equals("")'.  Although the two expressions perform the same check,
+'String.length() == 0' is preferred because it may be more efficient and removes 
+a String constant from the class file.  A violation is flagged for each place
+where the programmer uses 'String.equals("")'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Using 'String.length() == 0' instead of 'String.equals("")' may be more 
+efficient and removes the String constant "" from the class file.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class EES {
+    void method(String s){
+        System.err.println("is empty String: "+s.equals(""));
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'String.length() == 0' instead of 'String.equals("")'.
+
+package examples.rules.opt;
+
+public class EESFixed {
+    void method(String s){
+        System.err.println("is empty String: "+(s.length() == 0));
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

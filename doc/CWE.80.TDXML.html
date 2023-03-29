@@ -1,0 +1,270 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against XML data injection [CWE.80.TDXML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against XML data injection [CWE.80.TDXML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when data that comes directly from the end-user is used to
+compromise an XML document.
+
+This rule triggers when tainted data is passed to the following methods:
+
+org.w3c.dom.Node
+   * setNodeValue(String)
+
+org.w3c.dom.Attr
+   * setValue(String)
+
+org.w3c.dom.Element
+   * setAttribute(String, String)
+
+org.w3c.dom.CharacterData
+   * appendData(String)
+   * insertData(int, String)
+   * replaceData(int, int, String)
+   * setData(String)
+
+org.w3c.dom.Document
+   * createAttribute(String)
+   * createCDATASection(String)
+   * createElement(String)
+   * createentityReference(String)
+   * createProcessingInstruction(String, String)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+Data stored in the XML format can be used for different purposes. XML can be used even as
+an alternative database / storage system. Consequently, data from XML can be used to form some
+other requests (like SQL, XML, XPath, etc.), which may enable an attacker to provide malicious
+data and, in turn, execute dangerous requests, reveal private or secure information.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+See the SECURITY RELEVANCE section.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In this example, unverified user data can reach XML storage that is
+supposed to contain only trusted data.
+
+import javax.servlet.http.HttpServletRequest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class Example
+{
+    void example(HttpServletRequest req, Document document)
+    {
+        String sUserId = req.getParameter("userid");
+        String sUserName = req.getParameter("username");
+        String sDataType = req.getParameter("type");
+        String sData = req.getParameter("user_data");
+
+        String userAttrName = "User" + sUserId;
+        Element user = document.createElement(userAttrName); // VIOLATION
+        user.setAttribute("name", sUserName); // VIOLATION
+
+        Element userData = document.createElement(sDataType); // VIOLATION
+        userData.setNodeValue(sData); // VIOLATION
+        user.appendChild(userData);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Validate data prior to its usage:
+
+import javax.servlet.http.HttpServletRequest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public abstract class Repair
+{
+    void example(HttpServletRequest req, Document document)
+    {
+        String sUserId = validate(req.getParameter("userid"));
+        String sUserName = validate(req.getParameter("username"));
+        String sDataType = validate(req.getParameter("type"));
+        String sData = validate(req.getParameter("user_data"));
+
+        String userAttrName = "User" + sUserId;
+        Element user = document.createElement(userAttrName); // NO VIOLATION
+        user.setAttribute("name", sUserName); // NO VIOLATION
+
+        Element userData = document.createElement(sDataType); // NO VIOLATION
+        userData.setNodeValue(sData); // NO VIOLATION
+        user.appendChild(userData);
+    }
+
+    public abstract String validate(Object obj);
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+XML Injection
+Video: <A HREF="https://vimeo.com/239480422">https://vimeo.com/239480422</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_4-XML-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_4-XML-Injections.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+<A HREF="https://cwe.mitre.org/data/definitions/79.html">https://cwe.mitre.org/data/definitions/79.html</A>
+
+CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)
+<A HREF="https://cwe.mitre.org/data/definitions/80.html">https://cwe.mitre.org/data/definitions/80.html</A>
+
+CWE-91: XML Injection (aka Blind XPath Injection)
+<A HREF="https://cwe.mitre.org/data/definitions/91.html">https://cwe.mitre.org/data/definitions/91.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS16-J. Prevent XML Injection
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS16-J.+Prevent+XML+Injection">https://wiki.sei.cmu.edu/confluence/display/java/IDS16-J.+Prevent+XML+Injection</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002530: The application must validate all input.
+APSC-DV-002550: The application must not be vulnerable to XML-oriented attacks.
+APSC-DV-002560: The application must not be subject to input handling vulnerabilities.
+
+Tags: PCI-DSS, CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

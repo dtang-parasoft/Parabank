@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using 'getter' and 'setter' methods [MOBILE.AMA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using 'getter' and 'setter' methods [MOBILE.AMA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation if 'getter' or 'setter' method is called.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Method calls are expensive in embedded devices. So we should access a field directly,
+instead of accessing a field by 'getter' or 'setter' method.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class AMA {
+
+    private int number;
+    
+    public int getNumber() {
+        return number;
+    }
+    
+    public void calculate() {
+        int num = getNumber();  // VIOLATION
+        // ......
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class AMAFixed {
+
+    private int number;
+    
+    public int getNumber() {
+        return number;
+    }
+    
+    public void calculate() {
+        int num = number;  // FIXED
+        // ......
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#internal_get_set">http://developer.android.com/guide/practices/design/performance.html#internal_get_set</A>
+
+</PRE>
+</BODY>
+</HTML>

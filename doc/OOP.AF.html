@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "public"/"protected"/package-private fields [OOP.AF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "public"/"protected"/package-private fields [OOP.AF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "public"/"protected"/package-private fields. An error is 
+reported for each occurrence.  There is also a parameter where the user can 
+choose whether or not to check non-final static fields.  By default, this 
+parameter is "true", which means that non-final static fields will be checked by 
+default.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Unnecessary data exposure might lead to dangerous manipulation of the data. For
+best security, you should limit access to fields as much as possible.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check instance fields. (Default is true)
+-Check non-final "static" fields. (Default is true)
+-Check "public" field (Default is true)
+   -Check top-level class (Default is true)
+   -Check member class (Default is true)
+-Check "protected" field (Default is false)
+   -Check top-level class (Default is true)
+   -Check member class (Default is true)
+-Check package-private field (Default is false)
+   -Check top-level class (Default is true)
+   -Check member class (Default is true)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Fields not declared "private" are a class implementation detail. It is good 
+practice to hide such implementation details from the users of the class.  This 
+is accomplished by making the field "private" and providing access methods to
+read and/or write its value.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class AF {
+    public int _a = 10;  // VIOLATION
+    private int _c = 14;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the field "private" and provide access methods to the field if needed.
+
+package examples.rules.oop;
+
+public class AFFixed {
+    public void setA (int a) {  // FIXED
+        _a = a;
+    }
+    
+    public int getA () {  // FIXED
+        return _a;
+    }
+    
+    private int _a = 10;  // FIXED
+    private int _c = 14;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-487: Reliance on Package-level Scope
+<A HREF="https://cwe.mitre.org/data/definitions/487.html">https://cwe.mitre.org/data/definitions/487.html</A>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.170 - 173
+
+Section 10.1 of <A HREF="http://java.sun.com/docs/codeconv/html/CodeConventions.doc9.html#177">http://java.sun.com/docs/codeconv/html/CodeConventions.doc9.html#177</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Cigital Java Security Rulepack # 9:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated OOP.APF
+@deprecated OOP.APPF
+@deprecated OOP.APROF
+
+</PRE>
+</BODY>
+</HTML>

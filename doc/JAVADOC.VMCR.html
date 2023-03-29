@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the '@return' Javadoc tag on "void" methods [JAVADOC.VMCR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the '@return' Javadoc tag on "void" methods [JAVADOC.VMCR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies "void" methods (i.e., methods that do not return a value) that lack
+'@return' Javadoc tags. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Leaving '@return' tags on methods that do not actually return anything can
+lead to confusion.  In general, documentation that disagrees with the actual
+behavior of the code may cause confusion and bugs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class VMCR {
+    /**
+     * Displays text to the screen
+     * @return ...
+     */
+    public void display () {  // VIOLATION
+        System.out.println ("hello");
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the '@return' Javadoc tag.
+
+package examples.rules.javadoc;
+
+public class VMCRFixed {
+    /**                                                                     
+     * Displays text to the screen                                         
+     */
+    public void display () {  // FIXED
+        System.out.println ("hello");
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@severity-from 3(v6.0)
+
+</PRE>
+</BODY>
+</HTML>

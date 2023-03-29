@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use a "static" initializer that creates an instance of the current class before all "static final" fields are assigned [INIT.SICUI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use a "static" initializer that creates an instance of the current class before all "static final" fields are assigned [INIT.SICUI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "static" initializer that creates an
+instance of the current class's type before all "static final" fields 
+of the current class are initialized. An error is reported for 
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Code Quality
+
+Uninitialized fields can cause unexpected program behavior or
+null pointer exceptions, which can impact program stability. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+While creating an instance of an object inside the static initializer,
+the object being created would invoke its constructor. If the 
+object being created is an instance of the current class, it might
+refer to some static final fields (constants) of the current class.
+However, those constants are not initialized because the assignment 
+statements of those constants have not yet been executed. By nature, 
+constants should always return the assigned value at any time. 
+Consequently, such behavior is not desirable and might promote 
+NullPointerExceptions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class SICUI {
+    static {
+	SICUI obj= new SICUI(); //VIOLATION
+    }
+    static final Vector emptyVector= new Vector();
+    SICUI() {
+        System.out.println(emptyVector.size());
+        //a NullPointerException would be thrown here
+        //notice that emptyVector at this point is null
+        //instead of a Vector object with no element inside
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class SICUIFixed {
+    static final Vector emptyVector= new Vector();
+    static {
+	SICUIFixed obj= new SICUIFixed(); //FIXED
+    }
+    SICUIFixed() {
+        System.out.println(emptyVector.size());
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide a '{}' block for conditional statements [CWE.483.BLK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide a '{}' block for conditional statements [CWE.483.BLK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Requires that conditional statements have a "{ }" block.
+Conditional statements include "if", "else", "for", "while"
+and "do-while" statements.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"[T]his error may be introduced it into a production environment and provide
+additional attack vectors by creating a control flow path leading to
+an unexpected state in the application. The consequences will depend on
+the types of behaviors that are being incorrectly executed." [CWE-483]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "if" statements (default as true)
+-Check "else" statements (default as true)
+-Check "for" statements (default as true)
+-Check "while" statements (default as true)
+-Check "do-while" statements (default as true)
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Conditional statements with "{}" blocks are less error-prone than those 
+without "{}" blocks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class BLK {
+    public void method () {
+        for (int i = 0; i &lt; 10; i++)  // VIOLATION
+            System.out.println (i * i);  // inside the loop
+            System.out.println (i);      // outside the loop
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide a block for each "for" statement.
+
+
+package examples.rules.codsta.bp;
+
+public class BLKFixed {
+    public void method () {
+        for (int i = 0; i &lt; 10; i++) {  // FIXED
+            System.out.println (i * i);  // inside the loop
+            System.out.println (i);      // now inside the loop
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 7.2 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#15395">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#15395</A>
+
+CWE-483: Incorrect Block Delimitation
+<A HREF="https://cwe.mitre.org/data/definitions/483.html">https://cwe.mitre.org/data/definitions/483.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+EXP52-J. Use braces for the body of an if, for, or while statement
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP52-J.+Use+braces+for+the+body+of+an+if%2C+for%2C+or+while+statement">https://wiki.sei.cmu.edu/confluence/display/java/EXP52-J.+Use+braces+for+the+body+of+an+if%2C+for%2C+or+while+statement</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated MISC.BLKDOWHL
+@deprecated MISC.BLKELSE
+@deprecated MISC.BLKFOR
+@deprecated MISC.BLKIF
+@deprecated MISC.BLKWHL
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Explicitly call one of the superclass' constructors from all constructors [CODSTA.READ.ECSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Explicitly call one of the superclass' constructors from all constructors [CODSTA.READ.ECSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If no superclass constructor is explicitly called from a constructor, Java will
+implicitly call the constructor of the superclass with no arguments (assuming
+such a constructor exists).  Some people prefer for all constructor calls to be
+explicit to make the code easier to read.  This rule will flag a violation for
+each constructor which does not explicitly call one of the constructors of the
+superclass on the first line of its definition.  A violation will not be flagged
+for cases where the direct superclass is (either implicitly or explicitly) 
+"java.lang.Object". 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-ignore superclasses with only a no argument constructor (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Explicitly calling the constructor of the superclass instead of relying on Java
+to implicitly call the no-argument constructor makes the code easier to read.  
+Without the explicit constructor call, it is easy to forget that a call to 
+'super()' will automatically be inserted by Java.  This can cause confusion for 
+the reader of the code.  Making the constructor call explicit eliminates this
+confusion.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Since the code below does not contain any explicit calls to 'super()', it is 
+easy to forget that "_name" will be initialized to "Steve" when the constructor
+for "ECSC" is called and that the no-argument constructor for class "Object"
+will be called when the constructor for "Super_ECSC" is called.
+
+package examples.rules.codsta.read;
+
+public class ECSC extends Super_ECSC {
+    public ECSC() {  //VIOLATION
+    }
+}
+
+class Super_ECSC {
+    private String _name;
+    
+    public Super_ECSC() {  //VIOLATION
+        _name = "Steve";
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make all constructor calls explicit to avoid confusion.
+
+package examples.rules.codsta.read;
+
+public class ECSC_Fixed extends Super_ECSC {
+    public ECSC_Fixed() {  
+        super();  //FIXED
+    }
+}
+
+class Super_ECSC {
+    private String _name;
+    
+    public Super_ECSC() {  
+        super();  //FIXED
+        _name = "Steve";
+    }
+}
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calculations which result in overflow or NaN [CERT.NUM00.ICO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calculations which result in overflow or NaN [CERT.NUM00.ICO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each calculation which results in 
+overflow or NaN.  It will only flag calculations involving all constant values.  
+Calculations involving variables will only be flagged if the variables are 
+declared as "final".
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Calculations whose results are of type "int" can only have values between 
+Integer.MIN_VALUE (-2^31) and Integer.MAX_VALUE (2^31 - 1).  If the expected 
+result of an integer calculation is outside this range, the result will not be 
+accurately represented.  This is especially likely to lead to bugs if the result 
+of the "int" calculation is cast to a datatype which allows for a larger range 
+of values.  This is because the cast will not be applied until after the "int" 
+result has been calculated.  This is not what many programmers expect and will 
+cause the result to be erroneous.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class ICO {
+    public static void main(String[] args) {
+        final long LARGE_NUMBER = 30 * 60 * 60 * 1000 * 1000;  //VIOLATION
+        final long DENOM = 30 * 60 * 60 * 1000;
+
+        System.out.println(LARGE_NUMBER / DENOM);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Cast one of the operands in the expression to a "long", or define one of the
+operands as a "long" by putting an "L" after it if it is an "int" literal.
+
+package examples.rules.pb.num;
+
+public class ICOFixed {
+    public static void main(String[] args) {
+        final long LARGE_NUMBER = 30L * 60 * 60 * 1000 * 1000;  //FIXED
+        final long DENOM = 30 * 60 * 60 * 1000;
+
+        System.out.println(LARGE_NUMBER / DENOM);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Numeric Errors
+Video: <A HREF="https://vimeo.com/238779116">https://vimeo.com/238779116</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+Addison-Wesley, 2005, pp. 9-11
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-190: Integer Overflow or Wraparound
+<A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+NUM00-J. Detect or prevent integer overflow
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow">https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks
+
+</PRE>
+</BODY>
+</HTML>

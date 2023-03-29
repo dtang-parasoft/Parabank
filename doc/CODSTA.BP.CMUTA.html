@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid 'public' or 'protected' constructors for immutable classes [CODSTA.BP.CMUTA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid 'public' or 'protected' constructors for immutable classes [CODSTA.BP.CMUTA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies immutable classes with constructors that are public or 
+protected. A violation is reported for each constructor.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hiding constructors allows more flexibility in instance creation and caching.
+Creating build methods to construct these objects is a good practice.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class CMUTA {
+    private int a;
+    
+    public CMUTA(){ //VIOLATION
+    }
+    
+    private void method() {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class CMUTAFixed {
+    private int a;
+    
+    private CMUTA(){ //FIX
+    }
+    
+    private void method() {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#6-1">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#6-1</A>
+
+</PRE>
+</BODY>
+</HTML>

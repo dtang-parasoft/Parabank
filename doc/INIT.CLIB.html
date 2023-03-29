@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not put code other than initialization code in lazy initialization blocks [INIT.CLIB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not put code other than initialization code in lazy initialization blocks [INIT.CLIB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The lazy initialization pattern is commonly used to ensure that objects are only 
+created if they have not previously been created.  When this pattern is used, 
+the "if" block that is used for the initialization is usually only intended to 
+include initialization code.  If the last statement of the lazy initialization
+block is not initialization code, this may be a bug.  This may indicate that the
+code was supposed to go after the initialization block.  That way, the code will 
+be executed regardless of whether or not initialization was performed.
+
+This rule will detect two patterns of lazy initialization.  The patterns that 
+will be detected are:
+
+1.  The pattern where some field is compared to "null" and then initialized 
+using some constructor or factory method which calls a constructor.  For 
+instance, the following pattern will be detected:
+
+if (_someField == null) {
+    _someField = new SomeFieldType (); 
+    doSomething(_someField); 
+}
+
+The last statement in the lazy initialization block, the call to "doSomething(
+_someField)" does not appear to be initialization code, so there is a good 
+chance that it is misplaced.  This method call should go after the lazy 
+initialization "if" block.
+
+2.  The pattern where an element is retrieved from a "Map" using the "get()" 
+method and initialized if the "Map" element is "null".  For instance, the 
+following pattern will be detected:  
+
+Object obj= _map.get("a");
+if(obj == null) {
+    obj= new Object();
+    _map.put("a", obj);
+    doSomething(obj); 
+}
+
+In either case, it is possibly a bug if some non-initialization code is included
+as the last statement in the "if" block used for the initialization.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Since it is difficult to tell what is initialization code and what is not, it is
+possible that this rule will flag some false positives on lazy initialization
+blocks which contain only initialization code.  In these cases, the violation
+should be suppressed.
+
+It is common for lazy initialization blocks to contain code that is not directly
+related to initialization of the field or "Map" in question but that helps in 
+the initialization.  However, this code should usually not be the last statement 
+in the block.  This is why the rule will only check the last statement in lazy 
+initialization blocks.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Only report a violation for lazy-initialized variables which are not read 
+ outside of the lazy initialization block 
+    -Default is "true".
+    -Usually, when the lazy initialization pattern is used, you intend to access
+     some field (or map element), initialize it if it is "null", and then do
+     some processing with that field regardless of whether or not it was 
+     originally "null".  If there is no processing of the field outside of the 
+     lazy initialization block, you are not following this pattern.  In this 
+     case, it is much more likely that there is a bug.  This is why this 
+     parameter is on by default.  If the only time a field is read within its
+     declaring type is within the lazy initialization block, it is possible that 
+     the processing of that field should be moved outside the lazy 
+     initialization block.
+    -If this parameter is turned off, more violations will be reported.  Many of
+     these violations will likely be false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is easy to mistakenly place code that does not belong in a lazy 
+initialization block within a lazy initialization block.  Using this rule will
+detect subtle bugs that can arise when this is mistakenly done.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Notice that, in the "printFileName()" method, the file name will only get 
+printed if the field "_file" was null before the call to "printFileName()".  
+This is most likely a bug.
+
+package examples.rules.init;
+
+import java.io.File;
+
+public class CLIB {
+    File _file;
+    
+    public CLIB () {
+        _file= null;
+    }
+    
+    public CLIB (File f) {
+        _file= f;
+    }
+    
+    /*
+     * printFileName.  Print out the name of the file.  If the file doesn't 
+     * exist, create one called "a".
+     */
+    public void printFileName() {
+        if(_file == null){
+            _file= new File("a");
+            System.err.println(_file.getName());  //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the processing of the field "_file" to after the lazy initialization block 
+so that it is performed regardless of whether "_file" was originally null or 
+not.
+
+package examples.rules.init;
+
+import java.io.File;
+
+public class CLIBFixed {
+    File _file;
+    
+    public CLIBFixed () {
+        _file= null;
+    }
+    
+    public CLIBFixed (File f) {
+        _file= f;
+    }
+    
+    /*
+     * printFileName.  Print out the name of the file.  If the file doesn't 
+     * exist, create one called "a".
+     */
+    public void printFileName() {
+        if(_file == null){
+            _file= new File("a");   
+        }
+        System.err.println(_file.getName());  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

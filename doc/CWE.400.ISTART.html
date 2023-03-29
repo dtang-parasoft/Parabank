@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the 'start()' method directly on Thread class instances [CWE.400.ISTART]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the 'start()' method directly on Thread class instances [CWE.400.ISTART]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Programs that use multiple threads to service requests should. . . ensure
+graceful degradation of service during traffic bursts. Use of thread pools
+is one acceptable approach to meeting this requirement." [SEI CERT, TPS00-J]
+
+The start() method of the Thread class is used to begin the execution of
+a thread. Superfluous multithreading introduces overheads and may result in
+security threats (see SECURITY RELEVANCE).
+
+This rule detects calls to the start() method on java.lang.Thread objects.
+By default, the rule triggers when the start() method is called in loops.
+You can parameterize the rule to report all occurrences of calls to the start()
+method (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When allocating resources without limits, an attacker could prevent other
+systems, applications, or processes from accessing the same type of resource."
+[CWE-770]
+
+". . . an attacker can cause a denial of service (DoS) by overwhelming
+the system with too many requests at once, causing the system to become
+unresponsive rather than degrading gracefully." [SEI CERT, TPS00-J]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Ignore method calls outside of loops (enabled by default)
+    With this parameter enabled, the rule only triggers when the start() method
+	is called in one of the following loops:
+     - for
+     - while
+     - do while
+     - foreach (collections)
+     - foreach (stream)
+	Note: The rule detects when the method is called in loops directly or by
+	a helper method defined in the same file.
+	
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid overheads in time and resources that are required
+for thread creation and scheduling, task processing, and resource allocation
+and deallocation.  
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the start() method is called in a loop.
+
+package examples.rules.trs;
+
+public class ISTART
+{
+    public void acceptConnections() {
+        boolean isConnected = true;
+        while (isConnected) {
+            ...
+            isConnected = checkConnection();
+            new Thread(new Runnable() {
+                public void run() {
+                    // do sth
+                }
+            }).start(); //VIOLATION
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use thread pools instead of calls to the start() method.
+
+package examples.rules.trs;
+
+public class ISTARTFixed
+{
+    private final ExecutorService exec;
+    
+    public ISTARTFixed() {
+        exec = Executors.newFixedThreadPool(2);
+    }
+    
+    public void acceptConnections() {
+        boolean isConnected = true;
+        while (isConnected) {
+            ...
+            isConnected = checkConnection();
+            exec.submit(new Runnable() {
+            public void run() {
+                    //compute
+                }  //FIXED
+            }
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2021 CWE Weaknesses On the Cusp
+CWE-770: Allocation of Resources Without Limits or Throttling
+<A HREF="https://cwe.mitre.org/data/definitions/770.html">https://cwe.mitre.org/data/definitions/770.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-400: Uncontrolled Resource Consumption
+<A HREF="https://cwe.mitre.org/data/definitions/400.html">https://cwe.mitre.org/data/definitions/400.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+TPS00-J. Use thread pools to enable graceful degradation of service during traffic bursts
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/TPS00-J.+Use+thread+pools+to+enable+graceful+degradation+of+service+during+traffic+bursts">https://wiki.sei.cmu.edu/confluence/display/java/TPS00-J.+Use+thread+pools+to+enable+graceful+degradation+of+service+during+traffic+bursts</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid compound synchronized collection accesses which violate atomicity [TRS.CMA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid compound synchronized collection accesses which violate atomicity [TRS.CMA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies synchronized collections which have compound actions
+performed on them in a non-atomic manner. Although the compound action may be
+thread-safe, if not performed atomically confusing behavior may still occur.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks fields which are initialized to a synchronized wrapper from
+"java.util.Collections" or legacy synchronized collections. The rule identifies
+methods in which compound actions are performed on the field and the operation
+is not locked on the field. If a lock other than the field is used, then the
+compound operation can execute concurrently with any of the standard operations.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check legacy synchronized "Hashtable" and "Vector" (default off)
+    This parameter is disabled by default as "Hashtable" or "Vector" may be used
+    with no regard to their synchronized properties. As it is not apparent
+    whether these were intended to be used in a synchronized manner or not, the
+    rule may flag some cases where the user does not require the compound action
+    to complete atomically.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A user may unknowingly perform a complex action and assume that the operation
+is performed atomically when it is not. This may lead to an inconsistent or
+unexpected state.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CMA {
+    List _synchList = Collections.synchronizedList(new ArrayList());
+    Map _synchMap = Collections.synchronizedMap(new HashMap()); 
+
+    void synchronized addMap(Object o, Object p) { //VIOLATION, wrong lock
+        if (!_synchMap.containsKey(o)) {
+            _synchMap.put(o, p);
+        }
+    }
+    
+    void addList(Object o) { //VIOLATION, no lock
+        if (!_synchList.contains(o)) {
+            _synchList.add(o);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure the compound action is locked on the collection field. Alternatively,
+if a lock is used make sure it is the appropriate one.
+
+package examples.rules.trs;
+
+public class CMAFixed {
+    List _synchList = Collections.synchronizedList(new ArrayList());
+    Map _synchMap = Collections.synchronizedMap(new HashMap()); 
+
+    void addMap(Object o, Object p) { //FIXED
+        synchronized(_synchMap) {
+            if (!_synchMap.containsKey(o)) {
+                _synchMap.put(o, p);
+            }
+        }
+    }
+
+    void addList(Object o) { //FIXED
+        synchronized(_synchList) {
+            if (!_synchList.contains(o)) {
+                _synchList.add(o);
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 71-74.
+
+Collections
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html</A>
+
+</PRE>
+</BODY>
+</HTML>

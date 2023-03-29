@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+MessageDigest objects must process the data with the 'update' method [PCIDSS32.654.MCMDU]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+MessageDigest objects must process the data with the 'update' method [PCIDSS32.654.MCMDU]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Cryptographic implementations should follow the algorithms that define them
+exactly, otherwise encryption can be weaker than expected." [CWE-325]
+
+The MessageDigest class provides applications with message digest algorithms
+(hash functions), such as SHA-1 or SHA-256. The algorithms take data of
+arbitrary size, process the data with the 'update' method, and output
+a hash value of fixed size. For this reason, calling the 'update' method is 
+a required cryptographic step.
+
+This rule detects when obtaining a message digest object is not followed by
+a call to the 'update' method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"If the cryptographic algorithm is used for authentication and authorization,
+then an attacker could gain unauthorized access to the system.
+Sensitive data may be compromised by the use of a broken or risky
+cryptographic algorithm.
+If the cryptographic algorithm is used to ensure the identity of the source of
+the data (such as digital signatures), then a broken algorithm will compromise
+this scheme and the source of the data cannot be proven." [CWE-325]
+
+This rule helps you ensure that cryptographic algorithms provided by
+the MessageDigest are properly implemented.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+    public byte[] digest(String input) throws Throwable
+    {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+        return messageDigest.digest(); // VIOLATION Missing call to MessageDigest.update()
+    }
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+    public byte[] digest(String input) throws Throwable
+    {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+        messageDigest.update(input.getBytes("UTF-8"));
+        return messageDigest.digest(); // FIXED
+    }
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/5cc0b792-c66c-4d95-8394-97b170ff8944">https://app.hackedu.com/link/5cc0b792-c66c-4d95-8394-97b170ff8944</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.4 Insecure communications
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+CWE-325: Missing Required Cryptographic Step
+<A HREF="https://cwe.mitre.org/data/definitions/325.html">https://cwe.mitre.org/data/definitions/325.html</A>
+
+Juliet Tests Suite for Java v1.3
+Test Case ID 135100-135133
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,282 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent exposure of sensitive data [PCIDSS32.655.SENS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent exposure of sensitive data [PCIDSS32.655.SENS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when sensitive internal data is made available to the end-user.
+This may pose a threat to application security, as insight into the internal structure
+of a program may enable an attacker to construct a request that breaks the normal program
+flow and/or provide the attacker with higher access privileges.
+
+The sources of sensitive data:
+
+   * toString(): The toString() method is often implemented to display information that is
+     internal to an object and should not be made available to the end-user.
+
+   * Reflection: Reflection allows a program to examine and modify its own structure and
+     behavior at runtime. For this reason, objects of the following classes that are used
+     in the reflection mechanism are considered sensitive:
+     
+      * java.lang.Class
+      * java.reflect.AccessibleObject
+      * java.lang.reflect.Field
+      * java.lang.reflect.Method
+      * java.lang.reflect.Constructor
+
+   * Exceptions: Thrown exceptions should be hidden from the user.
+     Any instance of java.lang.Throwable is sensitive.
+
+   * Environment: Environment variables may contain information that should be hidden
+     from the regular user of the system.
+
+   * System Properties
+
+The rule prevents leakage of sensitive data through the following: 
+
+   * AWT API
+   * Swing API
+   * SWT API
+   * JFace API
+   * Apache ECS API
+   * java.io.Console
+   * javax.servlet.ServletOutputStream
+   * javax.servlet.jsp.JspWriter
+   * java.io.PrintWriter
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Enforces 'A3 - Sensitive Data Exposure', #3 from the OWASP Top 10 2017 list.
+
+Sensitive information leakage may be a critical problem for applications that need to be secure.
+Many security attacks occur as a result of an attacker gaining insight into the structure
+of an application, then using this insight to devise input data that makes the application behave
+in an abnormal way. The application then ends up granting the attacker higher access privileges than he should have.
+Thus, for security critical applications, it's important to keep information about the program's internal
+structure hidden-- so that potential attackers cannot access it. In particular, exceptions, stack traces, and
+method and class names should never be made available to the end user.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Dangerous methods" parameter allows you to specify methods the rule
+considers to be dangerous. The rule triggers when sensitive data is passed as
+a parameter to a dangerous method.
+Fill in the following columns to configure a dangerous method.
+- "Enabled" - enables or disables the dangerous method. If disabled, the rule
+    does not consider the method to be a dangerous method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents sensitive information leaks and helps you keep your code secure from malicious attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here are two examples which trigger a violation:
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
+
+public class Example
+{
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    {
+        try {
+            Class.forName("someClass");
+        } catch (Exception e) {
+            try {
+                resp.getWriter().write(e.getMessage()); // VIOLATION
+            } catch (IOException e1) {}
+        }
+    }
+
+    public void method()
+    {
+        Object obj = new Object();
+        JOptionPane.showMessageDialog(null, "Object " + obj.toString(), "Message", JOptionPane.INFORMATION_MESSAGE); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
+
+public abstract class Repair
+{
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    {
+        try {
+            Class.forName("someClass");
+        } catch (Exception e) {
+            try {
+                resp.getWriter().write(validate(e.getMessage())); // NO VIOLATION
+            } catch (IOException e1) {}
+        }
+    }
+
+    public void method()
+    {
+        Object obj = new Object();
+        JOptionPane.showMessageDialog(null, "Object " + validate(obj.toString()), "Message", JOptionPane.INFORMATION_MESSAGE); // NO VIOLATION
+    }
+
+    /** do the validation of the string here */
+    public abstract String validate(String str);
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/b3718deb-9c17-4b07-a5fe-6a6abaf0f96e">https://app.hackedu.com/link/b3718deb-9c17-4b07-a5fe-6a6abaf0f96e</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 - Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP Top 10 2017 (A3 - Sensitive Data Exposure):
+<A HREF="https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html">https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-200: Exposure of Sensitive Information to an Unauthorized Actor
+<A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+CWE-209: Generation of Error Message Containing Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/209.html">https://cwe.mitre.org/data/definitions/209.html</A>
+
+CWE-311: Missing Encryption of Sensitive Data
+<A HREF="https://cwe.mitre.org/data/definitions/311.html">https://cwe.mitre.org/data/definitions/311.html</A>
+
+CWE-497: Exposure of Sensitive System Information to an Unauthorized Control Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/497.html">https://cwe.mitre.org/data/definitions/497.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO13-J. Do not log sensitive information outside a trust boundary
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO13-J.+Do+not+log+sensitive+information+outside+a+trust+boundary">https://wiki.sei.cmu.edu/confluence/display/java/FIO13-J.+Do+not+log+sensitive+information+outside+a+trust+boundary</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000650: The application must not write sensitive data into the application logs.
+APSC-DV-001460: An application vulnerability assessment must be conducted.
+APSC-DV-002440: The application must protect the confidentiality and integrity of transmitted information.
+APSC-DV-002460: The application must maintain the confidentiality and integrity of information during preparation for transmission.
+APSC-DV-002470: The application must maintain the confidentiality and integrity of information during reception.
+APSC-DV-002480: The application must not disclose unnecessary information to users.
+
+Tags: OWASP, PCI-DSS, CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

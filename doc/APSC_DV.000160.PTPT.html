@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using plain text passwords in Axis 'wsdd' files [APSC_DV.000160.PTPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using plain text passwords in Axis 'wsdd' files [APSC_DV.000160.PTPT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that plain text passwords are not used in Apache Axis '.wsdd' 
+files.  A violation will be flagged for each "passwordType" parameter in a 
+'.wsdd' file which has the value "PasswordText" unless encryption is performed.  
+Using the password type "PasswordText" without any encryption is dangerous 
+because it may allow passwords to be transmitted in plain text.  
+
+By default, "passwordType" parameters with value "PasswordText" will not be 
+flagged if there is also an "action" parameter which specifies to use encryption 
+on the password.  By default, a violation will also not be flagged if there is 
+no "action" parameter which specifies to use the "UsernameToken" action.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Passwords of type "PasswordText" will be sent in plain text unless they are
+encrypted.  This is dangerous from a security standpoint because the passwords
+can be easily stolen if they are sent over an insecure channel. 
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+This rule also helps to enforce the PCI DSS Requirement #8: "Assign a unique ID 
+to each person with computer access."  Specifically, this rule helps to test for 
+Issue 8.4: "Render all passwords unreadable during transmission and storage on 
+all system components using strong cryptography" and Issue 8.5.11: "Use passwords 
+containing both numeric and alphabetic characters."
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Only flag a violation when a plain text password is used with the 
+ 'UsernameToken' directive
+    -Default is "true".
+    -When this parameter is enabled, a violation will only be flagged for a
+     tag which has a "passwordType" parameter with value "PasswordText" if the
+     tag also has an "action" parameter which specifies to use the action 
+     "UsernameToken".  The presence of the "UsernameToken" directive indicates a 
+     higher probability that a password is being transmitted in plain text.
+-Do not flag a violation when a password of type 'PasswordText' is encrypted
+    -Default is "true".
+    -When this parameter is enabled, a violation will not be flagged for
+     a tag which has a "passwordType" parameter with value "PasswordText" if the
+     tag also has an "Action" parameter which specifies to use the "Encrypt"
+     action.  When the "Encrypt" directive is present, it indicates that the 
+     password will be encrypted before it is transmitted and, thus, is 
+     relatively safe from attackers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+PTPT.wsdd:
+
+&lt;deployment
+    xmlns="<A HREF="http://xml.apache.org/axis/wsdd/">http://xml.apache.org/axis/wsdd/</A>"
+    xmlns:java="<A HREF="http://xml.apache.org/axis/wsdd/providers/java">http://xml.apache.org/axis/wsdd/providers/java</A>"&gt;
+    
+    &lt;service name="Ping1"&gt;
+        &lt;requestFlow&gt;
+            &lt;handler type="java:org.apache.ws.axis.security.WSDoAllSender" &gt;
+                &lt;parameter name="action" value="UsernameToken"/&gt;
+                &lt;parameter name="user" value="werner"/&gt;
+                &lt;parameter name="passwordType" value="PasswordText" /&gt;  &lt;!-- VIOLATION --&gt;
+                &lt;parameter name="passwordCallbackClass" 
+                    value="org.apache.ws.axis.oasis.PWCallback1"/&gt;
+            &lt;/handler&gt;
+        &lt;/requestFlow&gt;
+    &lt;/service&gt;     
+&lt;/deployment&gt;     
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a password of type "PasswordDigest" or specify to use encryption on the 
+password.
+
+PTPT_Fixed.wsdd:
+
+&lt;deployment
+    xmlns="<A HREF="http://xml.apache.org/axis/wsdd/">http://xml.apache.org/axis/wsdd/</A>"
+    xmlns:java="<A HREF="http://xml.apache.org/axis/wsdd/providers/java">http://xml.apache.org/axis/wsdd/providers/java</A>"&gt;
+    
+    &lt;service&gt;
+        &lt;requestFlow&gt;
+            &lt;handler type="java:org.apache.ws.axis.security.WSDoAllSender" &gt;
+                &lt;parameter name="action" value="UsernameToken Encrypt"/&gt;  &lt;!-- FIXED: Use encryption --&gt;
+                &lt;parameter name="user" value="werner"/&gt;
+                &lt;parameter name="passwordCallbackClass" 
+                    value="org.apache.ws.axis.oasis.PWCallback"/&gt;
+                &lt;parameter name="passwordType" value="PasswordText" /&gt;
+                &lt;parameter name="addUTElement" value="Nonce Created" /&gt;
+                &lt;parameter name="encryptionPropFile" value="crypto.properties" /&gt;
+                &lt;parameter name="encryptionKeyIdentifier" value="X509KeyIdentifier" /&gt;
+                &lt;parameter name="encryptionUser" 
+                    value="16c73ab6-b892-458f-abf5-2f875f74882e" /&gt;
+                &lt;parameter name="encryptionParts" 
+                    value="{Element}{<A HREF="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd</A>}UsernameToken" /&gt;  
+            &lt;/handler&gt;
+        &lt;/requestFlow&gt;  
+    &lt;/service&gt;
+&lt;/deployment&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-256: Unprotected Storage of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+WSS4J
+<A HREF="http://ws.apache.org/wss4j/package.html">http://ws.apache.org/wss4j/package.html</A>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC62-J. Store passwords using a hash function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function">https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001740: The application must only store cryptographic representations of passwords
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

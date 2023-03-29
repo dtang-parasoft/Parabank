@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Password information should not be included in properties file in plaintext [CWE.836.PLAIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Password information should not be included in properties file in plaintext [CWE.836.PLAIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rules checks if properties files have critical data stored as property values.
+Critical data such as password strings should be stored using hash functions.
+If the value is not hash sums, then a violation is reported. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that passwords are stored using cryptographic hash functions with:
+ - 128 bits sums - example: MD5 and RIPEMD-128
+ - 160 bits sums - example: SHA-1 and RIPEMD-160
+ - 320 bits sums - example: RIPEMD-320
+ - 224 bits sums - example: SHA-224 and HAVAL-224
+ - 256 bits sums - example: SHA-256, HAVAL-256, PANAMA, GOST and RIPEMD-256
+ - 384 bits sums - example: SHA-384
+ - 512 bits sums - example: SHA-512, WHIRPOOL
+
+A violation will be reported for using hash sums shorter than 128 bits or using encoded passwords
+The rule assumes that hash sums are stored as hexadecimal values.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Storing a password in plaintext may result in a system compromise." [CWE-256]
+"[If] the application stores sensitive information in cleartext in a file, or
+on disk. The sensitive information could be read by attackers with access to
+the file, or with physical or administrator access to the raw disk." [CWE-313]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-List of property keys to check (RegExp)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Password information should not be included in properties file as plain text.
+When application keeps plain text passwords in a properties file, then anyone
+who can read this file can also read the user password.
+If passwords must be placed in properties files, they should be hashed.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule reports false positives when password are stored using different functions than those described
+in the notes. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+pass=123
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+//use cryptographic hash function
+pass=1f3870be274f6c49b3e31a0c6728957f
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/8e03c330-3472-429b-a3b2-83c5bc9060b9">https://app.hackedu.com/link/8e03c330-3472-429b-a3b2-83c5bc9060b9</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 3.2
+6.5.3 Insecure cryptographic storage
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-312: Cleartext Storage of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/312.html">https://cwe.mitre.org/data/definitions/312.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.html">https://cwe.mitre.org/data/definitions/522.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-256: Unprotected Storage of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+CWE-313: Cleartext Storage in a File or on Disk
+<A HREF="https://cwe.mitre.org/data/definitions/313.html">https://cwe.mitre.org/data/definitions/313.html</A>
+
+CWE-836: Use of Password Hash Instead of Password for Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/836.html">https://cwe.mitre.org/data/definitions/836.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC62-J. Store passwords using a hash function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function">https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-002440: The application must protect the confidentiality and integrity of transmitted information
+
+</PRE>
+</BODY>
+</HTML>

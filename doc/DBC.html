@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Design by Contract [DBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Design by Contract [DBC]
+</STRONG>
+<p>
+<PRE>
+Rules that are related to Design By Contract.
+
+"Design by Contract" contracts are expressed with
+Java code embedded in Javadoc comments in the source file.
+
+The reserved Javadoc tags for DBC are:
+
+  - @invariant: specifies class invariant condition.
+  - @pre: specifies method pre-condition.
+  - @post: specifies method post-condition.
+  - @concurrency: specifies method concurrency.
+
+Jtest also support the following tags:
+
+  - @assert: to put assertions in the method bodies.
+  - @throws/@exception: to document the exceptions thrown
+    by a method.
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="DBC.CPT.html">Do not include a postcondition saying that "$result!=null" in methods which can return null [DBC.CPT]</a></code><br>
+<code><a href="DBC.IGM.html">Provide an '@invariant' contract for all getter methods [DBC.IGM]</a></code><br>
+<code><a href="DBC.IMNR.html">Do not invoke a method on a reference that is not guaranteed to be non-null [DBC.IMNR]</a></code><br>
+<code><a href="DBC.IPAN.html">Include a '@pre != null' tag for each parameter that is dereferenced before being checked for null [DBC.IPAN]</a></code><br>
+<code><a href="DBC.PKGC.html">Provide an '@invariant' contract for all package-private classes [DBC.PKGC]</a></code><br>
+<code><a href="DBC.PKGMPOST.html">Provide a '@post' contract for all package-private methods [DBC.PKGMPOST]</a></code><br>
+<code><a href="DBC.PKGMPRE.html">Provide a '@pre' contract for all package-private methods [DBC.PKGMPRE]</a></code><br>
+<code><a href="DBC.PRIC.html">Provide an '@invariant' contract for all "private" classes [DBC.PRIC]</a></code><br>
+<code><a href="DBC.PRIMPOST.html">Provide a '@post' contract for all "private" methods [DBC.PRIMPOST]</a></code><br>
+<code><a href="DBC.PRIMPRE.html">Provide a '@pre' contract for all "private" methods [DBC.PRIMPRE]</a></code><br>
+<code><a href="DBC.PROC.html">Provide an '@invariant' contract for all "protected" classes [DBC.PROC]</a></code><br>
+<code><a href="DBC.PROMPOST.html">Provide a '@post' contract for all "protected" methods [DBC.PROMPOST]</a></code><br>
+<code><a href="DBC.PROMPRE.html">Provide a '@pre' contract for all "protected" methods [DBC.PROMPRE]</a></code><br>
+<code><a href="DBC.PUBC.html">Provide an '@invariant' contract for all "public" classes [DBC.PUBC]</a></code><br>
+<code><a href="DBC.PUBMPOST.html">Provide a '@post' contract for all "public" methods [DBC.PUBMPOST]</a></code><br>
+<code><a href="DBC.PUBMPRE.html">Provide a '@pre' contract for all "public" methods [DBC.PUBMPRE]</a></code><br>
+<code><a href="DBC.RCC.html">Avoid rechecking @pre and @post conditions [DBC.RCC]</a></code><br>
+<code><a href="DBC.SYNTAX.html">Use correct syntax in the DbC contracts [DBC.SYNTAX]</a></code><br>
+</BODY>
+</HTML>

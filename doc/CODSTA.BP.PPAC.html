@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define "public" or "protected" members in anonymous classes [CODSTA.BP.PPAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define "public" or "protected" members in anonymous classes [CODSTA.BP.PPAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Anonymous classes should not have any "public" or "protected" 
+members.  This rule will flag a violation for each field or method 
+which is declared "public" or "protected" inside an anonymous class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by OPT.AAM.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for overriding methods, as the
+accessibility of overriding methods cannot be decreased.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Members of anonymous classes are not accessible outside of the class
+definition, so there is no point in declaring them "public" or
+"protected".  The members of anonymous classes can be declared
+"private".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class PPAC {
+    TestAnonClass anonObj= new TestAnonClass(){
+        public int foo;  //VIOLATION
+        
+        public void bar(String args[]){  //VIOLATION
+        }
+    };
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the members of the anonymous class "private" instead of
+"public" or "protected".
+
+package examples.rules.codsta.bp;
+
+public class PPACFixed {
+    TestAnonClass anonObj= new TestAnonClass(){
+        private int foo;  //FIXED
+        
+        private void bar(String args[]){  //FIXED
+        }
+    };
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare "public" or package-private constructors in "abstract" classes [OOP.NPAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare "public" or package-private constructors in "abstract" classes [OOP.NPAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "abstract" classes with "public" or package-private (the 
+default accessibility) constructors.  By default, the rule will check only for
+"public" constructors, but the values of the parameters can be changed to make 
+it also check for package-private constructors.  An error is reported for each 
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violations will only be flagged for inner classes if the inner class is static 
+and has either "public" or "protected" access.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check for "public" constructors
+    -Default is "true".
+-Check for package-private constructors
+    -Default is "false".
+    -Turn this parameter on if you want the rule to flag package-private 
+     constructors (constructors with the default accessibility) in addition to 
+     "public" constructors.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"abstract" classes cannot be instantiated. The constructors should only be 
+called by subclasses, so it is not necessary to set the accessibility to 
+"public" or package-private.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public abstract class NPAC {
+
+    private int _id;
+
+    public NPAC() {  // VIOLATION
+        this(0);
+    }
+
+    protected NPAC(int id) {
+        _id = id;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the "public" constructor to "protected".
+
+package examples.rules.oop;
+
+public abstract class NPACFixed {
+
+    private int _id;
+
+    protected NPACFixed() {  // FIXED
+        this(0);
+    }
+
+    protected NPACFixed(int id) {
+        _id = id;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

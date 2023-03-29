@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow limits for the lengths of type, method, field, parameter, and variable names [NAMING.LLI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow limits for the lengths of type, method, field, parameter, and variable names [NAMING.LLI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The names of types, methods, fields, parameters, and variables should be
+of a reasonable length. This means that they should be neither too long nor
+too short. By default, this rule will flag a violation for any name of a
+type, method, field, parameter, or variable that is either longer than the
+maximum allowed length or shorter than the minimum allowed length.  The default
+maximum allowed length is 30 characters, and the default minimum allowed length
+is 3 characters (1 for loop indices).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The previous rule NAMING.LCIN has been merged into this rule.
+This rule will ignore loop index variables by default since it is common to use
+short names such as "i", "j", and "k" for loop index variables.  The rule will
+also ignore overriding methods since users cannot change the names of overriding
+methods without also changing the name of the method that is overridden.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Type
+    -Check type names (Default is "true")
+    -Minimum length (Default is 3)
+    -Maximum length (Default is 30)
+    -Ignore the following names:***
+
+-Method
+    -Check method names (Default is "true")
+    -Minimum length (Default is 3)
+    -Maximum length (Default is 30)
+    -Ignore the following names:***
+
+-Field
+    -Check field names (Default is "true")
+    -Minimum length (Default is 2)
+    -Maximum length (Default is 30)
+    -Ignore the following names:***
+
+-Parameter
+    -Check parameter names (Default is "true")
+    -Minimum length (Default is 2)
+    -Maximum length (Default is 30)
+    -Ignore the following names:***
+
+-Variable
+    -Check variable names (Default is "true")
+    -Minimum length (Default is 1)
+    -Maximum length (Default is 30)
+    -Check loop indices
+        -Minimum length (Default is 1)
+    -Ignore the following names:***
+
+*** Ignore the following names:
+    -Identifiers in these lists will be ignored if they are used even if they
+    fall outside the acceptable range of lengths.
+    -If you have either short or long identifiers that you commonly use as 
+     names, you should add them to this list to prevent the rule from flagging
+     too many violations.
+    -By default, the list is empty.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Names which are too short (fewer than 3 characters by default) are probably not
+descriptive enough.  On the other hand, names which are too long (more than 30 
+characters by default) can make the code difficult to read.  These names may be 
+overly descriptive.  Using names which have lengths between the minimum and 
+maximum allowed values will help ensure that names are long enough to be 
+descriptive without being excessively long.  Using good names (ones that are
+neither too long nor too short) can serve as a form of documentation for code.  
+Good names will make the code easier to understand.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The example shown below contains 3 names which are shorter than the minimum 
+required length and one name which is longer than the maximum length.  The names
+which are too short do not give a proper indication of what the code does.  The
+name which is too long is overly verbose.
+
+package examples.rules.naming;
+
+public class LLI {
+    String _n;  //VIOLATION
+    
+    public void methodWhichPrintsOutTheNameToTheUser() {  //VIOLATION - 36 character name
+        System.out.println(_n);
+    }
+    
+    public void s(String nn) {  //2 VIOLATIONS
+        _n = nn;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use names which are long enough to be descriptive without being excessively
+verbose.  Notice that it is much easier to understand the purpose of the field,
+methods, and parameter in the repaired code.
+
+package examples.rules.naming;
+
+public class LLI_Fixed {
+    String _name;  //FIXED
+    
+    public void printName() {  //FIXED
+        System.out.println(_name);
+    }
+    
+    public void setName(String newName) {  //FIXED
+        _name = newName;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

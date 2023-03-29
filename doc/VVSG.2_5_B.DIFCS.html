@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Variable should be used in context of single critical section [VVSG.2_5_B.DIFCS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Variable should be used in context of single critical section [VVSG.2_5_B.DIFCS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a field defined in the same type as the analyzed method,
+a static field, or a non-primitive method parameter is used in more than one critical
+section in the context of a single method. Using a variable in many critical sections
+in a single method does not guarantee the atomicity of the method. If the method is
+executed by more than one thread, this may result in an incorrect state of the
+synchronized object.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not check whether a given method is executed in parallel
+by multiple threads. The violation is reported solely based on the existence of the
+synchronization mechanism in the code of the analyzed method.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"When a multi-step operation on a shared resource cannot be guaranteed to execute independent
+of interference, then the resulting behavior can be unpredictable. Improper synchronization
+could lead to data or memory corruption, denial of service, etc.." [CWE-662]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent incorrect states of objects in the application.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public abstract class Example
+{
+    private List&lt;Integer&gt; _data;
+
+    private final Lock _mutex = new ReentrantLock();
+
+    public void computeData(int[] data)
+    {
+        for (int i = 0; i &lt; data.length; i++) {
+            _mutex.lock();
+            _data.add(compute(data[i])); // VIOLATION
+            _mutex.unlock();
+        }
+    }
+
+    protected abstract int compute(int point);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public abstract class Repair
+{
+    private List&lt;Integer&gt; _data;
+
+    private final Lock _mutex = new ReentrantLock();
+
+    public void computeData(String id, int[] data)
+    {
+        _mutex.lock();
+        for (int i = 0; i &lt; data.length; i++) {
+            _data.add(compute(data[i])); // NO VIOLATION
+        }
+        _mutex.unlock();
+    }
+
+    protected abstract int compute(int point);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-662: Improper Synchronization
+<A HREF="https://cwe.mitre.org/data/definitions/662.html">https://cwe.mitre.org/data/definitions/662.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

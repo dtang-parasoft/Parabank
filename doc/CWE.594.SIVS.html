@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure instance variables of @Stateful beans are Serializable [CWE.594.SIVS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure instance variables of @Stateful beans are Serializable [CWE.594.SIVS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation for each instance variable of a "@Stateful" bean
+which is not Serializable. They should be Serializable, as "@Stateful" beans
+may need to be passivated and unpassivated.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"In heavy load conditions, most J2EE application frameworks flush objects to
+disk to manage memory requirements of incoming requests. . . While these
+application frameworks do the real work of writing objects to disk, they do not
+enforce that those objects be serializable, thus leaving the web application
+vulnerable to crashes induced by serialization failure. An attacker may be able
+to mount a denial of service attack by sending enough requests to the server to
+force the web application to save objects to disk." [CWE-594]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent saving unserializable objects do disk (see SECURITY
+RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateful
+public class SIVS {
+    Data d; //VIOLATION
+    
+    int getX() {
+        return d.x;
+    }
+    int getY() {
+        return d.y;
+    }
+    ...
+}
+
+class Data {
+    Object o;
+    int x;
+    int y;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use Serializable types for instance variables of @Stateful beans.
+
+package examples.rules.ejb.ejb3;
+
+@Stateful
+public class SIVSFixed {
+    int x; //FIXED
+    int y;
+    
+    int getX() {
+        return x;
+    }
+    int getY() {
+        return y;
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. p. 94.
+
+CWE-594: J2EE Framework: Saving Unserializable Objects to Disk
+<A HREF="https://cwe.mitre.org/data/definitions/594.html">https://cwe.mitre.org/data/definitions/594.html</A>
+
+</PRE>
+</BODY>
+</HTML>

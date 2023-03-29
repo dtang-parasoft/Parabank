@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not compare Class objects by name [CWE.486.CMP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not compare Class objects by name [CWE.486.CMP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies code that compares class objects with the 'getName ()' method.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Code Quality
+
+Enforce code access control. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Since more than one class in a running JVM can have the same name, comparing
+objects by name is not a safe or reliable way to check for class equality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+public class CMP {
+    public boolean sameClass (Object o) {
+        Class thisClass = this.getClass();
+        Class otherClass = o.getClass();
+        return (thisClass.getName() == otherClass.getName());  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Directly compare class objects for equality.
+
+package examples.rules.security.eab;
+
+public class CMPFixed {
+    public boolean sameClass (Object o) {
+        Class thisClass = this.getClass();
+        Class otherClass = o.getClass();
+        return (thisClass == otherClass);  // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Statically Scanning Java Code: Finding Security Vulnerabilities.
+John Viega, Gary McGraw, Tom Mutdosch, and Edward W. Felten
+IEEE SOFTWARE September/October 2000
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+CWE-486: Comparison of Classes by Name
+<A HREF="https://cwe.mitre.org/data/definitions/486.html">https://cwe.mitre.org/data/definitions/486.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ09-J. Compare classes and not class names
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ09-J.+Compare+classes+and+not+class+names">https://wiki.sei.cmu.edu/confluence/display/java/OBJ09-J.+Compare+classes+and+not+class+names</A>
+
+</PRE>
+</BODY>
+</HTML>

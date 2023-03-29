@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify which version of potentially ambiguous methods you wish to call for method calls in inner classes [OOP.SVHM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify which version of potentially ambiguous methods you wish to call for method calls in inner classes [OOP.SVHM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When calling methods from within inner classes, it is easy to accidentally call
+the wrong method when there are multiple methods with the same signature 
+accessible.  This case arises when a method belonging to the inner class and a 
+method belonging to the outer class are both defined with the same signature.  
+The effect is that the method belonging to the outer class is hidden within the
+scope of the inner class unless you explicitly specify that the outer class' 
+method should be called.  
+
+This rule will flag a violation for each case where a method is called from an
+inner class and the method call could potentially match different methods 
+belonging to the inner and outer class.  Violations will not be flagged for 
+cases where the calling object is explicitly specified since the calling object
+will disambiguate which version of the method is called.  That is, violations 
+will only be flagged for cases where the calling object is the implicit "this" 
+reference (for instance methods) or where the class of the method is not 
+specified (for "static" methods).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Specifying which version of a method to call when a method from an inner class
+hides a method from an outer class can help prevent bugs where the wrong version
+of a method is accidentally called.  Even if a particular violation of this rule 
+is not a bug, it is still better to always specify which version of potentially 
+ambiguous methods you wish to call.  Doing so will make the code easier to read.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, both the 'getInt()' method of class "SA" and the 'getInt()'
+method of class "SB" are accessible from within 'innerMethod()'.  Since it is 
+not specified which of these methods is to be called, the method belonging to
+the inner class (which is SB's version of 'getInt()'), will be called.  However,
+this may not have been what you intended.  You may have intended to call the
+version of 'getInt()' defined in "SA".
+
+package examples.rules.oop;
+
+public class SVHM extends SA {
+
+    public class B extends SB {
+        void innerMethod() {
+            System.out.println(getInt());  //VIOLATION
+        }
+    }
+}
+
+class SA {
+    public int getInt() {
+        return 0;
+    }
+}
+
+class SB {
+    public int getInt() {
+        return 1;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify which version of the method you wish to call for all potentially 
+ambiguous method calls from within inner classes.  Do so by using the class name
+for "static" methods and by using the "this" expression qualified by the class 
+name for instance methods.
+
+package examples.rules.oop;
+
+public class SVHMFixed extends SA {
+
+    public class B extends SB {
+        void innerMethod() {
+            System.out.println(SVHMFixed.this.getInt());  //FIXED- It is 
+                                //specified that SA's version of 'getInt()' is
+                                //to be called.
+        }
+    }
+}
+
+class SA {
+    public int getInt() {
+        return 0;
+    }
+}
+
+class SB {
+    public int getInt() {
+        return 1;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

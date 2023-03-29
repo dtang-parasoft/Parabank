@@ -1,0 +1,314 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent security vulnerability (custom rule) [BD.SECURITY.CUSTOM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent security vulnerability (custom rule) [BD.SECURITY.CUSTOM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule is a template that needs to be customized to detect cases when
+possibly tainted data that is used has not been validated and determined
+to be benign.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+In general, in order to prevent application security flaws, any data passed
+into dangerous methods should be verified in terms of benignity and validated before use.
+Failure to meet these requirements may enable a potential attacker to carry out
+malicious actions-- for example, to access a database from the system
+the application is running on. 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Tainted types" parameter allows you to specify fully qualified type names
+of classes the rule considers to be tainted. The rule assumes that variables of
+a specified type are always tainted. Also, if an instance method of a tainted
+type is called, all of its mutable parameters are considered to be tainted.
+Configuring tainted types is convenient when you work with classes that
+represent the means of user input. For example, you may want to define a custom
+stream class by using tainted-type data provided by the user.
+Fill in the following columns to configure tainted types:
+- "Enabled" - enables or disables the type. If disabled, the rule does not
+    consider the variables of the type to be tainted.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type. 
+- "Consider subtypes tainted as well" - specifies how the rule treats subtypes.
+    If enabled, the rule assumes that subtypes of a given type are also tainted.
+
+The "Tainting methods" parameter allows you to specify methods that return
+tainted data or taint some of the parameters on the object they are called on.
+Fill in the following columns to configure a method and specify the data it
+affects.
+- "Enabled" - enables or disables the method. If disabled, the rule does not
+    consider the method to be a tainting method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is tainted" - if enabled, the method taints the object it
+    is called on.
+- "Returns tainted data" - if enabled, the method taints its return value.
+- "Tainted parameters" - specifies which method parameters are tainted by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are tainted.
+ 
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+For example, to prevent an HTTP response splitting, there could be an encoding
+method that accepts a possibly-tainted string coming from the user input and
+returns an encoded string that can be safely used to form an HTTP response.
+In this case, the encoding method must be defined as a validating method that
+returns clean data. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+    
+    
+The "Dangerous methods" parameter allows you to specify methods the rule
+considers to be dangerous. The rule triggers when tainted data is passed as
+a parameter to a dangerous method.
+Fill in the following columns to configure a dangerous method.
+- "Enabled" - enables or disables the dangerous method. If disabled, the rule
+    does not consider the method to be a dangerous method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+  
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents tainted data from being passed to backend systems to keep your code
+secure from malicious attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that you can use to experiment with adding/removing
+validating or tainting methods in order to see how the rule works.
+
+public class Example
+{
+    public void generalTest()
+    {
+        String sStringToBeTainted = "";
+        MyType typeName = new MyType();
+
+        /* Taints both target object and parameters */
+        typeName.taintingMethod_2(sStringToBeTainted);
+
+        /* Methods below test tainted parameters */
+        typeName.myDangerousMethod_1(typeName.taintingMethod_1()); // VIOLATION
+        typeName.myDangerousMethod_1(sStringToBeTainted); // VIOLATION
+        typeName.myDangerousMethod_2(typeName); // VIOLATION
+
+        /* validates parameters */
+        typeName.validateParameters(sStringToBeTainted);
+        typeName.myDangerousMethod_1(sStringToBeTainted);
+        typeName.myDangerousMethod_2(typeName); // VIOLATION
+
+        /* validates target object */
+        typeName.validateTargetObject();
+        typeName.myDangerousMethod_2(typeName);
+
+        /* Again taints both target object and parameters (to test 'validateEverything()') */
+        typeName.taintingMethod_2(sStringToBeTainted);
+        /* validates both target object and parameters */
+        typeName.validateEverything(sStringToBeTainted);
+        typeName.myDangerousMethod_1(sStringToBeTainted);
+        typeName.myDangerousMethod_2(typeName);
+    }
+
+    /**
+     * Tests types that are known to be tainted and numericals as well.
+     */
+    public void testTaintedTypesAndNumericals(int i)
+    {
+        MyType typeName = new MyType();
+
+        /* Tests type that is known to be tainted */
+        typeName.myDangerousMethod_3(new MyTaintedType()); // VIOLATION
+
+        String sStringToBeTainted = "";
+        /* Taints both target object and parameters */
+        typeName.taintingMethod_2(sStringToBeTainted);
+
+        /* Methods below test numerical primitive and non-primitive parameters */
+        typeName.myDangerousMethod_4(new Integer(18));
+        typeName.myDangerousMethod_5("".length());
+        typeName.myDangerousMethod_5(i);
+        typeName.myDangerousMethod_5(sStringToBeTainted.length());
+
+        /* validates parameters */
+        typeName.validateParameters(sStringToBeTainted);
+        typeName.myDangerousMethod_5(sStringToBeTainted.length());
+    }
+
+    public class MyType
+    {
+
+        public void myDangerousMethod_1(String s)
+        {}
+
+        public void myDangerousMethod_2(MyType tn)
+        {}
+
+        public void myDangerousMethod_3(MyTaintedType tt)
+        {}
+
+        public String taintingMethod_1()
+        {
+            return "";
+        }
+
+        public void taintingMethod_2(String s)
+        {}
+
+        public void myDangerousMethod_4(Integer i)
+        {}
+
+        public void myDangerousMethod_5(int i)
+        {}
+
+        public String validateEverything(String s)
+        {
+            return "";
+        }
+
+        public void validateTargetObject()
+        {}
+
+        public void validateParameters(String s)
+        {}
+    }
+
+    public class MyTaintedType
+    {}
+}
+
+To detect violations in this code, the rule template should be parameterized as follows:
+    1. All dangerous methods from 'myDangerousMethod_1' to 'myDangerousMethod_5' should be
+    specified for their declaring type, which is 'mypackage.MyTaintedDataTest$MyType';
+    2. Type 'mypackage.MyTaintedDataTest$MyTaintedType', which is considered to be tainted,
+    should be specified;
+    3. Tainting methods 'taintingMethod_1' and 'taintingMethod_2' should be defined by setting
+    their declaring type, which is 'mypackage.MyTaintedDataTest$MyType' and, of course, method names.
+    In addition, details about which data (returned value and/or object the method is called on
+    and/or method parameters) any of these methods taints should be provided by checking the
+    appropriate check boxes.
+    4. Validating methods 'validateTargetObject', 'validateEverything' and 'validateParameters'
+    should be defined by setting their declaring type, which is 'mypackage.MyTaintedDataTest$MyType',
+    and their names. Also, the appropriate check boxes should be checked to indicate
+    which data (returned value and/or object the method is called on and/or method parameters)
+    are validated by this method application.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Validate tainted data before passing them to dangerous methods.
+
+</PRE>
+</BODY>
+</HTML>

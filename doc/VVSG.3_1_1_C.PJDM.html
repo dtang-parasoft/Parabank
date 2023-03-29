@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide Javadoc comments and descriptions for methods [VVSG.3_1_1_C.PJDM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide Javadoc comments and descriptions for methods [VVSG.3_1_1_C.PJDM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that lack Javadoc comments
+or descriptions within the Javadoc comments.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The "Quick Fix All" feature is not always available for this rule because some
+of the Quick Fixes require user input.  These cases must be Quick Fixed
+individually.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check if javadoc comment is missing (default as true)
+-Check if javadoc description is missing (default as false)
+    Javadoc should give a brief description of the commenting method.
+-check "public" methods/annotation member types (default as true)
+-check "protected" methods/annotation member types (default as false)
+-check "package-private" methods/annotation member types (default as false)
+-check "private" methods/annotation member types (default as false)
+
+-Ignore methods/annotation member types with fully qualified names (in regular expression): (^main$ is in the list by default)
+    Allows you to provide a list of methods to ignore. If a method's name
+    matches any of the regular expressions, it will be exempt from this rule.
+    For example, if "^main$" is added to the list, then a method with name "main"
+    would not be identified as a rule violation-- even if it does not have Javadoc.
+
+-Ignore "abstract" methods (default as false)
+    Prevents this rule from checking abstract methods.
+
+-Ignore overriding methods (default as false)
+    Prevents this rule from checking overriding methods if the method that is
+    being overridden has a valid Javadoc comment.
+
+-Ignore overriding methods where the source code for the overridden method is
+ not available (default is "true")
+    -This parameter is only available if the "Ignore overriding methods"
+     parameter is selected.
+    -Some methods override a method for which the source code is not available.
+     For example, the source code is not available for any method defined in the
+     JDK.  If the source code for an overridden method is not available, Jtest
+     cannot tell if there is a valid Javadoc comment for the overridden method.
+     Leaving this parameter turned on will prevent false positives from arising
+     due to this issue.  If this parameter is turned on, Jtest will assume that
+     any method for which there is no source code has a valid Javadoc comment.
+
+-Ignore method declarations within interfaces (default as false)
+    Prevents this rule from checking interface method declarations.
+
+-Ignore setter and getter methods (default is true)
+    Prevents this rule from checking setter and getter method declarations.
+
+-Ignore method declarations within local classes and anonymous classes (default as true)
+    Prevents this rule from checking method declarations within local classes
+    and anonymous classes. Since local classes and anonymous classes would not be
+    visible outside their current scope, Javadoc could sometimes be omitted in these
+    cases.
+
+-Ignore method declarations within private member classes (default as true)
+    Prevents this rule from checking method declarations within private member classes.
+    Since method declarations within private member classes would not be visible
+    outside the enclosing compilation units regardless of method visibility, Javadoc
+    could sometimes be omitted in these cases.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Commenting your code is a good way to document its behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+/** Comments about this class
+ */
+public class PJDM {
+
+    public void method () {}  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide Javadoc comments for each method.
+
+package examples.rules.javadoc;
+
+/** Comments about this class
+ */
+public class PJDMFixed {
+
+     /** Comments about this method
+      */
+    public void method () {}  // FIXED
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison-Wesley, 2001, pp. 136 -139
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#385">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141999.html#385</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.MMJCH
+@deprecated JAVADOC.MMJCH2
+@deprecated JAVADOC.MMJCH3
+@deprecated JAVADOC.MMJCH4
+@deprecated JAVADOC.PJDCM
+@deprecated JAVADOC.PJDCM2
+@deprecated JAVADOC.PJDCM3
+@deprecated JAVADOC.PJDCM4
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid re-initializing fields in the 'readExternal()' method of 'Externalizable' classes [SERIAL.IRX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid re-initializing fields in the 'readExternal()' method of 'Externalizable' classes [SERIAL.IRX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for fields which will be overwritten every time 
+'readExternal()' is called on a 'java.io.Externalizable' object.  An error is 
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When a 'java.io.Externalizable' object is created, 'readExternal()' will be
+called in order to restore the content of the instance. However, since it is a 
+"public" method, it can be called by other people. If the method doesn't have a 
+flag to ensure that all fields are only initialized once, it will cause the 
+fields to be overwritten by illegal calls to 'readExternal()'.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class IRX implements Externalizable {
+    private static final long serialVersionUID = 123456789;
+    private String _id;
+
+    public IRX() {
+    }
+    
+    public void writeExternal(final ObjectOutput out) {
+        // .....
+    }
+    
+    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException  {  // VIOLATION
+        _id = (String)in.readObject();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a check to avoid overwritten fields in 'readExternal()'.
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class IRXFixed implements Externalizable {
+    private static final long serialVersionUID = 123456789;
+    private String _id;
+    private boolean _initialized = false;
+
+    public IRXFixed() {
+    }
+    
+    public void writeExternal(final ObjectOutput out) {
+        // .....
+    }
+    
+    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException  {
+        if (!_initialized) { // FIXED
+            _id = (String)in.readObject();
+            _initialized = true;
+        } else {            
+            throw new IllegalStateException();     
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+SER11-J. Prevent overwriting of externalizable objects
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER11-J.+Prevent+overwriting+of+externalizable+objects">https://wiki.sei.cmu.edu/confluence/display/java/SER11-J.+Prevent+overwriting+of+externalizable+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid adding extra white spaces to the end of property values [PROPS.BSPV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid adding extra white spaces to the end of property values [PROPS.BSPV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If spurious white spaces are included at the end of the values of properties, it
+may cause bugs in the code which reads the ".properties" file.  This rule will 
+flag a violation for each property value in a ".properties" file which is a 
+valid numeric or boolean value except for extra whitespace at the end of the
+property value.  If the value of the property is not a correctly formatted 
+boolean or numeric value, the rule will assume that the extra whitespace was 
+intentional. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If there is extra space at the end of a boolean or numeric value in a property
+value, the property may not be read correctly if the code reading the 
+".properties" file does not take into account the possible extra whitespace.  
+For instance, if the following property entry appears in a ".properties" file:
+
+value=true 
+(with an extra space at the end of "true")
+
+code that reads the property "value" will read it as "true ".  If the code 
+compares the value with "true" without first calling "trim()", the code may not
+work.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#VIOLATION- has an extra tab after "true"
+a=true	
+#VIOLATION- has an extra space after "123"	
+b=123 
+ 
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the extra white space was accidental, remove it.
+
+#FIXED- eliminated extra tab
+a=true
+#FIXED- eliminated extra space
+b=123
+
+</PRE>
+</BODY>
+</HTML>

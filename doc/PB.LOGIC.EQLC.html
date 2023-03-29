@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'getClass()' or "instanceof" within 'equals()' and 'compareTo()' method implementations [PB.LOGIC.EQLC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'getClass()' or "instanceof" within 'equals()' and 'compareTo()' method implementations [PB.LOGIC.EQLC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies 'equals()' and 'compareTo()' methods that do not use
+'getClass()' or "instanceof" in their implementations.  By default, it is
+acceptable to use  either 'getClass()' or "instanceof" in the method
+implementations. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule replaces the rules PB.EQL and PB.EQL2 from previous versions of Jtest.
+It combines the functionality of these two rules.  Some people prefer to only 
+use "instanceof" in 'equals()' implementations, while others prefer to only use
+'getClass()'.  Experts disagree on which way is better.  If you have a 
+preference for one way or the other, you should change the value of the rule's 
+parameter.  Otherwise, the rule will accept either 'getClass()' or "instanceof".  
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Error Handling
+
+Avoid runtime casting exceptions.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check 'equals()' methods (default true)
+-Check 'compareTo()' methods (default false)
+    -Ignore type parameterized 'compareTo()' methods (default true)
+        -Enabling this parameter will ignore 'compareTo()' methods belonging to
+         a class that specifies a type parameter for the Comparable interface.
+         These methods generally limit the accepted types such that 'getClass()'
+         or "instanceof" is unnecessary.
+-Acceptable way of checking the parameter's type
+    -getClass() only
+        -With this setting of the parameter, all 'equals()' method 
+         implementations must call the 'getClass()' method.  If the "instanceof"
+         operator is used instead of 'getClass()', a violation will be flagged.
+        -With this setting of the parameter, the rule is equivalent to the rule 
+         PB.EQL from previous versions of Jtest.
+    -instanceof only
+        -With this setting of the parameter, all 'equals()' method 
+         implementations must use the "instanceof" operator.  If 'getClass()'
+         is used instead of the "instanceof" operator, a violation will be 
+         flagged.
+        -With this setting of the parameter, the rule is equivalent to the rule 
+         PB.EQL2 from previous versions of Jtest.
+    -Either Way (default setting)
+        -With this setting of the parameter, all 'equals()' method 
+         implementations must use either the 'getClass()' method or the 
+         "instanceof" operator.  
+        -Unlike the rules PB.EQL and PB.EQL2 from previous versions of Jtest,
+         this rule will accept either 'getClass()' or "instanceof" in the 
+         'equals()' method implementation by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Allowing only objects of the same class to be considered equal is a clean and 
+simple solution to implementing the 'equals()' and 'compareTo()' methods
+correctly.  You should use either the 'getClass()' method or the "instanceof"
+operator to check that the  type of the parameter is the same as the class for
+which the 'equals()' or 'compareTo()' method is defined. 
+  
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class EQL {
+    public int value;
+    public boolean equals (Object o) {
+        EQL temp = (EQL)o;
+        return temp.value == value;  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the 'getClass ()' method or the "instanceof" operator before comparing two 
+objects for equality.
+
+package examples.rules.pb.logic;
+
+public class EQLFixed {
+    public int value;
+    public boolean equals (Object o) {
+        if ((o == null) || (getClass () != o.getClass ())) {  // FIXED
+            return false;
+        }
+
+        EQLFixed temp = (EQLFixed)o;
+        return temp.value == value;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.44 -47
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison Wesley, 2000, pp.25 - 34
+
+</PRE>
+</BODY>
+</HTML>

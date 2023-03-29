@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use unsigned right shift instead of division when overflow is possible [APSC_DV.002590.IOF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use unsigned right shift instead of division when overflow is possible [APSC_DV.002590.IOF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where an integer addition, which may overflow, is
+divided by a power of 2. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In some situations it is common to perform an addition, which is then divided by
+a power of 2. In the case of array allocation or access, the user may wish to
+subdivide the array and perform various operations. However, if an addition
+overflowed then the array might be allocated or accessed with a negative value
+which would cause an exception to be thrown. Replacing the division with an
+unsigned right shift prevents the result of the operation from being negative.
+However, this may cause unexpected behavior. See DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+By replacing the division with an unsigned right shift, the behavior of the
+program may be altered. In the case of array allocation an array of unexpected
+or insufficient size may be created if the integer addition overflowed. In many
+cases it may be beneficial to perform the integer addition beforehand and handle
+cases of overflow, or to attempt the array allocation in a try/catch block. This
+way, the program can be structured to have a known behavior in the case of
+overflow.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class IOF {
+
+    private int[] VERY_BIG_ARRAY = new int[(Integer.MAX_VALUE + 100) / 2];  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the division with an unsigned right shift or check for overflow
+beforehand.
+
+package examples.rules.pb.num;
+
+public class IOFFixed {
+
+    private int[] VERY_BIG_ARRAY = new int[(Integer.MAX_VALUE + 100)&gt;&gt;&gt;1];  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Numeric Errors
+Video: <A HREF="https://vimeo.com/238779116">https://vimeo.com/238779116</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-190: Integer Overflow or Wraparound
+<A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks
+
+</PRE>
+</BODY>
+</HTML>

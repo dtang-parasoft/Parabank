@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing a JSP page from Action Classes [STRUTS.ACJC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing a JSP page from Action Classes [STRUTS.ACJC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies accesses to a JSP page made from a Struts Action Class. A
+violation is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Specifically, this rule identifies calls to an 'openConnection' method of a
+'java.net.URL' object where the URL is referencing a JSP file. This rule also 
+identifies calls to 'response.sendRedirect()' where the URL is a JSP file.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check 'URL.openConnection()' calls (default true)
+
+-Check 'HttpServletResponse.sendRedirect()' calls (default true)
+    Checks calls from the 'execute()' method to the 'sendRedirect()' method of
+    the HttpServletResponse parameter
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Accessing a JSP page from a Struts Action Class is unusual and violates the
+Model View Controller pattern by tying the business layer to the control layer.
+In some cases the Struts API may provide other means to accomplish the desired
+action. In these cases it is best to adhere to common practices to prevent
+confusion and improve readability.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.struts;
+
+import java.net.URL;
+
+public class ACDA extends Action {
+    public ActionForward execute(
+        ActionMapping mapping,
+        ActionForm form,
+        HttpServletRequest request,
+        HttpServletResponse response
+    )
+    {
+        ...
+        response.sendRedirect("/example.jsp"); //VIOLATION
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Consider refactoring the code.
+
+</PRE>
+</BODY>
+</HTML>

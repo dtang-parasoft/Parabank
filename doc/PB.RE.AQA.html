@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling the 'add()' method of a Queue [PB.RE.AQA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling the 'add()' method of a Queue [PB.RE.AQA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Queue objects that call the 'add()' method. A violation is
+reported for each occurrence. See BENEFITS.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check only bounded Queues (default false)
+    Enabling this parameter will check only Queues which have been initialized
+    with a capacity.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In general, a Queue 'add()' method may throw an IllegalStateException if it
+fails to add an element. On the other hand, 'offer()' will simply return false
+if it fails to insert an element.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some Queue implementations may be safer than others to use the 'add()' method.
+Additionally, surrounding code may be set up to handle any exceptions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class AQA {
+    Queue&lt;String&gt; _queue = new ArrayBlockingQueue&lt;String&gt;(10);
+
+    void add(String s) {
+        _queue.add(s); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'offer()' instead of 'add()'.
+
+package examples.rules.pb.re;
+
+public class AQAFixed {
+    Queue&lt;String&gt; _queue = new ArrayBlockingQueue&lt;String&gt;(10);
+
+    void add(String s) {
+        _queue.offer(s); //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Queue (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Queue.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Queue.html</A>
+
+</PRE>
+</BODY>
+</HTML>

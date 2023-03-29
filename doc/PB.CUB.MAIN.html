@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the method name 'main()' only for the entry point method [PB.CUB.MAIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the method name 'main()' only for the entry point method [PB.CUB.MAIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods named 'main()' that do not have the signature
+'public static void main (java.lang.String[])'. An error is reported for 
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'main()' is the name for a method with a special meaning in Java. To prevent
+confusion, do not use 'main()' unless you are defining
+'public static void main (java.lang.String[])'.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class MAIN {
+
+    public static void main (String[] args) {
+        System.out.println ("This is the main method.");
+    }
+
+    public static void main () {  // VIOLATION
+        System.out.println ("This is another method named main.");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rename the method to something other than 'main()'.
+
+package examples.rules.pb.cub;
+
+public class MAINFixed {
+
+    public static void main (String[] args) {
+        System.out.println ("This is the main method.");
+    }
+
+    public static void other_main () {  // FIXED
+        System.out.println ("This is another method, now named other_main.");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect instance fields of serializable objects to make sure they will not expose sensitive information [CWE.499.SIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect instance fields of serializable objects to make sure they will not expose sensitive information [CWE.499.SIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-transient, non-final instance fields within
+Serializable classes. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Because this rule checks all Serializable classes, it might flag a large 
+amount of errors.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Any non-transient, non-final instance field will be serialized. Those 
+fields might carry confidential data which should either not be serialized 
+or should be encrypted before serialization.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Ignore "final" fields (Default is "false")
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class SIF {
+    public class Account implements java.io.Serializable{
+        private String password; //VIOLATION
+        //...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either declare the sensitive fields as "transient" or encrypt the
+fields before serialization.
+
+package examples.rules.security.esd;
+
+public class SIFFixed {
+    public class Account implements java.io.Serializable{
+        private transient String password; //FIXED
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Serialization
+Video: <A HREF="https://vimeo.com/205101080">https://vimeo.com/205101080</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_5-Serialization.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-499: Serializable Class Containing Sensitive Data
+<A HREF="https://cwe.mitre.org/data/definitions/499.html">https://cwe.mitre.org/data/definitions/499.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+SER03-J. Do not serialize unencrypted sensitive data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER03-J.+Do+not+serialize+unencrypted+sensitive+data">https://wiki.sei.cmu.edu/confluence/display/java/SER03-J.+Do+not+serialize+unencrypted+sensitive+data</A>
+
+</PRE>
+</BODY>
+</HTML>

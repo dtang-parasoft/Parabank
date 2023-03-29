@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid modifying fixed-size Collections [PB.RE.AMFSL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid modifying fixed-size Collections [PB.RE.AMFSL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags attempted modifications of Collection objects that have
+restrictions to whether they are added to, removed from, or changed. See NOTES
+for methods whose return values are monitored for modification.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following "java.util.Collections" methods return immutable values:
+    "emptySet()", "emptyList()", "emptyMap()", "nCopies(int,Object)",
+    "singleton(Object)", "singletonList(Object)", "singletonMap(Object,Object)",
+    "unmodifiableCollection(Collection)", "unmodifiableList(List)",
+    "unmodifiableSet(Set)", "unmodifiableSortedMap(SortedMap)",
+    "unmodifiableSortedSet(SortedSet)"
+
+The following static "java.util.Collections" fields are immutable:
+    "EMPTY_LIST", "EMPTY_MAP", "EMPTY_SET"
+
+The following "java.util.Map" methods return values which can not be added to:
+    "keySet()", "entrySet", "values"
+
+The following "java.util.Arrays" methods return value which can not be removed
+from:
+    "asList(Object[])"
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class AMFSL{
+    private List _list = Arrays.asList(new int[] { 0 });
+    void method_1() {
+        List list = Arrays.asList(new int[] { 0 });
+ 
+        if(list.size() &gt; 0)
+            System.out.println(list.get(0));
+        list.remove(0); //VIOLATION
+    }
+    void method_2() {
+        if(list.size() &gt; 0)
+            System.out.println(list.get(0));
+        _list.remove(0); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove calls to methods that modify the Collection.
+
+package examples.rules.pb.re;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class AMSLFixed {
+    private List _list = Arrays.asList(new int[] { 0 });
+    void method_1() {
+        List list = Arrays.asList(new int[] { 0 });
+ 
+        if(list.size() &gt; 0)
+            System.out.println(list.get(0));
+    }
+    void method_2() {
+        if(list.size() &gt; 0)
+            System.out.println(list.get(0));
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

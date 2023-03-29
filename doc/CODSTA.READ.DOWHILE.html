@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using "do-while" statements [CODSTA.READ.DOWHILE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using "do-while" statements [CODSTA.READ.DOWHILE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses "do-while" statement.
+An error is reported for each occurence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Consider that the programmer looking at code is probably 
+examining each method starting at the top and working down. 
+When encountering a loop, the first thing the programmer 
+wants to know is what terminates the loop. It makes it more
+difficult to read if logic is located at the bottom. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class DOWHILE {
+    public static void main (String[] args) {
+        String name= null;
+        do {   //VIOLATION
+            System.out.println("Please enter a name:");
+            name= getNameFromInput();
+        } while (name== null); 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Restructure the "do-while" loop into other conditional 
+loop if possible
+
+package examples.rules.codsta.read;
+
+public class DOWHILEFixed {
+    public static void main (String[] args) {
+        String name= null;
+	while (name== null) { //fixed
+            System.out.println("Please enter a name:");
+            name= getNameFromInput();
+        } 
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make sure that widgets aren't updated too often [MOBILE.ANDROID.WUP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make sure that widgets aren't updated too often [MOBILE.ANDROID.WUP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that sets a widget to update more than 4 times per day.
+It does this by flagging code that sets the element [android:updatePeriodMillis]
+in the tag [appwidget-provider] to a number smaller than 21600000.  4 times a day
+is an arbitrary number, the real issue is with network access.  If the phone 
+frequently accesses the network, the battery will drain very quickly.
+
+When these accesses happen in a widget, the user may not understand that they 
+are happening.  Also, accesses to the radio are made more efficient in Android by
+making several together, and making frequent accesses that do not require user 
+input makes it less likely that your accesses will be combined with other accesses.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+  - Update time maximum in milliseconds.  21,600,000 ms is 6 hours.  A lower time
+     means more frequent updates, which is more expensive in terms of battery
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule will help keep your widgets from using up too much battery.
+This rule does not apply if the update does not involve a network access.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;!-- 1 Violation --&gt;
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+    &lt;!-- VIOLATION  - updatePeriodMillis needs to be larger than the parameter--&gt;
+    &lt;appwidget-provider
+        xmlns:android="<A HREF="http://schemas.android.com/apk/res/android">http://schemas.android.com/apk/res/android</A>"
+        android:minWidth="146dip"
+        android:minHeight="72dip"
+        android:initialLayout="@layout/widget_message"
+        android:updatePeriodMillis="8640000"  
+    /&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a greater value for updatePeriodMillis.
+
+&lt;!-- 1 Violation --&gt;
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+    &lt;!-- VIOLATION  - updatePeriodMillis needs to be larger than the parameter--&gt;
+    &lt;appwidget-provider
+        xmlns:android="<A HREF="http://schemas.android.com/apk/res/android">http://schemas.android.com/apk/res/android</A>"
+        android:minWidth="146dip"
+        android:minHeight="72dip"
+        android:initialLayout="@layout/widget_message"
+        android:updatePeriodMillis="86400000"  
+    /&gt;
+    
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://android-developers.blogspot.com/2009/04/introducing-home-screen-widgets-and.html">http://android-developers.blogspot.com/2009/04/introducing-home-screen-widgets-and.html</A>
+
+</PRE>
+</BODY>
+</HTML>

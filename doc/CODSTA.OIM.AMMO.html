@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not override non "abstract" methods of a parent class with "abstract" methods [CODSTA.OIM.AMMO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not override non "abstract" methods of a parent class with "abstract" methods [CODSTA.OIM.AMMO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that overrides non "abstract" methods 
+of a parent class with "abstract" methods. An error is reported
+for the "abstract" method declaration that overrides the non-"abstract"
+method.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In most cases, an inherited class should inherit all the 
+methods from its ancestors. However, if a class overrides a 
+non-abstract method into an abstract one, then any inherited
+class would lose access to that method from its ancestors.
+However, this behavior could still be desirable, since one class
+can require all its inherited classes to implement the overriden methods.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public abstract class AMMO {
+    public abstract String toString(); //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+public abstract class AMMOFixed {
+    //FIXED, method is removed
+}
+
+</PRE>
+</BODY>
+</HTML>

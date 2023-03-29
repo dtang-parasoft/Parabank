@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid inefficient removal of Map entries [BD.OPT.INEFMAPRM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid inefficient removal of Map entries [BD.OPT.INEFMAPRM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects situations when map entries are removed ineffectively. It is 
+triggered when an iterator is used on map's keySet (or entry set) to get key values, then 
+"remove(Object)" method is called on a collection. A more effective strategy is to
+use "remove()" directly on an iterator, without making map search for a corresponding 
+entry by its key value.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+import java.util.Iterator;
+import java.util.Map;
+
+public class Example
+{
+    public void remove(Map&lt;String, Integer&gt; map)
+    {
+        Iterator&lt;String&gt; keyIter = map.keySet().iterator();
+        while (keyIter.hasNext()) {
+            String key = keyIter.next();
+            map.remove(key); // VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code uses a more effective strategy:
+
+import java.util.Iterator;
+import java.util.Map;
+
+public class Repair
+{
+    public void remove(Map&lt;String, Integer&gt; map)
+    {
+        Iterator&lt;String&gt; keyIter = map.keySet().iterator();
+        while (keyIter.hasNext()) {
+            keyIter.remove(); // NO VIOLATION
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid or enforce the use of "this" and "super" expressions [CODSTA.READ.UATS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid or enforce the use of "this" and "super" expressions [CODSTA.READ.UATS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule can be set to identify either code that does or does not use "this" 
+and "super" for non-static field and method access. An error is reported 
+for each occurrence.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There is one exception to this rule.  Sometimes it is impossible to avoid 
+using the "super" keyword.  This happens when there is a method or a variable
+in a class which has the same name as a method or variable in the superclass.  
+In this case, a violation will not be flagged if the "super" keyword is used 
+(even if the current setting of the parameters is to avoid use of "super").  It
+is always possible to avoid use of the "this" keyword. 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Avoid or enforce using 'this' and 'super' expressions.
+   By default, this rule is set to report an error if code uses "this" and 
+   "super" for non-static field and method access.
+-What to Check
+   This parameter allows the user to specify whether to check the usage of 
+   "super", the usage of "this", or both.  By default, the rule will check usage
+   of both "super" and "this".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Whether you want to avoid or require the use of 'this' and 'super' expressions
+for non-static field and method access is a matter of personal preference.
+When "this" or "super" are used, it could explicitly state the scope of a field 
+or a method. Hence, anyone reading the code would get a better sense of 
+scopes under this convention. On the other hand, when "this" or "super"
+are used, it could imply that local variables and fields are sharing the same 
+names. In this situation, anyone reading your code might refer to the wrong
+item without using "this" or "super" when it is needed. Using different local
+variable and field names could prevent this mistake.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class UATS {
+    int a;
+    public UATS (int a) {
+        a++;
+        this.a = a;  //VIOLATION
+        this.myMethod(); //VIOLATION 
+    }
+    public void myMethod () {
+    System.out.println("Ctor");
+    }    
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Modify the code so that it does not use 'this'.
+
+package examples.rules.codsta.read;
+
+public class UATSFixed {
+    int a;
+    public UATSFixed (int _a) {
+        _a++;
+        a = _a;  //FIXED
+        myMethod(); //FIXED
+    }
+    public void myMethod () {
+        System.out.println("Ctor");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

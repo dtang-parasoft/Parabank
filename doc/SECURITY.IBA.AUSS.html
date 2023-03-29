@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using "SELECT *" in SQL queries [SECURITY.IBA.AUSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using "SELECT *" in SQL queries [SECURITY.IBA.AUSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "splat" character (the wild-card character "*") should not be used in the 
+"SELECT" portion of an SQL query.  The specific fields needed should be 
+specified instead.  This rule will flag a violation for each String in which the 
+pattern "SELECT *" appears. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is possible that this rule will flag on some Strings in which the pattern 
+"SELECT *" appears that are not used in database queries.  The rule will still 
+flag these cases because they are very rare.  You should review the code to make 
+sure that all Strings which are flagged by this rule are not used as database 
+queries.  In the rare case that a String contains the pattern "SELECT *" but 
+is not used as a database query, you should suppress the violation.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+Allowing the use of "SELECT *" in code is a bad security practice because it is
+likely to grant the programmer more access to data from the database than is
+required.  In general, only the data that is absolutely necessary should be
+accessed, and this data should be filtered based on the user and their role.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In addition to the security benefits mentioned in the "SECURITY RELEVANCE"
+section, doing a "SELECT *" in an SQL query is inefficient because it will 
+usually return more data than is required.  If only certain fields from the 
+database are needed, these fields should be separately specified.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.sql.*;
+
+package examples.rules.security.iba;
+
+public class AUSS {
+    public ResultSet getActors() {
+        try {
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            Connection conn = DriverManager.getConnection( "jdbc:odbc:Database" ) ;
+            Statement stmt = conn.createStatement() ;
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM Movies" ) ;  //VIOLATION
+            return rs;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Request only the necessary data from the database table instead of requesting 
+all the data using "*".  It is also a good idea to perform a check to make sure
+the user is permitted to access the requested data based on the user and their 
+role. 
+
+package examples.rules.security.iba;
+
+public class AUSSFixed {
+    public ResultSet getActors() {
+        try {
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            Connection conn = DriverManager.getConnection( "jdbc:odbc:Database" ) ;
+            Statement stmt = conn.createStatement() ;
+            ResultSet rs = stmt.executeQuery( "SELECT Actor FROM Movies" ) ;  //FIXED
+            return rs;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.8 Improper access control
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

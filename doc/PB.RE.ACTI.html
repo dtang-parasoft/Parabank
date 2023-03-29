@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not add a collection to itself [PB.RE.ACTI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not add a collection to itself [PB.RE.ACTI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a collection or "Map" is added to itself, a "StackOverflowException" will 
+occur if the hash code of the collection or "Map" is computed.  This rule will 
+flag a violation for each attempt to add a container implementing the interface 
+"java.util.Collection" or the interface "java.util.Map" to itself.  For 
+containers implementing the "java.util.Collection" interface, a violation will
+be flagged for each case where the "Collection" is added to itself using the 
+'add()' method.  For containers implementing the "java.util.Map" interface, a 
+violation will be flagged if the "Map" is added to itself as either the key or 
+the value using the 'put()' method.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a collection is added to itself, a "StackOverflowException" will occur at 
+runtime if the hash code of the collection is computed.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+import java.util.*;
+
+public class ACTI{
+    public static void main (String[] args){
+        List al = new ArrayList();
+        al.add(al);               //VIOLATION
+        int hash= al.hashCode(); 
+        
+        Map m = new HashMap();
+        m.put(m, m.get("Foo"));   //VIOLATION
+        hash= m.hashCode();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Instead of adding the container to itself, add the individual elements of the
+container separately.  One easy way to do this is to use the 'addAll()' or 
+'putAll()' methods.
+
+package examples.rules.pb;
+
+import java.util.*;
+
+public class ACTIFixed {
+    public static void main (String[] args){
+        List al = new ArrayList();
+        al.addAll(al);               //FIXED
+        int hash= al.hashCode(); 
+        
+        Map m = new HashMap();
+        m.putAll(m);                 //FIXED
+        hash= m.hashCode();
+    } 
+}
+
+</PRE>
+</BODY>
+</HTML>

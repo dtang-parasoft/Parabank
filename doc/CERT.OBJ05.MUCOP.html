@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide mutable classes with copy functionality [CERT.OBJ05.MUCOP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide mutable classes with copy functionality [CERT.OBJ05.MUCOP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when a mutable class does not provide appropriate
+copy functionality.  The parameters to this rule determine what functionality
+is required.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+ - Provide a public clone method(default is off)
+        The class selected must be final, and must contain a method named 
+        "clone" that is public, has no parameters, and returns the class type. 
+ - Provide a copy constructor(default is on)
+        The class selected must contain a constructor that takes a single 
+        parameter which is the class type 
+ - Provide a static creation method
+        The class selected must contain a static method that returns the class  
+        type and takes a single parameter which is the class type
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.OOP;
+
+public final class MUCOP {
+    public MUCOP(){   }
+    int field1, field2;
+    private void method() {    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add appropriate methods
+
+package examples.rules.OOP;
+
+public final class MUCOPFixed {
+    public MUCOPFixed(){   }
+    public MUCOPFixed(MUCOPFixed var){   }//FIXED
+    int field1, field2;
+    private void method() {    }
+    static MUCOPFixed method(MUCOPFixed var){//FIXED
+        return new MUCOPFixed();
+    }
+    public MUCOPFixed clone(){  
+        return new MUCOPFixed();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#6-3">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#6-3</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ04-J. Provide mutable classes with copy functionality to safely allow passing instances to untrusted code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ04-J.+Provide+mutable+classes+with+copy+functionality+to+safely+allow+passing+instances+to+untrusted+code">https://wiki.sei.cmu.edu/confluence/display/java/OBJ04-J.+Provide+mutable+classes+with+copy+functionality+to+safely+allow+passing+instances+to+untrusted+code</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ05-J. Do not return references to private mutable class members
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ05-J.+Do+not+return+references+to+private+mutable+class+members">https://wiki.sei.cmu.edu/confluence/display/java/OBJ05-J.+Do+not+return+references+to+private+mutable+class+members</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ06-J. Defensively copy mutable inputs and mutable internal components
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ06-J.+Defensively+copy+mutable+inputs+and+mutable+internal+components">https://wiki.sei.cmu.edu/confluence/display/java/OBJ06-J.+Defensively+copy+mutable+inputs+and+mutable+internal+components</A>
+
+</PRE>
+</BODY>
+</HTML>

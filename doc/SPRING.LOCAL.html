@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use ''local'' property attribute in local scope [SPRING.LOCAL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use ''local'' property attribute in local scope [SPRING.LOCAL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Spring determines the range of references. This rule flags each reference to a bean which is located in the same file 
+and is not marked with a local attribute.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This method is recommended in the official documentation for all Spring Framework versions.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Check p-namespace
+    -this option causes the rule to check the p-namespace property; it is disabled by default
+
+-Check shortcut property form
+    -this option causes the rule to check the shortcut form property; it is disabled by default
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using the ''local'' parameter accelerates file parsing by Spring and makes the XML file clearer. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+long form:
+
+  &lt;property name="targetName"&gt;
+      &lt;ref bean="theTargetBean" /&gt;
+  &lt;/property&gt;
+  
+short form:
+
+    &lt;property name="targetName" ref="theTargetBean" /&gt;
+    
+p-namespace form:
+
+    &lt;bean name="beanName" p:targetName-ref="theTargetBean" /&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change bean to local:
+
+  &lt;property name="targetName"&gt;
+      &lt;ref local="theTargetBean" /&gt;
+  &lt;/property&gt;
+
+The short and p-namespace forms do not have local scope. In this case, you must convert to long form.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Spring Framework Documentation:
+"3.4.2.2 References to other beans (collaborators)" <A HREF="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html</A>
+
+</PRE>
+</BODY>
+</HTML>

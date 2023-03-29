@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Order compilation unit elements appropriately [CODSTA.ORG.ORCU]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Order compilation unit elements appropriately [CODSTA.ORG.ORCU]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies inappropriately-ordered compilation units.
+An error is reported if a compilation unit is not ordered as follows:
+
+1) File header.
+2) "package" statement.
+3) "import" statements.
+4) "public" type definition.
+5) Non-"public" types definitions.
+
+Note that this rule verifies whether the elements are properly
+ordered; it does not verify whether the elements actually exist.
+This rule can produce spurious warning messages for source files
+that precede imports or groups of imports with additional comments
+("import comments").
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+FILE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes code easier to read and less error-prone.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;  // VIOLATION
+
+/*
+ * File header.
+ */
+
+/**
+ * Top class javadoc header.
+ */
+
+public class ORCU {
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Reorder the compilation unit.
+
+/*
+ * File header.
+ */
+
+package examples.rules.codsta.org;  // FIXED
+
+/**
+ * Top class javadoc header.
+ */
+
+public class ORCUFixed {
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141855.html#277">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141855.html#277</A>
+
+</PRE>
+</BODY>
+</HTML>

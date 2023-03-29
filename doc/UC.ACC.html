@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Remove commented out Java code [UC.ACC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Remove commented out Java code [UC.ACC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies commented java code. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore comments prefaced by "TODO" (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Removing the commented java code will reduce the class size and also increase 
+the readability of the class.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class ACC {
+
+// VIOLATION 
+//	public static void addElement(List list, Object value) {
+//		if (!list.contains(value)) {
+//			list.add(value);
+//		}
+//	}
+    
+    public static void insertElement(List list, Object value) {
+        if (!list.contains(value)) {
+            list.add(0, value);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Removing the commented java code.
+
+package examples.rules.uc;
+
+public class ACCFixed {
+    
+    // FIXED : remove the commented java code
+    
+    public static void insertElement(List list, Object value) {
+        if (!list.contains(value)) {
+            list.add(0, value);
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

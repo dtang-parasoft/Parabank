@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use single characters with logic operators in an Internationalized environment [INTER.CLO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use single characters with logic operators in an Internationalized environment [INTER.CLO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses single characters with logic operators.
+An error is reported for each occurrence, with the following exceptions:
+
+1.  An error is not reported if a special comment was added to the line of code 
+that does not follow the rule.
+
+2.  An error is not reported for cases where a character value is compared 
+against only a single character literal.  This rule was designed to catch cases
+where a character value is compared against several values or a range of values
+in an expression involving the "||" or "&amp;&amp;" conditional operators.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the following special comment to prevent Jtest from reporting
+any INTER rules for a specific line of code:
+
+1. /* NOI18N */
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore characters passed to the following methods
+    -Default values:
+        ^java.io.PrintStream#^print.*$
+        ^java.lang.System$^.*$
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In an internationalized environment, comparing single characters with character
+literals using the "&gt;", "&gt;=", "&lt;", "&lt;=", "==", or "!=" operators often will not
+work.  If necessary, the comparison should be replaced with a call to one of the
+"static" methods in the "Character" class, such as 'isLetter()', 'isDigit()', or
+'isSpaceChar()', or a customized utility method designed to handle international
+characters.  
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule may flag some violations for cases that do not need to be fixed.  For 
+these cases, you should suppress the violation or add a comment as described in
+the "NOTES" section.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class CLO {
+    public boolean isLetter (char ch) {
+        boolean _isLetter = ( ch &gt;= 'a' &amp;&amp; ch &lt;= 'z')  // VIOLATION
+            || (ch &gt;= 'A' &amp;&amp; ch &lt;= 'Z');
+        return _isLetter;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the character comparison methods, which use the Unicode standard to 
+identify character properties. Thus, replace the above "if" statement as follows:
+
+package examples.rules.inter;
+
+public class CLOFixed {
+    public boolean isLetter (char ch) {
+        boolean _isLetter = Character.isLetter(ch);  // FIXED
+        return _isLetter;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html">http://docs.oracle.com/javase/tutorial/i18n/intro/checklist.html</A>
+
+For more information on the Character comparison methods see
+"Checking Character Properties" at
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/text/charintro.html">http://docs.oracle.com/javase/tutorial/i18n/text/charintro.html</A>
+
+</PRE>
+</BODY>
+</HTML>

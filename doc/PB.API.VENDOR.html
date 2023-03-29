@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Update values which may be using to compare with vendor properties [PB.API.VENDOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Update values which may be using to compare with vendor properties [PB.API.VENDOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule finds string literals with the "Sun Microsystems Inc." or "<A HREF="http://java.sun.com/">http://java.sun.com/</A>" value, 
+and reports errors where the literals appear.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule has one quickfix - "Change vendor values from Sun to Oracle,"
+which changes the old vendor value to the new one.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Using with old vendor properties likely causes serious errors in the application.
+This rule helps reduce the risk of their occurrence.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+This rule may sometimes reports false-positive errors because only simple values in literals are checked.
+But this values do not occur frequently, so we may assume that the values are typically used for comparison 
+with vendor properties. Serious consequences of such errors outweigh false-positive risks errors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+import java.util.Properties;
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        Properties systemProperties = System.getProperties();
+        String javaVendor = (String) systemProperties.get("java.vendor");
+        
+        if(javaVendor.equals("Sun Microsystems Inc.")) { // VIOLATION
+            System.out.println("test1");
+        }
+        
+        String javaVendorUrl = (String) systemProperties.get("java.vendor.url");
+        
+        if(javaVendorUrl.equals("<A HREF="http://java.sun.com/">http://java.sun.com/</A>")) { // VIOLATION
+            System.out.println("test2");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+public class Main {
+
+    public static void main(String[] args) {
+        Properties systemProperties = System.getProperties();
+        String javaVendor = (String) systemProperties.get("java.vendor");
+        
+        if(javaVendor.equals("Oracle Corporation")) { // FIXED
+            System.out.println("test1");
+        }
+        
+        String javaVendorUrl = (String) systemProperties.get("java.vendor.url");
+        
+        if(javaVendorUrl.equals("<A HREF="http://java.oracle.com/">http://java.oracle.com/</A>")) { // FIXED
+            System.out.println("test2");
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://www.oracle.com/technetwork/java/javase/compatibility-417013.html">http://www.oracle.com/technetwork/java/javase/compatibility-417013.html</A>
+2. <A HREF="http://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html">http://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html</A>
+
+</PRE>
+</BODY>
+</HTML>

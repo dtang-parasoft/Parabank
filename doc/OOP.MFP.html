@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Give "finalize()" methods "protected" access [OOP.MFP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Give "finalize()" methods "protected" access [OOP.MFP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+"finalize()" methods should have "protected" access.  This rule will flag a
+violation for each "finalize()" method which overrides the "finalize()" method
+of "java.lang.Object" and has "public" access.  
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Failure to declare the "finalize()" method "protected" may have unintended
+security implications. An attacker may be able to preemptively call "finalize()"
+call "finalize()" and place the object in an inconsistent state.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class MFP {
+    public void finalize() {  //VIOLATION
+        //Perform finalization.
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the access of the "finalize()" method to "protected".
+
+package examples.rules.oop;
+
+public class MFPFixed {
+    protected void finalize() {  //FIXED
+        //Perform finalization.
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-583: finalize() Method Declared Public
+<A HREF="https://cwe.mitre.org/data/definitions/583.html">https://cwe.mitre.org/data/definitions/583.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MET12-J. Do not use finalizers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers">https://wiki.sei.cmu.edu/confluence/display/java/MET12-J.+Do+not+use+finalizers</A>
+
+</PRE>
+</BODY>
+</HTML>

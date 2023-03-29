@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'StringTokenizer' in an Internationalized environment [INTER.ST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'StringTokenizer' in an Internationalized environment [INTER.ST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of 'StringTokenizer()'. An error is reported for 
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+import java.util.*;
+
+public class ST{
+    public int method (String str) {
+        StringTokenizer st = new StringTokenizer(str);  // VIOLATION
+        return st.countTokens ();
+    }
+} 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+    
+Please see the reference for detailed guidance on using Strings in an
+internationalized environment.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://java.sun.com/docs/books/tutorial/i18n/intro/checklist.html">http://java.sun.com/docs/books/tutorial/i18n/intro/checklist.html</A>
+
+</PRE>
+</BODY>
+</HTML>

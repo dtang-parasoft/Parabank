@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the DriverManagerDataSource class in production code [APSC_DV.001460.DMDS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the DriverManagerDataSource class in production code [APSC_DV.001460.DMDS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The software does not properly control the allocation and maintence of
+a limited resource thereby enabling an actor to influence the amount of
+resources consumed, eventually leading to the exhaustion of available
+resources." [CWE-400]
+
+org.springframework.jdbc.datasource.DriverManagerDataSource is a simple
+implementation of the standard JDBC DataSource interface and returns a new
+connection from every call to the getConnection method.
+
+The DriverManagerDataSource class should not be used except for testing
+purposes, because it is not an actual connection pool and cannot properly
+control resource consumption.
+
+This rule detects when org.springframework.jdbc.datasource.DriverManagerDataSource
+is used in code other than JUnit test code.
+
+The rule triggers when:
+- an instance of the DriverManagerDataSource class is created.
+- a DriverManagerDataSource instance is injected to a field using the Spring
+  IOC mechanism.
+- a DriverManagerDataSource instance is returned from the getBean method called
+  on the Spring application context.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Limited resources include memory, file system storage, database connection
+pool entries, and CPU. If an attacker can trigger the allocation of these
+limited resources, but the number or size of the resources is not controlled,
+then the attacker could cause a denial of service that consumes all available
+resources. This would prevent valid users from accessing the software, and it
+could potentially have an impact on the surrounding environment. For example,
+a memory exhaustion attack against an application could slow down
+the application as well as its host operating system." [CWE-400]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the DriverManagerDataSource class is used in
+code other than JUnit test code. First, the class is instantiated, and then
+the instance is returned from the getBean method that is called on the Spring
+application context.
+
+    import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+	public DataSource mysqlDataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource(); // VIOLATION
+		dataSource.setDriverClassName(MYSQL_DRIVER_CLASS_NAME);
+		dataSource.setUrl(MYSQL_URL);
+		dataSource.setUsername(MYSQL_USER_NAME);
+		dataSource.setPassword(MYSQL_USER_PASSWORD);
+		return dataSource;
+	}
+
+    public void fetchDataUsingDriverManagerDS() throws SQLException {
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-core-config.xml");
+		DriverManagerDataSource dataSource = (DriverManagerDataSource) context.getBean("dataSource"); // VIOLATION
+		Connection connection = dataSource.getConnection();
+
+		PreparedStatement preparedStatement = connection.prepareStatement("Select * from testTable");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			System.out.println("Name of student :: " + name);
+
+		}
+		resultSet.close();
+		connection.close();
+	}
+
+	spring-core-config.xml:
+
+	&lt;beans xmlns="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="
+            <A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A> <A HREF="http://www.springframework.org/schema/beans/spring-beans.xsd">http://www.springframework.org/schema/beans/spring-beans.xsd</A>"&gt;
+    	&lt;bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"&gt;
+    		&lt;property name="driverClassName" value="com.mysql.jdbc.Driver" /&gt;
+    		&lt;property name="username" value="user" /&gt;
+    		&lt;property name="url" value="jdbc:mysql://localhost:3306/example" /&gt;
+    	&lt;/bean&gt;
+    &lt;/beans&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, replace DriverManagerDataSource with a pooled data source.
+
+    import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+	public DataSource mysqlDataSource() {
+	    //  Create a c3p0 pooling DataSource
+		ComboPooledDataSource  dataSource = new ComboPooledDataSource (); // FIXED
+		dataSource.setDriverClassName(MYSQL_DRIVER_CLASS_NAME);
+		dataSource.setUsername(MYSQL_USER_NAME);
+		dataSource.setPassword(MYSQL_USER_PASSWORD);
+		return dataSource;
+	}
+
+    public void fetchDataUsingDriverManagerDS() throws SQLException {
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-core-config.xml");
+		ComboPooledDataSource dataSource = (ComboPooledDataSource) context.getBean("dataSource"); // FIXED
+		Connection connection = dataSource.getConnection();
+
+		PreparedStatement preparedStatement = connection.prepareStatement("Select * from testTable");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			System.out.println("Name of student :: " + name);
+
+		}
+		resultSet.close();
+		connection.close();
+	}
+
+	spring-core-config.xml:
+
+	&lt;beans xmlns="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="
+            <A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A> <A HREF="http://www.springframework.org/schema/beans/spring-beans.xsd">http://www.springframework.org/schema/beans/spring-beans.xsd</A>"&gt;
+    	&lt;bean id="dataSource"
+    	    &lt;property name="driverClass" value="com.mchange.v2.c3p0.ComboPooledDataSource" /&gt;
+            &lt;property name="jdbcUrl" value="jdbc:mysql://localhost:3306/example" /&gt;
+            &lt;property name="user" value="user" /&gt;
+            &lt;property name="password" value="password" /&gt;
+            &lt;property name="initialPoolSize" value="10" /&gt;
+    	&lt;/bean&gt;
+    &lt;/beans&gt;
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/7cee1d68-be32-4dd8-a96d-dd0007ce2143">https://app.hackedu.com/link/7cee1d68-be32-4dd8-a96d-dd0007ce2143</A>
+
+	
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
+<A HREF="https://cwe.mitre.org/data/definitions/400.html">https://cwe.mitre.org/data/definitions/400.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

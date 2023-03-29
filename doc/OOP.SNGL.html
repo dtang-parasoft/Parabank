@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for singleton classes [OOP.SNGL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for singleton classes [OOP.SNGL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when a class matches the naming convention specified in the 
+parameter ("^.+Singleton$" by default) but does not match the definition of a 
+singleton class.  By definition, a singleton class should have only private 
+constructors and should have a "static" method to get the singleton instance.  
+If either or both of these is missing, an error will be reported.
+
+An error is reported for each occurrence. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule used to be part of the rule NAMING.SINGLETON.  The part that remains
+in that rule is the part that recognizes when a class follows the singleton
+pattern, but is not named in such a way that the singleton pattern is evident.
+This rule checks for a class with a name that follows the singleton pattern, but
+improperly implements the singleton pattern in the code.
+Also, this rule took the parameter and quickfix that checks whether a class 
+matching the singleton pattern has a getInstance method that is synchronized.
+This test may have to be run twice: once to fix the singleton pattern in the
+class named like a singleton, and once to fix the synchronization issue with the
+ getInstance method.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression (default value is "^.+Singleton$")
+-Check that the method to get the singleton instance is "synchronized" for 
+ classes which match the singleton pattern (default is "true")
+    -The method in a singleton class to get the singleton instance generally 
+     should be "synchronized" to avoid accidentally creating multiple instances
+     of a class that was intended to be a singleton.
+    -If this parameter is enabled, a violation will be flagged for classes which
+     follow the singleton pattern (That is, they have only private constructors
+     and have a "static" method to get the singleton instance.) but for which 
+     the method to get the singleton instance is not declared "synchronized".  
+     Instead of using the "synchronized" keyword in the method signature, it
+     is also acceptable to surround the entire body of the method with a 
+     "synchronized" block.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It helps to make sure that classes which were intended to be singletons match 
+the definition of the singleton pattern.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.OOP;
+
+public class SNGL {
+    private static SNGL _s;
+    
+    private SNGL() {
+        
+    }
+    
+    public static SNGL getInstance() {  //FR64782
+        _s = new SNGL();
+        return _s;
+    }
+}
+class MySingleton {//VIOLATION
+    
+    private static MySingleton _ss;
+    
+    private MySingleton(int i) {
+        this(i+"");
+    }
+
+    public static MySingleton getInstance() {
+        MySingleton ss = new MySingleton(1);
+        _ss = ss;
+        return new MySingleton("");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make SNGL's getInstance method synchronized.
+Change MySingleton's non-private constructor to private and add accessor method
+
+package examples.rules.oop;
+
+public class SNGL {
+    private static SNGL _s;
+    
+    private SNGL() {
+        
+    }
+    
+    public static synchronized SNGL getInstance() {  //FR64782
+        _s = new SNGL();
+        return _s;
+    }
+}
+
+class MySingleton {  // FIXED
+
+    private static MySingleton _ncl;
+    
+    private MySingleton() {
+    }
+    
+    public static synchronized MySingleton getInstance() {
+        if (_ss == null) {
+            _ss = new MySingleton();
+        }
+        return _ss;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

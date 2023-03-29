@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use '()' to separate complex expressions [CERT.EXP53.APAREN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use '()' to separate complex expressions [CERT.EXP53.APAREN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not use '() to separate complex
+expressions. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using '()' to separate expressions can help to avoid operator precedence
+problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class APAREN {
+
+    public int max(int i, int j) {
+        int default_num = 0;
+
+    if (i &gt;= j &amp;&amp; i &gt;= 0) { // VIOLATION
+        return i;
+    } else if (j &gt; i &amp;&amp; j &gt;= 0) { // VIOLATION
+        return j;
+    } else {
+        return default_num;
+    }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the '()' to separate the expression.
+
+package examples.rules.format;
+
+public class APARENFixed {
+
+    public int max(int i, int j) {
+        int default_num = 0;
+
+        if ((i &gt;= j) &amp;&amp; (i &gt;= 0)) { // OK 
+            return i;
+        } else if ((j &gt; i) &amp;&amp; (j &gt;= 0)) { // OK 
+            return j;
+        } else {
+            return default_num;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#331">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#331</A> (10.5.1)
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+SEI CERT Oracle Coding Standard for Java
+EXP53-J. Use parentheses for precedence of operation
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/EXP53-J.+Use+parentheses+for+precedence+of+operation">https://wiki.sei.cmu.edu/confluence/display/java/EXP53-J.+Use+parentheses+for+precedence+of+operation</A>
+
+</PRE>
+</BODY>
+</HTML>

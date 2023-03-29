@@ -1,0 +1,220 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid infinite loops [CWE.835.AIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid infinite loops [CWE.835.AIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects loops that are possibly infinite loops.  
+
+1.  The rule will flag a violation for any "while", "do-while", or "for" loop 
+    that meets the following conditions:
+    
+    a. The condition either always evaluates to "true" or relies on evaluating
+       a variable that is not changed within the body of the loop.
+
+    b. There is no "break;" statement which is not enclosed by a nested inner 
+       loop.
+
+    c. There is no "return" or "throw" statement. 
+    
+    d. There is no "System.exit()" or "Runtime.exit()" call.
+    
+2.  The rule will also flag a violation for any "while", "do-while", or "for" 
+    loop that meets the following conditions:
+    
+    a. The condition is a call to the "hasNext()" method of the 
+       "java.util.Iterator" interface.
+        
+    b. There is no call to the "next()" or "remove()" method of the "Iterator" 
+       interface in the loop's body. 
+        
+    This case is likely to lead to a situation where "hasNext()" will always 
+    return true, causing an infinite loop.
+
+3.  The rule will also flag a violation for any "while", "do-while", or "for" 
+    loop that meets the following conditions:
+    
+    a. The condition is a call to the "hasMoreElements()" method of the 
+       "java.util.StringTokenizer" class.
+        
+    b. There is no call to the "nextToken()" or "nextElement()" method of
+       the "StringTokenizer" class in the loop's body. 
+        
+    This case is likely to lead to a situation where "hasMoreElements()" will always 
+    return true, causing an infinite loop.
+    
+Either one of these cases is likely to lead to an infinite loop.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Since threads are a special case where a loop can be exited without meeting one 
+of the conditions above, any loop which contains a call to a threading method
+(one of the methods of the 'java.lang.Thread' class or the 'wait()', 'notify()',
+or 'notifyAll()' method) will not be flagged by this rule.  
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The program contains an iteration or loop with an exit condition that cannot
+be reached, i.e., an infinite loop. If the loop can be influenced by
+an attacker, this weakness could allow attackers to consume excessive
+resources such as CPU or memory." [CWE-835]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth of checking for nested calls to 'Iterator.next()' or 'Iterator.
+ remove()'
+    -Default value is 5.
+    -This parameter only affects case 2 in the "DESCRIPTION" section.  The rule
+     will check for calls to 'Iterator.next()' or 'Iterator.remove()' which are 
+     nested within methods called in the loop.  It will perform this checking up 
+     to a depth of the number of nested method calls specified in this 
+     parameter.  The default value of 5 should be good enough for most cases.  
+     You should only change this parameter if you are getting false positives 
+     because of this issue.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a loop is identified as a possible infinite loop by this rule, it is probably
+a bug.  If a loop evaluates a variable in its condition, that loop should either 
+change the value of that variable or provide another means of exiting the loop 
+(i.e., a "break", "return", or "throw" statement).  If a loop's condition always
+evaluates to the constant value "true", that loop must have either a "break", 
+"return", or "throw" statement.  If a loop uses a call to 'Iterator.hasNext()' 
+as its condition, there should be a call to 'Iterator.next()' or 'Iterator.
+remove()' in the loop's body.  Following all these rules will help to prevent 
+infinite loops.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+import java.util.List;
+import java.util.Iterator;
+
+public class AIL {
+    public void method(List l) {
+        boolean bool = true;
+        do {
+            //Some code that never modifies "bool"  
+        } while (bool); //VIOLATION
+
+        Iterator iter;
+        for (iter = l.iterator(); iter.hasNext();) { //VIOLATION
+            //Some code that never calls 'iter.next()'   
+        }
+
+        while (true) { //VIOLATION
+            //Some code that does not contain a "break", "return", or "throw"
+            //statement
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either change the loop condition or provide an alternate means of exiting from 
+the loop.
+
+package examples.rules.pb.logic;
+
+import java.util.List;
+import java.util.Iterator;
+
+public class AILFixed {
+    public void method(List l) {
+        boolean bool = true;
+        do {
+            //...
+            bool = false; //FIXED   
+        } while (bool);
+
+        Iterator iter;
+        for (iter = l.iterator(); iter.hasNext();) {
+            //...
+            System.err.println(iter.next()); //FIXED   
+        }
+        
+        while (true) {
+            //...
+            break; //FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2020 CWE Weaknesses On the Cusp
+CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')
+<A HREF="https://cwe.mitre.org/data/definitions/835.html">https://cwe.mitre.org/data/definitions/835.html</A>
+
+</PRE>
+</BODY>
+</HTML>

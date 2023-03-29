@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid methods that only call the overridden implementation (superclass implementation) [UC.SO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid methods that only call the overridden implementation (superclass implementation) [UC.SO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that call only the overridden implementation
+(superclass implementation). An error is reported for each method declaration
+that 1) overrides its superclass' method and 2) has a method declaration body
+that calls only its superclass' implementation. Constructors are not
+reported as errors. Errors are not reported for method declarations 
+that change the accessibility of the overridden method.
+
+The rule will also flag a violation for methods which override another method
+but have the exact same implementation as the overridden method.  For purposes
+of this rule, an implementation is considered exactly the same as the overridden
+implementation if the text of the method bodies is the same (ignoring any 
+spaces, comments, and empty statements).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The methods identified by this rule are not performing a useful purpose.
+By removing these methods, you make code simpler, easier to read, and less error prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class SO {
+    public boolean equals (Object obj) { //VIOLATION
+        return super.equals(obj);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the 'equals()' method.
+
+package examples.rules.uc;
+
+public class SOFixed {
+    //FIXED (the method is removed since it's not needed)
+}
+ 
+
+</PRE>
+</BODY>
+</HTML>

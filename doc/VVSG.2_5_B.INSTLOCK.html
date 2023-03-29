@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use an instance lock to protect shared static data [VVSG.2_5_B.INSTLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use an instance lock to protect shared static data [VVSG.2_5_B.INSTLOCK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects access to shared static data that is protected with an instance lock.
+
+"Programs must not use instance locks to protect static shared data because instance 
+locks are ineffective when two or more instances of the class are created. Consequently, 
+failure to use a static lock object leaves the shared state unprotected against 
+concurrent access."[SEI CERT Oracle Coding Standard for Java;
+LCK06-J. Do not use an instance lock to protect shared static data]
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule triggers when a lock on "this" object or its instance field is obtained
+while accessing a static variable that is a field of the same class.
+Flow Analysis will not report rule violation if it determines that the accessed variable
+is read-only (i.e. it is final, its class is final, and it has no non-final fields).
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Excluded types" parameter allows you to enumerate fully qualified type names of classes that
+the rule should ignore. The rule will assume that variables of the listed types are safe if they
+are accessed in critical sections.
+
+The following columns allow you to define different aspects of excluded types table:
+
+* The 'Enabled' column can be used to temporarily disable some of the defined types for Flow Analysis.
+
+* The 'Fully qualified type name (wildcard)' column should be used to provide the fully qualified name 
+  of the type.
+  
+* The 'Exclude the subtypes' option can be used to specify whether the subtypes of the listed type 
+  should also be excluded.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+    implements Runnable
+{
+    private static int counter;
+
+    private final Object lock = new Object();
+
+    @Override
+    public void run()
+    {
+        synchronized (lock) {
+            counter++; // VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, use a lock on a static object.
+
+public class Repair
+    implements Runnable
+{
+    private static int counter;
+
+    private static final Object lock = new Object();
+
+    @Override
+    public void run()
+    {
+        synchronized (lock) {
+            counter++; // NO VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK06-J. Do not use an instance lock to protect shared static data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK06-J.+Do+not+use+an+instance+lock+to+protect+shared+static+data">https://wiki.sei.cmu.edu/confluence/display/java/LCK06-J.+Do+not+use+an+instance+lock+to+protect+shared+static+data</A>
+
+Tags: PCI-DSS, CERT
+
+</PRE>
+</BODY>
+</HTML>

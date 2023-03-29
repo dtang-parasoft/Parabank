@@ -1,0 +1,235 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate all dangerous data [PCIDSS40.6244.VPPD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate all dangerous data [PCIDSS40.6244.VPPD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when tainted data has not been validated before use.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+category: Code Quality
+
+Input validation needs to be performed on all dangerous data in order to prevent
+security vulnerabilities.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Tainting methods" parameter allows you to specify methods that return
+tainted data or taint some of the parameters on the object they are called on.
+Fill in the following columns to configure a method and specify the data it
+affects.
+- "Enabled" - enables or disables the method. If disabled, the rule does not
+    consider the method to be a tainting method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is tainted" - if enabled, the method taints the object it
+    is called on.
+- "Returns tainted data" - if enabled, the method taints its return value.
+- "Tainted parameters" - specifies which method parameters are tainted by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are tainted.
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+For example, to prevent an HTTP response splitting, there could be an encoding
+method that accepts a possibly-tainted string coming from the user input and
+returns an encoded string that can be safely used to form an HTTP response.
+In this case, the encoding method must be defined as a validating method that
+returns clean data. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Safe methods" parameter allows you to specify methods that can be safely
+called before a call to a validating method. 
+Fill in the following columns to configure a safe method.
+- "Enabled" - enables or disables the safe method. If disabled, the rule
+    does not consider the method to be a safe method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A validation rule can be used to enforce expected behavior and prevent tainted 
+data from being passed to backend systems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Example
+{
+    public String example(HttpServletRequest req)
+    {
+        String value1 = req.getParameter("param");
+        String value2 = req.getParameter("param2");
+        String value3 = req.getParameter("param3");
+
+        value1 = validate(value1);
+        String aliasValue3 = validate(value3);
+
+        return value1 + " " + value2 + " " + aliasValue3; // VIOLATION
+    }
+
+    public abstract String validate(String s);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class Repair
+{
+    public String example(HttpServletRequest req)
+    {
+        String value1 = validate(req.getParameter("param"));
+        String value2 = validate(req.getParameter("param2"));
+        String value3 = validate(req.getParameter("param3"));
+        
+        return value1 + " " + value2 + " " + value3; // NO VIOLATION
+    }
+
+    public abstract String validate(String s);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+<A HREF="https://cwe.mitre.org/data/definitions/79.html">https://cwe.mitre.org/data/definitions/79.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-352: Cross-Site Request Forgery (CSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS11-J. Perform any string modifications before validation
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation">https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002500: The application must protect from Cross-Site Request Forgery (CSRF) vulnerabilities.
+
+Tags: PCI-DSS, CWE, CERT
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecates SECURITY.IBA.VPPD
+
+
+
+</PRE>
+</BODY>
+</HTML>

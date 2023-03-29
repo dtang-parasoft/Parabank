@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicated field initialization in constructors [CDD.DFI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicated field initialization in constructors [CDD.DFI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies repeated field initialization in constructors. 
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the field is initialized the same value in different constructors,
+it will increase the cost of code maintenance because every time you change
+the initial value of the field, you need to change it in multiple places. Reducing 
+or eliminating the amount of duplicated field initialization can prevent this problem.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.cdd;
+
+public class DFI {
+    private int max;
+    private int num;
+    
+    public DFI() {
+        max = 100; // VIOLATION
+        num = 10;
+        
+    }
+    
+    public DFI(int n) {
+        max = 100; // VIOLATION
+        num = n;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.misc;
+
+public class DFIFixed {
+    private int max = 100;  // FIXED
+    private int num;
+    
+    public DFI() {
+        num = 10;
+        
+    }
+    
+    public DFI(int n) {
+        num = n;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

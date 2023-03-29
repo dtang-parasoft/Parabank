@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use naming conventions for spring beans [SPRING.SPRNAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use naming conventions for spring beans [SPRING.SPRNAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks whether the bean id attribute value is the same as the bean class name--
+with the first letter changed from capital to small.  
+A violation is reported for each bean in a Spring xml configuration file
+that does not follow this naming convention for ids. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule ignores beans that have multiple names or do not have a name or id.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Following this rule makes code easier to understand and maintain. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;beans xmlns="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A>"
+    xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+    xsi:schemaLocation="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A> <A HREF="http://www.springframework.org/schema/beans/spring-beans.xsd">http://www.springframework.org/schema/beans/spring-beans.xsd</A>"
+
+    &lt;bean id="personSetterByName"	&lt;!-- VIOLATION --&gt;
+        class="org.springbyexample.springindepth.chapter03.autowire.PersonContainer" /&gt;
+&lt;/beans&gt; 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+&lt;beans xmlns="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A>"
+    xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+    xsi:schemaLocation="<A HREF="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</A> <A HREF="http://www.springframework.org/schema/beans/spring-beans.xsd">http://www.springframework.org/schema/beans/spring-beans.xsd</A>"
+
+    &lt;bean id="personContainer"	&lt;!-- FIXED --&gt;
+        class="org.springbyexample.springindepth.chapter03.autowire.PersonContainer" /&gt;
+&lt;/beans&gt; 
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Twelve Best Practices For Spring XML Configurations by Jason Zhicheng Li (O'Reilly ONJava.com)
+<A HREF="http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html">http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html</A>
+
+</PRE>
+</BODY>
+</HTML>

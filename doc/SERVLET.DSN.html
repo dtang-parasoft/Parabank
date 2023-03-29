@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid multiple '&lt;servlet&gt;' elements with the same '&lt;servlet-name&gt;' in a  'web.xml' file [SERVLET.DSN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid multiple '&lt;servlet&gt;' elements with the same '&lt;servlet-name&gt;' in a  'web.xml' file [SERVLET.DSN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a 'web.xml' file contains multiple '&lt;servlet&gt;'
+elements with the same '&lt;servlet-name&gt;'.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule can be used in conjunction with SERVLET.SSN. SERVLET.SSN checks that
+each '&lt;servlet&gt;' element contains exactly one non-empty '&lt;servlet-name&gt;'.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+An erroneous or inconsistent setup may have security implications. See BENEFITS
+for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Having multiple '&lt;servlet&gt;' elements with the same name is most likely an error
+caused by copying, pasting, and forgetting to update the copy. This rule will
+help prevent an inconsistent setup which could cause erroneous or confusing
+behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, both '&lt;servlet&gt;' have the name "servlet0".
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;
+
+    ...
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;servlet0&lt;/servlet-name&gt;
+        ...
+    &lt;/servlet&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;servlet0&lt;/servlet-name&gt;  &lt;!-- VIOLATION --&gt;
+        ...
+    &lt;/servlet&gt;
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+ 
+Ensure that each '&lt;servlet&gt;' has a unique '&lt;servlet-name&gt;'.
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;
+
+    ...
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;servlet0&lt;/servlet-name&gt;
+        ...
+    &lt;/servlet&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;servlet1&lt;/servlet-name&gt;  &lt;!-- FIXED --&gt;
+        ...
+    &lt;/servlet&gt;
+&lt;/web-app&gt;
+
+</PRE>
+</BODY>
+</HTML>

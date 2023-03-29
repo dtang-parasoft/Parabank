@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'setLockMode()' before executing a Hibernate Query [HIBERNATE.SLM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'setLockMode()' before executing a Hibernate Query [HIBERNATE.SLM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+To avoid executing dangerous queries, it is recommended that you always set the 
+LockMode before executing Hibernate queries.  The recommended LockMode to use
+for Hibernate queries is "LockMode.READ".  This will make the query a read-only
+query.  All Hibernate queries should have a method call like the following 
+to set their LockMode to read-only before they are executed:
+
+query.setLockMode("alias", LockMode.READ);
+
+A violation will be flagged for each case where one of the methods which 
+executes a Hibernate query (such as iterate(), list(), executeUpdate(), scroll(),
+or uniqueResult()) is called without first calling 'setLockMode()' on that 
+query.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Setting the query's LockMode to read-only before it is executed will ensure that
+the query is not modified in a malicious way.  Once the query is created and all
+of its parameters have been set, the query is not intended to be modified.  Any
+attempt to modify it may indicate that a hacker has gained control of it.
+      
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See "SECURITY RELEVANCE" section.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+         
+package nightly.original.hibernate;
+
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+public class SLM {
+    public static List getPeople(int age, Session session) {
+        Query query = session.createQuery("from examples.rules.hibernate.Person"
+                + " as person where person.age &lt;= :age");
+        query.setInteger("age", age);
+        return query.list();  //VIOLATION - called 'list()' without first calling
+                              //'setLockMode()'
+    }
+}
+         
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Set the LockMode to "LockMode.READ" before executing the query.
+
+package examples.rules.hibernate;
+
+import java.util.List;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+public class SLM_Fixed {
+    public static List getPeople(int age, Session session) {
+        Query query = session
+            .createQuery("from examples.rules.hibernate.Person as person "
+                + "where person.age &lt;= :age");
+        query.setInteger("age", age);
+        query.setLockMode("person", LockMode.READ);  //FIXED - Set the LockMode to read-only
+        return query.list();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 21:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

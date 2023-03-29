@@ -1,0 +1,378 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against HTTP response splitting [CWE.113.TDRESP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against HTTP response splitting [CWE.113.TDRESP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+HTTP response splitting is a type of vulnerability which occurs when tainted
+data that enters a web application through an untrusted source (for example,
+from an HTTP request) and is included in an HTTP response has not been
+validated.
+This rule detects when HTTP response splitting may occur. 
+
+The rule triggers when tainted data is passed to the following methods without
+validation:
+
+javax.servlet.http.HttpServletResponse   
+   * void addCookie(...)
+   * void addDateHeader(...)
+   * void addHeader(...)
+   * void addIntHeader(...)
+   * void sendRedirect(...)
+   * void setDateHeader(...)
+   * void setHeader(...)
+   * void setIntHeader(...)   
+   * void setStatus(...)
+
+javax.faces.context.ExternalContext
+   * void redirect(...)
+
+javax.servlet.RequestDispatcher
+   * void forward(...)
+   * void include(...)
+   
+   
+In addition, this rule triggers when tainted data is returned from methods that
+are annotated with annotations for mapping HTTP requests on specific methods.
+The rule must be parameterized to specify classes that are Controllers and
+specify method annotations that indicate tainted return values; see PARAMETERS.
+   
+To protect from HTTP response splitting, you must ensure that user input is properly
+encoded or cleaned, and tainted data cannot be passed to dangerous methods.
+
+Encoding can be performed with one of the following methods whose return values
+are safe even if data passed to the methods in parameters is tainted:
+
+java.net.URLEncoder
+	* String encode(...) methods
+	
+javax.servlet.http.HttpServletResponse	
+	* String encodeURL(...) method
+	* String encodeUrl(...) method
+	* String encodeRedirectURL(...) method
+	* String encodeRedirectUrl(...) method
+
+Additional sources of validating methods (in addition to the standard encoding
+methods) can be defined by parameterizing the rule; see PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+A successful attack may be performed by including CR (%0d or \r) and
+LF (%0a or \n) characters into the data that gets into an HTTP header.
+These characters, followed by a specially crafted string, may be used by
+an attacker to include arbitrary headers in the HTTP response, as well as
+create additional HTTP responses with arbitrary content.
+
+HTTP response splitting vulnerabilities may be used to perform XSS attacks,
+cross-user defacement, Web cache poisoning, and page hijacking.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+   
+The "Report tainted return values from methods annotated with:" option allows
+you to specify method annotations. With this option configured, the rule
+triggers when a method annotated with one of the specified annotations returns
+a tainted value. 
+Fill in the following columns to configure annotations:
+- "Enabled" - enables or disables the annotation. If disabled, the rule
+	does not trigger when the annotated method returns tainted data.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified type
+	name of the annotation.
+By default, the rule reports tainted return values from methods annotated
+with the following annotations: 
+- 'org.springframework.web.bind.annotation.RequestMapping'
+- 'org.springframework.web.bind.annotation.GetMapping'
+- 'org.springframework.web.bind.annotation.PutMapping'
+- 'org.springframework.web.bind.annotation.PostMapping'
+- 'org.springframework.web.bind.annotation.DeleteMapping'
+- 'org.springframework.web.bind.annotation.PatchMapping'
+- 'org.springframework.web.bind.annotation.ExceptionHandler'
+- 'org.springframework.web.bind.annotation.ResponseBody'
+- 'org.springframework.web.bind.annotation.ResponseStatus'
+This option requires configuring the "Class annotations that indicate
+Controllers" parameter (see below). The rule ignores methods that are not
+from a Controller class.
+
+The "Class annotations that indicate Controllers" parameter allows you to
+specify annotations that the rule will assume to indicate that the annotated
+class is a Controller.
+Fill in the following columns to configure annotations:
+- "Enabled" - enables or disables the annotation. If disabled, the rule
+	does not consider the class to be a Controller.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified type 
+	name of	the annotation.
+By default, the rules assumes that classes annotated with the following
+annotations are Controllers:
+- 'org.springframework.stereotype.Controller'
+- 'org.springframework.web.bind.annotation.RestController'
+- 'org.springframework.web.bind.annotation.ControllerAdvice'
+- 'org.springframework.web.bind.annotation.RestControllerAdvice'
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent HTTP response splitting; see SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Below is an example of vulnerable code:
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Example
+    extends HttpServlet
+{
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException
+    {
+        String name = req.getParameter("name");
+        // ...
+        resp.addCookie(new Cookie("namer", name)); // VIOLATION
+        // ...
+    }
+}
+
+A regular response may resemble the following:
+
+    HTTP/1.1 200 OK
+    ...
+    Set-Cookie: name=Joe
+    ...
+
+However, it is possible to construct a request so that the HTTP response
+would be split into two responses. By submitting a malicious string, such as
+"Joe\r\nHTTP/1.1 200 OK\r\n...", the response would be split as follows:
+
+    HTTP/1.1 200 OK
+    ...
+    Set-Cookie: author=Joe
+
+    HTTP/1.1 200 OK
+    ...
+
+The second response is completely under the attacker's control.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, validate the data before it is used.
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Repair
+    extends HttpServlet
+{
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws UnsupportedEncodingException
+    {
+        String name = URLEncoder.encode(req.getParameter("name"), "UTF_8");
+        // ...
+        resp.addCookie(new Cookie("namer", name)); // NO VIOLATION
+        // ...
+    }
+}
+
+When the code is fixed, a malicious string submitted by an attacker, for example:
+
+"Joe\r\nHTTP/1.1 200 OK\r\n..."
+
+does not result in a dangerous response:
+
+    HTTP/1.1 200 OK
+    ...
+    Set-Cookie: name=Joe%0D%0AHTTP%2F1.1+200+OK%0D%0A
+    ...
+
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Introduction to Injection Attacks
+Video: <A HREF="https://vimeo.com/262069083">https://vimeo.com/262069083</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/8e118750-e80a-4713-a0ca-c50367e08351">https://app.hackedu.com/link/8e118750-e80a-4713-a0ca-c50367e08351</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A03:2021 - Injection
+<A HREF="https://owasp.org/Top10/A03_2021-Injection/">https://owasp.org/Top10/A03_2021-Injection/</A>
+
+OWASP Top 10 2017 (A7-Cross-Site Scripting (XSS))
+<A HREF="https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS).html">https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS).html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+<A HREF="https://cwe.mitre.org/data/definitions/79.html">https://cwe.mitre.org/data/definitions/79.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-352: Cross-Site Request Forgery (CSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-601: URL Redirection to Untrusted Site ('Open Redirect')
+<A HREF="https://cwe.mitre.org/data/definitions/601.html">https://cwe.mitre.org/data/definitions/601.html</A>
+
+CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')
+<A HREF="https://cwe.mitre.org/data/definitions/113.html">https://cwe.mitre.org/data/definitions/113.html</A>
+
+CWE-644: Improper Neutralization of HTTP Headers for Scripting Syntax
+<A HREF="https://cwe.mitre.org/data/definitions/644.html">https://cwe.mitre.org/data/definitions/644.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS51-J. Properly encode or escape output
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS51-J.+Properly+encode+or+escape+output">https://wiki.sei.cmu.edu/confluence/display/java/IDS51-J.+Properly+encode+or+escape+output</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted.
+
+Tags: OWASP, PCI-DSS, CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

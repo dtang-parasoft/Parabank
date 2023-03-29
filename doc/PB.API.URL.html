@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the 'equals()' and 'hashCode()' methods of "java.net.URL" [PB.API.URL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the 'equals()' and 'hashCode()' methods of "java.net.URL" [PB.API.URL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies usage of the 'java.net.URL.equals()' and
+'java.net.URL.hashCode()' methods. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'equals()' and 'hashCode()' methods of 'java.net.URL' are poorly implemented.
+These methods will attempt to connect to the Internet to perform name resolution. 
+Because of this, the methods are very slow and may even hang if an Internet 
+connection is not available.  Therefore, you should avoid using these methods.  
+The 'equals()' and 'hashCode()' methods of 'java.net.URI' are much better than the
+corresponding methods of 'java.net.URL' because they do not require an Internet
+connection.  If possible, you should use 'URI' objects instead of 'URL' objects.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.net.*;
+
+public class URL {
+
+    public void run(URL url1, URL url2) {
+        if (url1.equals(url2)) {  // VIOLATION
+            // connect
+        }
+    }    
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change to use 'java.net.URI' instead of 'java.net.URL'
+
+package examples.rules.pb.api;
+
+import java.net.*;
+
+public class URLFixed {
+
+    public void run(URI uri1, URI uri2) {
+        if (uri1.equals(uri2)) {  // FIXED
+           // connect
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://michaelscharf.blogspot.com/2006/11/javaneturlequals-and-hashcode-make.html">http://michaelscharf.blogspot.com/2006/11/javaneturlequals-and-hashcode-make.html</A>
+
+</PRE>
+</BODY>
+</HTML>

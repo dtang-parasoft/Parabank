@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure methods are either a command(change state) or a query(get state) [OOP.CQS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure methods are either a command(change state) or a query(get state) [OOP.CQS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for Command Query Separation. A method can either change
+the state of an object (command) or get the state of an object (query), but
+not both.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check the following accessibilities:
+    -Check "public" methods. (default true)
+    -Check "protected" methods. (default true)
+    -Check "package-private" methods. (default true)
+    -Check "private" methods. (default false)
+-Ignore the following methods:
+    -"nextToken" (default)
+-Allow lazy initialization. (default true)
+    -Allows basic cases of lazy initialization, where a field is explicitly
+    checked for a null value and then initialized;
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Use of the Command Query Separation may have a simplifying effect on the program
+by making it easier to understand and allowing for clearer specifications.  It 
+also ensures that queries do not change the program state.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class CQS {
+    int x;
+    int squareInt() {
+        x = x * x;
+        return x;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class CQSFixed {
+    int x;
+    void squareInt() {
+        x = x * x;
+    }
+    int getInt() {
+        return x;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+<A HREF="http://en.wikipedia.org/wiki/Command-query_separation">http://en.wikipedia.org/wiki/Command-query_separation</A>
+
+</PRE>
+</BODY>
+</HTML>

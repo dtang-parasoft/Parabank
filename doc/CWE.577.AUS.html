@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use sockets in EJBs [CWE.577.AUS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use sockets in EJBs [CWE.577.AUS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Enterprise java beans and code they may use should avoid use of Sockets as it
+violates the specification.
+
+A class is considered a bean class if it meets one of the following:
+    1. Implements "javax.ejb.EnterpriseBean" or a subinterface ("EntityBean",
+       "MessageDrivenBean", "SessionBean")
+    2. Has the annotation "javax.ejb.MessageDriven", "java.ejb.Stateful",
+       "javax.ejb.Stateless", or "javax.persistence.Entity"
+    3. Is denoted as an Entity, MessageDriven, Stateful, or Stateless bean in
+       "ejb-jar.xml"
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+The EJB specification states: "An enterprise bean must not attempt to listen on
+a socket, accept connections on a socket, or use a socket for multicast."
+Although there are some instances where using a socket may be acceptable it is
+best to consider other alternatives. Failure to follow specification may leave
+a bean in an inconsistent state.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for socket usage (default "2")
+    This parameter allows for indirect checking of socket usage. Specifying a
+    value of "1" will check only for direct usage of a socket. A value of "2"
+    will check if any of the methods called from the web component use a socket,
+    and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+-Check Sockets (default true)
+    Enabling this parameter will check "java.net.Socket" and its subclasses such
+    as "java.net.ssl.SSLSocket".
+
+-Check ServerSockets (default true)
+    Enabling this parameter will check "java.net.ServerSocket" and its
+    subclasses such as "java.net.ssl.SSLServerSocket".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+@Stateless
+public class AUS {
+    void closeSocket(Socket s) {
+        s.close(); //VIOLATION
+    }
+    ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use sockets in EJBs.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-246: J2EE Bad Practices: Direct Use of Sockets
+<A HREF="https://cwe.mitre.org/data/definitions/246.html">https://cwe.mitre.org/data/definitions/246.html</A>
+
+CWE-577: EJB Bad Practices: Use of Sockets (1.2)
+<A HREF="https://cwe.mitre.org/data/definitions/577.html">https://cwe.mitre.org/data/definitions/577.html</A>
+
+Enterprise JavaBeans 3.0 Specification
+<A HREF="http://download.oracle.com/otndocs/jcp/ejb-3_0-fr-eval-oth-JSpec/">http://download.oracle.com/otndocs/jcp/ejb-3_0-fr-eval-oth-JSpec/</A>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of
+Static Analysis Tools" by Michael Ware:
+<A HREF="http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf">http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

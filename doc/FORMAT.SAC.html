@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of space character(s) after every comma [FORMAT.SAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of space character(s) after every comma [FORMAT.SAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+    
+This rule identifies any comma that is not followed by the required number of space
+characters. With the default parameters, an error is reported if a comma is not followed by one
+space. An error is reported for excess space as well as for missing space. 
+
+This rule applies to all commas in a source file except for commas in comments 
+or literal strings, or commas that appear at the end of a line. Commas that are  
+followed by only whitespace or comments on the same line are also considered to
+be at the end of a line.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Number of spaces after every comma (default value is 1)
+-Commas must not be preceded by a space. (default is false)
+    -If this parameter is enabled, the rule will check that commas are not 
+     preceded by a space character (in addition to being followed by the 
+     specified number of spaces).  Spaces at the beginning or end of lines are
+     ignored, so commas will not be flagged if they are the first non-whitespace
+     character on a line.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+public class SAC {
+    public void method (int i,int j) { }  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Place a single space after each comma.
+
+package examples.rules.format;
+
+public class SACFixed {
+    public void method (int i, int j) { }  // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 8.2 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#682">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#682</A>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 10 - 13
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

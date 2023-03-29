@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make sure implementation of Object.equals(Object) properly handles null values [BD.API.EQNULL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make sure implementation of Object.equals(Object) properly handles null values [BD.API.EQNULL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule checks for Object.equals(Object) methods that return true when called with null
+parameter. This practice is inconsistent with the equals method rule, which states that for any
+non-null reference value x, x.equals(null) should return false.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Example) {
+            return false;
+        }
+        return true; // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Repair) {
+            return true;
+        }
+        return false;
+    } // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#equals(java.lang.Object)">http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#equals(java.lang.Object)</A>
+
+</PRE>
+</BODY>
+</HTML>

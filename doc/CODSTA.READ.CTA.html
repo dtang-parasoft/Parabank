@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always call 'Collection.toArray()' with an empty constant array argument [CODSTA.READ.CTA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always call 'Collection.toArray()' with an empty constant array argument [CODSTA.READ.CTA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag cases where "Collection.toArray()" is called without an
+empty constant array argument.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore new empty array creation (default true)
+    Enabling this parameter will allow for new empty arrays to be passed
+    directly to "toArray()". For example: "list.toArray(new String[0])".
+    Disabling this parameter will require a constant to be used, which may
+    promote reuse of the same constant array.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The "toArray()" implementations will create a new array if the one passed in
+is not large enough. Using an empty array constant can simplify the code and
+improve readability. Furthermore, if the Collections are frequently empty, then
+the same empty array instance will be reused.
+
+If the common pattern: "_collection.toArray(new Object[_collection.size()])"
+is used in a multi-threaded environment, and is not properly synchronized, then
+the size of the collection may change between the call to "size()" and the call
+to "toArray()". In this case, the array would be reallocated anyways.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class CTA {
+    Object[] getArray(List list) {
+        return list.toArray(new Object[list.size()]); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class CTAFixed {
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+
+    Object[] getArray(List list) {
+        return list.toArray(EMPTY_OBJECT_ARRAY); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

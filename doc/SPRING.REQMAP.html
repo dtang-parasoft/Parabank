@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that methods annotated with @RequestMapping specify the HTTP request method they call [SPRING.REQMAP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that methods annotated with @RequestMapping specify the HTTP request method they call [SPRING.REQMAP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Cross-Site Request Forgery (CSRF) is an attack that forces an end user to
+execute unwanted actions on a web application in which they're currently
+authenticated. CSRF attacks specifically target state-changing requests, not
+theft of data, since the attacker has no way to see the response to the forged
+request. With a little help of social engineering (such as sending a link via
+email or chat), an attacker may trick the users of a web application into
+executing actions of the attacker's choosing."
+[OWASP, Cross-Site Request Forgery (CSRF)]
+
+CSRF protection is not enabled by default for the HTTP request methods.
+This means that methods annotated with @RequestMapping can handle all matching
+requests, which makes them vulnerable to CSRF attacks.
+To protect against CSRF attacks, ensure that each HTTP request is handled
+separately in one of the following ways:
+- Explicitly specify one HTTP method each @RequestMapping method calls.
+- Annotate methods without side-effects with @GetMapping and state-changing
+  methods with @PostMapping, @PutMapping, @DeleteMapping, or @PatchMapping.
+
+This rule detects when method annotated with @RequestMapping:
+- does not explicitly specify the HTTP request method it calls.
+- specifies more than one HTTP request method it calls.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The consequences will vary depending on the nature of the functionality that
+is vulnerable to CSRF. An attacker could effectively perform any operations
+as the victim. If the victim is an administrator or privileged user,
+the consequences may include obtaining complete control over the web
+application - deleting or stealing data, uninstalling the product, or using it
+to launch other attacks against all of the product's users. Because
+the attacker has the identity of the victim, the scope of CSRF is limited only
+by the victim's privileges." [CWE-352]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you protect against CSRF attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following example shows two methods annotated with @RequestMapping.
+One fails to specify the HTTP request method it calls, the other specifies
+more than one HTTP request method.
+
+@Controller
+  public class Controller1 {
+    @RequestMapping("/foo")  // VIOLATION
+    @ResponseBody
+    public String foo() {
+      return "";
+    }
+
+    @RequestMapping("/path", method = {GET, POST}) // VIOLATION
+    @ResponseBody
+    public void processData() {
+    }
+  }
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, you can add the "method = " annotation parameter to explicitly
+specify the HTTP request method the @RequestMapping method can call.
+Alternatively, you can annotate the methods that handle HTTP requests with 
+@GetMapping or @PostMapping.
+
+@Controller
+  public class Controller1 {
+
+    @RequestMapping("/foo", method = GET)
+    @ResponseBody
+    public String foo() {
+      return "";
+    }
+
+    @GetMapping("/path")
+    public String readData() {
+      return "";
+    }
+
+    @PostMapping("/path")
+    public void writeData() {
+    }
+  }
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-352: Cross-Site Request Forgery (CSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</A>
+
+OWASP Documentation
+Cross-Site Request Forgery (CSRF)
+<A HREF="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)</A>
+
+Spring Security Documentation
+13. Cross Site Request Forgery (CSRF)
+<A HREF="https://docs.spring.io/spring-security/site/docs/3.2.0.CI-SNAPSHOT/reference/html/csrf.html">https://docs.spring.io/spring-security/site/docs/3.2.0.CI-SNAPSHOT/reference/html/csrf.html</A>
+
+</PRE>
+</BODY>
+</HTML>

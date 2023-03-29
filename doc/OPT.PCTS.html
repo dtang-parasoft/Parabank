@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'charAt()' instead of 'startsWith()' for one character comparisons [OPT.PCTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'charAt()' instead of 'startsWith()' for one character comparisons [OPT.PCTS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of 'String.startsWith("string constant")' when the constant is a
+single character string. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+When replacing 'startsWith()' with 'charAt(0)', make sure that you
+first check that the String is at least one character long.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Using 'startsWith()' with a one character argument works, but is a misuse of the
+String API.  'startsWith()' makes several computations while preparing to
+compare its prefix with another string. This is unnecessary if you only want
+to compare one character against another.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class PCTS {
+    private void method(String s) {
+        if (s.startsWith("a"))  // VIOLATION
+            System.out.println("starts with a.");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace 'startsWith()' with a test for non-zero length and 'charAt(0)'.
+
+package examples.rules.opt;
+
+public class PCTSFixed {
+    private void method(String s) {
+        if (s.length () &gt; 0 &amp;&amp; s.charAt(0) == 'a')  // FIXED
+            System.out.println("starts with a.");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Dov Bulka, "Java Performance and Scalability Volume 1: Server-Side Programming 
+Techniques"  Addison Wesley, ISBN: 0-201-70429-3
+
+</PRE>
+</BODY>
+</HTML>

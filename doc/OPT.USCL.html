@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid questionable uses of non-short-circuit logic [OPT.USCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid questionable uses of non-short-circuit logic [OPT.USCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies questionable use of non-short-circuit logic 
+([boolean] | [boolean], [boolean] &amp; [boolean], [boolean] |= [boolean],
+or [boolean] &amp;= [boolean]). Findings will only be reported for expressions
+of "boolean" type. The operators "|" and "&amp;", as well as the assignment
+operators "|=" and "&amp;=", use non-short-circuit logic.
+
+A finding is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+In some cases, non-short-circuit logic might be necessary.
+For example, if both sides are method invocations with side 
+effects, then it is unsafe to substitute short-circuit-logic
+for the non-short-circuit logic operators.
+
+The rule does not trigger if the right-hand side of the expression
+is a variable or a field because evaluating a variable or field
+is not an expensive operation and will never throw an exception.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Using short-circuit operators instead of non-short-circuit operators 
+can help to prevent runtime exceptions.  For instance, the following code
+will throw a "NullPointerException" if "s" is "null":
+
+if((s != null) &amp; s.equals(...)) {
+}
+
+However, the following version of this code, which uses the short-circuit
+operator "&amp;&amp;", will not throw a "NullPointerException" even when "s" is "null":
+
+if((s != null) &amp;&amp; s.equals(...)) {
+}
+
+Preventing unexpected runtime exceptions is important for security because
+exception stack traces may leak sensitive information such as 
+implementation details.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore methods that match the regular expression
+ (the defaults are ^remove[.]* and ^add[.]*)
+
+-Ignore if the operator is directly followed by a comment, or the line ends with a comment
+ (disabled by default)
+
+-Ignore if the line above the operator contains a comment
+ (disabled by default)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+For mobile platforms with reduced resources optimizations are especially important.
+
+Short-circuit logic should be preferred over non-short-circuit logic 
+whenever possible because short-circuit logic is more efficient.
+Moreover, it is also possible that the validity of the right hand side
+statement depends on the left hand side. In such situations, some
+unexpected runtime exceptions might occur.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class USCL {
+    public void myMethod(int i, int j) {
+        if ((i &gt; 0) | (j &gt; 0)) {  //VIOLATION: both expressions always evaluated
+            // ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class USCLFixed {
+    public void myMethod(int i, int j) {
+        if ((i &gt; 0) || (j &gt; 0)) {  //FIXED: second expression only evaluated if first false
+            // ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

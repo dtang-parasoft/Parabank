@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define direct or indirect subclasses of 'RuntimeException' [PB.RE.NXRE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define direct or indirect subclasses of 'RuntimeException' [PB.RE.NXRE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies direct and indirect subclassing of RuntimeException.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Error Handling
+
+Potential erroneous exception handling. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Exceptions in java.lang.RuntimeException and its subclasses are used for
+avoidable exceptions. The Java compiler does not check the correct handling of
+these exceptions, so erroneous exception handling may not be noticed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+         
+package examples.rules.pb.re;
+         
+public class NXRE extends RuntimeException {  // VIOLATION         
+    public NXRE (String s) {
+        super(s);
+    }
+}
+         
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the class to extend Exception.
+
+package examples.rules.pb.re;
+        
+public class NXREFixed extends Exception {  // FIXED
+    public NXREFixed (String s) {
+        super(s);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

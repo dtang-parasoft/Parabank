@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Release Locks in a "finally" block [CERT.LCK08.RLF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Release Locks in a "finally" block [CERT.LCK08.RLF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where Lock interfaces are unlocked outside of a
+"finally" block. If for any reason an exception occurs, then the Lock would
+never be released.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+If an exception occurs while the Lock is held, the lock may never be released.
+This could lead to deadlock and problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class RLF {
+    int _value = 0;
+
+    public void updateValue(Object o) {
+        Lock lock = new ReentrantLock();
+        lock.lock();
+        if (o instanceof Number) {
+            Integer i = (Integer) o;
+            _value = i.intValue();
+        }
+        lock.unlock(); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Wrap the Lock usage in a try/finally block so that 'unlock()' is always called
+from within a 'finally' block.
+
+package examples.rules.trs;
+
+public class RLFFixed {
+    int _value = 0;
+
+    public void updateValue(Object o) {
+        Lock lock = new ReentrantLock();
+        try {
+            lock.lock();
+            if (o instanceof Number) {
+                Integer i = (Integer) o;
+                _value = i.intValue();
+            }
+        }
+        finally {
+            lock.unlock(); //FIXED
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 277-278.
+
+Cigital Java Security Rulepack # 7:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+CWE-833: Deadlock
+<A HREF="https://cwe.mitre.org/data/definitions/833.html">https://cwe.mitre.org/data/definitions/833.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK08-J. Ensure actively held locks are released on exceptional conditions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK08-J.+Ensure+actively+held+locks+are+released+on+exceptional+conditions">https://wiki.sei.cmu.edu/confluence/display/java/LCK08-J.+Ensure+actively+held+locks+are+released+on+exceptional+conditions</A>
+
+</PRE>
+</BODY>
+</HTML>

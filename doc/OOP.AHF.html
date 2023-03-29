@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hide inherited fields [OOP.AHF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hide inherited fields [OOP.AHF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that hides inherited instance fields. An error
+is reported if an inherited field is overridden by a child class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+You can choose the scope of checking. Fields are flagged if both the
+ancestor fields and the inherited fields are within the specified scope.
+- "public" field in ancestor class. (default is true)
+- "protected" field in ancestor class. (default is true)
+- package-private field in ancestor class. (default is true)
+- "private" field in ancestor class. (default is false)
+- "public" field in child class. (default is true)
+- "protected" field in child class. (default is true)
+- package-private field in child class. (default is true)
+- "private" field in child class. (default is true)
+
+
+- Fields to be ignored
+  Fields that match with the list would not be flagged as error inherited fields.
+  "serialVersionUID" is in the list by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Overriding a parent field obscures the inheritance relationship between the
+parent and the child class.  It is also likely to be an unintended mistake.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+class SuperAHF {
+    protected long a = 4;
+}
+
+public class AHF extends SuperAHF {
+   protected int a = 5;  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The solution will depend on the design of the program, but may be as
+simple as using the inherited member and removing the member declared
+in the child class.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for tag handlers and associated classes [NAMING.THAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for tag handlers and associated classes [NAMING.THAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The recommended naming conventions for tag handlers and associated classes are 
+as follows:
+
+Description										Class Name
+-----------										----------
+XXX tag extra info (extending from javax.	    XXXTEI
+servlet.jsp.tagext.TagExtraInfo)
+
+XXX tag library validator (extending from 		XXXTLV
+javax.servlet.jsp.tagext.TagLibraryValidator)
+
+XXX tag handler interface (extending from 		XXXTag
+javax.servlet.jsp.tagext.Tag/IterationTag/
+BodyTag)
+
+These conventions can be changed in the parameter table.  A violation will be 
+flagged for each class/interface which does not follow the convention.  For 
+instance, with the default settings of the parameters, a violation will be 
+flagged if a class which extends from javax.servlet.jsp.tagext.TagExtraInfo has 
+a name which does not end in "TEI".     
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Naming Conventions Table
+    -This table allows the user to specify his own naming convention for each
+     type of class/interface using a regular expression.  
+    -The default values are "^.*TEI$" for tag extra info classes, "^.*TLV$" for 
+     tag library validator classes, and "^.*Tag$" for tag handler interfaces (as 
+     described above).
+-Negate regular expression
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     tag handler or associated class matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged if the name of a tag handler or associated class does not match the 
+     regular expression specified.
+-Ignore case
+    -If this parameter is enabled, the regular expressions will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of tag 
+     handlers and associated classes must match the regular expression 
+     specified, including in case. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using these naming conventions helps make it more clear what the purpose of
+each class is.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.JSP;
+
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.TagLibraryValidator;
+import javax.servlet.jsp.tagext.Tag;
+
+public class THAC extends TagExtraInfo{  //VIOLATION- name should end in "TEI"
+    class THAC2 extends TagLibraryValidator{  //VIOLATION- name should end in "TLV"
+    }
+
+    abstract interface THAC3 extends Tag{  //VIOLATION- name should end in "Tag"
+    }   
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.JSP;
+
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.TagLibraryValidator;
+import javax.servlet.jsp.tagext.Tag;
+
+public class THACFixed_TEI extends TagExtraInfo{  //FIXED
+    class THAC2Fixed_TLV extends TagLibraryValidator{  //FIXED
+    }
+
+    abstract interface THAC3Fixed_Tag extends Tag{  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html">http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html</A>
+
+</PRE>
+</BODY>
+</HTML>

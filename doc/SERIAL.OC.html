@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure outer class is serializable if its inner class is serializable [SERIAL.OC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure outer class is serializable if its inner class is serializable [SERIAL.OC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies when the non-static inner class is serializable but the
+outer class is not serializable. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+By default, the rule will flag cases only where Serializable is explicitly
+implemented. If it is not explicitly implemented then there may be uncertainty
+as to whether the class was intended to be used in a Serializable manner or
+simply intended to extend or implement a particular interface/class.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check inner classes indirectly implementing Serializable (default false)
+    Enabling this parameter treats the following as implementing Serializable:
+        1) Implementing Serializable
+        2) Implementing an interface that extends Serializable
+        3) Extending a class that implements Serializable
+    With the parameter disabled, only the first option is counted. See NOTES
+    for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the non-static inner is serializable and when it is in serialization. It
+will attempt to serialize its class and attempt to serialize its outer class
+which is associated with it. However, because the outer is non-serializable, it
+will cause runtime error.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class OC {
+
+    public class Inner implements Serializable {  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change inner class to 'static'
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class OCFixed implements Serializable {
+
+    public static class Inner implements Serializable {  // FIXED
+    }
+
+}
+
+</PRE>
+</BODY>
+</HTML>

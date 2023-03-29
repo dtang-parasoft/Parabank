@@ -1,0 +1,200 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Be cautious when calling methods which may cause memory leaks [GC.MML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Be cautious when calling methods which may cause memory leaks [GC.MML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Some methods are known to cause memory leaks that may be not be obvious to the
+person calling the method.  For instance, the "substring()" methods of "java.
+lang.String" and various other methods which call "substring()" in their 
+implementations may cause severe memory leaks under certain situations.  
+
+This rule will flag a violation for each situation in which one of the methods
+specified in the parameter list is called and the return value of that method
+may possibly be returned directly to the calling method or stored directly in 
+some field.   
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Not every violation of this rule indicates a serious memory leak that needs to
+be fixed.  In fact, most usages of the methods listed in the parameters are
+fine.  You should use this rule to determine possible sources of memory leaks
+if you are experiencing memory leaks.  You should then use your discretion in
+deciding whether or not each violation indicates a problem that needs to be 
+fixed.  Violations which will not lead to serious memory leaks can be 
+suppressed.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Methods Which May Cause Memory Leaks
+    -Specify the fully qualified name of the declaring type and the method
+     signature for all methods which should be flagged as violations of this 
+     rule.  Specify the method signature as "&lt;method name&gt;(&lt;parameter1 fully 
+     qualified type&gt;,&lt;parameter2 fully qualified type&gt;,...)" with no spaces.  
+     You can follow the examples provided by the default values of the 
+     parameter.
+    -This parameter is a one-to-many mapping of the names of declaring types to 
+     the signatures of methods declared in those types.
+    -The methods which are in this mapping by default are:
+    
+     Declaring Type                 Method Signature
+     --------------                 ----------------
+     java.lang.String               split(java.lang.String)
+                                    split(java.lang.String,int)
+                                    substring(int)
+                                    substring(int,int)
+                                         
+     java.util.StringTokenizer      nextElement()
+                                    nextToken()
+                                    nextToken(java.lang.String)
+                                         
+     java.util.regex.Matcher        group()
+                                    group(int)
+                                         
+     The default values of the parameter all either are one of the "substring()"
+     methods of "java.lang.String" or may call one of the "substring()" methods
+     in their implementations                                    
+
+    Format: 
+        list1_type_name&lt;\#&gt;list2_method_signature1\#list2_method_signature2;...
+
+    Examples:
+    * java.lang.String&lt;\#&gt;split(java.lang.String)\#split(java.lang.String,int);java.util.regex.Matcher&lt;\#&gt;nextElement()
+
+                                              
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+For the "substring()" method of "java.lang.String", due to the implementation of
+this method, it is possible to introduce large memory leaks if you don't 
+understand how to properly use this method.  The reason is that "substring()" is
+implemented by keeping a reference to the original String and using pointers 
+into the char array which represents the original String to identify the 
+beginning and ending of the substring.  This can prevent the original String 
+from being garbage collected if the substring needs to be stored.  This 
+implementation is somewhat counterintuitive.  You may expect "substring()" to 
+create and return a new String object instead of keeping pointers into the 
+original String object.  While this behavior has been identified as a bug (See 
+the REFERENCES section), there is not universal agreement that this behavior is 
+a bug.  Thus, it is unlikely to be changed.  The only way to avoid memory leaks 
+when using methods like "substring()" is to review each usage and be careful for 
+memory leaks.
+
+The rule is parameterizable so that you can specify your own methods to be 
+checked by this rule in case you know of other methods which introduce memory 
+leaks that may be difficult to detect.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rule.gc;
+
+public class MML {
+    String _substring;
+    static MML _MMLObject;
+    
+    public MML() {
+        char[] largeCharArray= new char[1000000];
+        String largeString= new String(largeCharArray);
+        _substring= largeString.substring(2, 3);  //VIOLATION- "largeString" now 
+                      //cannot be garbage collected because a reference to it is
+                      //stored in a "static" variable.
+    }
+    
+    public static void main(String[] args){
+        _MMLObject= new MML();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The repair depends on the situation.  In this case, creating a new "String" 
+object from the contents of "_substring" will allow "largeString" to be garbage
+collected.
+
+package examples.rule.gc;
+
+public class MMLFixed {
+    String _substring;
+    static MMLFixed _MMLObject;
+    
+    public MMLFixed() {
+        char[] largeCharArray= new char[1000000];
+        String largeString= new String(largeCharArray);
+        _substring= new String(largeString.substring(2, 3));  //FIXED- "largeString" 
+                      //now can be garbage collected because "_substring" now
+                      //refers to a different String.
+    }
+    
+    public static void main(String[] args){
+        _MMLObject= new MMLFixed();
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Sun Developer Network PR # 4513622 ( <A HREF="http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4513622">http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4513622</A> )
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast primitive data types to lower precision [VVSG.2_5_4_F.CLP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast primitive data types to lower precision [VVSG.2_5_4_F.CLP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that casts primitive data types to lower precision
+types. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An error will not be reported if the casting statement is inside the "if"
+statement block and the expression being cast is used in the condition of the
+"if" statement.
+
+If a 'long' value is expected to be positive, one method of casting to a lower
+precision is to use the Math.min() method. For example:
+    int downcast(long val) {
+        return (int) Math.min(Math.abs(val), Integer.MAX_VALUE);
+    }
+In this example, the call to Math.min() will return a value between 0 and
+Integer.MAX_VALUE. In cases where loss of precision would have occurred, the
+result will instead be set to a known value. For this example, omitting the call
+to Math.abs() could result in a case where 'val' was a negative values less than
+Integer.MIN_VALUE, which would lead to a loss of precision.
+
+Similarly, the following example will return either Integer.MIN_VALUE or
+Integer.MAX_VALUE in cases where loss of precision would have occurred:
+    int downcast(long val) {
+        return (int) Math.min(Math.max(val, Integer.MIN_VALUE), Integer.MAX_VALUE);
+    }
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Casting this way truncates the value.  If the original value cannot be
+represented by the new type, then the new value will be different.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class CLP {
+    public static int trunc(double d) {
+        return (int)d; //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either explicitly test the value before performing a cast, or avoid casting.
+See NOTES for other ways to handle casting.
+
+package examples.rules.pb.num;
+
+public class CLPFixed {
+    public static int trunc(double d) {
+        if (d &gt;= Integer.MIN_VALUE &amp;&amp; d &lt;= Integer.MAX_VALUE) {  // FIXED
+            return (int)d;
+        }
+        else {
+            message.log("Error: "+ d + " out of integer bounds");
+            return 0;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Numeric Errors
+Video: <A HREF="https://vimeo.com/238779116">https://vimeo.com/238779116</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_2-Numeric-Errors.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-190: Integer Overflow or Wraparound
+<A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+CWE-681: Incorrect Conversion between Numeric Types
+<A HREF="https://cwe.mitre.org/data/definitions/681.html">https://cwe.mitre.org/data/definitions/681.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-704: Incorrect Type Conversion or Cast
+<A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+NUM12-J. Ensure conversions of numeric types to narrower types do not result in lost or misinterpreted data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM12-J.+Ensure+conversions+of+numeric+types+to+narrower+types+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/java/NUM12-J.+Ensure+conversions+of+numeric+types+to+narrower+types+do+not+result+in+lost+or+misinterpreted+data</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks
+
+</PRE>
+</BODY>
+</HTML>

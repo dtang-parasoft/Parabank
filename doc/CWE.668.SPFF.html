@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect 'static' fields which may have intended to be declared 'static final' [CWE.668.SPFF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect 'static' fields which may have intended to be declared 'static final' [CWE.668.SPFF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "static" fields which may have been intended to be declared
+"static final" instead.
+
+This rule will check the following types:
+    - primitive types
+    - java.lang.Boolean
+    - java.lang.Byte
+    - java.lang.Character
+    - java.lang.Double
+    - java.lang.Float
+    - java.lang.Integer
+    - java.lang.Long
+    - java.lang.Short
+    - java.lang.String
+
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+A "static" field which is not also declared "final" may be changed by other
+classes and break the logic of the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check fields of accessibility
+    -public (default is on)
+    -protected (default is off)
+    -package-private (default is off)
+    -private (default is off)
+-Check fields of type
+    -primitive type (default is on)
+    -primitive wrapper type (default is on)
+    -java.lang.String (default is on)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+public class SPFF {
+    private static String ID = 1;  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the field to "static final".
+
+package examples.rules.security.eab;
+
+public class SPFF_Fixed {
+    private static final String ID = 1;  // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-500: Public Static Field Not Marked Final
+<A HREF="https://cwe.mitre.org/data/definitions/500.html">https://cwe.mitre.org/data/definitions/500.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ10-J. Do not use public static nonfinal fields
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ10-J.+Do+not+use+public+static+nonfinal+fields">https://wiki.sei.cmu.edu/confluence/display/java/OBJ10-J.+Do+not+use+public+static+nonfinal+fields</A>
+
+</PRE>
+</BODY>
+</HTML>

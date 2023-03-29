@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Add the "@Override" annotation to overriding methods [OOP.AOA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Add the "@Override" annotation to overriding methods [OOP.AOA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for any method declaration which overrides or implements
+a method but does not have an "@Override" annotation.  A violation will be flagged 
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Adding the "@Override" annotation makes it more obvious to the reader that a 
+method declaration is an "overriding" or "implementing" method rather than a "new" method.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class AOA {
+    public String toString() { //VIOLATION
+        return "";
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add an "@Override" annotation to the method declaration.
+
+package examples.rules.oop;
+
+public class AOAFixed {
+    @Override 
+    public String toString() { //FIXED
+        return "";
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

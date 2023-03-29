@@ -1,0 +1,195 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always specify error pages in web.xml [OWASP2017.A6.SEP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always specify error pages in web.xml [OWASP2017.A6.SEP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies 'web.xml' files which do not specify any 'error-page'
+elements. A violation is reported for each occurrence. This rule also has
+parameters which can be used to check the format of 'error-page' elements as
+well as if certain error codes or exception types are covered.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Failure to specify an 'error-page' for common situations may result in a default
+error page being displayed. In the case of exceptions, data may be displayed to
+the user which reveals inner workings of the application. An attacker could then
+use this information to manipulate or exploit the application.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check 'error-page' format (default true)
+    Enabling this parameter will check that an 'error-code' or 'exception-type'
+    along with a 'location' element are not missing from an 'error-page'
+
+-Check that the following error codes are present:
+    Values added to this list should be specified as an integer representing an
+    error code that is wished to be covered. For example, adding '404' to this
+    parameter will report a violation if the 'web.xml' file does not contain an
+    'error-page' with an 'error-code' of '404'.
+ 
+-Check that the following exception types are present:
+    Values added to this list should be specified as a fully qualified name
+    representing an exception type that is wished to be covered. For example,
+    adding 'java.lang.NullPointerException' to this parameter will report a
+    violation if the 'web.xml' file does not contain an 'error-page' with an
+    'exception-type' of 'java.lang.NullPointerException'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+There may be alternate methods for specifying an error page depending on the
+specific technologies being used. In these cases, an error page may be properly
+configured elsewhere while this rule would still report a violation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+web.xml:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app
+    xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+    xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+    xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+    version="2.4"
+&gt;
+&lt;web-app&gt;
+    ...
+    &lt;!-- VIOLATION --&gt;
+&lt;/web-app&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add appropriate 'error-page' elements to handle error conditions.
+
+web.xml:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app
+    xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+    xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+    xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+    version="2.4"
+&gt;
+&lt;web-app&gt;
+    ...
+    &lt;!-- FIXED --&gt;
+    &lt;error-page&gt;
+        &lt;exception-type&gt;java.lang.NullPointerException&lt;/exception-type&gt;
+        &lt;location&gt;/error.html&lt;/location&gt;
+    &lt;/error-page&gt;
+    &lt;error-page&gt;
+        &lt;error-code&gt;404&lt;/error-code&gt;
+        &lt;location&gt;/404.html&lt;/location&gt;
+    &lt;error-page&gt;
+&lt;/web-app&gt;
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/99d7934c-bc90-4c5b-9810-b32045076e93">https://app.hackedu.com/link/99d7934c-bc90-4c5b-9810-b32045076e93</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+CWE-7: J2EE Misconfiguration: Missing Custom Error Page
+<A HREF="https://cwe.mitre.org/data/definitions/7.html">https://cwe.mitre.org/data/definitions/7.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

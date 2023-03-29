@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Store sensitive data in mutable objects [SECURITY.ESD.SDM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Store sensitive data in mutable objects [SECURITY.ESD.SDM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if sensitive data is not stored in mutable objects.
+The following cases are flagged:
+    1) A "javax.swing.JPasswordField" calls "getSelectedText()" or "getText()",
+           both of which return a String
+    2) A "password" method specified in the parameter table, which returns a
+       char[] is converted to a String through use of either the
+       "String(char[])" or "String(char[],int,int)" constructor
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Sensitive data should be stored as mutable objects so they can be overwritten
+after use. For example, a password is frequently stored as a "char[]". After
+use the password could be cleared by using "Arrays.fill()". However, if the
+password were instead stored as a String, then the value may persist in memory
+as the garbage collector is responsible for removing the String from memory.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check JPasswordField methods which return a String value (default true)
+    -Flags a violation if a JPasswordField or subclass calls "getSelectedText()"
+     or "getText()"
+
+-Check Strings initialized with a "char[]" password (default true)
+    -Flags a violation if a String constructor is called with the return value
+     of a method specified in the table. Note that only methods which return a
+     char[] will be checked.
+
+     Methods returning "char[]" password:
+
+       Type (qualified name)         |  Method (regular expression)
+     --------------------------------+-------------------------------
+       "java.io.Console"             |  "^readPassword$"
+       "javax.swing.JPasswordField"  |  "^getPassword$"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class SDM {
+    private Console c;
+    private JPasswordField jpf;
+    private String password; //VIOLATION
+
+    public String getPassword0() throws Exception {
+        return new String(c.readPassword()); //VIOLATION
+    }
+
+    public String getPassword1() throws Exception {
+        return jpf.getText(); //VIOLATION
+    }
+    public String getPassword2() throws Exception {
+        char[] pass = jpf.getPassword();
+        return new String(pass); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use "char[]" instead of String for passwords.
+
+package examples.rules.security.esd;
+
+public class SDM_Fixed {
+    private Console c;
+    private JPasswordField jpf;
+    private char[] password; //FIXED
+
+    public char[] getPassword0() throws Exception {
+        return c.readPassword(); //FIXED
+    }
+
+    public char[] getPassword1() throws Exception {
+        return jpf.getPassword(); //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Console (Java Platform SE 6):
+   <A HREF="http://java.sun.com/javase/6/docs/api/java/io/Console.html">http://java.sun.com/javase/6/docs/api/java/io/Console.html</A>
+
+2. JPasswordField (Java Platform SE 6):
+   <A HREF="http://java.sun.com/javase/6/docs/api/javax/swing/JPasswordField.html">http://java.sun.com/javase/6/docs/api/javax/swing/JPasswordField.html</A>
+
+3. "Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+   Static Analysis Tools" by Michael Ware
+
+4. Cigital Java Security Rulepack # 57:
+   <A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+5. OWASP API Security Top 10-2019
+   API3-Excessive Data Exposure
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

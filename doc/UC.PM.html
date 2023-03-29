@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused "private" methods [UC.PM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused "private" methods [UC.PM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused private methods. An error is reported
+for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule will ignore methods with the following signatures which are declared
+within classes that implement "java.io.Serializable":
+
+private void writeObject(java.io.ObjectOutputStream out);
+private void readObject(java.io.ObjectInputStream in);
+private Object writeReplace();
+private Object readResolve();
+
+These methods are designed to be called implicitly by the serialization and
+deserialization mechanisms, so they need not be called directly from your code.  
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+The code may implement features that bypass security.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore methods with names (in regular expression)
+    -Allows you to provide a list of methods to ignore. If a method's name 
+     matches any of the regular expressions, it will be exempt from this rule.
+     For example, if "^writeObject$" is added to the list, then a method with 
+     name "writeObject" would not be identified as a rule violation-- even if it 
+     is an unused "private" method
+    -The list is empty by default.  You should customize the list by adding the
+     names of any methods that you don't want to check. 
+-Ignore methods which are used within a Jcontract tag
+    -Default is "false".
+    -Sometimes, "private" methods which are not called from within the code are
+     still necessary because they are called from a Jcontract Javadoc tag.  If 
+     you use Jcontract and do not want such methods to be flagged as violations,
+     you should enable this parameter.  
+    -This parameter is disabled by default because it is unusual to have a 
+     "private" method which is only called from within the body of a Jcontract
+     Javadoc tag.
+-Ignore methods preceded by annotations with qualified names
+    -Default is "javafx.fxml.FXML"
+    -Allows you to ignore methods that are preceded by specific annotations
+    -You should customize the list with fully-qualified annotation names
+    
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An unused method could indicate a logical flaw in the corresponding
+class, or it could be leftover from a previously deleted section of the
+class. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class PM {
+    private void unusedMethod () {}  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the logical flaw or the leftover method.
+
+package examples.rules.uc;
+
+public class PMFixed {
+      // FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-561: Dead Code
+<A HREF="https://cwe.mitre.org/data/definitions/561.html">https://cwe.mitre.org/data/definitions/561.html</A>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+</PRE>
+</BODY>
+</HTML>

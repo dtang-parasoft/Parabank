@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not explicitly call 'System.gc()' or 'Runtime.gc()' [GC.GC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not explicitly call 'System.gc()' or 'Runtime.gc()' [GC.GC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies explicit calls of the "System.gc()" or 
+"Runtime.gc()" garbage collector method. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Garbage collection could be very costly and should be avoided
+by all means-- except in benchmarking code. The garbage
+collector will be executed automatically by the JVM whenever it is
+appropriate. If you want to gain more control over garbage
+collection, you should write your own code instead of calling "gc()".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+public class GC {
+    public void myMethod() {
+        try {
+            //...
+        } finally {
+            //...
+            System.gc(); //VIOLATION
+        }
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+public class GCFixed {
+    public void myMethod() {
+        try {
+            //...
+        } finally {
+            //...
+            //FIXED, System.gc() is removed
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

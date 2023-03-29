@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hide inherited "static" member methods [OOP.AHSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hide inherited "static" member methods [OOP.AHSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that hides inherited "static" member methods. An
+error is reported if an inherited method is overridden by a child class.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not flag cases where the "static" method is overridden solely to
+improve the visibility of the method. The criteria for this are:
+1) The overriding method only calls the overridden method.
+2) The overriding method has less restricted visibility than the overridden
+method.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Hiding  inherited "static" member methods is often considered poor style. 
+Following this rule makes code less confusing and error prone. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+class SuperAHSM {
+    static void method1 () {}
+}
+
+public class AHSM extends SuperAHSM {
+    static void method1 () {}  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The solution will depend on the design of the program, but
+may be as simple as using the inherited method and removing
+the method declared in the child class.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+MET07-J. Never declare a class method that hides a method declared in a superclass or superinterface
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET07-J.+Never+declare+a+class+method+that+hides+a+method+declared+in+a+superclass+or+superinterface">https://wiki.sei.cmu.edu/confluence/display/java/MET07-J.+Never+declare+a+class+method+that+hides+a+method+declared+in+a+superclass+or+superinterface</A>
+
+</PRE>
+</BODY>
+</HTML>

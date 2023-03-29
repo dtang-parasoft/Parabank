@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling 'equals(null)' [PB.API.EQNL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling 'equals(null)' [PB.API.EQNL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to 'equals()' with a 'null' parameter. See NOTES
+for more information.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The use of 'equals()' to check for 'null' is incorrect for a number of
+reasons. The most apparent reason is that if an object were 'null' then the
+call to the 'equals()' method would generate a NullPointerException. The
+standard way to check for a 'null' value is to use the comparison operators
+'==' and '!='.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class EQNL {
+    public Integer add(Integer a, Integer b) {
+        if (a.equals(null) || b.equals(null)) { //VIOLATION
+            return null;
+        }
+        return new Integer(a.intValue() + b.intValue());
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use '==' and '!=' for comparisons to 'null'.
+
+package examples.rules.pb.api;
+
+public class EQNLFixed {
+    public Integer add(Integer a, Integer b) {
+        if (a == null || b == null) { //FIXED
+            return null;
+        }
+        return new Integer(a.intValue() + b.intValue());
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

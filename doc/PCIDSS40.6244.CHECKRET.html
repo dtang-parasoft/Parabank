@@ -1,0 +1,259 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Consistently check the returned value of non-void methods [PCIDSS40.6244.CHECKRET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Consistently check the returned value of non-void methods [PCIDSS40.6244.CHECKRET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects unchecked returned values for methods that typically check returned values.
+
+Returned values can be checked in one of the following ways:
+- the returned value is used in a conditional statement (if, switch, while etc.)
+- the returned value is used in a binary expression with &gt;, &lt;, &gt;=, &lt;=, !=, == operators
+- the returned value is passed to a validating method as a parameter.
+
+Using the returned value means:
+- passing it as a parameter to a method other than a validating method
+- accessing its fields, invoking its methods etc.
+
+The returned value is considered unchecked if:
+- it is used before it has been checked
+- it has not been checked at all
+- it is not used.
+
+This rule works only on a scope of one method. For this reason, the returned values that are
+passed further to another method are counted neither as checked nor as unchecked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+If returned values are unchecked, then an attacker may force the method to fail or return a value
+that is not expected. This may lead to a software state that the programmer assumed would not be possible.
+For example, if a program calls a method to drop privileges, but does not check the return code to ensure
+that privileges were successfully dropped, then the program may continue to operate with the higher privileges.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Unchecked ratio threshold" parameter allows you to specify when a violation should be reported.
+The value expresses the ratio of the number of times returned values are checked to the number of
+the method invocations. If the ratio is lower than the specified threshold, the rule will report a violation.
+The default value is 0.2. 
+
+The "Validating methods" parameter allows you to specify a list of methods that can be used to check returned values.
+The returned value will be considered to be checked if it is passed to one of the listed methods as a parameter.
+
+The following columns allow you to define different aspects of methods in the tables: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined methods
+  for Flow Analysis.
+
+* The 'Fully qualified type name (wildcard)' column should be used to provide
+  the fully qualified name of the type where the method is declared.
+  Use '*' if you want to describe a method declared in any type.
+
+* The 'Method name (wildcard)' column should contain the name of the described method.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current row will apply
+  to methods with the given name defined in subclasses of the given class. Note that this
+  applies to both instance and non-instance methods.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Checking the value returned form a method can prevent unexpected states and conditions that may
+lead to crashes or other unintended behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public abstract class Example
+{
+    private int _error;
+
+    public abstract void handleError();
+
+    public int getErrorCode()
+    {
+        return _error;
+    }
+
+    public void usualMethod1()
+    {
+        int rv = getErrorCode();
+        if (rv == -1) {
+            handleError();
+        }
+    }
+
+    public void usualMethod2()
+    {
+        if (getErrorCode() == -1) {
+            handleError();
+        }
+    }
+
+    public void usualMethod3()
+    {
+        int rv = getErrorCode();
+        if (rv &lt; 0) {
+            handleError();
+        }
+    }
+
+    public void usualMethod4()
+    {
+        int rv = getErrorCode();
+        if (rv &gt; 0) {
+            handleError();
+        }
+    }
+
+    public void usualMethod5()
+    {
+        int rv;
+        if ((rv = getErrorCode()) &gt; 0) {
+            handleError();
+        }
+    }
+
+    public void unusualMethod()
+    {
+        getErrorCode(); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public abstract class Repair
+{
+    private int _error;
+
+    public abstract void handleError();
+
+    public int getErrorCode()
+    {
+        return _error;
+    }
+
+    public void usualMethod1()
+    {
+        int rv = getErrorCode();
+        if (rv == -1) {
+            handleError();
+        }
+    }
+
+    public void usualMethod2()
+    {
+        if (getErrorCode() == -1) {
+            handleError();
+        }
+    }
+
+    public void usualMethod3()
+    {
+        int rv = getErrorCode();
+        if (rv &lt; 0) {
+            handleError();
+        }
+    }
+
+    public void usualMethod4()
+    {
+        int rv = getErrorCode();
+        if (rv &gt; 0) {
+            handleError();
+        }
+    }
+
+    public void usualMethod5()
+    {
+        int rv;
+        if ((rv = getErrorCode()) &gt; 0) {
+            handleError();
+        }
+    }
+
+    public void unusualMethod()
+    {
+        int rv = getErrorCode(); // NO VIOLATION
+        if (rv == -1) {
+            return;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-252: Unchecked Return Value
+<A HREF="https://cwe.mitre.org/data/definitions/252.html">https://cwe.mitre.org/data/definitions/252.html</A>
+
+Tags: PCI-DSS, CWE
+
+</PRE>
+</BODY>
+</HTML>

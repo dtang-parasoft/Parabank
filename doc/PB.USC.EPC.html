@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define empty "public" constructors in classes with no other constructors [PB.USC.EPC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define empty "public" constructors in classes with no other constructors [PB.USC.EPC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies empty "public" constructors in classes which have no 
+other constructors defined.  An empty "public" constructor is the same as 
+the default constructor provided by Java for classes with no other 
+constructors defined, so it need not be explicitly defined.  A constructor
+is considered "empty" if its body contains no statements.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If both CODSTA.DCTOR and this rule are enabled, there may be conflicts 
+between the two rules.  The rule CODSTA.DCTOR can be used to enforce the 
+opposite of this rule.  That is, CODSTA.DCTOR will make sure that an 
+explicit "public" constructor is defined in classes which have no explicit 
+constructor (in addition to other things).  It is not recommended that you 
+use both rules at the same time.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Since an empty "public" constructor is implicitly defined for all classes
+which have no other constructors, explicitly defining such a constructor is
+unnecessary.  Removing the definition will help to make the code more 
+compact. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some people prefer to explicitly define all constructors to make it more
+clear to the reader of the code what constructors are available.  Whether
+or not this rule should be followed is a matter of personal preference. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class EPC {
+    public EPC() {  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the explicitly defined constructor.
+
+package examples.rules.pb.usc;
+
+public class EPCFixed {
+    //FIXED- implicitly defined EPCFixed constructor
+}
+
+</PRE>
+</BODY>
+</HTML>

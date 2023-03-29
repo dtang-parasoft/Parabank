@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid setting the write or execute file permissions to unintended users [CWE.732.IDP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid setting the write or execute file permissions to unintended users [CWE.732.IDP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Setting permissions for files and folders should be managed carefully to
+prevent unintended users from accessing restricted resources.
+
+This rule detects calls to the java.io.File.setExecutable and
+java.io.File.setWritable methods that have the execute or write permissions
+set to allow anyone to execute or modify the file:
+- setExecutable(true)
+- setExecutable(true, false)
+- setWritable(true)
+- setWritable(true, false)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Setting file permissions that allow anyone to modify or execute files may
+enable an attacker to bypass intended security restrictions to gain access
+to sensitive data or execute arbitrary code with the privileges of the file's
+owner.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the setWritable and setExecutable methods are called
+with the parameters that allow anyone to modify and execute the files. 
+
+public class IDP {
+    public void method() {
+        File firstFile  = new File("first_file");
+        firstFile.setExecutable(true);//VIOLATION
+        firstFile.setWritable(true);//VIOLATION
+
+        File secondFile = new File("second_file");
+        secondFile.setWritable(true, false);//VIOLATION
+        secondFile.setExecutable(true, false);//VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, modify the method parameters so that only the file owner is
+allowed to modify and execute the files.
+
+public class IDPFixed {
+    public void method() {
+        File firstFile  = new File("first_file");
+        firstFile.setExecutable(false);
+        firstFile.setWritable(false);
+
+        File secondFile = new File("second_file");
+        secondFile.setWritable(false, false);
+        secondFile.setExecutable(false, false);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-279: Incorrect Execution-Assigned Permissions
+<A HREF="https://cwe.mitre.org/data/definitions/279.html">https://cwe.mitre.org/data/definitions/279.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-732: Incorrect Permission Assignment for Critical Resource
+<A HREF="https://cwe.mitre.org/data/definitions/732.html">https://cwe.mitre.org/data/definitions/732.html</A>
+
+</PRE>
+</BODY>
+</HTML>

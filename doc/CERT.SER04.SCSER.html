@@ -1,0 +1,206 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce 'SecurityManager' checks in methods of 'Serializable' classes [CERT.SER04.SCSER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce 'SecurityManager' checks in methods of 'Serializable' classes [CERT.SER04.SCSER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for the following cases in Serializable classes:
+    1. 'SecurityManager' is checked in constructors, but not in the
+       'readObject()' and 'readObjectNoData()' methods.
+    2. 'SecurityManager' is checked in setter methods, but not in the
+       'readObject()' method.
+    3. 'SecurityManager' is checked in getter methods, but not in the
+       'writeObject()' method.
+    4. 'SecurityManager' is checked in the 'readObject()' or
+       'readObjectNoData()' methods, but not in the non-"private" constructors.
+
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+'SecurityManager.checkXXX()' is used to check for permission before performing 
+an unsafe or sensitive operation. If a constructor, setter, or getter method of
+a Serializable class has a SecurityManager check, it means that certain methods
+are performing potentially sensitive operations and need to check for
+permission. Therefore, similar SecurityManager checks should be made in methods
+when doing serialization.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for 'SecurityManager' check (default value 1)
+-Check indirect 'SecurityManager' checks in super constructor(s) (default is off)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.io.Serializable;
+
+public class SCSER implements Serializable {
+
+    private String _value;
+     
+    public SCSER() {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new ClassPermission("SCSER"));
+        }
+        _value = 0;
+    }
+    
+    public final void setValue(String v) {
+
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new StatePermission("setValue"));
+        }
+        
+        _value = v;
+    }
+    
+    public final String getValue() {
+
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new StatePermission("getValue"));
+        }
+        
+        return _value;
+    }   
+    
+    private void writeObject(final ObjectOutputStream stream)  // VIOLATION 
+            throws IOException {    
+        stream.writeUTF(_value);
+    }
+    
+    private void readObject(final ObjectInputStream stream)   // VIOLATION
+            throws IOException, ClassNotFoundException {        
+        _value = stream.readUTF();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add SecurityManager checks in 'readObject()' and 'writeObject()' methods.
+
+package examples.rules.security.wsc;
+
+import java.io.Serializable;
+
+public class SCSERFixed implements Serializable {
+
+    private String _value;
+     
+    public SCSERFixed() {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new ClassPermission("SCSERFixed"));
+        }
+        _value = 0;
+    }
+    
+    public final void setValue(String v) {
+
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new StatePermission("setValue"));
+        }
+        
+        _value = v;
+    }
+    
+    public final String getValue() {
+
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new StatePermission("getValue"));
+        }
+        
+        return _value;
+    }   
+    
+    private void writeObject(final ObjectOutputStream stream)
+        throws IOException {    
+        stream.writeUTF(_value);
+        
+        final SecurityManager sm = System.getSecurityManager();  // FIXED 
+        if (sm != null) {
+            sm.checkPermission(new ClassPermission("SCSERFixed"));
+        }
+    }
+    
+    private void readObject(final ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {        
+        _value = stream.readUTF();
+        
+        final SecurityManager sm = System.getSecurityManager();   // FIXED
+        if (sm != null) {
+            sm.checkPermission(new ClassPermission("SCSERFixed"));
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+SER04-J. Do not allow serialization and deserialization to bypass the security manager
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER04-J.+Do+not+allow+serialization+and+deserialization+to+bypass+the+security+manager">https://wiki.sei.cmu.edu/confluence/display/java/SER04-J.+Do+not+allow+serialization+and+deserialization+to+bypass+the+security+manager</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

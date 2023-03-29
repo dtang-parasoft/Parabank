@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "char" arrays in "String" concatenations [PB.CUB.SAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "char" arrays in "String" concatenations [PB.CUB.SAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports an error when a "char" array is used in 'String'
+concatenation.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Unlike some other languages, Java does not support concatenations 
+between "char" arrays and strings. Java would not report that as an
+compilation error, however, the result produced from such a concatenation
+would be different from what the programmer might have expected.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class SAC {
+    private String str= "";
+    private String appendString(char[] charSequence) {
+        str+= charSequence; //VIOLATION
+        return str;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class SACFixed {
+    private String str= "";
+    private String appendString(char[] charSequence) {
+        str+= String.valueOf(charSequence); //FIXED
+        return str;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

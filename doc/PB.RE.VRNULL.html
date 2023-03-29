@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid methods returning "null" value [PB.RE.VRNULL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid methods returning "null" value [PB.RE.VRNULL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies that some special methods cannot return "null" value.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Method are not allowed to return "null" value:
+   Default method list:
+      - toString()
+      - clone()
+      
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Some special methods are not expected to return "null" value or should never 
+returning "null" value, e.g toString() and clone(). Returning "null" in those 
+methods will cause unexpected NullPointerException if user didn't handle the
+return value carefully.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+public class VRNULL {
+
+    private String name;
+    
+    public void setName(String n) {
+        name = n;
+    }
+    
+    public String toString() {
+        if (name == null) {
+            return null;  // VIOLATION
+        }
+        return name;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change to other non-null value
+
+package examples.rules.pb.re;
+
+public class VRNULLFixed {
+
+    private String name;
+    
+    public void setName(String n) {
+        name = n;
+    }
+    
+    public String toString() {
+        if (name == null) {
+            return ""; // FIXED
+        }
+        return name;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

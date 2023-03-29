@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the 'new String(String)' constructor [OPT.ACDO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the 'new String(String)' constructor [OPT.ACDO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of the 'new String (String)' constructor, e.g., 
+the instantiation of a new String variable using a String literal. An error 
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for cases where the return value of a
+call to one of the "String" methods 'split()', 'substring()', or 'trim()'
+is wrapped in a call to a "String" constructor.  As explained in the 
+documentation for the rule GC.MML, creating a new "String" object from the 
+return values of these methods may be necessary to prevent memory leaks.  
+Read the documentation for GC.MML for more details.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Using the "String" constructor which takes only a single "String" as an argument
+wastes time and is redundant.  Strings are immutable, so there is usually no 
+need to copy them.  In general, you can just use the original "String" object
+(the one that is being passed as a parameter) instead of creating a new "String"
+object.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class ACDO {
+    public void method () {
+        System.out.println (_s);
+    }
+    private String _s = new String ("ACDO");  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Store the String literal directly into the field instead of creating a copy of
+it.
+
+package examples.rules.opt;
+
+public class ACDOFixed {
+    public void method () {
+        System.out.println (_s);
+    }
+    private String _s = "ACDO";  // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 13
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from CODSTA.ACDO(v5.1)
+
+</PRE>
+</BODY>
+</HTML>

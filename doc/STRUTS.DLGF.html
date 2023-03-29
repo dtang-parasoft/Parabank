@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid local and global forwards with the same name in 'struts-config.xml' files [STRUTS.DLGF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid local and global forwards with the same name in 'struts-config.xml' files [STRUTS.DLGF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In a 'struts-config.xml' file the 'forward' element can be specified either
+globally or local to an action. Global forwards are defined inside the
+'global-forwards' element and local forwards are defined inside an 'action'
+element. This rule reports a violation for any local forward which has the same
+'name' attribute value as a global forward. A violation is reported for each
+occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Having local forwards with the same name as a global forward may indicate an
+error or oversight.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If a local forward has the same name as a global forward then the local forward
+will be used. There may be valid reasons for using the same name, such as having
+a default error page defined as a global forward and overriding it for a special
+case with a local forward. In these instances the rule may report a violation
+despite the behavior being intended.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+    <A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;
+&lt;struts-config&gt;
+    &lt;global-forwards&gt;
+        &lt;forward name="logout" path="/Logout.jsp"/&gt;
+    &lt;/global-forwards&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/Logout"
+            type="examples.Logout"
+            name="logoutForm"
+            scope="request"
+            input="/Logout.jsp"
+            validate="false"
+        &gt;
+            &lt;forward name="logout" path="/Logout2.jsp"/&gt;  &lt;!-- VIOLATION --&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the violation is unintentional, then select a different name for one of the
+forwards.
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+    <A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;
+&lt;struts-config&gt;
+    &lt;global-forwards&gt;
+        &lt;forward name="logout" path="/Logout.jsp"/&gt;
+    &lt;/global-forwards&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/Logout"
+            type="examples.Logout"
+            name="logoutForm"
+            scope="request"
+            input="/Logout.jsp"
+            validate="false"
+        &gt;
+            &lt;forward name="logout2" path="/Logout2.jsp"/&gt;  &lt;!-- FIXED --&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+struts-config_1_3.dtd
+<A HREF="http://struts.apache.org/1.x/struts-core/dtddoc/struts-config_1_3.dtd.org.html">http://struts.apache.org/1.x/struts-core/dtddoc/struts-config_1_3.dtd.org.html</A>
+
+</PRE>
+</BODY>
+</HTML>

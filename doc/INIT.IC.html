@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use initialization circularities for fields [INIT.IC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use initialization circularities for fields [INIT.IC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies initialization circularities of "static" fields. An error 
+is reported for each occurrence. 
+
+Initialization circularities occur for initializations of "static" fields 
+(cross classes/files) that depend on each other's initialized values.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Code Quality
+
+Obfuscating and confusing code is error-prone and hard to maintain, therefore 
+increases the likelihood of security problems. See BENEFITS for more
+information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Because of the class loading mechanism, the initialized values of static fields
+might be different depending on which class is loaded first. Such an uncertainty
+could be a potential bug.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class IC {
+    public static void main(String args[]) {
+        IC2 ref2= new IC2(); //If the order is switched, the result would be different
+        IC1 ref1= new IC1();  
+        System.out.println(IC1.j + " "+ IC2.i);
+    }
+}
+class IC1 {
+    static int j= IC2.i+ 1; //VIOLATION
+}
+class IC2 {
+    static int i= IC1.j;  //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class ICFixed {
+    public static void main(String args[]) {
+        IC2 ref2= new IC2(); 
+        IC1 ref1= new IC1();  
+        System.out.println(IC1.j + " "+ IC2.i);
+    }
+}
+class IC1 {
+    static int j= IC2.i+ 1; //FIXED
+}
+class IC2 {
+    static int i= 0; //FIXED  
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002350: The application must use appropriate cryptography in order to protect stored DoD information when required by the information owner or DoD policy
+
+</PRE>
+</BODY>
+</HTML>

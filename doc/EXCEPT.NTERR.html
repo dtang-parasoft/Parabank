@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not throw exception types which are too general or are unchecked exceptions [EXCEPT.NTERR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not throw exception types which are too general or are unchecked exceptions [EXCEPT.NTERR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule looks for code which throws exceptions which have a type that is 
+either too general or an unchecked exception type.  By default, the exception
+types that are checked for are 'java.lang.Throwable', 'java.lang.Error', 
+'java.lang.Exception', and 'java.lang.RuntimeException'. The user can change
+the list of checked types in the parameters. A violation will be flagged for 
+each "throw" statement which throws one of the exception types specified in the
+parameters.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Throwing overly broad exceptions promotes complex error handling code that is
+more likely to contain security vulnerabilities." [CWE-397]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Exception types which should not be thrown (fully qualified names)
+    -Default values are 'java.lang.Exception', 'java.lang.Error', 'java.lang.
+     Throwable', and 'java.lang.RuntimeException'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using exception types which are too general can be very confusing. It would be 
+better to consider using more descriptive exception objects to make the 
+exception object more useful.
+
+Also, exceptions of type 'java.lang.RuntimeException' should not be explicitly
+thrown in the code because these exceptions are expected to be thrown only by
+the JVM.  Throwing them explicitly in code can be confusing.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NTERR {
+    void myMethod(int i) throws Exception { 
+        Exception e= new Exception(); 
+        throw e; //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a checked exception type or a more specific exception type which is a 
+subclass of 'Throwable', 'Error', and/or 'Exception'.
+
+package examples.rules.except;
+
+import java.io.IOException;
+
+public class NTERRFixed {
+    void myMethod(int i) throws IOException { 
+        IOException e= new IOException();  //FIXED
+        throw e; 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/5932539e-e457-4d40-9964-12f0d25273d1">https://app.hackedu.com/link/5932539e-e457-4d40-9964-12f0d25273d1</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-397: Declaration of Throws for Generic Exception
+<A HREF="https://cwe.mitre.org/data/definitions/397.html">https://cwe.mitre.org/data/definitions/397.html</A>
+
+OWASP Top 10-2021
+A05:2021 – Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR07-J. Do not throw RuntimeException, Exception, or Throwable
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR07-J.+Do+not+throw+RuntimeException%2C+Exception%2C+or+Throwable">https://wiki.sei.cmu.edu/confluence/display/java/ERR07-J.+Do+not+throw+RuntimeException%2C+Exception%2C+or+Throwable</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

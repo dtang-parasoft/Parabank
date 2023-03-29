@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make sure implementation of Object.equals(Object) is reflexive [BD.API.EQREFL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make sure implementation of Object.equals(Object) is reflexive [BD.API.EQREFL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects Object.equals(Object) methods that return false when called with the same object
+for which the method is invoked as a parameter. This is inconsistent with the equals method rule,
+which states that for any non-null reference value x, x.equals(x) should return true.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    int a;
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Example) {
+            return ((Example)obj).a &lt; a; // VIOLATION
+        }
+        return false;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public class Repair
+{
+    int a;
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Repair) {
+            return ((Repair)obj).a == a;
+        }
+        return false;
+    } // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+MET08-J. Preserve the equality contract when overriding the equals() method
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET08-J.+Preserve+the+equality+contract+when+overriding+the+equals%28%29+method">https://wiki.sei.cmu.edu/confluence/display/java/MET08-J.+Preserve+the+equality+contract+when+overriding+the+equals%28%29+method</A>
+
+<A HREF="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#equals(java.lang.Object)">http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#equals(java.lang.Object)</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

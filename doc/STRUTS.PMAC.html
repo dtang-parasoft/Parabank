@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid public methods in Action Classes [STRUTS.PMAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid public methods in Action Classes [STRUTS.PMAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags "public" methods declared in an Action Class other than
+"execute()".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Struts Action Classes are intended to be accessed by the controller. Having
+"public" methods in an Action Class suggests that the class may be be accessed
+in a way other than by the Struts controller. This may lead to confusing or
+unexpected behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.struts;
+
+import org.apache.struts.action.*;
+
+public class PMAC extends Action {
+    public ActionForward execute(
+        ActionMapping mapping,
+        ActionForm form,
+        HttpServletRequest request,
+        HttpServletResponse response
+    )
+    {
+        ...
+        boolean flag = someMethod();
+        ...
+    }
+
+    public static boolean someMethod() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Refactor to avoid public classes.
+
+package examples.struts;
+
+import org.apache.struts.action.*;
+
+public class PMACFixed extends Action {
+    public ActionForward execute(
+        ActionMapping mapping,
+        ActionForm form,
+        HttpServletRequest request,
+        HttpServletResponse response
+    )
+    {
+        ...
+        boolean flag = ActionUtil.someMethod();
+        ...
+    }
+}
+
+public class ActionUtil {
+    public static boolean someMethod() {
+        ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

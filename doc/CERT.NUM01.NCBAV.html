@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not perform bitwise and arithmetic operations on the same data [CERT.NUM01.NCBAV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not perform bitwise and arithmetic operations on the same data [CERT.NUM01.NCBAV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Integer variables are frequently intended to represent either a numeric value
+or a bit collection. Numeric values must be exclusively operated on using
+arithmetic operations, whereas bit collections must be exclusively operated on
+using bitwise operations." [SEI CERT Oracle Coding Standard for Java]
+
+This rule detects when a statement includes a variable on which both
+an arithmetic operation and a bitwise operation are performed.
+The rule can recognize the following operators: 
+- arithmetic operators: '+', '-', '*', '/', '%'
+- bitwise operators: '~',  '&lt;&lt;', '&gt;&gt;', '&gt;&gt;&gt;', '&amp;', '^', '|'
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Performing bitwise manipulation and arithmetic operations on the same variable
+obscures the programmer's intentions and reduces readability. Consequently, it
+is more difficult for a security auditor or maintainer to determine which
+checks must be performed to eliminate security flaws and ensure data
+integrity." [SEI CERT Oracle Coding Standard for Java]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Performing bitwise and arithmetic operations on the same data can obscure
+the purpose of the data stored in the variable and often indicates confusion
+regarding that purpose." [SEI CERT Oracle Coding Standard for Java]
+
+This rule helps you avoid issues caused by unexpected results of bitwise
+operations and improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.PB.CUB;
+
+public class NCBAV
+{
+    int computeViol(int x)
+    {
+        int y = x &lt;&lt; 2;
+        x += y + 1; //VIOLATION
+        return x;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, modify the statement assigned to the 'result' variable
+to avoid using both bitwise and arithmetic operations on the same statement.
+
+
+package examples.rules.PB.CUB;
+
+public class NCBAVFixed
+{
+    int compute(int x)
+    {
+        return 5 * x + 1; //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+NUM01-J. Do not perform bitwise and arithmetic operations on the same data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM01-J.+Do+not+perform+bitwise+and+arithmetic+operations+on+the+same+data">https://wiki.sei.cmu.edu/confluence/display/java/NUM01-J.+Do+not+perform+bitwise+and+arithmetic+operations+on+the+same+data</A>
+
+</PRE>
+</BODY>
+</HTML>

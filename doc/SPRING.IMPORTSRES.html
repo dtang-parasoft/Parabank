@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using relative ''../'' path reference to parent files [SPRING.IMPORTSRES]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using relative ''../'' path reference to parent files [SPRING.IMPORTSRES]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies usage of the relative path to parent in import tags within Spring xml configuration files.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is not recommended to import files from parent directories using a relative "../" path. 
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+From Spring Framework Documentation:
+
+section: 3.2.2.1. Composing XML-based configuration metadata
+
+"It is possible to reference files in parent directories using a relative "../" path. 
+However, this is not recommended because it creates 
+a dependency on a file that is outside the current application. 
+This is in particular not recommended for "classpath:" 
+URLs (e.g. "classpath:../services.xml") where the runtime resolution 
+process will pick the "nearest" classpath root and then look into 
+its parent directory. This is fragile since classpath configuration 
+changes may lead to a different directory being picked." 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;import resource="classpath:../services.xml"/&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move services.xml to a directory below and change the configuration to:
+&lt;import resource="classpath:./services.xml"/&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Spring Framework Documentation 
+<A HREF="http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-xml-import">http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-xml-import</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use mapped, named HQL queries instead of writing queries in Java code [HIBERNATE.UGNQ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use mapped, named HQL queries instead of writing queries in Java code [HIBERNATE.UGNQ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for uses of the method 'org.hibernate.Session.createQuery()'.
+Instead of creating an HQL query in Java code, it is recommended that you 
+use a named query that is mapped in a "hibernate-mapping" (".hbm.xml") file.
+You can then access this query using the "getNamedQuery()" method.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Moving HQL queries from Java code to XML files makes them easier to modify, 
+especially if the same query is used multiple times.
+
+This rule was created for use with Hibernate 3.1.  It is not guaranteed to apply
+to all versions of Hibernate.  You should not enable this rule if it does not
+apply to the version of Hibernate you are using.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.hibernate;
+
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+public class UGNQ {
+    public static List getPeople(int age, Session session){
+        Query query= session.createQuery("from examples.rules.hibernate.Person as person "
+                +"where person.age &lt;= :age");  //VIOLATION
+        query.setInteger("age", age);
+        return query.list();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Put a named query in the XML mapping document, and use 'getNamedQuery()' 
+instead of 'createQuery()'.  
+
+For instance, try adding the query to the XML mapping document as shown below
+(inside the "&lt;hibernate-mapping&gt;" tag):
+
+&lt;query name="examples.rules.hibernate.getPeople"&gt;
+    &lt;![CDATA[
+        from examples.rules.hibernate.Person as person 
+        where person.age &lt;= :age
+    ]]&gt;
+&lt;/query&gt; 
+
+After adding this to the mapping document, you can access the query as 
+follows:
+
+package examples.rules.hibernate;
+
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+public class UGNQFixed {
+    public static List getPeople(int age, Session session){
+        Query query= session.getNamedQuery("examples.rules.hibernate.getPeople");  //FIXED
+        query.setInteger("age", age);
+        return query.list();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. "Hibernate: A Developer's Notebook" by James Elliott. 2004,  pp. 54.
+
+</PRE>
+</BODY>
+</HTML>

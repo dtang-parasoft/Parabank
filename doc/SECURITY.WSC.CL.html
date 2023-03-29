@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define custom class loaders [SECURITY.WSC.CL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define custom class loaders [SECURITY.WSC.CL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies custom 'ClassLoader' declarations. A message
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Malicious Code
+
+Creating a custom class loader that is not secure can allow
+the loading of malicious classes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class CL extends ClassLoader {} //VIOLATION
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not create custom 'ClassLoader' or ensure that 
+custom ClassLoader is securely implemented.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.unix.org.ua/orelly/java-ent/security/ch03_04.htm">http://www.unix.org.ua/orelly/java-ent/security/ch03_04.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Number of statement lines in a "class" or "interface" [METRICS.ECLT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Number of statement lines in a "class" or "interface" [METRICS.ECLT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+Counts the number of statements in a class.
+An opening or closing brace by itself does not get counted as a statement.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest will report an error if the value is greater or equal 750.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Big classes are difficult to understand and maintain. Consider breaking down
+big classes into smaller ones performing related tasks.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.metrics;
+
+public class CSNL {
+    /** javadoc for example method
+     */
+    public void example (boolean isDone) {
+        if (isDone) {  /* this is a comment */
+            System.out.println ("this is a statement");
+            someMethod ();
+        } // end of if
+    }  // end of example.
+
+    public void someMethod () {
+    }
+}
+
+//This class' comments: 5
+//This class' statements: 7
+//This class' total lines: 13
+
+</PRE>
+</BODY>
+</HTML>

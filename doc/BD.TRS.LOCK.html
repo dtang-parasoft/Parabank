@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not abandon unreleased locks [BD.TRS.LOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not abandon unreleased locks [BD.TRS.LOCK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects situations when the java.util.concurrent.locks.Lock object is locked
+and not unlocked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Locked object may be unlocked from callers up to specified level" parameter
+allows to manage depth of analysis of call graph.
+Higher values of the parameter lead to more precise results but slower analysis.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents application deadlocks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The example which triggers a violation here is a use of a method which locks the Lock
+variable and calls a method which can throw an exception before unlocking of the lock.
+When the exception is thrown, the variable remains locked, which may cause deadlock.
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Example
+{
+    private Lock _lock = new ReentrantLock();
+
+    private FileInputStream _inputStream;
+
+    private int _lastCharacter;
+
+    public void readSingleByte()
+        throws IOException
+    {
+        _lock.lock();
+        _lastCharacter = _inputStream.read(); // Reading from the stream may throw IOException.
+        _lock.unlock();
+    } // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The best practice that guarantees unlocking is to wrap the code protected by a lock object
+in a try block and unlock the lock held in the corresponding finally block:
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Repair
+{
+    private Lock _lock = new ReentrantLock();
+
+    private FileInputStream _inputStream;
+
+    private int _lastCharacter;
+
+    public void readSingleByte()
+        throws IOException
+    {
+        _lock.lock();
+        try {
+            _lastCharacter = _inputStream.read();
+        } finally {
+            _lock.unlock();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-667: Improper Locking
+<A HREF="https://cwe.mitre.org/data/definitions/667.html">https://cwe.mitre.org/data/definitions/667.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK08-J. Ensure actively held locks are released on exceptional conditions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK08-J.+Ensure+actively+held+locks+are+released+on+exceptional+conditions">https://wiki.sei.cmu.edu/confluence/display/java/LCK08-J.+Ensure+actively+held+locks+are+released+on+exceptional+conditions</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

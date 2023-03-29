@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not inject @Stateful beans into @Stateless beans [EJB.EJB3.ISB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not inject @Stateful beans into @Stateless beans [EJB.EJB3.ISB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies @Stateful beans which are injected into a @Stateless bean.
+This behavior does not make sense and is likely an error. @Stateless beans are
+commonly reused and injected @Stateful beans may leave data behind.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule identifies injections using the "@EJB" and "@Resource" annotations.
+If an interface is injected, then a violation is flagged if any implementations
+of that interface are @Stateful.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Check the following:
+    -Check annotations
+    -Check annotations and deployment descriptors (default)
+        Check deployment descriptors in the following location:
+            -Check project (default)
+            -Check package
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class ISB implements ISBInterface {
+    @EJB
+    StatefulBeanInterface statefulBean; //VIOLATION
+    ...
+}
+
+@Stateful
+class StatefulBean implements StatefulBeanInterface {
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove @Stateful injection or convert to a @Stateful bean.
+
+package examples.rules.ejb.ejb3;
+
+
+@Stateful //FIXED
+public class ISBFixed implements ISBFixedInterface {
+    @EJB
+    StatefulBeanInterface statefulBean;
+    ...
+}
+
+@Stateful
+class StatefulBean implements StatefulBeanInterface {
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 105.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using loops in JUnit tests [JUNIT.AUL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using loops in JUnit tests [JUNIT.AUL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"JUnit Jupiter provides the ability to repeat a test a specified number of
+times by annotating a method with @RepeatedTest and specifying the total
+number of repetitions desired. Each invocation of a repeated test behaves
+like the execution of a regular @Test method with full support for the same
+lifecycle callbacks and extensions."
+[JUnit 5 User Guide, 2.14. Repeated Tests]
+
+"Parameterized tests make it possible to run a test multiple times with
+different arguments. They are declared just like regular @Test methods but
+use the @ParameterizedTest annotation instead. In addition, you must declare
+at least one source that will provide the arguments for each invocation
+and then consume the arguments in the test method."
+[JUnit 5 User Guide, 2.15. Parameterized Tests]
+
+This rule identifies test methods annotated with the @Test annotation
+that should be annotated with @RepeatedTest or @ParameterizedTest.
+
+The rule detects when all assertions in a @Test method are placed in one of
+the following loops:
+- for
+- while
+- do while
+- forEach (in streams and collections)
+- forEachOrdered (streams)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule flags JUnit 4 @Test methods only if the test class contains
+one or more JUnit 5 test.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you leverage JUnit 5 @Repeated and @Parameterized annotations, 
+which improve test code readability and facilitate test maintenance. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the assertions in the testMethod1 annotated with
+@Test are placed in a "for" loop.
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class AUL
+{
+    @Test
+    void testMethod1() { //VIOLATION
+        for(int i = 0; i &lt; 4; i++) {
+            assertEquals(2, Math.addExact(1, 1), "1 + 1 should equal 2");
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, annotate the testMethod1 with @RepeatedTest and specify
+the number of repetitions to remove the loop.
+
+package examples.rules.junit;
+
+import org.junit.jupiter.api.RepeatedTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class AUL
+{
+    @RepeatedTest(3)
+    void testMethod1() { //FIXED
+        System.out.println("Executing repeated test");
+        assertEquals(2, Math.addExact(1, 1), "1 + 1 should equal 2");
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JUnit 5 User Guide
+2.14. Repeated Tests
+<A HREF="https://junit.org/junit5/docs/current/user-guide/#writing-tests-repeated-tests">https://junit.org/junit5/docs/current/user-guide/#writing-tests-repeated-tests</A>
+
+JUnit 5 User Guide
+2.15. Parameterized Tests
+<A HREF="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests">https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests</A>
+
+</PRE>
+</BODY>
+</HTML>

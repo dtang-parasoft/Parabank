@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'Socket.setSocketImplFactory()' or 'URL.setURLStreamHandlerFactory()' in a web component [CWE.246.NSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'Socket.setSocketImplFactory()' or 'URL.setURLStreamHandlerFactory()' in a web component [CWE.246.NSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should not set network socket factories or URL stream handler
+factories.  This rule will flag a violation for each call to
+'Socket.setSocketImplFactory()' or 'URL.setURLStreamHandlerFactory()' in a web
+component. A class or interface is considered a web component if it extends or
+implements a type from the "javax.servlet" package. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+
+By setting default socket factories, a web application will interfere with the 
+web-communication provided by the web server. This is likely to have unintended 
+consequences and side-steps the security provided by the container.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for set factory calls (default "2")
+    This parameter allows for indirect checking of
+    'Socket.setSocketImplFactory()' or 'URL.setURLStreamHandlerFactory()' calls.
+    Specifying a value of "1" will only check for direct calls to these methods.
+    A value of "2" will check if any of the methods called from the web
+    component in turn call 'Socket.setSocketImplFactory()' or
+    'URL.setURLStreamHandlerFactory()', and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Setting defaults for socket factories and URL stream handler factories is 
+likely to impact the way the web application container deals with network 
+traffic. This could impact security mechanisms adversely.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import javax.servlet.Servlet;
+import java.net.Socket;
+import java.net.URL;
+
+public class NSF implements Servlet {
+    public void testMethodOne() { 
+        try{
+            Socket.setSocketImplFactory(null); //VIOLATION
+            URL.setURLStreamHandlerFactory(null); //VIOLATION
+        }
+        catch(Exception e){}
+    }
+    ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not set Socket or URL Stream Handler factories in web components.  
+
+package examples.rules.security.bv;
+
+import javax.servlet.Servlet;
+
+public class NSFFixed implements Servlet {
+    public void testMethodOne() { 
+        //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-246: J2EE Bad Practices: Direct Use of Sockets
+<A HREF="https://cwe.mitre.org/data/definitions/246.html">https://cwe.mitre.org/data/definitions/246.html</A>
+
+</PRE>
+</BODY>
+</HTML>

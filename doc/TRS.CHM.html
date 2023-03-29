@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use ConcurrentHashMap instead of Hashtable and "synchronizedMap" wrapped HashMap when possible [TRS.CHM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use ConcurrentHashMap instead of Hashtable and "synchronizedMap" wrapped HashMap when possible [TRS.CHM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where it may be possible to use a ConcurrentHashMap
+in place of a Hashtable or "synchronizedMap" wrapped HashMap. This rule checks
+private Map fields. Violations should be analyzed on a case by case basis, as
+ConcurrentHashMap may not offer strict enough synchronization details. See 
+"NOTES "and "DRAWBACKS" for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+ConcurrentHashMap was introduced in JDK 1.5, so this rule does not check files
+using an earlier version. ConcurrentHashMap offers thread-safety but not the
+same synchronization implementation as Hashtable or a synchronizedMap wrapped
+HashMap. See "DRAWBACKS" for more information. ConcurrentHashMap can be used as
+a drop-in replacement for Hashtable as it possesses the same method
+specification. However, unlike HashMap, ConcurrentHashMap does not allow for
+"null" keys or values. Therefore, if the previous implementation using HashMap
+may have had "null" keys or values, then ConcurrentHashMap may not be a viable
+option.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check Hashtable (default true)
+-Check HashMap wrapped with "synchronizedMap" (default false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In situations with multiple threads ConcurrentHashMap can offer significant
+performance improvements.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+ConcurrentHashMap offers thread-safety but does not allow for locking the entire
+map. Some retrieval operations do not use locking, and can overlap with update
+and remove operations. So, a ConcurrentHashMap may not use a synchronization
+policy that is applicable for the desired operation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CHM {
+    private Map _map = new Hashtable(); //VIOLATION
+
+    public put(Object key, Object value) {
+        _map.put(key, value);
+    }
+
+    public remove(Object key) {
+        _map.remove(key);
+    }
+
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class CHMFixed {
+    private ConcurrentHashMap _ht = new ConcurrentHashMap(); //Fixed
+
+    public put(Object key, Object value) {
+        _map.put(key, value);
+    }
+
+    public remove(Object key) {
+        _map.remove(key);
+    }
+
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 242-243.
+
+ConcurrentHashMap
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ConcurrentHashMap.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ConcurrentHashMap.html</A>
+
+Hashtable
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Hashtable.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Hashtable.html</A>
+
+HashMap
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html</A>
+
+Collections
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Collections.html</A>
+
+</PRE>
+</BODY>
+</HTML>

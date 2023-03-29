@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Check floating-point inputs for exceptional values [BD.SECURITY.FPEXC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Check floating-point inputs for exceptional values [BD.SECURITY.FPEXC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Programs must ensure that all floating-point inputs (especially those obtained from the user) 
+are free of unexpected exceptional values. The methods Double.isNaN(double d) and 
+Double.isInfinite(double d) can be used for this purpose."
+[SEI CERT Oracle Coding Standard for Java; NUM08-J. Check floating-point inputs for exceptional values]
+
+This rule detects when floating-point input that was not checked for exceptional values (such as
+"NaN", "Infinity" or "-Infinity") is used to perform calculation or comparison.
+
+The following methods and constructors can return exceptional values:
+    Class java.lang.Double:
+      * new Double(String s)
+      * Double.valueOf(String s)
+      * Double.parseDouble(String s)
+    Class java.lang.Float:
+      * new Float(String s)
+      * Float.valueOf(String s)
+      * Float.parseFloat(String s) 
+    Class java.util.Scanner:
+      * nextDouble()
+      * nextFloat()    
+    
+Methods that checks if value is NaN:
+    Class java.lang.Double:
+      * Double.isNan(double v)
+      * isNaN()
+    Class java.lang.Float:
+      * Float.isNan(float v)
+      * isNaN()
+	    
+Methods that checks if value is Infinity or -Infinity:   
+    Class java.lang.Double:
+      * Double.isInfinite(double v)
+      * isInfinite()
+    Class java.lang.Float:
+      * Float.isInfinite(float v)
+      * isInfinite()
+	    
+Methods that check if value is not NaN, Infinity and -Infinity:
+    Class java.lang.Double:
+      * Double.isFinite(double v)
+    Class java.lang.Float:
+      * Float.isFinite(float v)
+		  	       
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps to keep your code secure from malicious attacks.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    double currentBalance; // User's cash balance
+
+    void doDeposit(String userInput)
+    {
+        double val = 0;
+        try {
+            val = Double.valueOf(userInput);
+        } catch (NumberFormatException e) {
+            // Handle input format error
+        }
+
+        if (val &gt;= Double.MAX_VALUE - currentBalance) { // VIOLATION
+            // Handle range error
+        }
+
+        currentBalance += val;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, use the methods Double.isNaN(double d) and Double.isInfinite(double d)
+
+public class Repair
+{
+    double currentBalance; // User's cash balance
+
+    void doDeposit(String userInput)
+    {
+        double val = 0;
+        try {
+            val = Double.valueOf(userInput);
+        } catch (NumberFormatException e) {
+            // Handle input format error
+        }
+
+        if (Double.isInfinite(val)) {
+            // Handle infinity error
+            val = 0.0;
+        }
+
+        if (Double.isNaN(val)) {
+            // Handle NaN error
+            val = 0.0;
+        }
+
+        if (val &gt;= Double.MAX_VALUE - currentBalance) { // NO VIOLATION
+            // Handle range error
+        }
+        currentBalance += val;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+NUM08-J. Check floating-point inputs for exceptional values
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM08-J.+Check+floating-point+inputs+for+exceptional+values">https://wiki.sei.cmu.edu/confluence/display/java/NUM08-J.+Check+floating-point+inputs+for+exceptional+values</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

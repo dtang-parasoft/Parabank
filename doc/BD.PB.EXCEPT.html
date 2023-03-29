@@ -1,0 +1,203 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always catch exceptions [BD.PB.EXCEPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always catch exceptions [BD.PB.EXCEPT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when an exception is thrown, but it is not caught. By default,
+the rule checks for any uncaught exceptions in the 'main' method.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Exceptions may lead to information leaks and provide unauthorized users with sensitive information.
+They reveal information that may enable an attacker to carry out a denial of service attack. For
+example, when a Java program that is run within a console terminates because of an uncaught
+exception, the exception's message and the stack trace are displayed on the console, which may
+reveal sensitive information about the internal structure of a program. For this reason, all
+exceptions should be caught and handled in the way that would ensure exception safety.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Methods which cannot throw exceptions" parameter allows you to specify additional methods 
+that are not allowed to throw exceptions. 
+
+The following columns allow you to define different aspects of methods in the methods table: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined methods for Flow Analysis.
+
+* The 'Fully qualified type name (wildcard)' column should be used to provide the fully qualified name of the type
+  that declares the method. Use '*' if you want to describe a method declared in any type.
+
+* The 'Method name (wildcard)' column should contain the name of the described method.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current row will
+  apply to methods with the given name defined in subclasses of the given class. Note that this
+  applies to both instance and non-instance methods.
+  
+Enable "Aggressive mode" to report a violation for every path with an uncaught exception, even if the 
+path does not begin with a 'main' method or with a method defined in the "Methods which cannot throw 
+exceptions" parameter. Flow Analysis will report a violation for any potential problems, even if there 
+is a high probability that it may be a false positive. This setting will result in better bug detection, 
+but it will increase the number of false alarms. 
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps maintain high quality of code by detecting uncaught exceptions that may indicate
+a bug in the code. It protects against sensitive data leakage and ensures proper exception handling. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+public class Example
+{
+    public static void main(String[] args)
+    {
+        try {
+            foo(args.length);
+        } catch (ArithmeticException exc) {
+            //...
+        }
+    }
+
+    private static void foo(int n)
+    {
+        if (n &gt; 2) {
+            throw new ArithmeticException();
+        } else {
+            throw new ArrayIndexOutOfBoundsException(); // VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Change the "main" method to catch all exceptions.
+
+public class Repair
+{
+    public static void main(String[] args)
+    {
+        try {
+            foo(args.length);
+        } catch (RuntimeException exc) {
+            //...
+        }
+    }
+
+    private static void foo(int n)
+    {
+        if (n &gt; 2) {
+            throw new ArithmeticException();
+        } else {
+            throw new ArrayIndexOutOfBoundsException(); // NO VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Exceptions
+Video: <A HREF="https://vimeo.com/201696974">https://vimeo.com/201696974</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_4-Exceptions.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-476: NULL Pointer Dereference
+<A HREF="https://cwe.mitre.org/data/definitions/476.html">https://cwe.mitre.org/data/definitions/476.html</A>
+
+CWE-457: Use of Uninitialized Variable
+<A HREF="https://cwe.mitre.org/data/definitions/457.html">https://cwe.mitre.org/data/definitions/457.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR01-J. Do not allow exceptions to expose sensitive information 
+<A HREF="https://www.securecoding.cert.org/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information">https://www.securecoding.cert.org/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information</A>
+
+Java Platform, Standard Edition (Java SE) 8, Class Exception
+<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html">http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html</A>
+
+Tags: CERT
+
+</PRE>
+</BODY>
+</HTML>

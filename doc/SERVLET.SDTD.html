@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify an appropriate schema or DTD file for 'web.xml' files [SERVLET.SDTD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify an appropriate schema or DTD file for 'web.xml' files [SERVLET.SDTD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks to make sure that you use either a schema or a DTD to validate
+'web.xml' files.  Without using a schema or DTD, it is easy to make a careless
+mistake in a 'web.xml' file.  When using a schema or DTD, the validator will 
+find many of these mistakes for you.  In each 'web.xml' file used to map 
+servlets, you should have an element like one of the following:
+
+a)
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>
+            <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;
+
+OR
+
+b)
+
+&lt;!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "<A HREF="http://java.sun.com/dtd/web-app_2_3.dtd">http://java.sun.com/dtd/web-app_2_3.dtd</A>"&gt;
+
+Example a) shows how to use a schema, and example b) shows how to use a DTD 
+file.  
+
+This rule will flag a violation for each 'web.xml' file which contains neither a
+reference to a schema nor a reference to a DTD file.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+There are a large number of possible errors in 'web.xml' files which will be 
+caught by the XML validator if you are using a schema or DTD.  These errors may
+cause a denial of access or some other type of error for the user of your 
+application.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Without using a schema or DTD, it is easy to make a careless mistake in a 
+'web.xml' file.  If the 'web.xml' file is incorrect, it may cause the servlet to 
+be inaccessible.  When using a schema or DTD, the validator will find many 
+common mistakes for you.  The schema or DTD file enforces basic syntactic 
+requirements for a 'web.xml' file.  Some common mistakes which will be caught by
+a schema or DTD are a missing servlet name, empty servlet name, or duplicate 
+servlet name.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+web.xml:
+
+&lt;web-app&gt;  &lt;!-- VIOLATION : Missing a reference to the schema or DTD file --&gt;
+
+    &lt;description&gt;
+        Sample web.xml file
+    &lt;/description&gt;
+    &lt;display-name&gt;Sample web.xml file&lt;/display-name&gt;
+
+    &lt;servlet-mapping&gt;  &lt;!-- Missing servlet name (would be caught by the 
+                            validator if you were using a schema to do 
+                            validation) --&gt;
+        &lt;url-pattern&gt;/foo/*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use either a schema or a DTD file to perform validation.  In this case, we chose
+to use the schema for servlet version 2.4. 
+
+web.xml:
+
+&lt;web-app xmlns="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A>"
+        xmlns:xsi="<A HREF="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</A>"
+        xsi:schemaLocation="<A HREF="http://java.sun.com/xml/ns/j2ee">http://java.sun.com/xml/ns/j2ee</A> 
+            <A HREF="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</A>"
+        version="2.4"&gt;  &lt;!-- FIXED : Use a schema for validation --&gt;
+
+    &lt;description&gt;
+      Sample web.xml file
+    &lt;/description&gt;
+    &lt;display-name&gt;Sample web.xml file&lt;/display-name&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Foo&lt;/servlet-name&gt;  &lt;!-- FIXED : fixed missing servlet name 
+                                               problem pointed out by validator --&gt;
+        &lt;url-pattern&gt;/foo/*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 26:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare the 'readObject()' method as "synchronized" [SERIAL.SROS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare the 'readObject()' method as "synchronized" [SERIAL.SROS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies any 'readObject()' method
+declared in a 'Serializable' class, since it's not necessary 
+to declare it as "synchronized". An error is reported for 
+each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Concurrency
+
+If the readObject() method itself is causing the object to 
+become visible to another thread, that is a suspicious 
+concurrency coding pattern.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Generally, there should be only one thread accessing the 
+object retrieved by deserialization. Thus, there's no need
+to have the 'readObject()' method "synchronized".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SROS implements java.io.Serializable {
+    public synchronized void readObject(java.io.ObjectInputStream in) {//VIOLATION
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class SROSFixed implements java.io.Serializable {
+    public void readObject(java.io.ObjectInputStream in) {//FIXED
+        //Ensure that this method is thread safe
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources
+<A HREF="https://app.hackedu.com/link/790d5a0c-cdb1-4df0-a319-fb75f3df8501">https://app.hackedu.com/link/790d5a0c-cdb1-4df0-a319-fb75f3df8501</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

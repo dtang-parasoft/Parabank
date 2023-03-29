@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not synchronize on a collection view if the backing collection is accessible [CERT.LCK04.SOBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not synchronize on a collection view if the backing collection is accessible [CERT.LCK04.SOBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Any class that uses a collection view rather than the backing collection as the lock object
+may end up with two distinct locking strategies. When the backing collection is accessible
+to multiple threads, the class that locked on the collection view has violated the thread-safety
+properties and is unsafe. Consequently, programs that both require synchronization while
+iterating over collection views and have accessible backing collections must synchronize
+on the backing collection."
+[SEI CERT Oracle Coding Standard for Java; LCK04-J. Do not synchronize on a collection view
+if the backing collection is accessible]
+
+This rule detects synchronizing on a collection view when the backing collection is accessible.
+
+NOTE
+
+N/A
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v.10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent nondeterministic behavior and keep a class thread-safe.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+private final Map&lt;Integer, String&gt; mapView = Collections.synchronizedMap(new HashMap&lt;Integer, String&gt;());
+private final Set&lt;Integer&gt; setView = mapView.keySet();
+
+public Map&lt;Integer, String&gt; getMap() {
+  return mapView;
+}
+
+public void doSomething() {
+  synchronized (setView) {  // Incorrectly synchronizes on setView
+    for (Integer k : setView) {
+      // ...
+    }
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+private final Map&lt;Integer, String&gt; mapView = Collections.synchronizedMap(new HashMap&lt;Integer, String&gt;());
+private final Set&lt;Integer&gt; setView = mapView.keySet();
+
+public Map&lt;Integer, String&gt; getMap() {
+  return mapView;
+}
+
+public void doSomething() {
+  synchronized (mapView) {  // Synchronize on map, rather than set
+    for (Integer k : setView) {
+      // ...
+    }
+  }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT Oracle Coding Standard for Java
+LCK04-J. Do not synchronize on a collection view if the backing collection is accessible
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK04-J.+Do+not+synchronize+on+a+collection+view+if+the+backing+collection+is+accessible">https://wiki.sei.cmu.edu/confluence/display/java/LCK04-J.+Do+not+synchronize+on+a+collection+view+if+the+backing+collection+is+accessible</A>
+
+</PRE>
+</BODY>
+</HTML>

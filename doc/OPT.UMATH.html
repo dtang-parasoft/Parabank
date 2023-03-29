@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the methods from 'java.lang.Math' if the result is a constant which can be easily determined [OPT.UMATH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the methods from 'java.lang.Math' if the result is a constant which can be easily determined [OPT.UMATH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When possible, the results of calls to methods in the class 'java.lang.Math'
+should be calculated statically by the programmer.  These calls should be 
+replaced by their equivalent constants.  For instance, calls to the following
+methods of 'java.lang.Math' with the parameters listed can easily be calculated 
+by the programmer.
+
+method        parameter(s)    constant result
+------        ---------       ---------------
+abs           -any constant-
+acos          0.0             Math.PI/2
+              1.0             0.0
+asin          0.0             0.0
+              1.0             Math.PI/2
+atan          0.0             0.0
+              1.0             Math.PI/4
+atan2         0.0, 0.0        0.0
+cbrt          0.0             0.0
+              1.0             1.0
+ceil          -any constant-
+cos           0.0             1.0
+cosh          0.0             1.0
+exp           0.0             1.0
+              1.0             Math.E
+expm1         0.0             0.0
+floor         -any constant-
+log           0.0             -Infinity
+              1.0             0.0                
+log10         0.0             -Infinity
+              1.0             0.0
+rint          -any constant-
+round         -any constant-
+sin           0.0             0.0
+sinh          0.0             0.0
+sqrt          0.0             0.0
+              1.0             1.0
+tan           0.0             0.0
+tanh          0.0             0.0
+toDegrees     0.0             0.0
+toRadians     0.0             0.0
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+It is more efficient to just use the equivalent constant instead of having to
+make a method call if the result of the call can be easily calculated.  This 
+also can make the code cleaner and easier to read.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class UMATH {
+    public static void main(String[] args){
+        System.out.println("acos(0.0) is "+ Math.acos(0.0));  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the call to a method from the 'Math' class with its equivalent constant.
+
+package examples.rules.opt;
+
+public class UMATHFixed {
+    public static void main(String[] args){
+        System.out.println("acos(0.0) is "+ Math.PI/2);  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

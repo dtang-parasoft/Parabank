@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use constructors in the 'clone()' method [CODSTA.EPC.CLNC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use constructors in the 'clone()' method [CODSTA.EPC.CLNC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses a constructor when
+implementing the 'clone()' method. An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using a constructor can restrict subclasses from reusing the 'clone ()' method of
+the superclass.  This is because, in the subclasses, the 'clone ()' method will expect 
+an object of the subclass' type to be returned when the superclass' 'clone ()' method 
+is called.  
+
+This will not be the case if you use a constructor to implement the cloning
+in the superclass' method.  In this case, the type returned from the superclass' 
+'clone ()' method will be the superclass' type.  This can easily lead to 'ClassCast
+Exceptions' when the subclass calls 'super.clone ()' and expects an object of the
+subclass' type to be returned.  
+
+The best way to understand this is to look at the 
+example below.    
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+import java.util.*;
+
+public class CLNC implements Cloneable {
+    public Object clone(){
+        CLNC cl = new CLNC();  // VIOLATION
+        cl._field = _field;
+        return cl;             //returned value is of type 'CLNC' (not the type of the calling
+                               //object)
+    }
+    private int _field = 0;
+}
+
+class CLNC_Sub extends CLNC {
+    private Vector _vect;
+
+    public Object clone () {
+        CLNC_Sub newCLNC_Sub = (CLNC_Sub) super.clone();  //This will cause a ClassCastException
+                                     //because the superclass uses a constructor to implement the 
+                                     //cloning instead of calling 'super.clone()'.  The superclass'
+                                     //'clone ()' method returns a result of type 'CLNC', not 
+                                     //'CLNC_Sub'.  In this case, the superclass' 'clone ()' method
+                                     //cannot be used in the subclass.
+        newCLNC_Sub._vect= (Vector) _vect.clone();
+        return (newCLNC_Sub);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'super.clone()' instead of calling a constructor to implement 'clone()'.
+
+package examples.rules.codsta.epc;
+
+import java.util.*;
+
+public class CLNCFixed implements Cloneable {
+    public Object clone() throws CloneNotSupportedException  {
+        CLNCFixed cl = (CLNCFixed) super.clone();  // FIXED
+        cl._field = _field;
+        return cl;                //The returned value is now the correct type.  It is 
+                                  //whatever subtype of 'CLNCFixed' this 'clone()' method
+                                  //was called from.  This is because the 'clone ()' method
+                                  //of class 'Object' was called.  This method is guaranteed 
+                                  //to return a result which has the same type as the calling
+                                  //type.
+    }
+    private int _field = 0;
+}
+
+class CLNCFixed_Sub extends CLNCFixed {
+    private Vector _vect;
+
+    public Object clone() {
+        try {
+            CLNCFixed_Sub newCLNCFixed_Sub = (CLNCFixed_Sub) super.clone(); //This is OK since
+                                      //the implementation of the superclass' 'clone ()' method
+                                      //was changed to call 'super.clone ()' instead of using a
+                                      //constructor.  The returned value is now the expected 
+                                      //type ('CLNCFixed_Sub').
+            newCLNCFixed_Sub._vect = (Vector) _vect.clone();
+            return (newCLNCFixed_Sub);
+        } catch (CloneNotSupportedException cnse) {
+            throw new InternalError();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Michael Daconta, Eric Monk, J Keller, Keith Bohnenberger: "Java Pitfalls"
+John Wiley &amp; Sons, ISBN: 0-471-36174-7 pp.70 - 74
+
+</PRE>
+</BODY>
+</HTML>

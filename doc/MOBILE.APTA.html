@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using array of primtive wrapper objects [MOBILE.APTA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using array of primtive wrapper objects [MOBILE.APTA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation if an array type is primitive wrapper class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Use array of primitive type instead of array of primitive wrapper class can 
+avoid too many object creation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile;
+
+public class APTA {
+
+    public int getTotal(Integer[] iarray) {  // VIOLATION
+        int total = 0;
+        for (int i = 0; i &lt; iarray.length; i++) {
+            total += iarray[i].intValue();
+        }
+        return total;
+    }  
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile;
+
+public class APTAFixed {
+
+    public int getTotal(int[] iarray) {  // FIXED
+        int total = 0;
+        for (int i = 0; i &lt; iarray.length; i++) {
+            total += iarray[i];
+        }
+        return total;
+    }  
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#object_creation">http://developer.android.com/guide/practices/design/performance.html#object_creation</A>
+
+</PRE>
+</BODY>
+</HTML>

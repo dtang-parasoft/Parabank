@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'System.setProperty()' in a web component [SECURITY.WSC.SSP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'System.setProperty()' in a web component [SECURITY.WSC.SSP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components (a class or interface that extends or implements a type from the
+"javax.servlet" package) should not call 'System.setProperty()'. A violation is
+flagged for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Calling setProperty in a web component ties the implementation of the component
+to the system it is running on, which is generally bad for portability.
+Additionally, it could allow an attack to set system properties, which has
+serious security ramifications.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for "System.setProperty()" calls (default "2")
+    This parameter allows for indirect checking of "System.setProperty()" calls.
+    Specifying a value of "1" will only check for direct calls to
+    "System.setProperty()". A value of "2" will check if any of the methods
+    called from the web component call "System.setProperty()", and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Web components should not be allowed to set system properties by calling 
+'System.setProperty()', as all applications on the server share the same 
+properties.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.servlet.Servlet;
+
+public class SSP implements Servlet {
+    public void testMethod(){
+       System.setProperty(null, null); //VIOLATION
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove any calls to 'System.setProperty()'.
+
+package examples.rules.security.wsc;
+
+import javax.servlet.Servlet;
+
+public class SSPFixed implements Servlet {
+    public void testMethod() {
+        //FIXED
+    }
+    ...
+}
+
+</PRE>
+</BODY>
+</HTML>

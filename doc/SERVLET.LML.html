@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using collections without size limit in servlets [SERVLET.LML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using collections without size limit in servlets [SERVLET.LML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of collections without size limits in servlets.
+An error is reported when the servlet method doGet uses the "add" method
+from a field that has a collection type (List, Map etc.) and no method invocations 
+in the type call remove or clear methods.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+see Benefits
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents memory leaks in servlet collections. Otherwise,
+memory resources may be referenced indefinitely, but never used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+public class Mem1_bad extends HttpServlet
+{
+    protected ArrayList&lt;String&gt; _urlList;
+
+    public Mem1_bad() {
+        _urlList = new ArrayList&lt;String&gt;();
+    }
+
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+        throws ServletException, IOException
+    {
+        res.setContentType("text/html");
+        ServletOutputStream out = res.getOutputStream();
+        out.println("&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Test&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;&lt;blockquote&gt;&lt;pre&gt;");
+
+        String url = req.getRequestURI();
+        int len;
+        synchronized(_urlList) {
+            _urlList.add(url);          /* BAD */
+            len = _urlList.size();
+        }
+        out.print(len);
+        out.println(" urls in list");
+
+        out.println("&lt;/pre&gt;&lt;/blockquote&gt;&lt;/BODY&gt;&lt;/HTML&gt;");
+        out.close();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+ 
+public class Mem1_ok extends HttpServlet
+{
+    protected static final int MAXSIZE = 5;
+    protected ArrayList&lt;String&gt; _urlList;
+
+    public Mem1_ok() {
+        _urlList = new ArrayList&lt;String&gt;();
+    }
+
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+        throws ServletException, IOException
+    {
+        res.setContentType("text/html");
+        ServletOutputStream out = res.getOutputStream();
+        out.println("&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Test&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;&lt;blockquote&gt;&lt;pre&gt;");
+
+        String url = req.getRequestURI();
+        int len;
+        synchronized(_urlList) {
+            _urlList.add(url);          /* OK */
+            if(_urlList.size() &gt; MAXSIZE)
+                _urlList.remove(0);     /* OK */
+            len = _urlList.size();
+        }
+        out.print(len);
+        out.println(" urls in list");
+
+        out.println("&lt;/pre&gt;&lt;/blockquote&gt;&lt;/BODY&gt;&lt;/HTML&gt;");
+        out.close();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SAMATE-1583, SAMATE-1584, SAMATE-1587 Memory resources are referenced indefinitely but never used, resulting in a memory leak.
+
+</PRE>
+</BODY>
+</HTML>

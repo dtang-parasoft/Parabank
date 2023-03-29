@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use assertions in production code [CWE.617.ASSERT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use assertions in production code [CWE.617.ASSERT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The product contains an assert() or similar statement that can be triggered
+by an attacker, which leads to an application exit or other behavior that is
+more severe than necessary." [CWE-617]
+
+This rule detects when assertion statements are used in production code.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check only public methods
+(enabled by default)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that assertions are not used in your production
+code. Assertions should be only be used for testing purposes during
+the development phase. In production environment, it is safer to replace
+assertions with appropriate exceptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code triggers a violation:
+
+package examples.rules.codsta.org;
+
+public class ASSERT {
+    public String doSomething(int amount) {
+        assert amount &gt; 0; //VIOLATION
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+public class ASSERTFixed {
+    public String doSomething(double amount)     {
+        if (amount &lt;= 0) { // FIXED
+            throw new IllegalArgumentException("Value must be greater than 0!");
+        }
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-617: Reachable Assertion
+<A HREF="https://cwe.mitre.org/data/definitions/617.html">https://cwe.mitre.org/data/definitions/617.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC60-J. Do not use assertions to verify the absence of runtime errors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC60-J.+Do+not+use+assertions+to+verify+the+absence+of+runtime+errors">https://wiki.sei.cmu.edu/confluence/display/java/MSC60-J.+Do+not+use+assertions+to+verify+the+absence+of+runtime+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

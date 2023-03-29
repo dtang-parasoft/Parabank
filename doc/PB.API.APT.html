@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using certain packages or types [PB.API.APT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using certain packages or types [PB.API.APT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that imports or uses certain packages or types.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Class
+  -Package or type to be avoided (name in regular expression):
+     default elements in the list:
+      '^sun\..*' - any package or type usages from sun
+      '^java\.lang\.reflect.*' - any package or type usages from 'java.lang.reflect'
+      '.*internal.*' - any package or type fully qualified name which contains substring 'internal'
+      
+-Interface
+  -Package or type to be avoided (name in regular expression):
+     default elements in the list:
+      '^sun\..*' - any package or type usages from sun
+      '.*internal.*' - any package or type fully qualified name which contains substring 'internal'
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Some packages that are outside of the Java platform (for instance, sun.*) 
+can differ on different OS platforms and can change at any time without
+notice in SDK versions. Programs that contain direct calls to the sun.* 
+packages are not 100% Pure Java. That is, a Java program that directly 
+calls into sun.* packages is not guaranteed to work on all
+Java-compatible platforms. Thus, using sun.* packages 
+should be avoided for portability issues. 
+
+There are also concerns of using 'java.lang.reflect' as Java's reflection 
+capabilities is slow.  It is also unsafe because you lose compile-time type
+and exception checking.
+
+
+Moreover, some other packages might not be intended to be used by
+clients, such as some internal classes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import sun.audio.AudioDevice; //VIOLATION
+import java.util.Vector;
+
+public class APT {
+    AudioDevice obj1= AudioDevice.device; //flag
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+//FIXED, imports removed
+import java.util.Vector;
+
+public class APTFixed {
+    //FIXED
+}
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated MISC.AURM
+
+</PRE>
+</BODY>
+</HTML>

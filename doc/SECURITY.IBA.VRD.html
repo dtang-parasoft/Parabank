@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Encapsulate all redirect and forward URLs with a validation function [SECURITY.IBA.VRD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Encapsulate all redirect and forward URLs with a validation function [SECURITY.IBA.VRD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects redirect URLs or forward URLs that are not encapsulated by
+a validation method.
+The rule must be parameterized with a list of validation methods. If no
+validation method is specified, the rule will report each occurrence
+(see PARAMETERS).
+
+The rule checks calls to the following methods:
+-javax.servlet.http.HttpServletResponse.sendRedirect(java.lang.String location)
+-javax.servlet.ServletContext.getRequestDispatcher(java.lang.String path)
+-javax.servlet.ServletRequest.getRequestDispatcher(java.lang.String path)
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule ignores URLs that are hard-coded. 
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Such redirects may attempt to install malware or trick victims into disclosing
+passwords or other sensitive information. Unsafe forwards may allow access
+control bypass." [OWASP A-10]
+
+"The user may be redirected to an untrusted page that contains malware which
+may then compromise the user's machine .  . . The user may be subjected to
+phishing attacks by being redirected to an untrusted page." [CWE-601]
+
+"An attacker could insert malicious functionality into the program by causing
+the program to download code that the attacker has placed into the untrusted
+control sphere, such as a malicious web site." [CWE-829]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Validation methods" parameter allows you to specify the list of validating
+methods (use regular expressions to specify the names of the methods).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that redirect URLs or forward URLs are validated
+to prevent security attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.iba;
+
+import javax.servlet.http.*;
+
+public class VRD extends HttpServlet {
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+        // .....
+        response.sendRedirect(request.getParameter("url"));  // VIOLATION
+        
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+validate the redirect url
+
+package examples.rules.security.iba;
+
+import javax.servlet.http.*;
+
+public class VRDFixed extends HttpServlet {
+
+
+    private String validateUrl(String url) {
+            // .......
+
+    }
+    
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+        // .....
+        response.sendRedirect(validateUrl(request.getParameter("url")));  // FIXED
+        
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Weaknesses On the Cusp
+CWE-601: URL Redirection to Untrusted Site ('Open Redirect')
+<A HREF="https://cwe.mitre.org/data/definitions/601.html">https://cwe.mitre.org/data/definitions/601.html</A>
+
+OWASP 2013 Top 10: A10-Unvalidated Redirects and Forwards
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Maintainability Index [METRIC.MI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Maintainability Index [METRIC.MI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Maintainability Index is a composite metric that incorporates a number of
+traditional source code metrics into a single number that indicates relative
+maintainability. 
+
+Threshold evaluation for this index suffers from limitations regarding 
+language independence or used technology.
+
+Don Coleman analysis software systems and evaluates following thresholds 
+for this index (see REFERENCES section):
+
+1) Maintainability Index &lt; 65 is a poor maintainability
+2) 65 &lt; Maintainability Index &lt; 85 is fair maintainability
+3) 85 &lt; Maintainability Index is excellent maintainability
+
+But in Java world you should consider this numbers as suggestion 
+because this analysis was created before Java language had appeared.
+
+Formula
+The maintainability index of a type is:
+MI = 171 - 5.2*ln(avgHV) - 0.23*avgSCC - 16.2*ln(avgLOC) + 50*sin(sqrt(2.46*CMR))
+
+Where:
+- avgHV is the average Halstead Volume of methods of the type. 
+- avgSCC is the average Strict Cyclomatic Complexity of methods of the type. 
+- avgLOC is the average number of lines of code of methods of the type. 
+- CMR is average percent of comment lines of code of methods of the type. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+147.94  public class Foo
+        {
+            /**
+            * comment
+            */
+            int foo(int i, int j)
+            {
+                if(i &gt; 0 &amp;&amp; j &gt; 0)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+        }
+ 
+102.17  class Qux
+        {
+            public int bar(int i, int j)
+            {
+                if(i &gt; 0)
+                {
+                    if(j &gt; 0)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+"The application of software maintainability models in industrial software systems"
+D. Coleman, B. Lowther, P. Oman
+Journal of Systems and Software 
+Volume 29, Issue 1, April 1995, Pages 3�16
+
+</PRE>
+</BODY>
+</HTML>

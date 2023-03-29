@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Internationalization [INTER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Internationalization [INTER]
+</STRONG>
+<p>
+<PRE>
+
+Rules that are related to Internationalization
+
+<A HREF="http://docs.oracle.com/javase/tutorial/i18n/intro/index.html">http://docs.oracle.com/javase/tutorial/i18n/intro/index.html</A>
+
+Internationalization is the process of designing an application
+so that it can be adapted to various languages and regions
+without engineering changes.
+
+An internationalized program has the following characteristics:
+  * With the addition of localized data, the same executable
+    can run worldwide.
+  * Support for a new language does not require recompilation.
+  * Culturally-dependent data, such as dates and currencies,
+    appear in formats that conform to the end user's region
+    and language.
+  * It can be localized quickly.
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="INTER.CCL.html">Use the optional java.util.Locale parameter [INTER.CCL]</a></code><br>
+<code><a href="INTER.CLO.html">Do not use single characters with logic operators in an Internationalized environment [INTER.CLO]</a></code><br>
+<code><a href="INTER.COS.html">Do not use String concatenation in an Internationalized environment [INTER.COS]</a></code><br>
+<code><a href="INTER.CTLC.html">Do not call 'Character.toLowerCase(char)' or 'Character.toUpperCase(char)' in an internationalized environment [INTER.CTLC]</a></code><br>
+<code><a href="INTER.DTS.html">Do not call 'toString()' or 'String.valueOf()' on Date objects in an Internationalized environment [INTER.DTS]</a></code><br>
+<code><a href="INTER.ITT.html">Isolate translatable text in resource bundles in an Internationalized environment [INTER.ITT]</a></code><br>
+<code><a href="INTER.NCL.html">Use "static final" constants for single character literals in an Internationalized environment [INTER.NCL]</a></code><br>
+<code><a href="INTER.NTS.html">Do not call 'toString()' or 'String.valueOf()' on numeric values in an Internationalized environment [INTER.NTS]</a></code><br>
+<code><a href="INTER.PN.html">Do not call the 'parse' methods of the 'Number' types in an Internationalized environment [INTER.PN]</a></code><br>
+<code><a href="INTER.SCT.html">Do not call 'String.compareTo()' in an Internationalized environment [INTER.SCT]</a></code><br>
+<code><a href="INTER.SDFL.html">Provide a 'Locale' argument when instantiating 'SimpleDateFormat' objects [INTER.SDFL]</a></code><br>
+<code><a href="INTER.SE.html">Do not call 'String.equals()' in an Internationalized environment [INTER.SE]</a></code><br>
+<code><a href="INTER.SEO.html">Avoid calling methods and constructors which do not allow you to specify a character encoding option [INTER.SEO]</a></code><br>
+<code><a href="INTER.SIO.html">Do not call 'String.indexOf()' or 'String.lastIndexOf()' in an Internationalized environment [INTER.SIO]</a></code><br>
+<code><a href="INTER.ST.html">Do not use 'StringTokenizer' in an Internationalized environment [INTER.ST]</a></code><br>
+<code><a href="INTER.TTS.html">Do not call 'toString()' or 'String.valueOf()' on Time objects in an Internationalized environment [INTER.TTS]</a></code><br>
+<code><a href="INTER.UNLS.html">Avoid unnecessary "$NON-NLS" and "NOI18N" comments [INTER.UNLS]</a></code><br>
+</BODY>
+</HTML>

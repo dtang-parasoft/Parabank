@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'super.clone()' in all 'clone()' methods [CODSTA.EPC.SCLONE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'super.clone()' in all 'clone()' methods [CODSTA.EPC.SCLONE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies 'clone ()' methods that do not call
+'super.clone ()'. An error is reported for each occurrence
+in classes which implements Cloneable interface.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag a violation for 'clone ()' methods which only throw a 
+'CloneNotSupportedException' and contain no other code.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"All implementations of clone() should obtain the new object by calling
+super.clone(). If a class does not follow this convention, a subclass's
+clone() method will return an object of the wrong type." [CWE-580]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'super.clone ()' invokes the method 'Object.clone ()', which creates an object 
+of the correct type.  'Object.clone ()' initializes each field in the new clone 
+object by assigning it the value from the same field of the object being 
+cloned.  Therefore, if 'super.clone()' is not called, the object might not be 
+initialized correctly.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+public class SCLONE implements Cloneable {
+    public Object clone() {  // VIOLATION: no call to 'super.clone ()'
+        SCLONE cl = new SCLONE();
+        cl._field = _field;
+        return cl;
+    }
+    private int _field = 0;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'super.clone()' to implement 'clone()'.
+
+package examples.rules.codsta.epc;
+
+public class SCLONEFixed implements Cloneable {
+    public Object clone() throws CloneNotSupportedException {
+    SCLONEFixed cl = (SCLONEFixed) super.clone();  // FIXED
+    cl._field = _field;
+        return cl;
+    }
+    private int _field = 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Ken Arnold, James Gosling: "The Java Programming Language Second Edition".
+Addison Wesley, 1997. pp.77 - 82
+
+CWE-580: clone() Method Without super.clone()
+<A HREF="https://cwe.mitre.org/data/definitions/580.html">https://cwe.mitre.org/data/definitions/580.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.mdS">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.mdS</A>
+
+SEI CERT Oracle Coding Standard for Java
+MET53-J. Ensure that the clone() method calls super.clone()
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487446">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487446</A>
+
+</PRE>
+</BODY>
+</HTML>

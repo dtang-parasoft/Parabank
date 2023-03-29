@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not extend 'java.util.HashMap' or 'java.util.Hashtable' [PB.API.EHM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not extend 'java.util.HashMap' or 'java.util.Hashtable' [PB.API.EHM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases where the user attempts to extend either 'java.util.HashMap' 
+or 'java.util.Hashtable'.  An error will be flagged for each case where the user
+attempts to define a type which extends off one of these two classes.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the programmer attempts to extend HashMap or Hashtable to add methods that 
+restrict the keys or values (as 'java.lang.properties' does), it is very easy to 
+have a bug in the get and put methods.  This may happen if the user accidentally 
+breaks the contract of the extending class.  Instead of extending from 'HashMap' 
+or 'Hashtable', the user should do one of the following:
+
+1. Use a wrapper class such as:
+
+class FixedProperties {
+    private Map _map = new HashMap();
+    
+    public void setProperty(String key, String value) {
+        _map.put(key, value);
+    }
+    
+    public String getProperty(String key) {
+        return (String) _map.get(key);
+    }
+}
+
+2. Use JDK 5.0 generics.  Declare the HashMap as "HashMap &lt;String&gt; &lt;String&gt;" or 
+something similar to this. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class EHM extends HashMap{  //VIOLATION
+    public Object put(Object key, Object value){
+        //some code
+        return null;
+    }
+
+    public Object get(Object key){
+        //some code
+        return null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use one of the fixes detailed in the benefits section above.
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+class EHMFixed {  //FIXED- using a wrapper class for "HashMap" instead
+    private Map _map = new HashMap();
+    
+    public void setProperty(String key, String value) {
+        _map.put(key,value);
+    }
+ 
+    public String getProperty (String key) {
+        return (String)_map.get(key);
+    }   
+}
+
+</PRE>
+</BODY>
+</HTML>

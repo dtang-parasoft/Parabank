@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent potential memory leaks in ObjectOutputStreams by calling 'reset()' [GC.OSTM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent potential memory leaks in ObjectOutputStreams by calling 'reset()' [GC.OSTM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule detects when the writeObject() method is called on
+'ObjectOutputStream' and is not followed by a call to reset()
+or close().
+
+ObjectStreams are designed to handle sending the same object across a connection
+multiple times. For this reason, ObjectStream classes keep a reference to all
+objects that are written or read until the reset() or close() method is
+called. Such objects will not be garbage collected before a call to one of these
+methods.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Application Denial of Service
+
+Potential memory leaks may exceed JVM memory size and 
+terminate the application.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'ObjectOutputStream' may cause memory leaks. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+If the method is used repeatedly to write the same object and
+'reset()' is called, the amount of serialized data may be larger.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+import java.io.*;
+
+public class OSTM {
+    public void writeToStream(ObjectOutputStream os, String s)  // VIOLATION
+        throws IOException {
+        os.writeObject (s);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the 'reset ()' method to clear the list of Objects written to the Stream.
+Alternatively, use DataStreams instead of ObjectStreams for optimal performance.
+
+package examples.rules.gc;
+
+import java.io.*;
+
+public class OSTMFixed {
+    public void writeToStream(ObjectOutputStream os, String s) 
+        throws IOException {
+        os.writeObject (s);
+        os.reset();  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

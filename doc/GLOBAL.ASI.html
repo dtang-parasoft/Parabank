@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make methods "static" if they do not use instance class members [GLOBAL.ASI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make methods "static" if they do not use instance class members [GLOBAL.ASI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that do not use any instance class members (i.e.
+non-static fields and methods) and are not declared static. An error is
+reported for each occurrence.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You should not declare any methods which you intend to override as "static"
+since overriding "static" methods is a confusing practice.  The rule tries to
+reduce the number of cases it flags where a method is intended to be overridden
+by not flagging on "public" and "protected" methods by default and not checking
+"abstract" classes by default.  The rule will also never flag on methods which
+are actually overridden in your workspace or are overriding some other method.
+However, it may still be necessary to suppress some violations of this rule if
+you intend for a method to be overridden at some point in the future.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check methods with accessibility:
+    -public (Default is "false")
+    -protected (Default is "false")
+    -package-private (Default is "true")
+    -private (Default is "true")
+    -By default, only "private" and package-private methods will be checked.
+     "public" and "protected" methods are often designed to be overridden, so
+     they should not be declared as "static".  Even if the class which overrides
+     the "public" or "protected" method is not available when the rule is run,
+     it may be your intention to add such a class later.  Also, it is possible
+     that the class which overrides this method is not in your workspace.  This
+     is why Jtest will not flag these cases with the default parameter settings.
+-Ignore method declaration within "abstract" classes (default is false)
+ Some methods within an "abstract" class are designed to be overridden by
+ an extending class. However, at the time that the "abstract" class is designed,
+ an extending class might not be available yet. To preserve the original design,
+ method declarations within "abstract" class should not be flagged as candidates
+ to declare as "static" in some cases.
+ -Ignore "synchronized" method declarations (default is false)
+ "static" "synchronized" methods synchronize on the Class object while
+ non-"static" "synchronized" methods synchronize on an instance object. So,
+ changing the method to "static" may inadvertently change the lock object the
+ method synchronizes on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A method that does not make use of any non-static data can carry out its
+intended behavior without creating an instance of the class. Consequently, it
+should be declared "static".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.global;
+
+public class ASI {
+    private int add (int i, int j) {  // VIOLATION
+        return i + j;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Declare the method "static".
+
+package examples.rules.global;
+
+public class ASIFixed {
+    private static int method (int i, int j) {  // FIXED
+        return i + j;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@move-from CODSTA.ASI(v5.0)
+
+</PRE>
+</BODY>
+</HTML>

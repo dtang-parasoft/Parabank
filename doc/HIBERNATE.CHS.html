@@ -1,0 +1,198 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Close Hibernate Sessions in "finally" blocks [HIBERNATE.CHS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Close Hibernate Sessions in "finally" blocks [HIBERNATE.CHS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks for local objects of the type 'org.hibernate.Session' that are
+created in the method body, but are not closed in a "finally" block. An error is
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.RES.LEAKS.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule would not identify an unused Session object.
+Also, the Session obtained with SessionFactory.getCurrentSession() is treated as handled by the
+container, so no violation will be triggered in this case.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Hibernate Session methods treated as safe (in regular expression)
+   This parameter allows you to list methods that will be considered
+   to be safe Hibernate 'Session' handlers.
+   Only add methods to this list if they handle the session that they return.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is important to close sessions after you have finished using them so that the
+system can reclaim resources which are not being used. Closing the session will
+also detach any persistent objects or collections that are currently associated
+with the session and free them to be used in any application layer.
+
+Additionally, if resources are not closed, an application may not exit when you
+expect it to exit.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule reports only one violation per variable, even if more than one session is open.
+For example, the following expression will only report one violation:
+Session session = SessionFactory.openConnection();
+session = SessionFactory.openConnection();
+
+Also, when a variable is reassigned to a safe expression, the rule will not trigger
+violation even if earlier the variable was assigned an unclosed connection, i.e.
+Session session = SessionFactory.openConnection();
+session = SessionFactory.getCurrentSession();
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class CHS {
+    public static void main(String[] args) {
+        Session session = null;
+
+        try {
+            SessionFactory sessionFactory = new Configuration().configure()
+                    .buildSessionFactory();
+            session = sessionFactory.openSession();
+            //Do some work using the session object
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.flush();  //VIOLATION- "session" is never closed.
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Close the session in the 'finally' block.
+
+package examples.rules.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class CHSFixed {
+    public static void main(String[] args) {
+        Session session = null;
+
+        try {
+            SessionFactory sessionFactory = new Configuration().configure()
+                    .buildSessionFactory();
+            session = sessionFactory.openSession();
+            //Do some work using the session object
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.flush();
+            session.close();  //FIXED
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/tutorial.html</A>
+
+<A HREF="http://www.hibernate.org/hib_docs/v3/reference/en/html/architecture.html">http://www.hibernate.org/hib_docs/v3/reference/en/html/architecture.html</A>
+
+"Hibernate: A Developer's Notebook" by James Elliott. 2004,  pp. 46.
+
+<A HREF="https://community.jboss.org/wiki/SessionsAndTransactions#Transaction_demarcation_with_EJBCMT">https://community.jboss.org/wiki/SessionsAndTransactions#Transaction_demarcation_with_EJBCMT</A>
+
+</PRE>
+</BODY>
+</HTML>

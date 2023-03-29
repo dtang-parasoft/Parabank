@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling expensive operations in the body of a loop [OPT.EOIL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling expensive operations in the body of a loop [OPT.EOIL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that expensive operations (operations that may take a long 
+time) are not called in loops.  The user can customize the rule by specifying 
+which methods are to be considered expensive operations in the parameters.  By 
+default, the rule checks that the "sort()" methods of "java.util.Arrays" are not 
+called in loops. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are some cases where a method call cannot be moved outside of a loop.  For
+instance, this is not possible if the method call uses one of the variables defined
+in the loop.  In this case, the rule will not flag a violation.  It is also 
+possible that the method call may have side effects that the rest of the loop 
+body anticipates.  For this reason, the user should be careful when fixing 
+violations of this rule.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Methods which should not be called in loops
+ (in form of &lt;regular expression for qualified name of declaring type&gt;#&lt;regular 
+  expression for method name&gt;)
+    -The default value is "java\.util\.Arrays#^sort$".
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+Moving method calls which may take a long time outside of loops can produce a
+large performance gain.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+import java.util.Arrays;
+
+public class EOIL {
+    public int[] sortArray(int[] a){
+        for(int i=0; i&lt;100; i++){
+            Arrays.sort(a);  //VIOLATION
+            //Some other code
+        }
+        return a;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the call to the expensive operation outside of the loop body if possible.
+
+package examples.rules.opt;
+
+public class EOILFixed {
+    public int[] sortArray(int[] a){
+        Arrays.sort(a);  //FIXED
+        for(int i=0; i&lt;100; i++){
+            //Some other code
+        }
+        return a;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+</PRE>
+</BODY>
+</HTML>

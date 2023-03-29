@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use user-defined "native" methods [PORT.NATV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use user-defined "native" methods [PORT.NATV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies user-defined native methods. An error is
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+category: Malicious Code
+
+Native code can cause security problems such as buffer 
+overflows and format string vulnerabilities.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and applications".
+Specifically, this rule tests for Issue 6.5.5: "Buffer overflows".  Since native 
+code is often vulnerable to buffer overflows, enforcing this rule will help to
+enforce this requirement.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+User-defined native methods are not portable because all native methods 
+must be ported to each platform.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some features must be implemented at the native level to use native libraries
+or implement a performance optimization.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.port;
+
+public class NATV {
+    native void method (String s);  // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Find a non-native way to perform the operation.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+David Flanagan: "Java in a Nutshell".  O'Reilly
+November, 1999: Third Edition, pp.190-192
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation 
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-111: Direct Use of Unsafe JNI
+<A HREF="https://cwe.mitre.org/data/definitions/111.html">https://cwe.mitre.org/data/definitions/111.html</A>
+
+PCI Data Security Standard:
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+</PRE>
+</BODY>
+</HTML>

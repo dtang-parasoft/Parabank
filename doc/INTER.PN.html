@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the 'parse' methods of the 'Number' types in an Internationalized environment [INTER.PN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the 'parse' methods of the 'Number' types in an Internationalized environment [INTER.PN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to the 'parse...()' methods of the classes which
+extend 'java.lang.Number'  An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Because number formats differ by region and language, the 'parse...()' 
+methods of the 'Number' classes must not be used in an internationalized 
+environment.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+public class PN {
+    public void method(String s) {
+        double d = Double.parseDouble(s);
+        System.out.println(d);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
+public class PNFixed {
+    public void method(String s) throws ParseException {
+        Locale currentLocale = Locale.getDefault();
+        NumberFormat numberFormatter = NumberFormat
+                .getNumberInstance(currentLocale);
+        Number n = numberFormatter.parse(s);
+        double d = n.doubleValue();
+        System.out.println(d);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

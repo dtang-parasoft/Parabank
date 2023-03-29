@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "enum" types instead of a series of "static final" constants [CODSTA.POD.UET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "enum" types instead of a series of "static final" constants [CODSTA.POD.UET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Instead of using series of constants to represent enums, you should use the 
+typesafe "enum" type which was added to Java for JDK 1.5.  This rule will flag a 
+violation for each series of "final" "static" constants which have consecutive
+numeric values.  The default length for a series of constants to be considered
+a candidate for conversion to an "enum" is 4, but this number can be changed in
+the rule's parameter.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag any violations in projects where the compiler compliance
+level is set at 1.4 or any earlier version of the JDK.  "enum" types are only
+available if the compiler compliance level is set to 5.0 or later.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Minimum Number of Consecutive Constants to be Flagged
+    -This parameter determines the minimum number of consecutive "final static"
+     constants with consecutive numeric values which must be present for a 
+     violation to be flagged.  
+    -The default value is 4.  This value must be set to at least 2.
+    -If you are getting too many false positives for this rule (violations 
+     flagged for cases where the "final static" constants cannot reasonably be
+     refactored into an "enum" type), you should try increasing the value of 
+     this parameter.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+There are several problems with using the pattern of a series of constants 
+instead of an "enum" type.  They include:
+
+1.  This pattern is not typesafe. 
+2.  This pattern does not have its own namespace.
+3.  This pattern is brittle. 
+4.  The printed values with this pattern are uninformative.
+
+For more details on the problems with using a series of constants instead of an
+"enum" type, see the link in the REFERENCES section.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class UET {
+    public final static int PRODUCT_JTEST = 0;  //VIOLATION
+    public final static int PRODUCT_CPPTEST = 1;
+    public final static int PRODUCT_DOTTEST = 2;
+    public final static int PRODUCT_SOATEST = 3;
+
+    public void printProductName(int product) {
+        switch(product){
+        case PRODUCT_JTEST: 
+            System.out.println("Jtest"); 
+            break;
+        case PRODUCT_CPPTEST: 
+            System.out.println("C++Test"); 
+            break;
+        case PRODUCT_DOTTEST: 
+            System.out.println(".TEST"); 
+            break;
+        case PRODUCT_SOATEST: 
+            System.out.println("SOATest"); 
+            break;
+        default: 
+            break;
+        }
+    }   
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the series of "final static" constants to an "enum" type.
+
+package examples.rules.codsta.pod;
+
+public class UETFixed {
+    public static enum Product {JTEST, CPPTEST, DOTTEST, SOATEST};  //FIXED
+
+    public void printProductName(Product product) {
+        switch(product){
+        case JTEST: 
+            System.out.println("Jtest"); 
+            break;
+        case CPPTEST: 
+            System.out.println("C++Test"); 
+            break;
+        case DOTTEST: 
+            System.out.println(".TEST"); 
+            break;
+        case SOATEST: 
+            System.out.println("SOATest"); 
+            break;
+        default: 
+            break;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/language/enums.html">http://docs.oracle.com/javase/1.5.0/docs/guide/language/enums.html</A>
+
+</PRE>
+</BODY>
+</HTML>

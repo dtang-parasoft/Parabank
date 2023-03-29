@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate objects before deserialization [OWASP2021.A8.VOBD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate objects before deserialization [OWASP2021.A8.VOBD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Data which is untrusted cannot be trusted to be well formed. Malformed data or
+unexpected data could be used to abuse application logic, deny service, or execute
+arbitrary code, when deserialized." [OWASP Reference]
+
+The ObjectInputStream class is used to read serialized objects. By default,
+it does not validate objects before deserialization, which may lead to
+security threats (see SECURITY RELEVANCE). Using a custom implementation of
+ObjectInputStream that validates the object before it is deserialized allows
+you to prevent deserializing untrusted data. 
+
+This rule detects when the readObject() method is called on an object of
+the ObjectInputStream class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Attackers can modify unexpected objects or data that was assumed to be safe
+from modification. . . The consequences can vary widely, because it depends on
+which objects or methods are being deserialized, and how they are used. Making
+an assumption that the code in the deserialized object is valid is dangerous
+and can enable exploitation." [CWE-502]
+
+"The impact of deserialization flaws cannot be overstated. These flaws can lead
+to remote code execution attacks, one of the most serious attacks possible."
+[OWASP Top 10-2017, A8]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves application security by helping you ensure that objects
+are validated before deserialization.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the readObject() method is called on the object
+of the ObjectInputStream class, which does not validate the input.
+
+private static Object deserialize(byte[] buffer)
+    throws IOException, ClassNotFoundException {
+
+    ByteArrayInputStream bais = null;
+    ObjectInputStream ois = null;
+    Object obj = null;
+
+    try {
+         ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+         ObjectInputStream ois = new ObjectInputStream(bais);
+         Object obj = ois.readObject();   //VIOLATION
+    } finally {
+         if (ois != null) ois.close();
+         if (bais != null) bais.close();
+    }
+    return obj;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use LookAheadObjectInputStream - a custom implementation that
+validates the input before deserializing it.
+
+private static Object deserialize(byte[] buffer)
+ throws IOException, ClassNotFoundException {
+
+     ByteArrayInputStream bais = null;
+     ObjectInputStream ois = null;
+     Object obj = null;
+
+     try {
+         ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+         ObjectInputStream ois = new LookAheadObjectInputStream(bais);   //FIXED
+         Object obj = ois.readObject();
+     } finally {
+         if (ois != null) ois.close();
+         if (bais != null) bais.close();
+     }
+     return obj;
+}
+
+
+public class LookAheadObjectInputStream extends ObjectInputStream {
+
+     private final String authorizedClassName;
+
+     public LookAheadObjectInputStream(InputStream inputStream, String authorizedClassName)
+         throws IOException {
+         super(inputStream);
+         this.authorizedClassName = authorizedClassName;
+     }
+
+     /** Only deserialize instances of our expected authorized class name     */
+     @Override
+     protected Class&lt;?&gt; resolveClass(ObjectStreamClass desc)
+         throws IOException, ClassNotFoundException {
+         if (!desc.getName().equals(authorizedClassName)) {
+             throw new InvalidClassException("Unauthorized deserialization attempt", desc.getName());
+         }
+         return super.resolveClass(desc);
+     }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/a3290d3b-81df-46bb-908d-2cfb4a712c8c">https://app.hackedu.com/link/a3290d3b-81df-46bb-908d-2cfb4a712c8c</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-502: Deserialization of Untrusted Data
+<A HREF="https://cwe.mitre.org/data/definitions/502.html">https://cwe.mitre.org/data/definitions/502.html</A>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+OWASP Reference
+Deserialization of untrusted data
+<A HREF="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">https://www.owasp.org/index.php/Deserialization_of_untrusted_data</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+SEI CERT Oracle Coding Standard for Java
+SER12-J. Prevent deserialization of untrusted data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER12-J.+Prevent+deserialization+of+untrusted+data">https://wiki.sei.cmu.edu/confluence/display/java/SER12-J.+Prevent+deserialization+of+untrusted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

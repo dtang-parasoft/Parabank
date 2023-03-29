@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using "private" fields which are never given a meaningful value [PB.USC.FCBS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using "private" fields which are never given a meaningful value [PB.USC.FCBS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects "private" fields which are used but which are never set to a 
+meaningful value.  By default, the rule only checks fields of non-primitive 
+types.  For purposes of this rule, a meaningful value is considered to be 
+anything other than "null".
+
+This rule will also check fields of types in the Java Collections Framework.  
+For these types, a violation will be flagged if no element is ever added to the 
+collection.  The following collection types will be checked:
+
+- java.util.Set
+- java.util.List
+- java.util.Map
+- java.util.HashSet
+- java.util.ArrayList
+- java.util.TreeSet
+- java.util.Stack
+- java.util.Vector
+- java.util.LinkedList
+
+For Maps, a violation will be flagged if no mappings are ever added into the 
+"Map".
+
+If the "Check fields of primitive types" parameter is enabled, the rule will 
+check that primitive fields are explicitly assigned a value within an enclosing 
+class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check fields of primitive types
+    -Default value is "false".  This parameter is off by default because some 
+     people may intentionally use primitive fields which are initialized to the
+     default values.
+    -If this parameter is enabled, the rule will check "private" fields of 
+     primitive types to make sure that these fields are explicitly assigned a 
+     value somewhere.  You should not rely on the default implicit 
+     initialization values of primitive fields.
+-Ignore "final" fields
+    -Default value is "true".
+    -This parameter is set to "true" by default because "final" fields which are
+     initialized to "null" (or some other "meaningless" value) are often used 
+     intentionally.  For instance, some method may compare another value to 
+     "null" using this final field instead of the "null" literal. 
+-Ignore annotations that correspond to these qualified names
+    -Default value is "javax.persistence.GeneratedValue;javax.ejb.EJB;
+    javax.annotation.Resource;javax.persistence.EntityManager;"
+    -Some annotations indicate that a field will be initialized.
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Private" fields cannot be set outside of their declaring classes if there are 
+no non-"private" methods provided to set these fields.  It is most likely a bug 
+if such a field is used but never assigned a meaningful value within the 
+declaring class.  For instance, use of any non-primitive field which is only set 
+to "null" or use of any Collection to which no elements are ever added (with no 
+non-"private" setter methods) is probably a bug.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FCBS {
+    // It is not possible to add Objects to the "_list" field, so it doesn't
+    // make sense to write methods that try to use it
+
+    private List _list = new ArrayList();
+
+    public List getElementsWithPrefix(String prefix) {
+        List list = new ArrayList();
+        for (int i = 0; i &lt; _list.size(); i++) {  // VIOLATION
+            String element = (String) _list.get(i);
+            if (element.startsWith(prefix))
+                list.add(element);
+        }
+        return list;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a non-"private" method which allows the field to be set outside of the
+declaring class, or assign the field some meaningful value within the declaring 
+class.  
+
+package examples.rules.pb.usc;
+
+public class FCBSFixed {
+    private List _list = new ArrayList();
+
+    public List getElementsWithPrefix(String prefix) {
+        List list = new ArrayList();
+        for (int i = 0; i &lt; _list.size(); i++) {  
+            String element = (String) _list.get(i);
+            if (element.startsWith(prefix))
+                list.add(element);
+        }
+        return list;
+    }
+    
+    public void addElements(List newElements) {  // FIXED- added method to add
+                                                 // values to "_list"
+        _list.addAll(newElements);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

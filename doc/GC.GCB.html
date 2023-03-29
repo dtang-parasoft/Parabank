@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Reuse calls to 'getClipBounds()' [GC.GCB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Reuse calls to 'getClipBounds()' [GC.GCB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that reuses calls to 'getClipBounds()'.
+An error is reported if 'getClipBounds ()' is called more than once in a method.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Only methods with more than one 'getClipBounds ()' call will be reported.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Application Denial of Service
+
+Unnecessary memory allocation and garbage collection might
+exhaust system resources, slowing down or even crashing the
+application.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'getClipBounds()' method always returns a new rectangle, thereby allocating
+more memory every time it is called.  This makes the garbage collector very busy.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+import java.awt.Graphics;
+
+public class GCB {
+    public void paint(Graphics g) {
+        int firstColLine = g.getClipBounds().x;
+        // VIOLATION
+        int lastColLine = g.getClipBounds().x + g.getClipBounds().width;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Reuse the 'Rectangle' object that the first 'getClipBounds ()' call returns.
+
+package examples.rules.gc;
+
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
+public class GCBFixed {
+    public void paint(Graphics g) {
+        Rectangle rec = g.getClipBounds();
+        int firstColLine = rec.x;
+        int lastColLine = rec.x + rec.width;  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

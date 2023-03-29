@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid string literals except in constant declarations and calls to System.out or System.err's 'print' or 'println' methods [SECURITY.WSC.SL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid string literals except in constant declarations and calls to System.out or System.err's 'print' or 'println' methods [SECURITY.WSC.SL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Managing string literals that are scattered over the code is difficult and
+error-prone. It is a good practice to group them as string constants or store
+them in a separate file to facilitate the maintenance of output messages.
+
+This rule detects when string literals are used in calls to the following
+methods:
+- System.err.print()
+- System.err.println()
+- System.out.print()
+- System.out.println()
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+  
+The rule does not report sting literals that are used in string constant
+declaration statements and classes that extend the javax.servlet.http.HttpServlet
+class.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Hard-coded constant strings make code hard to maintain and error-prone.
+This brings a risk of introducing security vulnerabilities.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the maintainability of string literals in your
+codebase.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following example shows a hard-coded sting literal "Hello World".
+
+package examples.rules.security;
+public class SL {
+public static void main(String args[]) {
+String msg= "Hello World!"; //VIOLATION
+System.out.println(msg);
+}
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by declaring a string constant that is later used
+to print out the message.
+
+package examples.rules.security;
+public class SLFixed {
+static final String WELCOME_MESSAGE= "Hello World!";
+public static void main(String args[]) {
+String msg= WELCOME_MESSAGE; //FIXED
+System.out.println(msg);
+}
+}
+
+</PRE>
+</BODY>
+</HTML>

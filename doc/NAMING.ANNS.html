@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow class name conventions defined for annotations [NAMING.ANNS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow class name conventions defined for annotations [NAMING.ANNS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks naming conventions for classes with type annotations.
+You can configure it to check conventions for different annotations. It reports
+a violation for each class name that does not follow the defined convention.  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The  "Configure expected name for class using annotation" table has two columns:
+
+- first "Expected class name"
+The regular expression that classes with the specified annotations (configured in the
+second column) should follow.
+
+- second "Fully qualified name of annotation" 
+The annotations used with classes that should follow this naming convention.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule enforces naming conventions for classes with annotations such as @Controller, @Model, and others.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Create a Test Configuration with this rule, and add a row to the parameterization table in the rule configuration. 
+In first column, add the regular expression ^.*Deprecated$. In the second, add java.lang.Deprecated.
+Then, run this Test Configuration against the following example:
+
+package examples.rules.naming;
+
+@Deprecated
+public class Person {  // VIOLATION
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Change example to:
+
+package examples.rules.naming;
+
+@Deprecated
+public class PersonDeprecated {  
+ 
+}
+
+</PRE>
+</BODY>
+</HTML>

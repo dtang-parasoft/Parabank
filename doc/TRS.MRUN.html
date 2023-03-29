@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Give subclasses of Thread a 'run()' method so they can run as separate threads [TRS.MRUN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Give subclasses of Thread a 'run()' method so they can run as separate threads [TRS.MRUN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that extend "Thread" but do not have a 'run()' 
+method. An error is reported for each occurrence. 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag on "abstract" classes which extend "Thread".  For 
+"abstract" Thread classes, it is acceptable if the subclasses define their own
+'run()' methods.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Classes that extend 'Thread' should always have a 'run()' method.  If a 'run()' 
+method is not implemented, the class will not run as a separate thread.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class MRUN extends Thread{
+    public MRUN () {}
+
+    // VIOLATION, no run method
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide a 'run()' method for this class.
+
+package examples.rules.trs;
+
+public class MRUNFixed extends Thread {
+    public void run () {}  // FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

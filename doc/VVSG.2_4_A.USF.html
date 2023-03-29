@@ -1,0 +1,68 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a Session Facade to manage access to entity beans [VVSG.2_4_A.USF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a Session Facade to manage access to entity beans [VVSG.2_4_A.USF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not use a Session Facade
+to manage access to Entity Beans. An error is reported if a 
+non-session bean class contains Entity Bean code.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Entity Beans are coarse-grained distributed persistent
+objects. Exposing the Entity Bean to clients in a different
+tier results in network overhead and performance degradation.
+Each client invocation on the Entity Bean is a remote
+network method call, which is expensive. It is a good practice
+to use session bean to implement a session facade to access Entity Beans.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. 2001. pp. 104-105.
+
+</PRE>
+</BODY>
+</HTML>

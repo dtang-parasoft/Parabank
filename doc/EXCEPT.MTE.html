@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare any thrown exceptions in the 'main()' method [EXCEPT.MTE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare any thrown exceptions in the 'main()' method [EXCEPT.MTE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for each 'main()' method which is declared
+to throw any exceptions.  The rule will only check methods which have the 
+signature 'static void main(String[] args) ...'.  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The user should be able to execute the 'main()' method without having to
+worry about any exception handling.  Thus, the 'main()' method should not
+declare any thrown exceptions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class MTE {
+    public static void main(String args[]) throws Exception {  //VIOLATION
+        foo();
+    }
+    
+    private static void foo() throws Exception {
+        throw new Exception();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Instead of declaring the exception to be thrown, handle it appropriately
+in the 'main()' method using a 'try' block.
+
+package examples.rules.except;
+
+public class MTEFixed {
+    public static void main(String args[]) {  //FIXED
+        try{
+            foo();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static void foo() throws Exception {
+        throw new Exception();
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

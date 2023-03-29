@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use inner classes [SECURITY.WSC.AUIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use inner classes [SECURITY.WSC.AUIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that contain inner classes.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+Enforce code access control. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to McGraw and Felten,
+"Java bytecode has no concept of inner classes, so inner
+classes are translated by the compiler into ordinary
+classes that happen to be accessible to any code in the
+same package. An inner class gets access to the fields of the enclosing
+outer class, even if the these fields are declared private.
+And the inner class is translated into a separate class. To
+let this separate class access the fields of the outer class,
+the compiler silently changes these fields from private to
+package scope. It is bad enough that the inner class is
+exposed; but it is even worse that the compiler is silently
+overruling your decision to make some fields private."
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class AUIC {
+
+    private class AUIC2 {  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the inner class to a top-level class.
+
+package examples.rules.security.wsc;
+
+public class AUICFixed {
+
+}
+
+class AUIC2 {  // FIXED
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+</PRE>
+</BODY>
+</HTML>

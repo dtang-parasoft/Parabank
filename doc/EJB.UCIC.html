@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Cache reusable JNDI resources to minimize the use of expensive operations [EJB.UCIC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Cache reusable JNDI resources to minimize the use of expensive operations [EJB.UCIC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies reusable JNDI resources that are not cached.
+An error is reported if: 
+1. The local variable is creating an InitialContext object, or
+2. The local variable is assigned by a method that is 
+   not static and didn't return a static field.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Application Denial of Service
+
+Prevent possible exhaustion of system resources.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Certain re-usable objects are expensive to instantiate while 
+retrieving objects using JNDI. Such objects should be cached to reduce the
+number of lookups to the naming server and thus improve performance.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+import javax.naming.*;
+
+public class UCIC {
+
+    private InitialContext _context;
+
+    public InitialContext getInitialContext() throws NamingException {
+    InitialContext ic = new InitialContext();  // VIOLATION
+    return ic;
+    }
+
+    public InitialContext getInitialContext2() {
+    return _context;
+    }
+
+    public void method() throws NamingException {
+    InitialContext ic = getInitialContext();  // VIOLATION
+
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Create a static InitialContext field and use a static
+method to initialize the field.
+
+package examples.rules.ejb;
+
+import javax.naming.*;
+
+public class UCICFixed {
+
+    private static InitialContext _context;
+
+    public static InitialContext getIntance() throws NamingException {
+
+        if (_context == null) {
+           _context = new InitialContext();
+        }
+        return _context;
+    }
+
+    public void method() throws NamingException {
+    InitialContext context = UCICFixed.getInstance();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. pp. 315
+
+<A HREF="http://docs.oracle.com/cd/A97688_16/generic.903/bp/j2ee.htm#1011327">http://docs.oracle.com/cd/A97688_16/generic.903/bp/j2ee.htm#1011327</A>
+
+<A HREF="http://docs.oracle.com/javaee/1.4/tutorial/doc/Resources3.html">http://docs.oracle.com/javaee/1.4/tutorial/doc/Resources3.html</A>
+
+</PRE>
+</BODY>
+</HTML>

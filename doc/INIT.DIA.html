@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use diamond to invoke the constructor of a generic class [INIT.DIA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use diamond to invoke the constructor of a generic class [INIT.DIA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule checks parameterized types--such as Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;String, List&lt;String&gt;&gt;();--
+and reports an error when the constructor class and declaration have the same parameterized types.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule has one quickfix - "Change invoked constructor of a generic classes to diamond"
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Since Java 7 the parameterized type is not required to invoke the constructor of a generic class and can be replaced  
+with an empty set of type parameters (&lt;&gt;). This pair of angle brackets is called the diamond.
+The diamond operator removes the need for explicit type arguments in constructor calls to generic classes, 
+thereby reducing visual clutter and allowing you to write more compact and readable code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+        
+Map&lt;String, String&gt; map1 = new HashMap&lt;String, String&gt;(); // VIOLATION
+
+Map&lt;String, String&gt; map2 = null;
+
+map2 = new HashMap&lt;String, String&gt;(); // VIOLATION
+
+Map&lt;String, List&lt;String&gt;&gt; map3 = new HashMap&lt;String, List&lt;String&gt;&gt;(); // VIOLATION
+
+Map&lt;String, List&lt;String&gt;&gt; map4;
+
+map4 = new HashMap&lt;String, List&lt;String&gt;&gt;(); // VIOLATION
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Map&lt;String, String&gt; map1 = new HashMap&lt;&gt;(); // FIXED
+        
+Map&lt;String, String&gt; map2 = null;
+
+map2 = new HashMap&lt;&gt;(); // FIXED
+
+Map&lt;String, List&lt;String&gt;&gt; map3 = new HashMap&lt;&gt;(); // FIXED
+
+Map&lt;String, List&lt;String&gt;&gt; map4;
+
+map4 = new HashMap&lt;&gt;(); // FIXED
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+<A HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/language/type-inference-generic-instance-creation.html">http://docs.oracle.com/javase/7/docs/technotes/guides/language/type-inference-generic-instance-creation.html</A>
+
+</PRE>
+</BODY>
+</HTML>

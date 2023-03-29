@@ -1,0 +1,202 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use overloading judiciously [CERT.MET50.OVERLOAD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use overloading judiciously [CERT.MET50.OVERLOAD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies confusing usage of overloading.  There are three different 
+cases that can potentially be caught by this rule.  Which cases are actually 
+caught depends on the setting of the parameters.  The three cases are:
+
+1.  Multiple overloadings of a method have the same number of parameters.
+
+    This is the most general case.  Any methods which fit the description of 
+    case 2 and/or case 3 must also fit this case.  The strictest policy possible
+    is to enforce that multiple overloadings do not have the same number of
+    parameters.
+    
+2.  Multiple overloadings of a method have the same number and types of 
+    parameters (with the types in different orders)
+    
+    This case is a subset of case 1.  If two overloadings match this 
+    description, the caller of the overloaded methods may get confused between 
+    the two overloadings and accidentally call the wrong overloading.
+    
+3.  Multiple overloadings of a method have the same number of parameters, and
+    the type of each parameter of one of the overloadings is assignable to the 
+    corresponding parameter type of the other method.  
+    
+    This case is also a subset of case 1 and is the most serious violation of
+    the three types of violation.  This case is the most likely to lead to bugs.
+    For an explanation of this, see the BENEFITS section.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule may flag some false positives in cases where the implementations of 
+two overloaded methods are the same (or one overloading just calls the other). 
+In this case, it is not necessary to follow this rule.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-What to Flag
+    -Flag any overloaded methods with the same number of parameters.
+        -If this option is selected, the rule will check for case 1 as described
+         in the DESCRIPTION section. 
+    -Flag only certain cases where two overloadings can be easily confused. 
+     (default option)
+        -Flag overloaded methods if they have the same number and types of 
+         parameters. (default is true)
+            -If this option is selected, the rule will check for case 2 as 
+             described in the DESCRIPTION section.
+        -Flag overloaded methods where the same set of parameters can be passed 
+         to different overloadings using casts. (default is true)
+            -If this option is selected, the rule will check for case 3 as 
+             described in the DESCRIPTION section.
+        
+Note: The options "Flag overloaded methods if they have the same number and 
+types of parameters." and "Flag overloaded methods where the same set of 
+parameters can be passed to different overloadings using casts." are only 
+available when "Flag only certain cases where two overloadings can be easily 
+confused." is selected. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule should prevent the confusion and errors that result
+from having overloaded methods with the same number of parameters, especially
+if the parameters are of compatible types.  Consider the following example.
+
+Say you have the following two methods in a class:
+    
+    public String getType (Object obj) {
+        return "Object";
+    }
+
+    public String getType (String str) {
+        return "String";
+    } 
+    
+This code matches case 3 from the DESCRIPTION section.  Say you have some code 
+in this class which calls these methods as follows:
+    
+    Object o= new String();
+    System.err.println(getType(o));
+
+The decision on which overloaded method to call is made based on the 
+compile-time type of the parameter.  Even though the runtime type of the 
+variable "o" is "String", the overloaded method which takes "Object obj" as its 
+parameter will be called since this decision is made at compile-time.  This is
+probably not what was expected and is confusing.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+One strategy for allowing an algorithm to accept different types of input
+is to write overloaded methods that accept parameters of different types.
+Users only need to learn the signature of the general method and do not
+need to remember any signature variations from method to method.  Java's
+String class provides such a method for the conversion of numeric types
+to Strings, 'valueOf ()', which takes any basic numeric type as a parameter.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.epc;
+
+import java.util.*;
+
+public class OVERLOAD {
+    public void method (ArrayList al) {}  // VIOLATION
+    public void method (Collection c) {}  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Differentiate the methods by either renaming them or changing the number
+of parameters.
+
+package examples.rules.codsta.epc;
+
+import java.util.*;
+
+public class OVERLOADFixed {
+    public void arrayListMethod (ArrayList al) {}  // FIXED
+    public void collectionMethod (Collection c) {}  // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide".
+Addison Wesley, 2001, pp 128 - 133.
+
+SEI CERT Oracle Coding Standard for Java
+MET50-J. Avoid ambiguous or confusing uses of overloading
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET50-J.+Avoid+ambiguous+or+confusing+uses+of+overloading">https://wiki.sei.cmu.edu/confluence/display/java/MET50-J.+Avoid+ambiguous+or+confusing+uses+of+overloading</A>
+
+</PRE>
+</BODY>
+</HTML>

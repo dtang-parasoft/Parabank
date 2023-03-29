@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare a class as implementing an interface if a superclass already implements that interface [OOP.RI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare a class as implementing an interface if a superclass already implements that interface [OOP.RI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule looks for "implements" statements which are redundant.  A redundant
+"implements" statement will happen if a class is declared to implement an
+interface that was already implemented by a superclass of that class.  Once a 
+superclass is declared to implement an interface, all of its subclasses will
+automatically implement this interface.  This rule will flag a violation for 
+each redundant declaration of an implemented interface.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Having a redundant "implements" statement may indicate confusion.  The 
+programmer may not have been aware that a superclass already implemented the 
+interface.  If this is the case, the programmer should take into consideration
+whether to use the inherited version of the implemented interface or to override
+this implementation.  
+
+In any case, having a redundant "implements" statement only serves to complicate
+the code unnecessarily.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class RI extends B implements A {  //VIOLATION- Superclass "B" already 
+                                          // implements interface "A"
+}
+
+interface A{	
+}
+
+class B implements A{
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary "implements" statement.  Consider whether to use the 
+inherited version of the implemented interface or to override this 
+implementation.
+
+package examples.rules.oop;
+
+public class RIFixed extends B {  //FIXED
+}
+
+interface A{	
+}
+
+class B implements A{
+}
+
+</PRE>
+</BODY>
+</HTML>

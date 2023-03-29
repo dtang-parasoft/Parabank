@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare a method in an interface which conflicts with a 'protected' method of 'Object' [OOP.CIMOM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare a method in an interface which conflicts with a 'protected' method of 'Object' [OOP.CIMOM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation for any method declared in an interface which 
+conflicts with one of the 'protected' methods of the class 'java.lang.Object'
+(either 'clone()' or 'finalize()').  A violation will be flagged for each 
+'clone()' method defined in an interface which does not have the return type
+'Object' and for every 'finalize()' method defined in an interface which does
+not have 'void' for its return type. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If there is a conflict between a method declared in an interface and a method
+of 'Object', the interface cannot be implemented.  Thus, these conflicts should
+be resolved.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public interface CIMOM {
+    int clone();  //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the conflicting method declaration, or change the return type so that it
+matches the return type of the method in 'java.lang.Object'.
+
+package examples.rules.oop;
+
+public interface CIMOMFixed {
+    Object clone();  //FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+the Java Compiler page of the Help section of Eclipse 3.1.2
+
+</PRE>
+</BODY>
+</HTML>

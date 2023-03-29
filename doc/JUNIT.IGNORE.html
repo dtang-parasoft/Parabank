@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that JUnit 5 test classes that use @Ignore are annotated with @ExtendWith(IgnoreCondition.class) or @EnableJUnit4MigrationSupport [JUNIT.IGNORE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that JUnit 5 test classes that use @Ignore are annotated with @ExtendWith(IgnoreCondition.class) or @EnableJUnit4MigrationSupport [JUNIT.IGNORE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter,
+the junit-jupiter-migrationsupport module provides support for JUnit 4’s
+@Ignore annotation analogous to Jupiter’s @Disabled annotation.
+To use @Ignore with JUnit Jupiter based tests, configure a test dependency on
+the junit-jupiter-migrationsupport module in your build and then annotate your
+test class with @ExtendWith(IgnoreCondition.class) or
+@EnableJUnit4MigrationSupport." [JUnit 5 User Guide]
+
+This rule detects the @Ignore annotation in JUnit 5 test classes that are not
+annotated with @ExtendWith(IgnoreCondition.class) or
+@EnableJUnit4MigrationSupport.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a JUnit 5 test class is a class that contains a method
+marked with one of the following annotations:
+- @Test (from the org.junit.jupiter.api package)
+- @TestFactory
+- @TestTemplate,
+- @ParameterizedTest
+- @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule facilitates the migration process from JUnit 4 to JUnit 5 by helping
+you ensure that tests annotated with @Ignore will not be run after migration.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, a JUnit 5 test class includes the @Ignore
+annotation.
+
+
+import org.junit.Ignore;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class SomeTest
+{
+    @Test
+    @Ignore // VIOLATION
+    public void testBagMultiply()
+    {
+        Boolean a = Boolean.valueOf(true);
+        Boolean b = Boolean.valueOf(false);
+
+        assertTrue(a == b);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, annotate the test class with
+@EnableJUnit4MigrationSupport.
+
+import org.junit.Ignore;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport;
+
+@EnableJUnit4MigrationSupport
+public class SomeTest
+{
+    @Test
+    @Ignore // NO VIOLATION
+    public void testBagMultiply()
+    {
+        Boolean a = Boolean.valueOf(true);
+        Boolean b = Boolean.valueOf(false);
+
+        assertTrue(a == b);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JUnit 5 User Guide
+3.4. JUnit 4 @Ignore Support
+<A HREF="https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4-ignore-annotation-support">https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4-ignore-annotation-support</A>
+
+</PRE>
+</BODY>
+</HTML>

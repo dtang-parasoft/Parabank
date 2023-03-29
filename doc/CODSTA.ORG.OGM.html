@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Organize methods by name [CODSTA.ORG.OGM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Organize methods by name [CODSTA.ORG.OGM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods that are not organized by name. An error is 
+reported if methods of the same name are not grouped together.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes code easier to read and less error-prone.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+public class OGM {
+    void foo () {}
+    void bar () {}
+    void foo (int a) {  // VIOLATION: this should be with the previous 'foo ()'
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Move the 'foo' methods together.
+
+package examples.rules.codsta.org;
+
+public class OGMFixed {
+    void foo () {}
+    void foo (int a) {  // FIXED
+    } 
+    void bar () {}
+}
+
+</PRE>
+</BODY>
+</HTML>

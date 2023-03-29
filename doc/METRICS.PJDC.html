@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+DEPRECATED: Percentage of Javadoc comments (%) [METRICS.PJDC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+DEPRECATED: Percentage of Javadoc comments (%) [METRICS.PJDC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rules from this category are deprecated - see METRIC category.
+
+Calculates, for classes and interfaces, the percentage of fields and methods
+that have Javadoc comments.
+
+% comments = #comments in a file / (#fields + #methods + 1) * 100
+' + 1' is for the class or interface's Javadoc comment.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Jtest will report an error if the value is below 25%.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Every class, interface, method and field should have a Javadoc comment 
+associated with it.  Documentation helps users of your code to understand it
+better.
+                       
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+By Mark Schroeder "A Practical Guide to Object-Oriented Metrics"
+IT Pro, November/December, 1999.
+
+</PRE>
+</BODY>
+</HTML>

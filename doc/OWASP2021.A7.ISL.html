@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always call 'HttpSession.invalidate()' before 'LoginContext.login()' [OWASP2021.A7.ISL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always call 'HttpSession.invalidate()' before 'LoginContext.login()' [OWASP2021.A7.ISL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to 'LoginContext.login()' which are not preceded by a
+call to 'HttpSession.invalidate()'. A violation is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+If a session is not invalidated before a new login is performed it may use the
+same session as the previous logged in user. On public computers it may be
+possible to record session information and then gain access to a user's account
+if they log into the same application. However, if a session is invalidated
+before a login then this will not be possible.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class ISL {
+    private void authenticate(HttpSession session, LoginContext loginContext)
+        throws LoginException
+    {
+        ...
+        loginContext.login(); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Invalidate the session before login.
+
+package examples.rules.security.wsc;
+
+public class ISLFixed {
+    private void authenticate(HttpSession session, LoginContext loginContext)
+        throws LoginException
+    {
+        ...
+        if (session != null) {
+            session.invalidate(); //FIXED
+        }
+        loginContext.login();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/c647b49d-1f19-4f50-b7d9-3afc8e64acbf">https://app.hackedu.com/link/c647b49d-1f19-4f50-b7d9-3afc8e64acbf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A07:2021 – Identification and Authentication Failures
+<A HREF="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-384: Session Fixation
+<A HREF="https://cwe.mitre.org/data/definitions/384.html">https://cwe.mitre.org/data/definitions/384.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

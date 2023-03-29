@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using 'Date[]', use 'long[]' instead [GC.DUD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using 'Date[]', use 'long[]' instead [GC.DUD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Disallows the use of Date arrays, i.e. 'Date[] d;'.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The 'Date' object contains a lot of fields, and will use a lot of space.  
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Using an array of type "long" obscures the intended use of the values and
+loses the extra information that the 'Date' object carries.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+import java.util.Date;
+
+public class DUD {
+   Date d[];  // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Using an array of type "long" instead of an array of 'Date' objects is more
+efficient.
+
+package examples.rules.gc;
+
+import java.util.Date;
+
+public class DUDFixed {
+   long d[];  // FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

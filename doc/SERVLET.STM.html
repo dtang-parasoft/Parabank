@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'SingleThreadModel' in Servlet classes [SERVLET.STM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'SingleThreadModel' in Servlet classes [SERVLET.STM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Servlet classes that implement the 'SingleThreadModel' "interface". 
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+SingleThreadModel is a tag interface that a servlet can implement to transfer
+its re-entrance problem to the servlet engine.  As such, 
+javax.servlet.SingleThreadModel is part of the J2EE specification.  The 
+WebSphere servlet engine handles the servlet's re-entrance problem by creating 
+separate servlet instances for each user.  Because this causes a great amount 
+of system overhead, SingleThreadModel should be avoided.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class STM extends HttpServlet implements SingleThreadModel {
+    public void service () { }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Developers typically use javax.servlet.SingleThreadModel to protect updatable 
+servlet instances in a multithreaded environment.  The better approach is to
+avoid using servlet instance variables that are updated from the servlet's
+service method.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+IBM WebSphere Application Server Standard and Advanced Editions
+by Harvey W. Gunther Date: September 7, 2000
+<A HREF="http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf">http://www-4.ibm.com/software/webservers/appserv/ws_bestpractices.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare variables as close as possible to where they are used [CODSTA.READ.DVCU]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare variables as close as possible to where they are used [CODSTA.READ.DVCU]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Reports an error if the local variable declaration is not close to where the
+variable is used.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In large classes, it could be difficult to find the variable declaration. By
+keeping a variable declaration close to its usage, readability can be improved.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class DVCU {
+
+    public void sort2(int[] array) {
+
+        int temp;  // VIOLATION
+        if (array[0] &gt; array[1]) {
+            temp = array[1];
+            array[1] = array[0];
+            array[0] = temp;
+        }
+    }
+
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+move the "temp" variable declaration inside "if" statement
+
+package examples.rules.codsta.read;
+
+public class DVCUFixed {
+
+    public void sort2(int[] array) {
+
+        if (array[0] &gt; array[1]) {
+            int temp;  // FIXED
+            temp = array[1];
+            array[1] = array[0];
+            array[0] = temp;
+        }
+    }
+
+}
+
+</PRE>
+</BODY>
+</HTML>

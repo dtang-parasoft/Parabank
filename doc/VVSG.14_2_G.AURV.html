@@ -1,0 +1,190 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid local variables that are never read [VVSG.14_2_G.AURV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid local variables that are never read [VVSG.14_2_G.AURV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unused local variables and local variables which are only
+assigned to but are never read.  By default, a violation is flagged for each
+declaration of a local variable which is never used.  A violation will also be
+flagged by default for variables which are assigned a value (even multiply) but
+which are never read later.  A violation will be flagged in this case at the
+variable declaration as well as at each place where the variable is assigned to.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule replaces two old rules from previous versions of Jtest (UC.AUV and
+UC.AVNR) since there was significant overlap between these two rules.
+Originally, UC.AUV was designed to flag local variables which are never used at
+all, and UC.AVNR was designed to flag local variables which are assigned to but
+are never read.  This new rule combines the functionality of these old rules.
+If you only want to enforce one part of the rule but not the other, you can
+change the values of the parameters to get the original behavior of either
+UC.AUV or UC.AVNR.
+
+Currently, a Quick Fix is only available for cases where a local variable is
+never used at all.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The variable's value is assigned but never used, making it a dead store. . .
+This weakness could be an indication of a bug in the program or a deprecated
+variable that was not removed and is an indication of poor quality. This could
+lead to further bugs and the introduction of weaknesses." [CWE-563]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check for variables which are assigned but never read.
+    -Default is "true".
+    -Enabling this parameter provides the functionality of the deprecated rule
+     UC.AVNR.
+-Check for variables which are never used.
+    -Default is "true".
+    -Enabling this parameter provides the functionality of the deprecated rule
+     UC.AUV.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An unused or unread variable may indicate a logical flaw in the corresponding
+method. In this case, the method should be rewritten to take the unused or
+unread variable into account. This revision removes the logical flaw.
+
+The variable could also have accidentally been leftover when its use was
+deleted. In this case, it is safe to remove. This revision simplifies code, which
+makes it easier to read and less error prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class AURV {
+    void method () {
+        int i = 4;  // VIOLATION
+    }
+
+    static class NodeData {
+        //...
+    }
+
+    public static boolean needsRefresh(NodeData orig, NodeData update) {
+        boolean ret = false;  // VIOLATION: 'ret' is assigned, but not read
+
+        if (orig == null &amp;&amp; update != null) {
+            ret = true;
+        } else if (orig != null &amp;&amp; update == null) {
+            ret = true;
+        }
+
+        return false;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either add the missing usage of the variable or remove the variable.
+
+package examples.rules.uc;
+
+public class AURVFixed {
+    void method () {
+        // FIXED
+    }
+
+    static class NodeData {
+        //...
+    }
+
+    public static boolean needsRefresh(NodeData orig, NodeData update) {
+        boolean ret = false;
+
+        if (orig == null &amp;&amp; update != null) {
+            ret = true;
+        } else if (orig != null &amp;&amp; update == null) {
+            ret = true;
+        }
+
+        return ret;  // FIXED: variable 'ret' is used as intended
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://xp.c2.com/CodeSmell.html">http://xp.c2.com/CodeSmell.html</A>
+
+CWE-563: Assignment to Variable without Use ('Unused Variable')
+<A HREF="https://cwe.mitre.org/data/definitions/563.html">https://cwe.mitre.org/data/definitions/563.html</A>
+
+</PRE>
+</BODY>
+</HTML>

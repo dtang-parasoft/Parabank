@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid classes that implement 'Externalizable' but do not define a no-argument constructor [SERIAL.ENNAC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid classes that implement 'Externalizable' but do not define a no-argument constructor [SERIAL.ENNAC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any class that implements 'java.io.Externalizable', but 
+does not define a zero-argument constructor. An error is reported for each 
+occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+EXAMPLES
+
+package examples.rules.serial;
+
+public class ENNAC implements Externalizable{
+    public ENNAC(int i) {}
+    //VIOLATION, no zero-argument constructor 
+    //exception would be thrown if object of this class is deserialized
+    //java.io.InvalidClassException: 
+    //serialization.ExternalizableObject; no valid constructor
+}
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Whenever the class object that implements 'java.io.Externalizable' is
+deserialized, the zero-argument constructor of that class would be 
+invoked. If such a zero-argument constructor is not present, the 
+deserialization process would experience errors.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+public class ENNACFixed implements Externalizable {
+    ENNACFixed() { //fixed
+    //...
+    }   
+    //...
+}   
+
+</PRE>
+</BODY>
+</HTML>

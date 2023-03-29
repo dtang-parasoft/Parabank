@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the 'next' method from the 'hasNext' method of an Iterator [PB.API.HNCN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the 'next' method from the 'hasNext' method of an Iterator [PB.API.HNCN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that the "hasNext()" method of a class which implements the 
+"java.util.Iterator" interface does not call the "next()" method of the same
+class.  A violation is flagged for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Calling "next()" from the "hasNext()" method is usually wrong because the 
+"hasNext()" method is not supposed to change the state of the iterator.  Since
+the "next()" method will change the iterator's state, it should not be called 
+from "hasNext()".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package nightly.original.pb.api;
+
+import java.util.*;
+
+public class HNCN implements Iterator{
+    List myList;
+    int position;
+    
+    HNCN(List l){
+        myList= l;
+        position= 0;
+    }
+
+    public boolean hasNext(){
+        if(next() != null){ //VIOLATION
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public Object next(){
+        Object retval= myList.get(position);
+        position++;
+        return retval;
+    }
+    
+    public void remove(){
+        //SOME CODE
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package nightly.original.pb.api;
+
+import java.util.*;
+
+public class HNCNFixed implements Iterator{
+    List myList;
+    int position;
+    
+    HNCN(List l){
+        myList= l;
+        position= 0;
+    }
+
+    public boolean hasNext(){
+        if(myList.get(position+1) != null){ //FIXED
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public Object next(){
+        Object retval= myList.get(position);
+        position++;
+        return retval;
+    }
+    
+    public void remove(){
+        //SOME CODE
+    } 
+}
+
+</PRE>
+</BODY>
+</HTML>

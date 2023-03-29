@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide an '@invariant' contract for all "protected" classes [DBC.PROC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide an '@invariant' contract for all "protected" classes [DBC.PROC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any "protected" class without a '@invariant' contract.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If there's no Javadoc comment, Jtest will not report this error.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Class invariants are contracts that the class's objects should always
+satisfy.  A class invariant is often implicit in the design of a class; 
+by making it explicit, you might catch bugs that would otherwise go undetected.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class PROC {
+    
+    /**
+     * class Stack
+     */
+    protected class Stack  // VIOLATION
+    {
+        public int getSize () {
+            return _size;
+        }
+        private int _size;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide an '@invariant' contract or use '/** @invariant $none */' to document the lack of one.
+
+package examples.rules.dbc;
+
+public class PROCFixed {
+
+    /** @invariant getSize () &gt;= 0 */  // FIXED
+    protected class Stack
+    {
+        public int getSize () {
+            return _size;
+        }
+        private int _size;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+See the "Design by Contract" section in the Jtest User's Guide.
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 50, 75 - 76
+
+</PRE>
+</BODY>
+</HTML>

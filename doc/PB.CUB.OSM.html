@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure overloaded methods in superclass are overridden when overriding a method in subclass [PB.CUB.OSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure overloaded methods in superclass are overridden when overriding a method in subclass [PB.CUB.OSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods in a subclass that override methods in a
+superclass. If so, the rule checks that all overloaded methods in the
+superclass are also overridden in the subclass.  The rule ignores cases where
+the superclass method is private or is in another package with default
+accessibility.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Fixing this violation by simply calling the superclass implementation may cause
+it to be flagged by the rule UC.SO. Additionally, if a superclass method is
+concrete and calls an abstract method, a violation is not flagged. This is
+because the usage suggests that only the abstract is intended to be overridden
+in subclasses.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore the following methods:
+    -"visit", "accept", "beginVisit", "endVisit",
+    "run", "read", "write", "print" (default)
+
+-Ignore methods with empty bodies (default true)
+
+-Ignore "chained" methods (default true)
+    Enabling this parameter will ignore methods which directly call an
+    overloaded method. In these instances it is more likely that the intent is
+    to only override one of the methods. For example:
+        class OSM {
+            void print(String s) {
+                print();
+                System.out.print(s);
+            }
+            void print() {}
+        }
+        class OSM2 extends OSM {
+            void print() {
+                System.out.print("String is: ");
+            }
+        }
+    Note that if a method conditionally calls an overloaded method (e.g. for the
+    above example if 'print()' were called in an if/else block) then a violation 
+    will still be reported.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Inconsistent changes between a subclass and its superclass sometimes leads to
+overriding a superclass method when the intent was to override another.  This
+rule helps to identify those cases where a user may have missed overriding a 
+method when it was intended to do so.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+class OSM {
+    public void print(String s){
+        System.out.println("String is: "+s);
+    }
+}
+class OSM2 extends OSM {
+    public void print(Object o) { //VIOLATION
+        System.out.println(o.toString());
+    }
+    public static void main(String[] args) {
+        Object o = getUserString();
+        print(o);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+At runtime it isn't clear which print method might be called and the program
+could yield unexpected results. For clarity override the other "print" method
+as well.
+
+package examples.rules.pb.cub;
+
+class OSMFixed {
+    public void print(String s){
+        System.out.println("String is: "+s);
+    }
+}
+class OSM2Fixed extends OSMFixed {
+    public void print(Object o) { //FIXED
+        System.out.println(o.toString());
+    }
+    public void print(String s) {
+        super.print(s);
+    }
+    public static void main(String[] args) {
+        Object o = getUserString();
+        print(o);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

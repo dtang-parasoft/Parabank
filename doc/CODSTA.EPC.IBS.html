@@ -1,0 +1,189 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "int" instead of "byte" or "short" and "double" instead of "float" for variable declarations [CODSTA.EPC.IBS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "int" instead of "byte" or "short" and "double" instead of "float" for variable declarations [CODSTA.EPC.IBS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Memory is abundant enough nowadays that there rarely is a strong reason to use
+variables of type "byte" or "short" instead of type "int" or variables of type
+"double" instead of "float".  This rule will flag a violation for cases where a  
+local variable, parameter, or field is declared as having one of the primitive 
+types "byte", "short", or "float" and it appears as if the variable could have 
+been declared as an "int" (instead of "byte" or "short") or "float" (instead of 
+"double").
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not flag the parameters of overriding methods because the 
+parameter type of an overriding method must be the same as the corresponding
+parameter in the overridden method.  Also, variables, fields, and parameters 
+which are passed to methods which require parameters of type "byte", "short", or 
+"float" will not be flagged because calling these methods would require either 
+changing the signature of the called method or casting to the original type if 
+the type were changed.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore variables of array types
+    -Default value is "true".
+    -If this parameter is enabled, the rule will not flag a violation for any
+     variables, parameters, or fields of array types even if the element type of
+     the array is "byte", "short", or "float".
+    -The memory savings for array declarations is more significant than the 
+     memory savings for single variables because the savings is multiplied by 
+     the size of the array.  This is why array variables are not flagged by 
+     default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using "byte" or "short" instead of "int" or using "float" instead of "double" 
+saves a small amount of memory, but doing so can also lead to confusion and
+obscure bugs (See the "EXAMPLE" section below).  Unless you have a very limited
+amount of memory or a very large array, we recommend that you not use the types
+"byte", "short", and "float".  
+
+Using a "byte" instead of an "int" only saves 3 bytes of memory.  Using a 
+"short" instead of an "int" only saves 2 bytes.  Using a "float" instead of a
+"double" only saves 4 bytes.  These memory savings are insignificant in most
+modern machines.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+There are some legitimate reasons for using "byte", "short", or "float" 
+datatypes.  For instance, if you are developing for a platform with very limited
+memory (such as if you are using J2ME), the memory savings from using these 
+datatypes may be significant.  Also, using the "byte" datatype can serve as a 
+form of documentation.  If a variable is declared as a "byte", the reader will
+know that this variable can only hold values between -128 and 127 without any
+documentation.  If you change the type to "int", you will have to document this 
+fact.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example was first presented in the Google Tech Talk shown in the 
+"REFERENCES" section.  The example looks like it should print "1", but it 
+actually prints "100".  The problem is that the result of the calculation "i-1"
+is silently converted to an "int" even though "i" is of type "short".  Since the
+elements being added are "shorts" and the elements you attempt to remove are 
+"ints", nothing ever gets removed from the "Set".  See the link in the 
+"REFERENCES" section for more details.
+
+package examples.rules.codsta.epc;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class IBS {
+    public static void main(String args[]) {
+        Set&lt;Short&gt; s = new HashSet&lt;Short&gt;();
+        for (short i = 0; i &lt; 100; i++) {  //VIOLATION
+            s.add(i);
+            s.remove(i - 1);
+        }
+        System.out.println(s.size());
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If you use the types "int" and "Integer" instead of "short" and "Short", the
+code prints out what you would expect ("100").
+
+package examples.rules.codsta.epc;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class IBSFixed {
+    public static void main(String args[]) {
+        Set&lt;Integer&gt; s = new HashSet&lt;Integer&gt;();
+        for (int i = 0; i &lt; 100; i++) {  //FIXED- Use "int" instead of "short"
+            s.add(i);
+            s.remove(i - 1);
+        }
+        System.out.println(s.size());
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. "Learning the Java Language" Tutorial.
+<A HREF="http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html</A>
+
+2. Google Tech Talk, "Java Puzzlers, Episode VI: The Phantom-Reference Menace/
+Attack of the Clone/Revenge of the Shift" by Josh Bloch and William Pugh. July 
+23, 2007.
+<A HREF="http://www.youtube.com/watch?v=yGFok5AJAyc">http://www.youtube.com/watch?v=yGFok5AJAyc</A>
+
+</PRE>
+</BODY>
+</HTML>

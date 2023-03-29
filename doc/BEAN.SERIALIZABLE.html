@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that JavaBean classes implement 'java.io.Serializable' [BEAN.SERIALIZABLE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that JavaBean classes implement 'java.io.Serializable' [BEAN.SERIALIZABLE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies JavaBean classes that do not implement 'java.io.Serializable'.
+All JavaBeans are required to be persistable. An error is reported for each
+occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Data Security
+
+When implementing the Serializable interface, fields that contain confidential
+or sensitive data (such as passwords) should be marked as transient or should use
+a customized, encrypted serialization scheme. Otherwise, a potential attacker
+could extract the confidential data from the serialization stream or from a
+serialized object file.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Objects that support the Serializable interface can save and restore their 
+state from disk. This is also a requirement for JavaBeans.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.bean;
+
+import java.io.Serializable;
+import java.awt.Color;
+
+public class SERIALIZABLEBean {  // VIOLATION
+
+    private Color color = Color.green;
+
+    //getter method
+    public Color getColor() {
+	return color;
+    }
+
+    //setter method
+    public void setColor(Color newColor) {
+	color = newColor;
+	repaint();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the Bean class implement Serializable.
+
+package examples.rules.bean;
+
+import java.io.Serializable;
+import java.awt.Color;
+
+public class SERIALIZABLEFixedBean implements Serializable {  // FIXED
+
+    private Color color = Color.green;
+
+    //getter method
+    public Color getColor() {
+	return color;
+    }
+
+    //setter method
+    public void setColor(Color newColor) {
+	color = newColor;
+	repaint();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-01-1998/jw-01-beans.html">http://www.javaworld.com/javaworld/jw-01-1998/jw-01-beans.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

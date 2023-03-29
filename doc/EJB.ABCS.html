@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use Servlet code in EJB classes [EJB.ABCS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use Servlet code in EJB classes [EJB.ABCS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies Servlet code inside EJB classes. An error
+is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Validation
+category: Input Validation
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Implementation details specific to one tier should not be
+introduced in another tier. The service API exposed by the
+business tier to the presentation tier will likely be used
+by other clients as well. If the service API accepts 
+parameters with types, such as HttpServletRequest, then
+every client to the service is forced to package its data
+in a servlet request data structure. This drastically 
+reduces the service's reusability.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Core J2EE Patterns - Best Practices and Design Strategies"
+by Deepak Alur, John Cupri and Dan Malks. 2001. pp. 91-95
+
+</PRE>
+</BODY>
+</HTML>

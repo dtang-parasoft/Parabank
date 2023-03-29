@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not start business method names with "ejb" [EJB.EJB3.BMN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not start business method names with "ejb" [EJB.EJB3.BMN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a method in a business interface starts with
+"ejb". Methods should not use this formatting to avoid conflicts with callback
+methods.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An interface is considered a business interface if it implements one of the
+following annotations: @Local, @Remote, @WebService.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Local
+public interface BMN {
+    void ejbMethod(); //VIOLATION
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rename the method.
+
+package examples.rules.ejb.ejb3;
+
+@Local
+public interface BMNFixed {
+    void method(); //Fixed
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. p. 78.
+
+JSR 220: Enterprise JavaBeansTM,Version 3.0
+EJB Core Contracts and Requirements, Section #4.6.5
+
+</PRE>
+</BODY>
+</HTML>

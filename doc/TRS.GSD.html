@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use "getState" except for debugging purposes [TRS.GSD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use "getState" except for debugging purposes [TRS.GSD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to "getState" which are not used for debugging
+purposes.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule attempts to infer whether the "getState" call was used for debugging
+purposes or not. The rule checks the surrounding block for calls to "print" or
+to a "Logger" method and flags no violation in cases where one is present.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Concurrency
+
+A blocked thread may not actually be in the WAITING or TIMED_WAITING state as
+the JVM may implement blocking by spin-waiting. A thread in some cases may also
+transition to RUNNABLE even if a condition it is waiting on is yet to be true.
+As the accuracy of "getState" is not always reliable, it should not be used for
+concurrency control purposes.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class GSD {
+    void checkState() {
+        //VIOLATION
+        if (Thread.currentThread().getState() == Thread.State.WAITING) {
+            ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If intending to use getState for debugging purposes, check that information is
+reported. If intended for concurrency control, consider using another method.
+
+package examples.rules.trs;
+
+public class GSDFixed {
+    void checkState() {
+        //FIXED
+        if (Thread.currentThread().getState() == Thread.State.WAITING) {
+            Logger.global.warning("Waiting");
+            ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Brian Goetz with Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, and
+Doug Lea. Java Concurrency In Practice. Stoughton: Addison-Wesley, 2007.
+pp. 250-252.
+
+</PRE>
+</BODY>
+</HTML>

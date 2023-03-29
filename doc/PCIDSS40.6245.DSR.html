@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid defining multiple security roles with the same name in 'web.xml' files [PCIDSS40.6245.DSR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid defining multiple security roles with the same name in 'web.xml' files [PCIDSS40.6245.DSR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A common mistake in 'web.xml' files is to define multiple security roles with 
+the same name.  This rule will flag a violation for any case where there are 
+multiple '&lt;security-role&gt;' elements within a 'web.xml' file which all specify 
+the same role name.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Including multiple '&lt;security-role&gt;' elements with the same name can lead to
+unauthorized access to resources.  The last security role with a given role name
+will most likely be chosen if there are multiple security roles with the same 
+role name.  This can cause unintended access to be granted.
+
+Enforcing this rule will help to protect against the OWASP 2013 Top 10 
+application vulnerability, including:
+
+A5-Security Misconfiguration
+A7-Missing Function Level Access Control
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It's easy to accidentally duplicate a security role name when copying and 
+pasting code in a 'web.xml' file.  When copying and pasting, you may forget to
+change the '&lt;role-name&gt;' element.  Accidentally duplicating a security role name
+can lead to unauthorized access to resources (See the "SECURITY RELEVANCE" 
+section).
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the 'web.xml' file shown below, there are two security roles defined with the
+name 'privileged'.  The second one is clearly a mistake.  This mistake is likely
+to lead to pages with privileged access being accessible to regular users.  
+These pages were clearly not intended to be accessible to regular users.
+
+web.xml:
+
+&lt;web-app&gt;    
+     
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+             &lt;web-resource-name&gt;PrivilegedPages&lt;/web-resource-name&gt;
+             &lt;description&gt;Pages with privileged access&lt;/description&gt;
+             &lt;url-pattern&gt;/privileged/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+    
+        &lt;auth-constraint&gt;
+            &lt;description&gt;Privileged access only&lt;/description&gt;
+            &lt;role-name&gt;privileged&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+    &lt;/security-constraint&gt;
+    
+    &lt;security-role&gt;
+        &lt;description&gt;Privileged Access&lt;/description&gt;
+        &lt;role-name&gt;privileged&lt;/role-name&gt;
+    &lt;/security-role&gt;
+                           
+    &lt;security-role&gt;
+        &lt;description&gt;Regular Access&lt;/description&gt;
+        &lt;role-name&gt;privileged&lt;/role-name&gt;  &lt;!-- VIOLATION --&gt;
+    &lt;/security-role&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ensure that each security role referenced has a unique name.  In this case, 
+change the name of the second security role to 'regular' so that pages which
+match the URL pattern '/privileged/*' will not be accessible to regular users.
+
+web.xml:
+
+&lt;web-app&gt;    
+     
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+             &lt;web-resource-name&gt;PrivilegedPages&lt;/web-resource-name&gt;
+             &lt;description&gt;Pages with privileged access&lt;/description&gt;
+             &lt;url-pattern&gt;/privileged/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+    
+        &lt;auth-constraint&gt;
+            &lt;description&gt;Privileged access only&lt;/description&gt;
+            &lt;role-name&gt;privileged&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+    &lt;/security-constraint&gt;
+    
+    &lt;security-role&gt;
+        &lt;description&gt;Privileged Access&lt;/description&gt;
+        &lt;role-name&gt;privileged&lt;/role-name&gt;
+    &lt;/security-role&gt;
+                           
+    &lt;security-role&gt;
+        &lt;description&gt;Regular Access&lt;/description&gt;
+        &lt;role-name&gt;regular&lt;/role-name&gt;  &lt;!-- FIXED --&gt;
+    &lt;/security-role&gt;
+
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013:
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-863: Incorrect Authorization
+<A HREF="https://cwe.mitre.org/data/definitions/863.html">https://cwe.mitre.org/data/definitions/863.html</A>
+
+Cigital Java Security Rulepack # 31:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-000460: The application must enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

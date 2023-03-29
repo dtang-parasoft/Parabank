@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use hash functions with a salt [APSC_DV.001860.MDSALT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use hash functions with a salt [APSC_DV.001860.MDSALT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"The software uses a one-way cryptographic hash against an input that
+should not be reversible, such as a password, but the software does not
+also use a salt as part of the input. This makes it easier for attackers
+to pre-compute the hash value using dictionary attack techniques such as
+rainbow tables." [CWE-759]
+
+This rule detects instances of the MessageDigest class that do not use
+salt to create a digest.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not recognize when a fixed (constant) salt is used. A fixed salt
+is considered to be a bad implementation because using the same salt for every
+hashed password makes it easier to attack multiple users by cracking only one hash.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"If an attacker can gain access to the hashes, then the lack of a salt makes it
+easier to conduct brute force attacks using techniques such as rainbow tables."
+[CWE-759]
+
+"All the unsalted hashes can be exposed with a rainbow table of pre-calculated
+hashes." [OWASP A3 2017]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule protects against security attacks by helping you ensure that a salt 
+is used for the MessageDigest hash functions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+A salt is missing in the following example.
+
+    public byte[] digest(String value) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        return md.digest(value.getBytes()); // VIOLATION
+    }
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The code is fixed by adding a salt to the value. Note that a different salt
+should be used for each user.
+
+    public byte[] digest(String value) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        value = SALT + value;
+        return md.digest(value.getBytes()); // NO VIOLATION
+    }
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/7feb5f1c-e5b8-4db0-8b3a-e74a76f27631">https://app.hackedu.com/link/7feb5f1c-e5b8-4db0-8b3a-e74a76f27631</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-328: Use of Weak Hash
+<A HREF="https://cwe.mitre.org/data/definitions/328.html">https://cwe.mitre.org/data/definitions/328.html</A>
+
+CWE-759: Use of a One-Way Hash without a Salt
+<A HREF="https://cwe.mitre.org/data/definitions/759.html">https://cwe.mitre.org/data/definitions/759.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001860: The application must use mechanisms meeting the requirements of applicable federal laws, Executive Orders, directives, policies, regulations, standards, and guidance for authentication to a cryptographic module
+APSC-DV-002290: The application must use the Federal Information Processing Standard (FIPS) 140-2-validated cryptographic modules and random number generator if the application implements encryption, key exchange, digital signature, and hash functionality
+
+</PRE>
+</BODY>
+</HTML>

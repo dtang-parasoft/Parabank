@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not return "this" [EJB.THISRET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not return "this" [EJB.THISRET]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that returns "this". An error is reported
+for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Concurrency
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A bean class should not return "this" from a method. 
+Although not strictly a restriction (the container will 
+not prevent you from doing it), it is identified as being 
+a very bad practice. Clients should only be able to invoke
+bean class methods through its container (remote interface). 
+However, by returning the "this" reference, it could potentially 
+give a client a direct remote reference to the bean 
+rather than the EJBObject.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use 'getEJBObject ()' available in SessionContext or EntityContext.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Enterprise JavaBeans Programming restrictions on EJB 
+by Sanjay Mahapatra  -- JavaWorld August 2000
+
+<A HREF="http://www.developer.com/java/ejb/article.php/1436981">http://www.developer.com/java/ejb/article.php/1436981</A>
+
+</PRE>
+</BODY>
+</HTML>

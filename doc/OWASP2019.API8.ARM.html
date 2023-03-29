@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using reflection methods [OWASP2019.API8.ARM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using reflection methods [OWASP2019.API8.ARM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to reflection methods. A violation is reported for
+each occurrence. See BENEFITS, DRAWBACKS, and PARAMETERS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check the following methods:
+    Types being checked should be specified as a fully qualified name and method
+    names may be specified using regular expressions. Note that the defaults for
+    this list are non-exhaustive for reflection methods and instead contains
+    some of the more commonly used reflection methods.
+
+    Type (qualified name)          Method name (regular expression)
+    ---------------------          --------------------------------
+    java.lang.Class                get(Declared)?(Constructor|Field|Method)(s)?
+    java.lang.Class                newInstance
+    java.lang.reflect.Constructor  setAccessible
+    java.lang.reflect.Constructor  newInstance
+    java.lang.reflect.Method       invoke
+    java.lang.reflect.Method       setAccessible
+    java.lang.reflect.Field        set.*
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Use of reflection has various implications and should be avoided when possible.
+In regards to performance, dynamic resolution of types incurs a performance
+overhead. In regards to encapsulation, it may be possible to access "private"
+members and other members that would normally be inaccessible. As a result, use
+of reflection may have unintended consequences. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Reflection methods are often used when necessary, in which case this rule may
+flag cases that have no suitable alternative.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+public class ARM {
+    public boolean addOffer(Collection c, Object o) {
+        try {
+            Method m = c.getClass().getMethod("offer", null); //VIOLATION
+            return (Boolean) m.invoke(o);
+        } catch (Exception e) {
+            return c.add(o);
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a non-reflection alternative if possible.
+
+package examples.rules.codsta.bp;
+
+public class ARMFixed {
+    public boolean addOffer(Collection c, Object o) {
+        if (c instanceof Queue) { //FIXED
+            return ((Queue) c).offer(o);
+        }
+        return c.add(o);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Code Injections
+Video: <A HREF="https://vimeo.com/304405723">https://vimeo.com/304405723</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_3-Code-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8_3-Code-Injections.pdf</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Trail: The Reflection API (The Java Tutorials)
+<A HREF="http://docs.oracle.com/javase/tutorial/reflect/index.html">http://docs.oracle.com/javase/tutorial/reflect/index.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+SEC05-J. Do not use reflection to increase accessibility of classes, methods, or fields
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SEC05-J.+Do+not+use+reflection+to+increase+accessibility+of+classes%2C+methods%2C+or+fields">https://wiki.sei.cmu.edu/confluence/display/java/SEC05-J.+Do+not+use+reflection+to+increase+accessibility+of+classes%2C+methods%2C+or+fields</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+</PRE>
+</BODY>
+</HTML>

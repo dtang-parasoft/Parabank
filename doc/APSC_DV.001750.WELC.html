@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure all web content directories                                 have a "welcome file" [APSC_DV.001750.WELC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure all web content directories                                 have a "welcome file" [APSC_DV.001750.WELC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if web content directories didn't have a "welcome file" which
+the "welcome files" are specified in 'web.xml'. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 2013
+application vulnerabilities, including:
+
+A5-Security Misconfiguration
+
+For example, if a web content directory, '/admin' didn't have a welcome file, hackers
+will be able to see and download all the files in '/admin' directory by 
+typing url '<A HREF="http://notsafe.com/admin'">http://notsafe.com/admin'</A>
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Select which folders(web content directroies) will be used in web applications:
+    [x] All folders will be used (selected by default)
+    [ ] List of folders will be used (Glob expression)
+    
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;!--- web.xml --&gt;
+&lt;web-app&gt;
+   ......
+   &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+   &lt;/welcome-file-list&gt;
+   .....
+&lt;/web-app&gt;
+   
+&lt;!--- web application tree structure --&gt;
+
+    + /
+    |
+    |--+ admin     &lt;------ VIOLATION : missing welcome file
+       |
+       |--+ login.jsp
+          + account.jsp
+    |
+    |--+ other
+       |
+       |+  ........
+    |
+    |--+ WEB-INF
+       |
+       |+ .......
+          
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add index.jsp in /admin web content directory
+
+&lt;!--- web.xml --&gt;
+&lt;web-app&gt;
+   ......
+   &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+   &lt;/welcome-file-list&gt;
+   .....
+&lt;/web-app&gt;
+   
+&lt;!--- web application tree structure --&gt;
+
+    + /
+    |
+    |--+ admin     &lt;------ FIXED : add welcome file 'index.jsp'
+       |
+       |--+ index.jsp
+          + login.jsp
+          + account.jsp
+    |
+    |--+ other
+       |
+       |+  ........
+    |
+    |--+ WEB-INF
+       |
+       |+ .......
+       
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2013 (A5-Security Misconfiguration):
+<A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

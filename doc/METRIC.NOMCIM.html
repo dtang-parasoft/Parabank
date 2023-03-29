@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Method Calls in Methods [METRIC.NOMCIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Method Calls in Methods [METRIC.NOMCIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric calculates the number of method calls within a method. 
+A high number of invocations may indicate that the design is too complex
+and can be simplified by splitting the method into smaller methods.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Method calls defined in lambdas and other code entities within a method body
+are included in the total number of invocations within this method.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This metric helps you reduce design complexity and improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+        public Boolean startsWith (String str, String match) {
++1          for (int i = 0; i &lt; match.length (); ++i)
++2               if (str.charAt (i) != match.charAt (i))
++1                  return new Boolean(false);
++1          return new Boolean(true);
+        }
+Total: 5
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+By Mark Schroeder "A Practical Guide to Object-Oriented Metrics"
+IT Pro, November/December, 1999.
+
+</PRE>
+</BODY>
+</HTML>

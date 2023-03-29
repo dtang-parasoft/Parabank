@@ -1,0 +1,207 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Check the return value of methods which read or skip input [PCIDSS32.655.CRRV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Check the return value of methods which read or skip input [PCIDSS32.655.CRRV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Methods which read or skip input usually return either the number of bytes read
+or skipped or the byte that was read (for methods which only read one byte).
+Either way, the return value of these methods should be checked instead of just
+being ignored.  For methods that return the number of bytes read or skipped, you
+should check that the number of bytes actually read or skipped matches the
+desired number of bytes.  For methods which return the byte read (such as "java.
+io.InputStream.read(byte[])"), you should check that the end of the stream has
+not been reached.
+
+This rule will flag a violation for each case where the return value of one of
+the methods specified in the parameter list is discarded without being used in
+an expression or assigned to a variable.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Currently there is only a Quick Fix for a few specific cases of this rule.  The
+cases which have a Quick Fix are calls to the "read(byte[])" or "read(byte[],
+int, int)" methods of types which implement the "java.io.DataInput" interface.
+In these cases, a good fix is usually to use the "readFully(byte[])" or
+"readFully(byte[], int, int)" method instead of the "read()" methods.  Thus,
+there is a Quick Fix to change the call to the "read()" method to a call to the
+"readFully()" method in these cases.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The software does not check the return value from a method or function, which
+can prevent it from detecting unexpected states and conditions. . . If
+an attacker can force the function to fail or otherwise return a value that is
+not expected, then the subsequent program logic could lead to a vulnerability,
+because the software is not in a state that the programmer assumes. For
+example, if the program calls a function to drop privileges but does not check
+the return code to ensure that privileges were successfully dropped, then
+the program will continue to operate with the higher privileges." [CWE-252]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Methods to be checked:
+ (in form of &lt;fully qualified type name&gt;#&lt;method&gt;(&lt;parameter1 type&gt;,&lt;parameter2 type&gt;))
+    -Default values are:
+        -java.io.InputStream#read()
+        -java.io.InputStream#read(byte[])
+        -java.io.InputStream#read(byte[],int,int)
+        -java.io.InputStream#skip(long)
+        -java.io.DataInput#skipBytes(int)
+    -The rule will also check calls to methods which override or implement a
+     method specified in this list.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Forgetting to check the return value of methods which read or skip input is a
+common cause of bugs.  It is possible that the end of the stream was reached or
+that fewer bytes were read or skipped than the caller requested for some other
+reason.  You must check the return value to properly handle this case.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+import java.io.*;
+
+public class CRRV{
+    public byte[] readFully(InputStream input, int length) throws IOException
+    {
+        byte[] buffer = new byte[length];
+        input.read(buffer, 0, length); // VIOLATION
+        return buffer;
+    }
+
+    public byte[] readFully(DataInputStream input, int length) throws IOException
+    {
+        byte[] buffer = new byte[length];
+        input.read(buffer, 0, length);  // VIOLATION
+        return buffer;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Check the return value of the 'read()' method.  In particular, you should always
+check that the return value is not negative to make sure the end of the stream
+was not reached.
+
+If the type being used is an input stream which implements the "java.io.
+DataInput" interface, you can use one of the "readFully()" methods defined in
+this interface to read in the whole input stream.  These methods do not require
+any return values to be checked because they will throw an exception if the
+desired number of bytes could not be read.
+
+package examples.rules.pb.logic;
+
+import java.io.*;
+
+public class CRRVFixed{
+    public byte[] readFully(InputStream input, int length) throws IOException {
+        byte[] buffer = new byte[length];
+        int num_read = 0;
+        while (num_read &lt; length)
+        {
+            int count = input.read(buffer, num_read, length - num_read);
+            if (count &lt; 0)                                                // FIXED
+                throw new IOException("end of stream reached");
+            num_read += count;
+        }
+        return buffer;
+    }
+
+    public byte[] readFully(DataInputStream input, int length) throws IOException {
+        byte[] buffer = new byte[length];
+        input.readFully(buffer);  //FIXED
+        return buffer;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 3.2
+6.5.5 Improper error handling
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+CWE-252: Unchecked Return Value
+<A HREF="https://cwe.mitre.org/data/definitions/252.html">https://cwe.mitre.org/data/definitions/252.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO08-J. Distinguish between characters or bytes read from a stream and -1
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO08-J.+Distinguish+between+characters+or+bytes+read+from+a+stream+and+-1">https://wiki.sei.cmu.edu/confluence/display/java/FIO08-J.+Distinguish+between+characters+or+bytes+read+from+a+stream+and+-1</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003235: The application must not be subject to error handling vulnerabilities
+
+</PRE>
+</BODY>
+</HTML>

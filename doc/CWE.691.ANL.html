@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using negative logic in if-else statement [CWE.691.ANL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using negative logic in if-else statement [CWE.691.ANL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies negative logic in 'if-else' control flow.
+'if-else' control flow includes the patterns below:
+
+-if (cond)
+    expr
+ else 
+    expr
+  
+-cond ? expr1 : expr2 
+
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The code does not sufficiently manage its control flow during execution,
+creating conditions in which the control flow can be modified in unexpected
+ways." [CWE-691]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore special cases (default is true)
+    There are some commonly used negative logics that should not
+    be reported as errors; these include:
+    -if (var!= null) 
+    -if (var!= 0)
+    -if (var!= -1)
+    -if (!methodInvocation) where methodInvocation is not "equals" method
+    
+    If 'Ignore special cases' is set to true, all the above cases would
+    be ignored.
+    
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using negative logic could sometimes lead to complicated control flow.
+The logic could easily be modified to avoid negation and provide
+a more intuitive flow.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class ANL {
+    public int specialAdd(int i, int j) {
+        if (i!= j) //VIOLATION
+            return i+ j;
+        else
+            return i;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class ANLFixed {
+    public int specialAdd(int i, int j) {
+        if (i== j) //FIXED
+            return i;
+        else 
+            return i+ j;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-691: Insufficient Control Flow Management
+<A HREF="https://cwe.mitre.org/data/definitions/691.html">https://cwe.mitre.org/data/definitions/691.html</A>
+
+</PRE>
+</BODY>
+</HTML>

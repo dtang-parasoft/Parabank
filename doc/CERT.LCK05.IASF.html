@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect accesses to "static" fields which may require synchronization [CERT.LCK05.IASF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect accesses to "static" fields which may require synchronization [CERT.LCK05.IASF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Non-"final" "static" fields are dangerous because they are susceptible to 
+concurrency problems.  When a "static" field is set and then later read, the 
+only way to guarantee that the code is thread-safe is to enclose all such write
+and read accesses inside a "synchronized" method or "synchronized" block (We
+recommend using a "synchronized" block.  See the rule TRS.NSM for more 
+discussion on this.).  All such "synchronized" blocks should synchronize on the
+same object to ensure that all threads see a consistent state of the "static"
+field.  
+
+This rule will flag a violation for all cases where a non-"final" "static" field
+is set and read within a method without any synchronization being 
+performed.  Although such code is safe when it is run within a single thread, it
+is likely to cause concurrency problems when run in a multi-threaded 
+environment. See the example shown below for more details.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Improper synchronization could cause concurrency issues that could result in 
+unexpected application behavior, which could have security implications.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+ - Check non-static instance fields
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule will help to make sure that code behaves as expected when
+running in a multi-threaded environment.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The simple code shown below looks like it should always print out "_i = 3".  
+However, this is not necessarily the case if this code is run in a multi-
+threaded environment.  The method 'setAndPrint()' does not contain any 
+synchronization, so there could be a context switch after "_i" is assigned the
+value of the parameter but before "_i" is printed out.  When this happens,
+another thread will take over.  This other thread could also modify "_i" and
+cause the value of "_i" to be different for both the other thread and the 
+original thread.  
+
+package examples.rules.trs;
+
+public class IASF {
+    private static int _i;
+    
+    public static void setAndPrint(int i) {
+        _i = i;  //VIOLATION - no synchronization
+        System.out.println("_i = " + _i);
+    }
+    
+    public static void main(String[] args) {
+        setAndPrint(3);
+    }
+} 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Ideally, you should not use non-"final" "static" fields at all if an application
+is designed to run in a multi-threaded context.  Using an instance field instead
+of a "static" field would remove the need for synchronization.  However, if you
+must use a "static" field, you should ensure that there is a "synchronized" 
+block enclosing all code which modifies and then accesses the field.  The code
+shown below is guaranteed to print out "_i = 3".
+
+package examples.rules.trs;
+
+public class IASF_Fixed {
+    private static int _i;
+    private static final Object LOCK_OBJ = new Object();
+    
+    public static void setAndPrint(int i) {
+        synchronized (LOCK_OBJ) {  //VIOLATION - perform synchronization
+            _i = i;
+            System.out.println(_i);
+        }
+    }
+    
+    public static void main(String[] args) {
+        setAndPrint(3);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP WebGoat Project "Thread Safety Problem" lesson:
+<A HREF="http://www.owasp.org/index.php/Race_condition_within_a_thread">http://www.owasp.org/index.php/Race_condition_within_a_thread</A>
+
+CWE-543: Use of Singleton Pattern Without Synchronization in a Multithreaded Context
+<A HREF="https://cwe.mitre.org/data/definitions/543.html">https://cwe.mitre.org/data/definitions/543.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK05-J. Synchronize access to static fields that can be modified by untrusted code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK05-J.+Synchronize+access+to+static+fields+that+can+be+modified+by+untrusted+code">https://wiki.sei.cmu.edu/confluence/display/java/LCK05-J.+Synchronize+access+to+static+fields+that+can+be+modified+by+untrusted+code</A>
+
+</PRE>
+</BODY>
+</HTML>

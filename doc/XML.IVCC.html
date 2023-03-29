@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that classes have a "public" constructor with zero arguments [XML.IVCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that classes have a "public" constructor with zero arguments [XML.IVCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies qualified names in XML elements that are used for class 
+initialization but cannot be initialized. It violate for following cases:
+
+    - It is an "interface"
+    - It is an "abstract" class
+    - It is not a "public" class
+    - No "public" constructor with zero arguments in the class
+    - Inner class is not a "public static" class
+    - Class doesn't exist (see 'Ignore not existed classes' option)
+
+Non-source classes are ignored unless some class from source code
+extends or implement this class. 
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-XML elements which are used to store the class names
+    - Rule will only check files that on the left-hand side of the parameter
+      and their corresponding XML element paths on the right-hand side of the parameter.
+    
+- Ignore not existed classes
+    - Default value is true. 
+    When this option is disabled, this rule returns violations when classes don't exist 
+    This option may cause false-positive results for non-source classes.
+    
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An unexpected runtime exception will be thrown if the class is not defined 
+correctly (e.g., It is a non-"public" class, or there is no "public" constructor 
+with zero arguments). This rule can detect these kind of problems.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.xml;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class IVCC extends HttpServlet {
+    
+    protected IVCC() {  // VIOLATION : no "public" constructor
+    }
+}
+
+---- web.xml --------
+&lt;web-app&gt;
+   &lt;servlet&gt;
+       &lt;servlet-name&gt;IVCCServlet&lt;/servlet-name&gt;
+       &lt;servlet-class&gt;examples.rules.xml.IVCC&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+&lt;/web-app&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.xml;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class IVCCFixed extends HttpServlet {
+    
+    public IVCCFixed() {  // FIXED
+    }
+}
+
+---- web.xml --------
+&lt;web-app&gt;
+   &lt;servlet&gt;
+       &lt;servlet-name&gt;IVCCServlet&lt;/servlet-name&gt;
+       &lt;servlet-class&gt;examples.rules.xml.IVCCFixed&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+&lt;/web-app&gt;
+
+</PRE>
+</BODY>
+</HTML>

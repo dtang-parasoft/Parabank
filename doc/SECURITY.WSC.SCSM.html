@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure 'SecurityManager' check in constructor of "public" non-"final" sensitive type [SECURITY.WSC.SCSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure 'SecurityManager' check in constructor of "public" non-"final" sensitive type [SECURITY.WSC.SCSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks "public" non-"final" sensitive classes which do not perform a
+SecurityManager "check" method in their constructor. A class is considered
+sensitive if it disallows cloning by overriding the "clone()" method to throw an
+exception.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a class contains multiple constructors, the rule will attempt to find the
+one most often executed.
+For example:
+    public class SCSM {
+        SCSM() {
+            this(0);
+        }
+        SCSM(int i) {
+            this(i, false);
+        }
+        SCSM(int i, boolean b) { //VIOLATION
+            ...
+        }
+
+        public final Object clone() throws CloneNotSupportedException {
+            throw new CloneNotSupportedException();
+        }
+    }
+In this example "SCSM(int i, boolean b)" will be visited regardless of the
+constructor called. This constructor is then inspected for a call to a
+SecurityManager "check" method a it is the most likely location to insert one.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+If a class prevents cloning, it usually implies that there are intended
+restrictions on when new instances can be created. Adding a SecurityManager
+check in a constructor can add additional security in limiting when a subclass
+is allowed. 
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ensure that the final constructor performs a SecurityManager check(default true)
+    This is the traditional functioning of the rule, with the exception that
+      private constructors will no longer be flagged
+-Enforce Java 6 style, requiring the 'SecurityManager' check to be first.  If 
+    Java 6 is not in use then nothing is flagged
+    This is new functionality which incorporates newer Java 6 syntax, and can
+        flag all constructors, not just the ones most often executed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class SCSM {
+    SCSM() {  //VIOLATION
+    }
+
+    public final Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a SecurityManager check to prevent unwanted subclasses.
+
+package examples.rules.security.wsc;
+
+public class SCSM_Fixed {
+    private SCSM_Fixed() {
+    }
+
+    SCSM_Fixed(Permission p) {  //FIXED
+        SecurityManager sm = System.getSecurityManager();
+        sm.checkPermission(p);
+    }
+
+    public final Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+    
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#7-2">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#7-2</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

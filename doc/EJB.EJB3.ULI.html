@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Access beans through a local interface [EJB.EJB3.ULI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Access beans through a local interface [EJB.EJB3.ULI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an injected bean is a remote interface. This rule
+also checks for calls to 'javax.rmi.PortableRemoteObject.narrow()' as these are
+commonly a sign of a remote access.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For the purpose of this rule, an injected bean is considered to be a remote
+interface if either of the following is true:
+    1) The bean's type is an interface and its name contains "Remote"
+    2) The bean's type is an interface and has a javax.ejb.Remote annotation
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check injected beans (default true)
+    Enabling this parameter will flag instances where a field annotated with
+    'javax.ejb.EJB' is a remote interface type. See NOTES for more information.
+    
+    -Flag injected classes (default true)
+        Enabling this parameter will flag any instances where a field annotated
+        with 'javax.ejb.EJB' is a class and not an interface. It is generally
+        preferred to use a bean's interface to promote loose coupling.
+
+-Check calls to narrow() (default false)
+    Enabling this parameter will flag calls to 'PortableRemoteObject.narrow()'.
+    This method is generally called after a lookup for a remote bean. However,
+    this method may be called for other reasons as well. If only dependency
+    injection is used then it may be preferable to have this parameter disabled.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Local accesses have a reduced overhead and may reduce network traffic.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+In many cases, a remote access may be desired or required.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class ULI {
+    @EJB
+    OtherBeanRemote _otherBean;
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If possible, use a local interface instead.
+
+package examples.rules.ejb.ejb3;
+
+@Stateless
+public class ULIFixed {
+    @EJB
+    OtherBeanLocal _otherBean;
+    ...
+}
+
+</PRE>
+</BODY>
+</HTML>

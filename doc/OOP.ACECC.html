@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not extend concrete classes in "abstract" classes [OOP.ACECC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not extend concrete classes in "abstract" classes [OOP.ACECC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that concrete classes are not used as the superclasses of abstract
+classes.  A violation will be flagged for the declaration of each abstract class
+which is declared to extend a concrete class.
+ 
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Abstract classes represent general types and, as such, should be defined
+at the top of the type hierarchy with the concrete implementations of the abstract
+classes coming at the bottom of the hierarchy.  Having abstract classes which are
+subclasses of concrete classes violates this general practice and is confusing.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta;
+
+import java.util.Vector;
+
+public abstract class ACECC extends Vector { //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the class that you are declaring concrete, or change its superclass to make it
+abstract.
+
+package examples.rules.codsta;
+
+import java.util.Vector;
+
+public class ACECCFixed extends Vector { //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

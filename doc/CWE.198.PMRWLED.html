@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide methods to read and write little-endian data [CWE.198.PMRWLED]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide methods to read and write little-endian data [CWE.198.PMRWLED]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Correct handling of byte order–related issues is critical when exchanging data
+in a networked environment that includes both big-endian and little-endian
+machines or when working with other languages using Java Native Interface
+(JNI)." [SEI CERT Oracle Coding Standard for Java]
+
+The read methods and the corresponding write methods from
+the java.io.DataInputStream and java.io.DataOutputStream classes operate only
+on big-endian data. This may result in unexpected program behavior when
+interoperating with traditional languages, such as C and C++, which do not
+guarantee endianness of data. For this reason, the use of such methods is
+considered to be insecure.
+
+This rule detects when the following methods are used in code:
+- java.io.DataInputStream$readByte()
+- java.io.DataInputStream$readShort()
+- java.io.DataInputStream$readInt()
+- java.io.DataInputStream$readLong()
+- java.io.DataInputStream$readFloat()
+- java.io.DataInputStream$readDouble()
+- java.io.DataOutputStream$writeByte()
+- java.io.DataOutputStream$writeShort()
+- java.io.DataOutputStream$writeInt()
+- java.io.DataOutputStream$writeLong()
+- java.io.DataOutputStream$writeFloat()
+- java.io.DataOutputStream$writeDouble()
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Reading and writing data without considering endianness can lead to
+misinterpretations of both the magnitude and sign of the data."
+[SEI CERT Oracle Coding Standard for Java]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Failure to handle byte-ordering issues can cause unexpected program behavior."
+[SEI CERT Oracle Coding Standard for Java]
+
+This rule helps you prevent compatibility issues and other errors that may
+occur when incorrect endianness is used to read or write data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.PB.CUB;
+
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class PMRWLED
+{
+    public static void readData()
+   {
+       try(DataInputStream dis = new DataInputStream(new FileInputStream("data"))) {
+           // Little-endian data might be read as big-endian
+           int serialNumber = dis.readInt(); //VIOLATION
+       } catch (IOException x) {
+           // Handle error
+       }
+   }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use a third-party class, for example ByteBuffer, to correctly
+read data from the external source.
+
+package examples.rules.PB.CUB;
+
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+public class PMRWLEDFixed
+{
+    void readIntFixed()
+    {
+        try (DataInputStream dis = new DataInputStream( new FileInputStream("data")))  {
+            byte[] buffer = new byte[4];
+            int bytesRead = dis.read(buffer);  // Bytes are read into buffer
+            if (bytesRead != 4) {
+                throw new IOException("Unexpected End of Stream");
+            }
+            int serialNumber = ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN).getInt(); //FIXED
+            //do sth with the 'serialNumber'
+        } catch (IOException x) {
+            // Handle error
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-198: Use of Incorrect Byte Ordering
+<A HREF="https://cwe.mitre.org/data/definitions/198.html">https://cwe.mitre.org/data/definitions/198.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO12-J. Provide methods to read and write little-endian data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO12-J.+Provide+methods+to+read+and+write+little-endian+data">https://wiki.sei.cmu.edu/confluence/display/java/FIO12-J.+Provide+methods+to+read+and+write+little-endian+data</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplicated field validators [STRUTS.STRUTS2.S2DAFV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplicated field validators [STRUTS.STRUTS2.S2DAFV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies if there is more than one validator for a single field in 
+an '&lt;ActionName&gt;-validation.xml' file. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If there is more than one validator for the same field, it may cause a security 
+problem because the result may be unexpected.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+
+&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+       "<A HREF="http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd</A>"&gt;
+&lt;validators&gt;
+   &lt;field name="user"&gt;
+      &lt;field-validator type="required"&gt;
+         &lt;message&gt;Enter your name &lt;/message&gt;     
+      &lt;/field-validator&gt; 
+      &lt;!-- VIOLATION : duplicated validator name --&gt;
+      &lt;field-validator type="required"&gt;
+         &lt;message&gt;Invalid name&lt;/message&gt;     
+      &lt;/field-validator&gt; 
+  &lt;/field&gt;
+&lt;/validators&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove one of the validators.
+
+&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+       "<A HREF="http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd</A>"&gt;
+&lt;validators&gt;
+   &lt;field name="user"&gt;
+      &lt;field-validator type="required"&gt;
+         &lt;message&gt;Enter your name &lt;/message&gt;     
+      &lt;/field-validator&gt; 
+      &lt;!-- FIXED : remove duplicated validator name --&gt;
+  &lt;/field&gt;
+&lt;/validators&gt;
+
+</PRE>
+</BODY>
+</HTML>

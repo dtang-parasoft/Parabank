@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid collection objects that are never read [UC.AURCO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid collection objects that are never read [UC.AURCO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unread collection objects in local variables and private 
+fields. Collection objects which are modified via mutator methods or sorted (if 
+applicable), but never read are flagged. The rule checks objects of type 
+"java.util.List", "java.util.Map", "java.util.Set" and their respective
+subclasses.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An unread collection object may indicate a logical error or code mistakingly
+left in place. Removal of unnecessary code can improve performance and simplify
+code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class AURCO {
+    private Map _data = new HashMap();
+
+    public void reset() {
+        _data.clear();
+    }
+    public void addProperty(String name, String value) {
+        _data.put(name, value);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the collection object or remove if unnecessary.
+
+package examples.rules.uc;
+
+public class AURCOFixed {
+    private Map _data = new HashMap();
+
+    public void reset() {
+        _data.clear();
+    }
+    public void addProperty(String name, String value) {
+        _data.put(name, value);
+    }
+    public Map getData() { //now possesses a way to read the data
+        return _data;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

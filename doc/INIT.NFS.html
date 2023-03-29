@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use non-final "static" fields during the initialization [INIT.NFS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use non-final "static" fields during the initialization [INIT.NFS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies usage of non-final "static" fields in a field's initialization.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Static" values can be modified by other users of a class.  Therefore, 
+the "static" field may contain a different value than what users might
+expect.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class NFS {
+    static int max = 10;
+    int size = max;  // VIOLATION
+}
+  
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a "static final" field instead.
+
+package examples.rules.init;
+
+public class NFSFixed {
+    static final int MAX = 10;  // FIXED
+    static int max = 10;
+    int size = NFSFixed.MAX;  // FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

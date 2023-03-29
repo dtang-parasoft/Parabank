@@ -1,0 +1,43 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Serialization [SERIAL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Serialization [SERIAL]
+</STRONG>
+<p>
+<PRE>
+Rules that enforce proper serialization.
+
+
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="SERIAL.DUID.html">Create a 'serialVersionUID' for all 'Serializable' classes [SERIAL.DUID]</a></code><br>
+<code><a href="SERIAL.ENNAC.html">Avoid classes that implement 'Externalizable' but do not define a no-argument constructor [SERIAL.ENNAC]</a></code><br>
+<code><a href="SERIAL.EZEE.html">Implement Externalizable instead of Serializable [SERIAL.EZEE]</a></code><br>
+<code><a href="SERIAL.FT.html">Avoid declaring "transient" fields in non-serializable classes [SERIAL.FT]</a></code><br>
+<code><a href="SERIAL.IRX.html">Avoid re-initializing fields in the 'readExternal()' method of 'Externalizable' classes [SERIAL.IRX]</a></code><br>
+<code><a href="SERIAL.MRWD.html">Ensure the return type of 'readResolve()' and 'writeReplace()' methods are 'java.lang.Object' [SERIAL.MRWD]</a></code><br>
+<code><a href="SERIAL.NSFSC.html">Ensure Serializable classes are correct [SERIAL.NSFSC]</a></code><br>
+<code><a href="SERIAL.OC.html">Ensure outer class is serializable if its inner class is serializable [SERIAL.OC]</a></code><br>
+<code><a href="SERIAL.ROWO.html">Ensure that the 'readObject()' and 'writeObject()' methods have the correct signature [SERIAL.ROWO]</a></code><br>
+<code><a href="SERIAL.RRSC.html">Define a "readResolve" method for all instances of Serializable types [SERIAL.RRSC]</a></code><br>
+<code><a href="SERIAL.RWAF.html">Ensure that all fields are assigned by the 'readObject()' method and written out by the 'writeObject()' method [SERIAL.RWAF]</a></code><br>
+<code><a href="SERIAL.SCBNP.html">Always declare writeObject and readObject methods for Serializable subclasses of non-Serializable parents [SERIAL.SCBNP]</a></code><br>
+<code><a href="SERIAL.SNNAC.html">Avoid serializable classes that extend a superclass without a zero-argument constructor [SERIAL.SNNAC]</a></code><br>
+<code><a href="SERIAL.SNSO.html">Do not store non-serializable objects as HttpSession attributes [SERIAL.SNSO]</a></code><br>
+<code><a href="SERIAL.SPF.html">Declare 'serialPersistentFields' "private static final" [SERIAL.SPF]</a></code><br>
+<code><a href="SERIAL.SRLZ.html">Do not declare SerialVersionUID in classes that do not implement Serializable [SERIAL.SRLZ]</a></code><br>
+<code><a href="SERIAL.SROS.html">Do not declare the 'readObject()' method as "synchronized" [SERIAL.SROS]</a></code><br>
+<code><a href="SERIAL.VOBD.html">Validate objects before deserialization [SERIAL.VOBD]</a></code><br>
+</BODY>
+</HTML>

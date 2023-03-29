@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not make assignments to method parameters [CODSTA.EPC.AFP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not make assignments to method parameters [CODSTA.EPC.AFP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies assignment to method parameters.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Assignment operations on method parameters can lead to mistakes 
+when the value of the parameter is used more than once in a block.
+It is also discouraged because changing the value of a method parameter
+is a side effect that the method caller may not be aware of.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example illustrates a simple case where changing method parameters alters
+the value of the parameter in the caller's scope.
+
+package examples.rules.codsta.epc;
+
+public class AFP {
+    public void method (int[] a) {
+        a[0] = 0;  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Create a local copy of the variable.
+
+package examples.rules.codsta.epc;
+
+public class AFPFixed {
+    public void method (int[] a) {
+        int[] copy = new int [a.length];
+        System.arraycopy (a, 0, copy, 0, a.length);
+        copy[0] = 0;  // FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

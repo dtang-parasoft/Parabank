@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure overloaded constructors and methods share the same accessibility [CODSTA.BP.OCMA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure overloaded constructors and methods share the same accessibility [CODSTA.BP.OCMA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies overloaded constructors and methods of a class with
+different accessibilities.  Each method that is overloaded will be flagged.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.3
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-Check constructors (default true)
+-Check methods (default true)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Inconsistent accessibilities is usually unintended. In some cases an overloaded
+method/constructor may be called such that the code is able to compile.
+However, at  runtime an overloaded method/constructor with different
+accessibility may be called instead, which could lead to an error.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.bp;
+
+class OCMA {
+    public OCMA(){};
+    protected OCMA(int i){}; //VIOLATION
+
+    protected void method1(Object o){};
+    private void method1(String s){}; //VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the method/constructor with differing visibility to match.
+
+package examples.rules.codsta.bp;
+
+class OCMAFixed {
+    public OCMAFixed(){};
+    public OCMAFixed(int i){}; //FIXED
+    
+    protected void method1(Object o){};
+    protected void method1(String s){}; //FIXED
+}
+
+</PRE>
+</BODY>
+</HTML>

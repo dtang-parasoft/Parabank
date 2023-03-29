@@ -1,0 +1,252 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define a "readResolve" method for all instances of Serializable types [CERT.SER07.RRSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define a "readResolve" method for all instances of Serializable types [CERT.SER07.RRSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If there is an instance of a type which implements the "java.io.Serializable" 
+interface, that instance should also have a correct implementation of the 
+"readResolve()" method. If the "readResolve()" method is not correctly
+implemented, the class it may be possible to create another new instance of the
+object, as  shown in the example below.  If the "readResolve()" method is
+correctly implemented, this is not possible.
+
+A violation will be flagged for each class which looks like it was intended to 
+be an instance of a Serializable type, but is actually not because the class 
+does not define a proper "readResolve()" method.  
+
+The rule will flag any of the following three cases as a violation for a class
+which implements "Serializable":
+
+1.  There is no "readResolve()" method defined in the class.
+2.  There is at least one method named "readResolve()" defined within the class,
+but none of these methods has the correct signature.  The "readResolve()" method 
+should take no arguments and have the return type "Object".  The accessibility
+does not matter.  That is, the signature should be:
+
+Object readResolve();
+
+3.  There is a "readResolve()" method with the correct signature, but it has a
+return value other than the corresponding instance of the class.  The only 
+possible return value from this method should be the instance of the
+Serializable type. If there is another return value (even if the instance is 
+also a possible return value), a violation will be flagged.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule infers that a class was intended to be checked if:
+1.  All instances of the class created within that class, and those instances
+are stored into static fields.  This instances of the class could be 
+created either when the field is accessed in a "getter" method or when a static 
+final field is initialized.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The impact of deserialization flaws cannot be overstated. These flaws can lead
+to remote code execution attacks, one of the most serious attacks possible."
+[OWASP Top 10-2017, A8]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check classes with:
+    -a "public" constructor (default off)
+    -a "protected" constructor (default off)
+    -a "package-private" constructor (default off)
+    -a "private" constructor (default on)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Instances of Serializable types can cause incorrect behavior after
+deserialization if no readResolve() method is defined.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+It is possible to make a new instance of "RRSC_a", as shown in  the "copy()" 
+method of the class "RRSC" below.  The reason this is possible is  that the
+class "RRSC_a" extends "Exception", which implements the "Serializable"
+interface.
+
+package examples.rules.serial;
+
+import java.io.*;
+
+public class RRSC {
+    public static void main(String[] args) {
+        RRSC_a newInstance= (RRSC_a)copy(RRSC_a.INSTANCE);
+        System.out.println(newInstance == RRSC_a.INSTANCE);  //This line will 
+                                //print out "false", indicating that a new
+                                //instance has been created.
+    }
+    
+    public static Object copy(Object o) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            new ObjectOutputStream(bos).writeObject(o);
+            ByteArrayInputStream bin = new ByteArrayInputStream(bos
+                .toByteArray());
+            return new ObjectInputStream(bin).readObject();
+        } 
+        catch (Exception e) {
+            // Ignore exception.
+        }
+        return null;
+    }
+}
+
+class RRSC_a extends Exception {  
+    public static final RRSC_a INSTANCE = new RRSC_a();
+    
+    private RRSC_a() {
+    }
+    
+    //VIOLATION: RRSC_a implements "Serializable" but does not define 
+    //"readResolve()"
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Implement the "readResolve()" method. The "readResolve()" method should return
+the corresponding instance of the class.  That way, the correct instance of the
+class will be returned instead of a new Object when an Object of type "RRSC_a"
+is read from a stream.
+
+package examples.rules.serial;
+
+public class RRSCFixed {
+    public static void main(String[] args) {
+        RRSC_a newInstance= (RRSC_a)copy(RRSC_a.INSTANCE);
+        System.out.println(newInstance == RRSC_a.INSTANCE);  //This line will 
+                                //print out "true".
+    }
+    
+    public static Object copy(Object o) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            new ObjectOutputStream(bos).writeObject(o);
+            ByteArrayInputStream bin = new ByteArrayInputStream(bos
+                .toByteArray());
+            return new ObjectInputStream(bin).readObject();
+        } 
+        catch (Exception e) {
+            // Ignore exception.
+        }
+        return null;
+    }
+}
+
+class RRSC_a extends Exception {  
+    public static final RRSC_a INSTANCE = new RRSC_a();
+    
+    private RRSC_a() {
+    }
+    
+    private Object readResolve() {  //FIXED
+        return INSTANCE;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/8f02cbb1-fd9f-46ae-85ee-4347030f9530">https://app.hackedu.com/link/8f02cbb1-fd9f-46ae-85ee-4347030f9530</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+Joshua Bloch, Neal Gafter: "Java Puzzlers: Traps, Pitfalls, and Corner Cases" 
+    Addison-Wesley, 2005, pp. 201-203
+
+SEI CERT Oracle Coding Standard for Java
+SER07-J. Do not use the default serialized form for classes with implementation-defined invariants
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/SER07-J.+Do+not+use+the+default+serialized+form+for+classes+with+implementation-defined+invariants">https://wiki.sei.cmu.edu/confluence/display/java/SER07-J.+Do+not+use+the+default+serialized+form+for+classes+with+implementation-defined+invariants</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

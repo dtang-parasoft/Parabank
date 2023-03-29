@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use String concatenation in an Internationalized environment [INTER.COS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use String concatenation in an Internationalized environment [INTER.COS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies string concatenation using 'String.concat ()', '+', or '+='
+operations. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+For code to be able to run in an internationalized environment, concatenated 
+strings must not be used.  This includes the 'String.concat ()' method,
+or '+' or '+=' operators with strings.   String concatenation should be avoided
+because compound messages contain variable data and are difficult to translate.
+For example, the message "At 12:30 P.M on Jul 3, 2053, something happened." would
+be translated from a few distinct strings representing a time stamp and the text
+that follows the time stamp.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.inter;
+
+import java.util.Date;
+
+public class COS {
+    public void addstrings () {
+        Date current_date = new Date (System.currentTimeMillis ());
+        String message = "At " + current_date;  // VIOLATION
+        message = message.concat (" something happened.");  // VIOLATION
+        System.out.println (message);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The example's approach will work fine in English, but it won't work for 
+languages in which the sentences are structured differently.  Because this message's
+word order is hard coded, your localizers won't be able to create 
+grammatically correct translations for all languages.
+
+The "MessageFormat" class should be used as follows to deal with compound
+messages:
+
+package examples.rules.inter;
+
+import java.util.Date;
+import java.text.MessageFormat;
+
+public class COSFixed {
+    public void addstrings () {
+        Object [] arguments = { 
+            new Date (System.currentTimeMillis ()),
+            "something happened"
+        };
+        MessageFormat f = new MessageFormat ("At (0, time) on (0, date), {1}.");
+        System.out.print (f.format (arguments));  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://java.sun.com/docs/books/tutorial/i18n/intro/checklist.html">http://java.sun.com/docs/books/tutorial/i18n/intro/checklist.html</A>
+<A HREF="http://java.sun.com/javase/6/docs/api/java/text/MessageFormat.html">http://java.sun.com/javase/6/docs/api/java/text/MessageFormat.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+STR00-J. Don't form strings containing partial characters from variable-width encodings
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/STR00-J.+Don%27t+form+strings+containing+partial+characters+from+variable-width+encodings">https://wiki.sei.cmu.edu/confluence/display/java/STR00-J.+Don%27t+form+strings+containing+partial+characters+from+variable-width+encodings</A>
+
+</PRE>
+</BODY>
+</HTML>

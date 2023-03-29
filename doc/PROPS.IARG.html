@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid misusing arguments in property values [PROPS.IARG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid misusing arguments in property values [PROPS.IARG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will identify the following potential mistakes in using arguments:
+
+   1. Any argument that cannot be formatted appropriately in 'java.text.MessageFormat.format()', 
+      for examples:
+           i) "Class name: '{0}'"
+           ii) "Can't find class : {0}"
+   2. Any argument index that is skipped
+      for examples:
+          MessageFormat.format("{1}-{2}-{3}", new Object[]{"1", "2", "3"}); // expected result is "1-2-3", but actual result is "2-3-{3}"
+   3. Any unmatched brace
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore property file name (regular expression)
+    -Allows you to provide a list of property files to ignore. If a property file 
+     matches any of the regular expressions, it will be exempt from this rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps users detect all possible mistakes in using arguments.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+a='{0}'  // VIOLATION : argument {0} cannot be formatted appropriately
+c={1}, {3} // VIOLATION : skipped {0} and {2}
+b={{0}  // VIOLATION : unmatched brace
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+a=''{0}''  // FIXED
+c={0}, {1}, {2}, {3} // FIXED
+b={0}  // FIXED
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce or avoid the use of parameterized types [CODSTA.POD.UPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce or avoid the use of parameterized types [CODSTA.POD.UPT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+By default, this rule will enforce the use of parameterized types instead of raw 
+types in variable declarations and method return types where it is possible to
+do so.  The rule will check types that implement the "java.util.Collection",
+"java.util.Map", or the "java.util.Iterator" interfaces and that can be 
+parameterized using the generic types which were introduced in JDK 5.0.
+Additional types to be checked can be specified in the parameters. A violation 
+will be flagged for each use of a raw type in the declaration of these 
+variables.  Most of the types which implement these interfaces are generic types
+which can be parameterized to indicate the type of the elements of the 
+Collection, Map, or Iterator.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Enforce or avoid?
+    -Enforce (Default selection)
+        -With this setting of the parameter, the rule will enforce the use of
+         parameterized types instead of raw type.
+    -Avoid
+        -Although we recommend using parameterized types wherever possible, this
+         parameter setting is included in case compatibility with versions of
+         the JDK prior to version 5.0 is important.
+        -With this setting of the parameter, the rule will flag a violation for
+         each case where a variable is declared using a parameterized type
+         instead of the corresponding raw type.
+
+-Types to check
+    -Check Collections (default true)
+    -Check Maps (default true)
+    -Check Iterators (default true)
+
+-Locations to check
+    -Check fields (default true)
+    -Check parameters (default true)
+    -Check local variables (default true)
+    -Check method return types (default true)
+
+    -Additional types to check: (specify fully qualified name)
+       This parameter can be used to specify additional types to check. For
+       example, specifying 'java.lang.Enum' will check Enums.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using parameterized types instead of raw types offers many advantages, 
+including improved readability, better tool support, fewer ClassCastExceptions, 
+fewer casts, no unchecked warnings, and no future deprecation.  See the website
+in the REFERENCES section for more details.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class UPT{
+    static void expurgate(Collection c) { //VIOLATION- raw type "Collection"
+        for (Iterator i = c.iterator(); i.hasNext(); ){ //VIOLATION- raw type "Iterator"
+            if (((String) i.next()).length() == 4)
+                i.remove();
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+import java.util.Collection;
+import java.util.Iterator;
+
+public class UPTFixed{
+    static void expurgate(Collection&lt;String&gt; c) {  //FIXED
+        for (Iterator&lt;String&gt; i = c.iterator(); i.hasNext(); )  //FIXED
+            if (i.next().length() == 4)
+                i.remove();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Java Generics FAQs - Programming With Java Generics by Angelika Langer
+<A HREF="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html">http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html</A>
+
+</PRE>
+</BODY>
+</HTML>

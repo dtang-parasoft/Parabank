@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When used HttpURLConnection always check return value from the getResponseCode() methods before call getInputStream() [PB.RE.RCODE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When used HttpURLConnection always check return value from the getResponseCode() methods before call getInputStream() [PB.RE.RCODE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+The java.net.HttpURLConnection$getResponseCode() method should be used between
+open connection and java.net.URLConnection$getInputStream(). If this method
+is not used, then the rule reports a violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule reduces the number of "java.io.IOException: Invalid Http response"
+runtime errors thrown by java.net.URLConnection$getInputStream() when
+the response code is -1. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+URL url = new URL("");
+HttpURLConnection urlc = (HttpURLConnection)url.openConnection();     
+InputStream is = urlc.getInputStream(); // VIOLATION
+        
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+URL url = new URL("");
+HttpURLConnection urlc = (HttpURLConnection)url.openConnection();     
+if (urlc.getResponseCode() &gt; -1) { // return -1 if the response is not valid HTTP
+    InputStream is = urlc.getInputStream(); // FIXED
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://www.oracle.com/technetwork/java/javase/compatibility-417013.html">http://www.oracle.com/technetwork/java/javase/compatibility-417013.html</A>
+2. <A HREF="http://www.w3.org/Protocols/HTTP/HTRESP.html">http://www.w3.org/Protocols/HTTP/HTRESP.html</A>
+3. <A HREF="http://www.w3.org/Protocols/HTTP/Response.html">http://www.w3.org/Protocols/HTTP/Response.html</A>
+4. <A HREF="http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#getResponseCode%28%29">http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#getResponseCode%28%29</A>
+
+</PRE>
+</BODY>
+</HTML>

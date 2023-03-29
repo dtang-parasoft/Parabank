@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary casting [OPT.UNC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary casting [OPT.UNC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unnecessary casting. An error is reported if a variable
+casts to an "interface" that it implements or to a parent "class" that it 
+extends.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mobile platforms have reduced resources, optimizations are especially important.
+
+All classes either directly or indirectly inherit from the class Object.
+Also, any subclass is implicitly the same type as its superclass and its
+implemented interfaces.  Therefore, cast operations to the superclass or
+implemented interfaces are not necessary.
+     
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.opt;
+
+public class UNC {
+    String _id = "UNC";
+}
+class Dog extends UNC {
+    void method () {
+        Dog dog = new Dog ();
+        UNC animal = (UNC)dog;  // VIOLATION
+        Object o = (Object)dog;  // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the unnecessary cast to an interface or parent class.
+
+package examples.rules.opt;
+
+public class UNCFixed {
+    String _id = "UNCFixed";
+}
+
+class DogFixed extends UNCFixed {
+    void method () {
+        DogFixed dog = new DogFixed();
+        UNCFixed animal = dog;  // FIXED
+        Object o = dog;  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html">http://developer.android.com/guide/practices/design/performance.html</A>
+
+Nigel Warren, Philip Bishop: "Java in Practice - Design Styles and Idioms
+for Effective Java".  Addison-Wesley, 1999. pp.22-23
+
+</PRE>
+</BODY>
+</HTML>

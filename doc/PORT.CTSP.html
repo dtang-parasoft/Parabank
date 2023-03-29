@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling 'Thread.setPriority()' [PORT.CTSP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling 'Thread.setPriority()' [PORT.CTSP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of the 'setPriority()' method of "java.lang.
+Thread".  An error is reported for each call to this method.  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'Thread.setPriority()' is a non-portable operation.  There are no 
+guarantees in the Java specification about how priorities are used in 
+scheduling threads.  In fact, the priorities may not be used at all in
+scheduling threads.  If possible, your code should use the default 
+priorities for threads or should use its own mechanism for prioritizing the
+threads.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, the programmer attempts to change the priorities of the
+threads after they are created by calling 'setPriority()'.  
+
+package examples.rules.port;
+
+public class CTSP {
+    public static Thread _thread1, _thread2;
+    
+    public static void main(String[] args) {
+        _thread1 = new Thread1();
+        _thread2 = new Thread2();
+        _thread2.setPriority(2);  //VIOLATION
+        _thread1.setPriority(1);  //VIOLATION
+        _thread1.start();
+        _thread2.start();
+    }
+}
+
+class Thread1 extends Thread {
+    public void run() {
+        System.out.println("Thread #1");
+    }
+}
+
+class Thread2 extends Thread {
+    public void run() {
+        System.out.println("Thread #2");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If possible, avoid changing the priorities of the threads from the default
+values.
+
+package examples.rules.port;
+
+public class CTSP_Fixed {
+    public static Thread _thread1, _thread2;
+    
+    public static void main(String[] args) {
+        _thread1 = new Thread1();
+        _thread2 = new Thread2();
+                                   //FIXED- Run the threads with the 
+                                   //default priorities.
+        _thread1.start();
+        _thread2.start();
+    }
+}
+
+class Thread1 extends Thread {
+    public void run() {
+        System.out.println("Thread #1");
+    }
+}
+
+class Thread2 extends Thread {
+    public void run() {
+        System.out.println("Thread #2");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass floating point values to the 'BigDecimal' constructor [PB.NUM.BBDCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass floating point values to the 'BigDecimal' constructor [PB.NUM.BBDCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code where a floating point value is passed to the
+constructor for 'java.math.BigDecimal'.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Calling the 'BigDecimal' constructor with a floating point value as an
+argument should be avoided because these values are not precisely equal to
+their desired values.  This is because floating point values cannot be
+precisely represented as a finite sequence of bits.  For instance, the
+"double" ".1" is actually equal to ".10000000000000000555111512312578270211
+81583404541015625".  This can cause errors in accuracy.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+import java.math.*;
+
+public class BBDCC{
+    public void method(){
+        BigDecimal bd= new BigDecimal(.1);  //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use one of the other 'BigDecimal' constructors instead of one of the
+constructors which takes a double as an argument.  For instance, if you are
+passing in a 'double' literal, you can pass in an equivalent 'String'
+instead.  Using the 'String' constructor will produce a 'BigDecimal' object
+which has a value precisely equal to the desired value.
+
+package examples.rules.pb.num;
+
+import java.math.*;
+
+public class BBDCC{
+    public void method(){
+        BigDecimal bd= new BigDecimal(".1");  //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+NUM10-J. Do not construct BigDecimal objects from floating-point literals
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/NUM10-J.+Do+not+construct+BigDecimal+objects+from+floating-point+literals">https://wiki.sei.cmu.edu/confluence/display/java/NUM10-J.+Do+not+construct+BigDecimal+objects+from+floating-point+literals</A>
+
+</PRE>
+</BODY>
+</HTML>

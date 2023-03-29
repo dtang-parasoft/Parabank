@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid or enforce usage of enhanced "for" loops [CODSTA.READ.AEFS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid or enforce usage of enhanced "for" loops [CODSTA.READ.AEFS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is used to avoid or enforce the use of enhanced "for" loops.
+See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+As enhanced for loops were introduced in JDK 1.5, this rule does not check
+projects with a compiler compliance level less than 1.5.
+
+Notes regarding enforcing enhanced "for" loop usage:
+  The following loop types are considered for conversion to enhanced for loop:
+      1) while (iterator.hasNext())
+      2) for (int i = 0; iterator.hasNext(); i++)
+      3) for (int i = 0; i &lt; collection.size(); i++)
+      4) for (int i = 0; i &lt; array.length; i++)
+
+  When enforcing enhanced "for" loop usage, this rule attempts to only flag
+  loops where an enhanced for loop may be used as a drop-in replacement. If
+  there are dependencies on the iterator, or otherwise complex loop operations
+  are performed, then the loop may not be considered. The following are some of
+  the restrictions which are taken into account:
+      1) For all loops, the iterator must not be accessed outside the loop scope
+         Note: if an iterator is reused across multiple loops, this will cause
+         it to not be considered
+      2) For loops "1" and "2", 'iterator.next()' must be called only once in
+         the loop body
+      3) For loops "1" and "2", 'iterator.remove()' and 'iterator.hasNext()'
+         must not be called
+      4) For loops "3" and "4", the iterator must be initialized to 0
+      5) For loops "3" and "4", the iterator must be read only once in the loop
+         body
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Avoid usage of enhanced "for" loops (default)
+
+-Enforce usage of enhanced "for" loops
+    -Check Iterator loops (default true)
+        Enabling this parameter will check loops of the forms:
+        'while (iterator.hasNext())' and
+        'for (int i = 0; iterator.hasNext(); i++)'
+    -Check Collection loops (default true)
+        Enabling this parameter will check loops of the form:
+        'for (int i = 0; i &lt; collection.size(); i++)'
+    -Check array loops (default true)
+        Enabling this parameter will check loops of the form:
+        'for (int i = 0; i &lt; array.length; i++)'
+    -Check loops over raw types (default false)
+        Enabling this parameter, will cause loops using non-parameterized
+        Iterator and Collection objects to also be considered.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Benefits of regular "for" loops:
+  The regular "for" loop format is more standard, and explicitly shows the steps
+  the loop is taking.
+
+Benefits of using enhanced "for" loops:
+  Enhanced for loops can improve readability by hiding index variables and
+  iterators. In some cases it can also help prevent bugs by preventing errors
+  that occur from erroneously using the wrong iterator.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Drawbacks of regular "for" loops:
+  Regular "for" loops are more verbose than their enhanced counterpart, as using
+  an enhanced "for" loop eliminates the need for an index variable or iterator.
+
+Drawbacks of enhanced "for" loops:
+  Use of enhanced "for" loop may be confusing and harm readability for
+  developers who are not familiar with the new format. The loop also hides
+  information about index variables and iterators.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class AEFS {
+    public static void main(String[] args) {
+        int[] a = new int[10];
+
+        for (int j : a) { //VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class AEFSFixed {
+    public static void main(String[] args) {
+        int[] a= new int[10];
+        int j;
+
+        for (int i = 0; i &lt; a.length; i++) { //FIXED
+            j= a[i];
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+The For-Each Loop
+<A HREF="http://docs.oracle.com/javase/1.5.0/docs/guide/language/foreach.html">http://docs.oracle.com/javase/1.5.0/docs/guide/language/foreach.html</A>
+
+J2SE 5.0 (Tiger)
+<A HREF="http://java.sun.com/developer/technicalArticles/releases/j2se15langfeat/">http://java.sun.com/developer/technicalArticles/releases/j2se15langfeat/</A>
+
+</PRE>
+</BODY>
+</HTML>

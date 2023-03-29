@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use unnecessary temporaries when converting primitive types to String [GC.AUTP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use unnecessary temporaries when converting primitive types to String [GC.AUTP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses unnecessary temporaries when converting 
+primitive types to String. An error is reported when an unnamed temporary primitive
+type wrapper is created solely to call its 'toString ()' method.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule will not report a violation if you create a temporary wrapper
+object and then, in a separate statement, call its 'toString ()' method.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Java provides wrapping classes for primitive types.  Those classes provide a
+static method 'toString (...)' to convert primitive types into their String
+equivalent. Calling the static method avoids creating a wasted object.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+public class AUTP {
+   public String foobar (int x) {
+      return new Integer (x).toString ();  // VIOLATION
+   }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the static 'toString ()' method of the wrapper class instead of creating an
+object of the wrapper class and then using the instance 'toString ()' method.
+Alternatively, you can use 'String.toString (primitive)', a static method that
+will call the appropriate 'toString ()' from the class that wraps the
+primitive argument.
+
+package examples.rules.gc;
+
+public class AUTPFixed {
+   public String foobar (int x) {
+      return Integer.toString (x);  // FIXED
+   }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt,
+Jim Shur, Patrick Thompson: "The Elements of Java Style"
+SIGS Cambridge, 2000, pp. 86
+
+</PRE>
+</BODY>
+</HTML>

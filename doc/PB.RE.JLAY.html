@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using methods add() from JLayer class [PB.RE.JLAY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using methods add() from JLayer class [PB.RE.JLAY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+JLayer is a decorator for Swing components that allows advanced painting effects.
+Although it inherits class java.awt.Component, JLayer does not support the following methods: 
+    
+    Container.add(java.awt.Component)
+    Container.add(String, java.awt.Component)
+    Container.add(java.awt.Component, int)
+    Container.add(java.awt.Component, Object)
+    Container.add(java.awt.Component, Object, int)
+
+Using any of them will cause UnsupportedOperationException to be thrown.
+
+For such cases, this rule reports a violation.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+setView(Component) or setGlassPane(JPanel) methods must be used to add a component to JLayer.
+Mistakes can easily be made, though, because JLayer inherits java.awt.Component.
+This rule is in place to prevent this problem.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+    public void test() {
+
+        JButton jButton = new JButton();
+
+        JFrame jFrame = new JFrame();
+
+        JPanel jPanel = new JPanel();
+        LayerUI&lt;JPanel&gt; layerUI = new LayerUI&lt;JPanel&gt;();
+        JLayer&lt;JPanel&gt; jLayer = new JLayer&lt;JPanel&gt;(jPanel, layerUI);
+        jLayer.add(jButton); //VIOLATION
+
+        jFrame.add(jLayer);
+    }
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+    public void test() {
+
+        JButton jButton = new JButton();
+
+        JFrame jFrame = new JFrame();
+
+        JPanel jPanel = new JPanel();
+        LayerUI&lt;JPanel&gt; layerUI = new LayerUI&lt;JPanel&gt;();
+        JLayer&lt;JPanel&gt; jLayer = new JLayer&lt;JPanel&gt;(jPanel, layerUI);
+        // removed jLayer.add(jButton); FIXED
+
+        jFrame.add(jLayer);
+    }
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLayer.html">http://docs.oracle.com/javase/7/docs/api/javax/swing/JLayer.html</A>
+2. <A HREF="http://docs.oracle.com/javase/tutorial/uiswing/misc/jlayer.html">http://docs.oracle.com/javase/tutorial/uiswing/misc/jlayer.html</A>
+
+</PRE>
+</BODY>
+</HTML>

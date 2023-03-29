@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify a non-empty name and path for each '&lt;forward&gt;' element in 'struts-config.xml' files [STRUTS.FWD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify a non-empty name and path for each '&lt;forward&gt;' element in 'struts-config.xml' files [STRUTS.FWD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each '&lt;forward&gt;' element in a 'struts-config.xml' file must have both a 'name'
+and a 'path' attribute.  The 'name' attribute identifies the '&lt;forward&gt;'
+element.  Without the 'name' attribute, the ActionServlet will not be able to
+map a redirect to a '&lt;forward&gt;' element.  The 'path' attribute specifies where
+the redirect request will get sent when the forward is performed.  Without the
+'path' attribute, the container will not know where to send the redirect
+request.
+
+This rule will flag a violation for each '&lt;forward&gt;' element which is missing
+either a 'name' attribute or a 'path' attribute.  It will also flag a violation
+when a 'name' attribute or a 'path' attribute is specified which is empty or
+consists entirely of whitespace characters.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+Forgetting to specify either a 'name' attribute or a 'path' attribute may cause
+your Struts application to not work correctly.  Users may notice denial of
+access problems when using your application.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This sample 'struts-config.xml' file contains a '&lt;forward&gt;' element with an
+empty 'name' attribute, a '&lt;forward&gt;' element with an empty 'path' attribute, a
+'&lt;forward&gt;' element without a 'name' attribute, and a '&lt;forward&gt;' element
+without a 'path' attribute.  None of these mistakes will be caught by the XML
+validator because the file does not use the Struts DTD for validation.
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;struts-config&gt;
+
+    &lt;global-forwards&gt;
+        &lt;forward name="" path="/logout.do"/&gt;  &lt;!-- VIOLATION: 'name' attribute
+                                                   is empty --&gt;
+        &lt;forward name="login" path=""/&gt;       &lt;!-- VIOLATION: 'path' attribute
+                                                   is empty --&gt;
+    &lt;/global-forwards&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/chooseColor"
+            type="examples.ChooseColorAction"
+            name="colorForm"
+            scope="request"
+            input="/color.jsp"
+            validate="false"&gt;
+                &lt;forward path="/results.jsp"/&gt;  &lt;!-- VIOLATION: 'name' attribute
+                                                     is missing --&gt;
+                &lt;forward name="failure"/&gt;       &lt;!-- VIOLATION: 'path' attribute
+                                                     is missing --&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify a non-empty 'name' and 'path' attribute for each '&lt;forward&gt;' element.
+Use the Struts DTD file so that the XML validator will find missing 'name'
+attributes.
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE struts-config PUBLIC
+      "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+      "<A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;
+&lt;struts-config&gt;
+
+    &lt;global-forwards&gt;
+        &lt;forward name="logout" path="/logout.do"/&gt;  &lt;!-- FIXED --&gt;
+        &lt;forward name="login" path="/login.jsp"/&gt;   &lt;!-- FIXED --&gt;
+    &lt;/global-forwards&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/chooseColor"
+            type="examples.ChooseColorAction"
+            name="colorForm"
+            scope="request"
+            input="/color.jsp"
+            validate="false"&gt;
+                &lt;forward name="success" path="/results.jsp"/&gt;  &lt;!-- FIXED --&gt;
+                &lt;forward name="failure" path="/error.jsp" /&gt;   &lt;!-- FIXED --&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;
+
+&lt;/struts-config&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Cigital Java Security Rule Pack # 39 &amp; # 40:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+2. Struts 1.3.10 Documentation:
+<A HREF="http://struts.apache.org/release/1.3.x/userGuide/index.html">http://struts.apache.org/release/1.3.x/userGuide/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

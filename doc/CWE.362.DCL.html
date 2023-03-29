@@ -1,0 +1,230 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unsafe implementations of the "double-checked locking" pattern [CWE.362.DCL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unsafe implementations of the "double-checked locking" pattern [CWE.362.DCL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies incorrect implementations of the programming pattern known 
+as "double-checked locking".  "Double-checked locking" is an attempt to 
+optimize the lazy initialization pattern by only requiring the code to obtain a
+lock if it sees that the field which is being lazily initialized has not already
+been initialized.  The basic structure of code which uses this pattern is as
+follows:
+
+if (_field == null) {
+    synchronized(this) {
+        if (_field == null) {
+            _field = new Field();
+        }
+    }
+}
+
+The pattern is as follows:
+
+1.  Check if a field has already been initialized.
+2.  Enter a "synchronized" block only if the field has not already been 
+initialized.  This prevents having to synchronize every time the code is called.
+3.  Once inside the "synchronized" block, check to see if the field still has 
+not been initialized.  It is possible that another thread has already 
+initialized the field since the first such check was made.
+4.  If the field is still "null", initialize it.
+
+This pattern is only guaranteed to work in J2SE 5.0 and later if the "volatile" 
+keyword is used on the declaration of the lazily initialized field.  In earlier 
+versions of the JDK, the pattern is not guaranteed to work at all.  An error is 
+reported for each occurrence of the "double-checked locking" pattern which is 
+not guaranteed to work correctly.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule ignores double checked locking involving Collections or Maps.
+The rules TRS.UACS and TRS.STR should be used to catch thread synchronization
+errors involving Collections and Maps.
+
+According to the book "Secure Programming with Static Analysis" (See the 
+"REFERENCES" section), the problem with "double-checked locking" has been fixed 
+as of J2SE 5.0 if the field in question has the "volatile" keyword in its 
+declaration.  The "volatile" keyword will prevent the compiler from performing
+optimizations which may cause the "double-checked locking" pattern to work
+incorrectly.  
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Deadlocks and Race Conditions
+
+Improper synchronization could cause concurrency issues that could result in 
+unexpected application behavior.  This could have security implications. See
+BENEFITS for more information.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+At first glance, the "double-checked locking" pattern seems to be a valid 
+optimization.  However, there are subtle reasons why it may not work in a multi-
+threaded environment.  The problem is that, with compiler optimizations and 
+shared memory multiprocessors, it is possible that one thread will see a field 
+which has only been partially initialized and think that the field has already 
+been completely initialized.  This is due to reordering of the instructions in
+the "synchronized" block.  The thread will then use the field as if it has been 
+fully initialized and will likely run into problems.  For more details, see the
+links provided in the "REFERENCES" section. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class DCL {
+    private Vector data;
+    
+    public Vector getData() {
+        if (data== null) {  //VIOLATION
+            synchronized(this) {
+                if (data== null) {
+                    data= new Vector(); 
+                }
+            }
+        }
+        return data;
+    }
+}    
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In J2SE 5.0 and later, the "double-checked locking" pattern can be fixed by 
+declaring the field in question to be "volatile":
+
+package examples.rules.trs;
+
+public class DCL_Fixed {
+    private volatile Vector data;  //FIXED - Declare field as "volatile"
+    
+    public Vector getData() {
+        if (data== null) {
+            synchronized(this) {
+                if (data== null) {
+                    data= new Vector(); 
+                }
+            }
+        }
+        
+        return data;
+    }
+}
+
+In earlier versions of the JDK, it's not possible to fix the "double-checked 
+locking" pattern.  To completely avoid the problem, the program might have to 
+give up lazy initialization, which could cause a significant performance hit. 
+A better approach is to ensure that every read/write of the same variable is 
+"synchronized", but this will also cause a significant performance hit.
+
+package examples.rules.trs;
+
+public class DCLFixed {
+    private Vector data 
+    
+    public synchronized Vector getData() { //FIXED
+                                           //but penalty to performance
+        if (data== null) {
+            data= new Vector();
+        }
+        
+        return data;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')
+<A HREF="https://cwe.mitre.org/data/definitions/362.html">https://cwe.mitre.org/data/definitions/362.html</A>
+
+CWE-609: Double-Checked Locking
+<A HREF="https://cwe.mitre.org/data/definitions/609.html">https://cwe.mitre.org/data/definitions/609.html</A>
+
+"Secure Programming with Static Analysis" by Brian Chess and Jacob West.
+pg. 32, 2007 Edition.
+
+<A HREF="http://en.wikipedia.org/wiki/Double_checked_locking">http://en.wikipedia.org/wiki/Double_checked_locking</A>
+
+<A HREF="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html</A>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-02-2001/jw-0209-double.html">http://www.javaworld.com/javaworld/jw-02-2001/jw-0209-double.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+LCK10-J. Use a correct form of the double-checked locking idiom
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK10-J.+Use+a+correct+form+of+the+double-checked+locking+idiom">https://wiki.sei.cmu.edu/confluence/display/java/LCK10-J.+Use+a+correct+form+of+the+double-checked+locking+idiom</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001995: The application must not be vulnerable to race conditions
+
+</PRE>
+</BODY>
+</HTML>

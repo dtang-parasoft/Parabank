@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always clone array parameters which are stored to fields [CWE.496.CAP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always clone array parameters which are stored to fields [CWE.496.CAP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if an array parameter is not cloned before being
+stored in a field.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following examples demonstrate cases where 'array2' is considered to be a
+clone of 'array' for the purposes of this rule:
+    1) array2 = array.clone();
+    2) System.arraycopy(array, 0, array2, 0, array.length);
+    3) for (int i = 0; i &lt; array.length; i++) {
+           array2[i] = array[i];
+       }
+
+Note that no distinction is made between cloning and deep cloning. So, in some
+cases it may still be possible for an external source to affect the array if
+the array elements are mutable.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+If an array is not cloned before being stored in a field then any external
+changes to the array contents will be reflected in the stored array and may
+affect functionality.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security;
+
+public class CAP {
+    int[] _array;
+
+    public void setArray(int[] array) { //VIOLATION
+        _array = array;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security;
+
+public class CAPFixed {
+    int[] _array;
+
+    public void setArray(int[] array) { //FIXED
+        if (array == null) {
+            _array = null;
+        }
+        else {
+            final int length = array.length;
+            _array = new int[length];
+            System.arraycopy(array, 0, _array, 0, length);
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-496: Public Data Assigned to Private Array-Typed Field
+<A HREF="https://cwe.mitre.org/data/definitions/496.html">https://cwe.mitre.org/data/definitions/496.html</A>
+
+</PRE>
+</BODY>
+</HTML>

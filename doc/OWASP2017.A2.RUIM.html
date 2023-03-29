@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure proper session expiration [OWASP2017.A2.RUIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure proper session expiration [OWASP2017.A2.RUIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The HttpSession.setMaxInactiveInterval method allows you to specify session
+expiration times. Failing to ensure a sufficient timeout or enabling
+modification of the timeout value through a servlet request may lead
+to security attacks.
+
+This rule detects when:
+- the timeout value is negative (it indicates the session will never expire)
+- a servlet request is used to obtain the session expiration time
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule ignores the following cases:
+1) the timeout value is non-constant
+2) the timeout value is set outside the setMaxInactiveInterval method 
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The lack of proper session expiration may improve the likely success of
+certain attacks. For example, an attacker may intercept a session ID, possibly
+via a network sniffer or Cross-site Scripting attack. . . In another scenario,
+a user might access a web site from a shared computer (such as at a library,
+Internet cafe, or open work environment). Insufficient Session Expiration could
+allow an attacker to use the browser's back button to access web pages
+previously accessed by the victim." [CWE-613]
+
+This rule helps you ensure proper session expiration.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+public class RUIM extends HttpServlet {
+
+    private static final int TIMEOUT = 5 * 60;
+    private static final int TIMEOUT2 = 100 * - 60;
+    private static final int TIMEOUT3 = TIMEOUT * - 60;
+
+    private int timeout = - 6000;
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().setMaxInactiveInterval(Integer.parseInt(request.getParameter("timeout"))); // VIOLATION
+        request.getSession().setMaxInactiveInterval(-1); // VIOLATION
+        request.getSession().setMaxInactiveInterval(3000);
+        request.getSession().setMaxInactiveInterval(timeout); // NO VIOLATION
+        request.getSession().setMaxInactiveInterval(TIMEOUT);
+        request.getSession().setMaxInactiveInterval(TIMEOUT2); // VIOLATION
+        request.getSession().setMaxInactiveInterval(TIMEOUT3); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+public class RUIM extends HttpServlet {
+
+    private static final int TIMEOUT = 5 * 60;
+    private static final int TIMEOUT2 = 100 * 60; // changed into a positive value
+    private static final int TIMEOUT3 = TIMEOUT * 60; // changed into a positive value
+
+    private int timeout = - 6000;
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().setMaxInactiveInterval(UserConfiguration.getTime()); // retrieved from the server
+        request.getSession().setMaxInactiveInterval(1); // FIXED
+        request.getSession().setMaxInactiveInterval(3000);
+        request.getSession().setMaxInactiveInterval(timeout);
+        request.getSession().setMaxInactiveInterval(TIMEOUT);
+        request.getSession().setMaxInactiveInterval(TIMEOUT2); // FIXED
+        request.getSession().setMaxInactiveInterval(TIMEOUT3); // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/b63f3dec-d50c-4351-b102-b8cad7d92b09">https://app.hackedu.com/link/b63f3dec-d50c-4351-b102-b8cad7d92b09</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A07:2021 – Identification and Authentication Failures
+<A HREF="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-613: Insufficient Session Expiration
+<A HREF="https://cwe.mitre.org/data/definitions/613.html">https://cwe.mitre.org/data/definitions/613.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000070: The application must automatically terminate the non-privileged user session and log off non-privileged users after a 15 minute idle time period has elapsed
+APSC-DV-000080: The application must automatically terminate the admin user session and log off admin users after a 10 minute idle time period is exceeded
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

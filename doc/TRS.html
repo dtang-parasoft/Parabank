@@ -1,0 +1,75 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Threads &amp; Synchronization [TRS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Threads &amp; Synchronization [TRS]
+</STRONG>
+<p>
+<PRE>
+Rules related to threads &amp; synchronization.
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="TRS.AIL.html">Do not use Atomic variables when always accessed in synchronized manner [TRS.AIL]</a></code><br>
+<code><a href="TRS.ANF.html">Do not use 'notify()'; use 'notifyAll()' instead so that all waiting threads will be notified [TRS.ANF]</a></code><br>
+<code><a href="TRS.ATI.html">Avoid accidental use of "Thread.interrupted()" [TRS.ATI]</a></code><br>
+<code><a href="TRS.AUTG.html">Do not use variables of the unsafe type 'java.lang.ThreadGroup' [TRS.AUTG]</a></code><br>
+<code><a href="TRS.AUTY.html">Do not use 'Thread.yield()' because it may behave differently under different Virtual Machines [TRS.AUTY]</a></code><br>
+<code><a href="TRS.CDF.html">Avoid invoking methods using "static" 'Calendar', 'DateFormat', or 'SimpleDateFormat' [TRS.CDF]</a></code><br>
+<code><a href="TRS.CHM.html">Use ConcurrentHashMap instead of Hashtable and "synchronizedMap" wrapped HashMap when possible [TRS.CHM]</a></code><br>
+<code><a href="TRS.CIET.html">Do not catch InterruptedException except in classes extending Thread [TRS.CIET]</a></code><br>
+<code><a href="TRS.CLQ.html">Use ConcurrentLinkedQueue instead of Vector and synchronizedList when possible [TRS.CLQ]</a></code><br>
+<code><a href="TRS.CMA.html">Avoid compound synchronized collection accesses which violate atomicity [TRS.CMA]</a></code><br>
+<code><a href="TRS.CSFS.html">Do not cause deadlocks by calling a "synchronized" method from a "synchronized" method [TRS.CSFS]</a></code><br>
+<code><a href="TRS.CSTART.html">Do not call the "start" method of threads from inside a constructor [TRS.CSTART]</a></code><br>
+<code><a href="TRS.CTRE.html">Do not let "this" reference escape during construction [TRS.CTRE]</a></code><br>
+<code><a href="TRS.DCL.html">Avoid unsafe implementations of the "double-checked locking" pattern [TRS.DCL]</a></code><br>
+<code><a href="TRS.DOPQ.html">Do not use DiscardOldestPolicy with PriorityBlockingQueue [TRS.DOPQ]</a></code><br>
+<code><a href="TRS.GSD.html">Do not use "getState" except for debugging purposes [TRS.GSD]</a></code><br>
+<code><a href="TRS.IASF.html">Inspect accesses to "static" fields which may require synchronization [TRS.IASF]</a></code><br>
+<code><a href="TRS.ILI.html">Make lazy initializations thread-safe [TRS.ILI]</a></code><br>
+<code><a href="TRS.IMSE.html">Do not catch 'IllegalMonitorStateException' since this exception likely indicates a design flaw [TRS.IMSE]</a></code><br>
+<code><a href="TRS.IRET.html">Implement Runnable instead of extending Thread [TRS.IRET]</a></code><br>
+<code><a href="TRS.IRUN.html">Do not call the 'run()' method directly on classes extending 'java.lang.Thread' or implementing 'java.lang.Runnable' [TRS.IRUN]</a></code><br>
+<code><a href="TRS.ISTART.html">Do not call the 'start()' method directly on Thread class instances [TRS.ISTART]</a></code><br>
+<code><a href="TRS.LORD.html">Ensure that nested locks are ordered correctly [TRS.LORD]</a></code><br>
+<code><a href="TRS.MRAV.html">Access related Atomic variables in a synchronized block [TRS.MRAV]</a></code><br>
+<code><a href="TRS.MRUN.html">Give subclasses of Thread a 'run()' method so they can run as separate threads [TRS.MRUN]</a></code><br>
+<code><a href="TRS.NAME.html">Ensure threads are named [TRS.NAME]</a></code><br>
+<code><a href="TRS.NSM.html">Use "synchronized" blocks instead of making the whole method declaration "synchronized" [TRS.NSM]</a></code><br>
+<code><a href="TRS.NSYN.html">Ensure 'wait()', 'notify()' and 'notifyAll()' are invoked on an object that is clearly synchronized in its enclosing mod scope [TRS.NSYN]</a></code><br>
+<code><a href="TRS.OSNS.html">Avoid overriding synchronized methods with non-synchronized methods [TRS.OSNS]</a></code><br>
+<code><a href="TRS.RLF.html">Release Locks in a "finally" block [TRS.RLF]</a></code><br>
+<code><a href="TRS.RUN.html">Use synchronization on methods that implement 'Runnable.run()' [TRS.RUN]</a></code><br>
+<code><a href="TRS.SCS.html">Do not synchronize on constant Strings [TRS.SCS]</a></code><br>
+<code><a href="TRS.SGC.html">Do not synchronize on the class object returned by the 'getClass' method [TRS.SGC]</a></code><br>
+<code><a href="TRS.SNSM.html">Do not mix "static" and non-"static" "synchronized" methods [TRS.SNSM]</a></code><br>
+<code><a href="TRS.SOBC.html">Do not synchronize on a collection view if the backing collection is accessible [TRS.SOBC]</a></code><br>
+<code><a href="TRS.SOL.html">Do not perform synchronization using the "synchronized" keyword on implementations of "java.util.concurrent.locks.Lock" [TRS.SOL]</a></code><br>
+<code><a href="TRS.SOPF.html">Do not synchronize on "public" fields since doing so may cause deadlocks [TRS.SOPF]</a></code><br>
+<code><a href="TRS.SOUF.html">Do not synchronize on non-"final" fields since doing so makes it difficult to guarantee mutual exclusion [TRS.SOUF]</a></code><br>
+<code><a href="TRS.SSCI.html">Manually synchronize on 'synchronized' collections when iterating over them [TRS.SSCI]</a></code><br>
+<code><a href="TRS.SSDF.html">Synchronize access to "static" SimpleDataFormats [TRS.SSDF]</a></code><br>
+<code><a href="TRS.SSUG.html">Make the get method for a field synchronized if the set method is synchronized [TRS.SSUG]</a></code><br>
+<code><a href="TRS.STR.html">Do not perform synchronization nor call semaphore methods on an Object's 'this' reference [TRS.STR]</a></code><br>
+<code><a href="TRS.THRD.html">Avoid calling unsafe deprecated methods of 'Thread' and 'Runtime' [TRS.THRD]</a></code><br>
+<code><a href="TRS.TSHL.html">Do not call 'Thread.sleep()' while holding a lock since doing so can cause poor performance and deadlocks [TRS.TSHL]</a></code><br>
+<code><a href="TRS.UACS.html">Avoid unsynchronized accesses of "Collections.synchronized" wrapped Collections [TRS.UACS]</a></code><br>
+<code><a href="TRS.UCM.html">Use unsynchronized Collections/Maps only when safe [TRS.UCM]</a></code><br>
+<code><a href="TRS.USL.html">Use the same locking object to access variables [TRS.USL]</a></code><br>
+<code><a href="TRS.UT.html">Do not start a thread without specifying a 'run()' method [TRS.UT]</a></code><br>
+<code><a href="TRS.UWIL.html">Call 'wait()' and 'await()' only inside a loop that tests the liveness condition [TRS.UWIL]</a></code><br>
+<code><a href="TRS.UWNA.html">Use 'wait()' and 'notifyAll()' instead of polling loops [TRS.UWNA]</a></code><br>
+<code><a href="TRS.WOC.html">Use the correct method calls on "java.util.concurrent.locks.Condition" objects [TRS.WOC]</a></code><br>
+<code><a href="TRS.WOS.html">Do not make the "writeObject()" method synchronized if no other method is synchronized [TRS.WOS]</a></code><br>
+</BODY>
+</HTML>

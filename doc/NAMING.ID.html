@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using potential Java keywords as identifiers [NAMING.ID]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using potential Java keywords as identifiers [NAMING.ID]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies a variable that is considered to be a java keyword
+in other version of JDK. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Considerable variable names are:
+  - enum
+  - assert
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using potential java keyword name in variable will cause compilation error
+when the JDK version is changed. Therefore, developers should avoid using those
+names in their variables.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class ID {
+
+    private String enum;  // VIOLATION
+    private int assert;   // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Rename the fields
+
+package examples.rules.naming;
+
+public class IDFixed {
+ 
+    private String myEnum;  // FIXED
+    private int _myAssert;  // FIXED
+
+}
+
+</PRE>
+</BODY>
+</HTML>

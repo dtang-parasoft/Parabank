@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare 'clone() throws CloneNotSupportedException' for Cloneable class [CODSTA.OIM.CLONE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare 'clone() throws CloneNotSupportedException' for Cloneable class [CODSTA.OIM.CLONE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not declare 'clone() throws CloneNotSupportedException'
+for a Cloneable class. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a class implements the Cloneable interface, then it 
+should have a "public" 'clone ()' method to correctly 
+implement the behavior of 'Cloneable' object.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.oim;
+
+import java.util.*;
+
+public class CLONE implements Cloneable {
+    private Entry[] buckets = null;
+ 
+    private static class Entry {
+        Object key;
+        Object value;
+        Entry next;
+
+        Entry (Object key, Object value, Entry next) {
+            this.key = key;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
+    // VIOLATION : missing clone method
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+In classes that implement 'java.lang.Cloneable' you should write a
+'clone ()' method and declare the method as "throws CloneNotSupportedException".
+
+package examples.rules.codsta.oim;
+
+public class CLONEFixed implements Cloneable {
+    private Entry[] buckets = null;
+ 
+    private static class Entry {
+        Object key;
+        Object value;
+        Entry next;
+
+        Entry (Object key, Object value, Entry next) {
+            this.key = key;
+            this.value = value;
+            this.next = next;
+        }
+      
+        Entry deepCopy () {
+            Entry n = next == null ? null : next.deepCopy ();
+            return new Entry (key, value, n);
+        }
+
+    }
+    
+    public Object clone () throws CloneNotSupportedException {  // FIXED
+        CLONEFixed result = (CLONEFixed)super.clone();
+        result.buckets = new Entry[buckets.length];
+        for (int i = 0; i &lt; buckets.length; i++) {
+            if (buckets[i] != null) {
+                result.buckets[i] = (Entry)buckets[i].deepCopy();
+            }
+        }
+        return result;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch : "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 45-52
+
+</PRE>
+</BODY>
+</HTML>

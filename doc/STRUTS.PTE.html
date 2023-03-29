@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify a non-empty path and type for each '&lt;exception&gt;' element in 'struts-config.xml' files [STRUTS.PTE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify a non-empty path and type for each '&lt;exception&gt;' element in 'struts-config.xml' files [STRUTS.PTE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each '&lt;exception&gt;' element in a 'struts-config.xml' file must have both a 'path'
+and a 'type' attribute.  The 'path' attribute specifies the resource to which you 
+will be sent when an exception is thrown.  Without this attribute, the container
+will not know where to send users when a particular exception occurs.  The 
+'type' attribute specifies the Java class name of the exception type.  If this 
+attribute is empty or missing, the '&lt;exception&gt;' element is useless.  
+
+This rule will flag a violation for each '&lt;exception&gt;' element in a 
+'struts-config.xml' file which is missing either the 'type' or the 'path' 
+attribute.  It will also flag a violation if there is an empty 'type' or 'path' 
+attribute or a 'type' or 'path' attribute which consists entirely of whitespace
+characters.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If an '&lt;exception&gt;' element is missing the 'type' attribute, it will cause the 
+exception to be inaccessible and unusable, which will cause a denial of access.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This sample 'struts-config.xml' file contains an '&lt;exception&gt;' element with a
+missing 'type' attribute and an '&lt;exception&gt;' element with an empty 'path' 
+attribute.
+
+struts-config.xml:
+
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;struts-config&gt;
+
+    &lt;global-exceptions&gt;
+        &lt;exception key="global.error.invalidLogin" path="/signin.jsp" scope="request" /&gt;  &lt;!-- VIOLATION: Missing 'type' attribute --&gt;
+    &lt;/global-exceptions&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/login"
+                type="com.coreservlets.LoginAction"
+                name=""
+                scope="request"
+                input="/login.jsp"
+                validate="true"&gt;                                       
+            &lt;exception key="error.invalidLogin" path="" scope="request" type="InvalidLoginException" /&gt;  &lt;!-- VIOLATION: Empty 'path' attribute --&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;   
+
+&lt;/struts-config&gt; 
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Specify a non-empty 'path' and 'type' attribute for each '&lt;exception&gt;' element.
+Use the Struts DTD file so that the XML validator will find missing 'type' 
+attributes.  Note that the XML validator will not find missing 'path' attributes
+because the 'path' attribute is optional according to the Struts DTD (although 
+we recommend always specifying the 'path' attribute).
+
+struts-config.xml:
+    
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE struts-config PUBLIC
+      "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+      "<A HREF="http://struts.apache.org/dtds/struts-config_1_3.dtd">http://struts.apache.org/dtds/struts-config_1_3.dtd</A>"&gt;
+&lt;struts-config&gt;
+
+    &lt;global-exceptions&gt;
+        &lt;exception key="global.error.invalidLogin" path="/signin.jsp" scope="request" 
+            type="InvalidLoginException" /&gt;  &lt;!-- FIXED --&gt;
+    &lt;/global-exceptions&gt;
+
+    &lt;action-mappings&gt;
+        &lt;action path="/login"
+                type="com.coreservlets.LoginAction"
+                name="LoginAction"
+                scope="request"
+                input="/login.jsp"
+                validate="true"&gt;                                       
+            &lt;exception key="error.invalidLogin" path="/signin.jsp" scope="request" 
+                type="InvalidLoginException" /&gt;  &lt;!-- FIXED --&gt;
+        &lt;/action&gt;
+    &lt;/action-mappings&gt;   
+
+&lt;/struts-config&gt; 
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Cigital Java Security Rule Pack # 46 &amp; # 47:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+2. Struts 1.3.10 Documentation:
+<A HREF="http://struts.apache.org/release/1.3.x/userGuide/index.html">http://struts.apache.org/release/1.3.x/userGuide/index.html</A>
+
+</PRE>
+</BODY>
+</HTML>

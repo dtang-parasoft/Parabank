@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid assigning same variable in the fall-through switch case [PB.TYPO.DAV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid assigning same variable in the fall-through switch case [PB.TYPO.DAV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies that the value of the variable in the previous "switch" case is 
+overwritten due to "switch" fall through. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The program omits a break statement within a switch or similar construct,
+causing code associated with multiple conditions to execute. This can cause
+problems when the programmer only intended to execute code associated with
+one condition. This can lead to critical code executing in situations where
+it should not." [CWE-484]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+We consider this is a typo, which user may forget to put a break or return statement at the
+end of the "switch" case. This rule is used to detect this logical problem.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class DAV {
+
+    private int num;
+    
+    public void setNum(int type) {
+        switch (type) {
+            case 1 :
+               num = 1;
+            case 2 :
+               num = 2;  // VIOLATION
+            default :
+               num = -1;  // VIOLATION
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add 'break' statement in each switch case
+
+package examples.rules.pb.typo;
+
+public class DAVFixed {
+
+    private int num;
+    
+    public void setNum(int type) {
+        switch (type) {
+            case 1 :
+               num = 1;
+               break;  // FIXED
+            case 2 :
+               num = 2;
+               break;  // FIXED
+            default :
+               num = -1;
+               break;  // FIXED
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-484: Omitted Break Statement in Switch
+<A HREF="https://cwe.mitre.org/data/definitions/484.html">https://cwe.mitre.org/data/definitions/484.html</A>
+
+</PRE>
+</BODY>
+</HTML>

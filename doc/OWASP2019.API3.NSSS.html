@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use static variables in servlets without synchronization [OWASP2019.API3.NSSS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use static variables in servlets without synchronization [OWASP2019.API3.NSSS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When multiple servlets are created, queried and modified at the same time, a static
+variable may be shared and modified by a number of instances of the same class.
+This may lead to unintended consequences and security threats. To prevent simultaneous
+access to a static variable in a servlet, all static field assignments
+created in the servlet should be synchronized.
+
+This rule checks if static field assignments in servlets are placed in synchronized blocks.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Using static variables in servlets without synchronization may lead to data leaks.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent leaking sensitive data, such as information provided via 
+a secure web form.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+public class NSSS extends GenericServlet {
+    
+    static int staticField = 3;
+    Error unstaticField = new Error();
+    
+    private static Object synchronizationStaticObject = new Object();
+    private Object synchronizationObject = new Object();
+
+    private void unsynchronizedMethod() {
+        staticField = 4; // VIOLATION
+        unstaticField = new Error();
+    }
+    
+    private static void unsynchronizedStaticMethod() {
+        staticField = 4; // VIOLATION
+    }
+    
+    private synchronized void synchronizedMethod() {
+        staticField = 4; // VIOLATION: The simple synchronized method blocks access only to a specific instance of the class
+                         // Synchronizing on the method is functionally equivalent to: synchronized (this)
+        unstaticField = new Error(); 
+    }
+    
+    private static synchronized void synchronizedStaticMethod() {
+        staticField = 4; // CORRECT: The static synchronized method blocks access to all instances the class
+                         // This is equivalent to: synchronized(NSSS.class)
+    }
+    
+    private void typicalBlockMethod() {
+        synchronized (synchronizationStaticObject) {
+            staticField = 4; // CORRECT: synchronizationStaticObject is static
+        }
+    }
+    
+    private void violatedBlockMethod() {
+        synchronized (synchronizationObject) {
+            staticField = 4; // VIOLATION: synchronizationObject isn't static
+        }
+    }
+    
+    @Override
+    public void service(ServletRequest arg0, ServletResponse arg1)
+            throws ServletException, IOException {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Enterprise Java Security: Building Secure J2EE Applications" Marco Pistoia p. 143
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

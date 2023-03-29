@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce or avoid usage of conditional operators [CODSTA.READ.CX]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce or avoid usage of conditional operators [CODSTA.READ.CX]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule can be set to identify either code that does or does not use 
+conditional operators (? :). An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Option
+    -Enforce usage of conditional operators (default option)
+        -Use conditional operator instead of 'if (cond) a = b; else a = c;' (default is true)
+        -Use conditional operator instead of 'if (cond) return a; else return b;' (default is true)
+    -Avoid usage of conditional operators
+    
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+-Enforce usage of conditional operators
+    The conditional operator provides a single expression that yields 
+    one of two values based on a boolean expression. This results in a more
+    compact expression.
+    
+-Avoid usage of conditional operators
+    Although inline conditional operator could reduce the size of the
+    code, they could make the code difficult to read and understand. 
+    Consequently, some people prefer to use if-else statements instead of
+    conditional expressions (a ? b : c).
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+By default, the rule enforces usage of conditional operators (? :)
+
+package examples.rules.codsta.read;
+
+public class CX {
+    public int getAbsoluteValue (int i) {  
+        if (i&gt;= 0) {    // VIOLATION
+            return i;    
+        }
+        else {
+            return i* -1;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use conditional operator
+
+package examples.rules.codsta.read;
+
+public class CXFixed {
+    public int getAbsoluteValue (int i) {  
+        return i&gt;= 0 ? i : i* -1; //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated CODSTA.AIC
+@deprecated OPT.IF
+@deprecated OPT.IFAS
+
+</PRE>
+</BODY>
+</HTML>

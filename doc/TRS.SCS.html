@@ -1,0 +1,190 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not synchronize on constant Strings [TRS.SCS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not synchronize on constant Strings [TRS.SCS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Synchronizing on constant Strings is deadlock-prone and should be avoided.  This
+rule will flag a violation for each constant String which is used as the
+expression to synchronize on in a "synchronized" block.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+According to the Java Language Specification, "Literal strings within different
+classes in different packages likewise represent references to the same String
+object." This means that, if you synchronize on a String constant, other classes
+which synchronize on an equivalent String constant will be synchronizing on the
+same object.  Since this is prone to deadlocks, you should avoid synchronizing on
+String constants.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, there is a class named "SCS" that is located in package
+"examples.rules.trs" and a class named "SCS_2" that is located in package
+"test".  Although they appear to synchronize on different objects, they are
+actually synchronizing on the same object (since they both synchronize on a
+String which has the value "LOCK").  This can easily lead to deadlock.
+
+SCS.java
+--------
+
+package examples.rules.trs;
+
+import test.SCS_2;
+
+public class SCS {
+    private static final String LOCK= "LOCK";
+
+    public static void main(String[] args){
+        new Thread(new Runnable() {
+            public void run() { SCS.method(); }
+        }).start();
+        new Thread(new Runnable() {
+            public void run() { SCS_2a.method(); }
+        }).start();
+    }
+
+    public static void method()  {
+        synchronized(LOCK){  //VIOLATION
+            System.err.println("In SCS's synchronized block for thread " +
+                Thread.currentThread().getName());
+            try {
+                Thread.sleep(1000000);
+            }
+            catch (Exception e){
+            }
+        }
+    }
+}
+
+SCS_2.java
+----------
+
+package test;
+
+public class SCS_2 {
+    private static final String LOCK= "LOCK";
+
+    public static void method() {
+        synchronized (LOCK) {  //VIOLATION
+            System.err.println("In SCS_2's synchronized block for thread " +
+                Thread.currentThread().getName());
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Create a unique new object to synchronize on instead of using a String constant.
+
+SCSFixed.java
+-------------
+
+package examples.rules.trs;
+
+import test.SCSFixed_2;
+
+public class SCSFixed {
+    public static void main(String[] args){
+        new Thread(new Runnable() {
+            public void run() { SCSFixed.method(); }
+        }).start();
+        new Thread(new Runnable() {
+            public void run() { SCSFixed_2.method(); }
+        }).start();
+    }
+
+    public static void method()  {
+        synchronized(SCSFixed.class){  //FIXED
+            System.err.println("In SCSFixed's synchronized block for thread " +
+                Thread.currentThread().getName());
+            try {
+                Thread.sleep(1000000);
+            }
+            catch (Exception e){
+            }
+        }
+    }
+}
+
+SCSFixed_2.java
+---------------
+
+package test;
+
+public class SCSFixed_2 {
+    public static void method() {
+        synchronized (SCSFixed_2.class) {  //FIXED
+            System.err.println("In SCSFixed_2's synchronized block for thread " +
+                Thread.currentThread().getName());
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://www.javalobby.org/java/forums/t96352.html">http://www.javalobby.org/java/forums/t96352.html</A>
+
+2. <A HREF="http://docs.oracle.com/javase/specs/jls/se5.0/html/lexical.html#3.10.5">http://docs.oracle.com/javase/specs/jls/se5.0/html/lexical.html#3.10.5</A>
+
+3. <A HREF="http://jira.codehaus.org/browse/JETTY-352">http://jira.codehaus.org/browse/JETTY-352</A>
+
+4. SEI CERT Oracle Coding Standard for Java
+   LCK01-J. Do not synchronize on objects that may be reused
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused">https://wiki.sei.cmu.edu/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused</A>
+
+</PRE>
+</BODY>
+</HTML>

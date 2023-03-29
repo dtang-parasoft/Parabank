@@ -1,0 +1,201 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure all sensitive method invocations are logged [OWASP2019.API10.ENFL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure all sensitive method invocations are logged [OWASP2019.API10.ENFL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not log sensitive method invocations. An 
+error is reported if some sensitive method invocations--  for instance, 
+'login' and 'logout' from 'javax.security.auth.login.LoginContext'-- are not
+logged in the previous or next statements.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #10: "Track and monitor all access to network resources 
+and cardholder data".
+
+See BENEFITS section for more of the SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Previous statement
+    -Method invocations that need logging in previous statement
+        -Specify type with fully qualified name. Specify method by name.
+        -Enter method invocations that should be flagged if no suitable logging
+         method is invoked before them.
+        -By default the following methods are checked:
+            javax.security.auth.login.LoginContext.login,
+            javax.security.auth.Subject.doAs,
+            javax.security.auth.Subject.doAsPrivileged
+
+Next statement
+    -Method invocations that need logging in next statement
+        -Specify type with fully qualified name. Specify method by name.
+        -Enter method invocations that should be flagged if no suitable logging
+         method is invoked before them.
+        -By default the following methods are checked:
+            javax.security.auth.login.LoginContext.logout 
+
+Loggers
+    -Acceptable Loggers (Specify fully qualified names)
+        -A call to a method of a logging class specified here or any of its
+         subclasses will be treated as a call to a logger.
+        -By default, "java.util.logging.Logger" and "org.apache.log4j.Logger"
+         are checked.
+    -Logging method name in regular expression
+        -Custom logging methods are sometimes used to perform additional actions
+         each time an event is logged. Methods specified here will be treated as
+         a call to a logger.
+        -You can insert names that would be recognized as logging methods.
+         The name is represented as a regular expression. By default, "log" is 
+         recognized as a logging method. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When you follow this rule, all important actions (attempts to log in, log out,
+access privileged information, etc.) are logged for security purposes. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+public class ENFL {
+    protected void doLogin(LoginContext lc, String userName) {
+        try {
+            lc.login(); //VIOLATION
+        }
+        catch (LoginException le) {
+        } 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+public class ENFLFixed {
+    Logger _logger= Logger.getAnonymousLogger();
+    protected void doLogin(LoginContext lc, String userName) {
+        try {
+            _logger.log(Level.INFO, userName+ " logs in "); //FIXED
+            lc.login(); //FIXED
+        }
+        catch (LoginException le) {
+        } 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/339652e4-96c1-4eda-b7db-298e5afef0bb">https://app.hackedu.com/link/339652e4-96c1-4eda-b7db-298e5afef0bb</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard:
+<A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+CWE-778: Insufficient Logging
+<A HREF="https://cwe.mitre.org/data/definitions/778.html">https://cwe.mitre.org/data/definitions/778.html</A>
+
+OWASP Top 10-2021
+A09:2021 – Security Logging and Monitoring Failures
+<A HREF="https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/">https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/</A>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000650: The application must not write sensitive data into the application logs
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call non-"final", non-"static" and non-"private" methods from constructors [PB.CUB.CTOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call non-"final", non-"static" and non-"private" methods from constructors [PB.CUB.CTOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that calls non-"final" non-"private" methods 
+from a constructor. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If a constructor calls a method which is non-"final" and non-"private", it may 
+be possible for an attacker to override the method to do something malicious.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check indirect method calls to a depth of (default false)
+    Enabling this parameter will check for method calls made from a constructor,
+    which in turn call another method. This will continue up to a user-specified
+    depth. Note that a depth of "1" would flag the following:
+        class CTOR {
+            public CTOR() {
+                /*
+                 * "callDepth1" is indirectly called and is non-"private"
+                 */
+                callDepth0(); //VIOLATION (parameter enabled, depth of 1)
+            }
+            private void callDepth0() {
+                callDepth1();
+            }
+            void callDepth1() {
+                ...
+            }
+        }
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The purpose of a constructor is to initialize an object.  If it calls a 
+non-"final" method that is accessible to subclasses, a subclass can
+override the method, leading to unexpected results.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+import java.io.*;
+
+public class CTOR {
+    public CTOR() {
+        _size = readSize();  // VIOLATION
+    }
+    
+    public int readSize() {
+        try {
+            fis = new FileInputStream("data.out");
+            return fis.read();
+        } 
+        catch(IOException e) {
+            return -1;
+        }
+        
+    }
+    private FileInputStream fis;
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If a constructor needs to call a method for initialization, make this method 
+"final" or "private".  Or, create a "private void" method to perform the
+initialization.
+
+package examples.rules.pb.cub;
+
+import java.io.*;
+
+public class CTORFixed {
+    public CTORFixed() {
+        _size = readSize();
+    }
+    
+    private int readSize() {  // FIXED
+        try {
+            fis = new FileInputStream("data.out");
+            return fis.read();
+        } 
+        catch(IOException e) {
+            return -1;
+        }
+    }
+    
+    private FileInputStream fis;
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.238 - 240
+
+</PRE>
+</BODY>
+</HTML>

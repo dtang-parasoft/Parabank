@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that comments do not contain task tags [CODSTA.ORG.TODOXML]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that comments do not contain task tags [CODSTA.ORG.TODOXML]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Many suspicious comments, such as BUG, HACK, FIXME, LATER, LATER2, TODO,
+in the code indicate missing security functionality and checking. Others
+indicate code problems that programmers should fix, such as hard-coded
+variables, error handling, not using stored procedures, and performance
+issues." [CWE-546]
+
+This rule detects comments in XML files that indicate that the code
+development has not been completed.
+By default, the rule reports comments that include the following tags:  "TODO",
+"FIXME", "XXX". The rule can be parameterized to report comments that include
+custom tags or regular expressions (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Suspicious comments could be an indication that there are problems in
+the source code that may need to be fixed and is an indication of poor
+quality. This could lead to further bugs and the introduction of
+weaknesses." [CWE-546]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "List of task tags" table allows you to configure the tags the rule will
+detect in comments.
+- "Is reg expr" - if enabled, the tag name specified in the "Value" column
+    will be treated as a regular expression.
+- "Value" - specifies the tag name to be detected.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that all suspicious comments are resolved before
+the development process is completed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+web.xml:
+
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;
+        &lt;!-- TODO Specify connection properties - VIOLATION --&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Complete the task specified by the comment and remove the comment from
+the XML file.
+
+web.xml:
+
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;
+        &lt;!-- FIXED --&gt;
+        &lt;property name="hibernate.connection.username"&gt;jI$^!nv&amp;j`9n7c@U1i&lt;/property&gt;
+        &lt;property name="hibernate.connection.password"&gt;SnRlc3Q6bnVsbA==&lt;/property&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-546: Suspicious Comment
+<A HREF="https://cwe.mitre.org/data/definitions/546.html">https://cwe.mitre.org/data/definitions/546.html</A>
+
+</PRE>
+</BODY>
+</HTML>

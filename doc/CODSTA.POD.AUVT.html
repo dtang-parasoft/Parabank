@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use less specific types to accomplish loose coupling [CODSTA.POD.AUVT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use less specific types to accomplish loose coupling [CODSTA.POD.AUVT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that should use a less specific type declaration to 
+accomplish loose coupling. An error is reported if a variable declaration could
+use a less specific type. 
+
+Inner classes are not flagged.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is parameterized to extend the functionality of the previous rule, 
+which only checks for 'java.util.List', 'java.util.Set' and 
+'java.util.SortedMap'. It should no longer flag variable declarations as errors 
+if promoting such a variable up the class hierarchy would create a compilation
+error.
+
+Notice that variables within abstract classes and interfaces will not be 
+checked. Parameters to methods that are overridden in the same file will not be
+flagged, but this rule does not check other source files to see if a method is
+overridden elsewhere.  Parameters to methods that override other methods will
+not be flagged, since generalizing them would make them not override the parent
+method. Be cautious when changing parameter types because doing so could 
+affect overridden methods.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+Basic Settings
+    Variables to check:
+        -private fields (enabled)
+        -parameters (enabled)
+        -caught exceptions (disabled)
+        -local variables (enabled)
+            NOTE: For the purpose of this rule, 'local variables' does not
+            include caught exceptions
+
+    Only check types which implement interfaces (disabled)
+        Enabling this parameter will limit reported violations to those that can
+        be generalized to an interface. This may be desired as using interfaces
+        may further help promote loose coupling. Replacement classes could be
+        easily dropped in as long as they implement the same interface.
+
+Types
+    Types to check:
+        -Consider all types
+        -Limit analysis to: (default)
+            -java.util.List (enabled)
+            -java.util.Map (enabled)
+            -java.util.Set (enabled)
+            -java.io.InputStream (disabled)
+            -java.io.OutputStream (disabled)
+            -java.io.Reader (disabled)
+            -java.io.Writer (disabled)
+            -Extra classes/interfaces to be promoted to:
+            (manually add more types to be checked)
+
+Excluded Types
+    -Classes/Interfaces to ignore:
+    (default 'java.util.Properties', 'java.lang.String', 'java.lang.Object', 'java.util.Stack')
+    (manually specify types to be ignored)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule promotes loose coupling, which is one of the best Object
+Oriented Programming practices. By making the variable declaration type less
+specific, you can reduce the code's dependencies. Code with low dependencies
+can be more modular and flexible, since a wider variety of class objects 
+could be applied to the code (because variable declarations are not very
+specific). Some well-known and trusty interfaces/classes-- java.util.Set
+for instance-- could be candidates for loose coupling.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class AUVT {
+    private ArrayList list = new ArrayList();  //VIOLATION
+    private static final int MAX_CAPACITY = 10;
+
+    public void addElement(Object element) {
+        if (list.size() &lt; MAX_CAPACITY)
+            list.add(element);
+        else
+            System.out.println("list is filled.");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use a less specific type declaration to achieve loose coupling.
+
+package examples.rules.codsta.pod;
+
+public class AUVTFixed {
+    private List list = new ArrayList();  //FIXED
+    private static final int MAX_CAPACITY = 10;
+
+    public void addElement(Object element) {
+        if (list.size() &lt; MAX_CAPACITY)
+            list.add(element);
+        else
+            System.out.println("list is filled.");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

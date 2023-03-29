@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare a package-private method "final" if it is not overridden [CWE.749.SPAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare a package-private method "final" if it is not overridden [CWE.749.SPAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies package-private methods that are not overridden and that
+are not declared "final". An error is reported for each occurrence.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Exposing critical functionality essentially provides an attacker with
+the privilege level of the exposed functionality. This could result in
+the modification or exposure of sensitive data or possibly even execution
+of arbitrary code." [CWE-749]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check methods in abstract classes (Default value is "false")
+-Check methods in anonymous classes (Default value is "false")
+-Check methods in local classes (Default value is "false")
+-Check unused methods (Default value is "false")
+-Check static methods (Default value is "false")
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+1) It optimizes the code: because the compiler knows that nobody is
+   overriding the method, it can generate optimized code.
+
+2) It makes the code self documenting: somebody looking at the
+   method knows that no other method overrides it.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make the method "final" or document the reason for the
+method not being final.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-749: Exposed Dangerous Method or Function
+<A HREF="https://cwe.mitre.org/data/definitions/749.html">https://cwe.mitre.org/data/definitions/749.html</A>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html">http://www.javaworld.com/javaworld/jw-12-1998/jw-12-securityrules_p.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the javax.crypto.NullCipher class in non-test classes [OWASP2019.API2.AUNC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the javax.crypto.NullCipher class in non-test classes [OWASP2019.API2.AUNC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of a broken or risky cryptographic algorithm is an unnecessary risk
+that may result in the exposure of sensitive information." [CWE-327]
+
+"The NullCipher class is a class that provides an "identity cipher" -- one that
+does not transform the plaintext. As a consequence, the ciphertext is identical
+to the plaintext." [Java API Specification]
+
+This rule detects when the javax.crypto.NullCipher class is used in non-test
+classes.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The confidentiality of sensitive data may be compromised by the use of
+a broken or risky cryptographic algorithm.
+The integrity of sensitive data may be compromised by the use of
+a broken or risky cryptographic algorithm." [CWE-327]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves data security by helping you avoid using
+the NullCipher class, which does not encrypt the plaintext.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, javax.crypto.NullCipher is used in a non-test class.
+
+public class AUNC {
+
+    public byte[] encodeData(String data) throws Exception {
+        byte[] result;
+
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, new NullCipher())) { // VIOLATION
+            cipherOutputStream.write(data.getBytes());
+            result = outputStream.toByteArray();
+        }
+        return result;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use javax.crypto.NullCipher in production code.
+
+public class AUNC {
+
+    public byte[] encodeDataFixed(String ALGORITHM, SecretKey key, String data) throws Exception {
+        byte[] result;
+        Cipher inputCipher = Cipher.getInstance(ALGORITHM);
+        inputCipher.init(Cipher.ENCRYPT_MODE, key);
+
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, inputCipher)) { // FIXED
+            cipherOutputStream.write(data.getBytes());
+            result = outputStream.toByteArray();
+        }
+        return result;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/7169acb4-4900-4150-b7af-5edee7f0af5d">https://app.hackedu.com/link/7169acb4-4900-4150-b7af-5edee7f0af5d</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-328: Use of Weak Hash
+<A HREF="https://cwe.mitre.org/data/definitions/328.html">https://cwe.mitre.org/data/definitions/328.html</A>
+
+Java API Specification
+<A HREF="https://docs.oracle.com/javase/7/docs/api/javax/crypto/NullCipher.html">https://docs.oracle.com/javase/7/docs/api/javax/crypto/NullCipher.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001860: The application must use mechanisms meeting the requirements of applicable federal laws, Executive Orders, directives, policies, regulations, standards, and guidance for authentication to a cryptographic module
+APSC-DV-002010: The application must implement NSA-approved cryptography to protect classified information in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Provide an appropriate getter and setter method for each field in a form bean [STRUTS.FIELDS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Provide an appropriate getter and setter method for each field in a form bean [STRUTS.FIELDS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will identifies any field that is defined in a class which extends
+"org.apache.struts.action.ActionForm" but does not have both a
+"getter" and "setter" method defined.  Two errors will be reported
+for a field if both the "getter" and "setter" method are missing.  
+This rule ignores fields that are declared as "static" or "final".  
+
+For this rule, a "getter" method is defined as a method that has
+zero parameters and has a name of the form "get&lt;field_name&gt;" (Case is ignored
+for the field name portion of the method name).  A setter method is defined as
+a method that takes one parameter and has a name of the form "set&lt;field_name&gt;"
+(Case is ignored for the field name portion of the method name).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In a Struts form bean, each field must have an appropriate "getter" and 
+"setter" method defined. Failure to define these methods will prevent the
+Struts application from working correctly and lead to errors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.STRUTS;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+
+public final class FIELDS extends ActionForm{
+    
+    private String password = null; //VIOLATION- no getter method for field
+                                    //"password"
+    private String username = null; 
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public String getUsername() {
+        return (this.username);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void reset(ActionMapping mapping,
+        HttpServletRequest request) {
+        setPassword(null);
+        setUsername(null);
+    }
+    
+    public ActionErrors validate()
+    {
+        ActionErrors errors= new ActionErrors();
+        return errors;
+    }
+} 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.STRUTS;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+
+public final class FIELDSFixed extends ActionForm{
+    
+    private String password = null;
+    private String username = null;
+
+    public String getPassword() { //FIXED
+        return (this.password);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public String getUsername() {
+        return (this.username);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void reset(ActionMapping mapping,
+        HttpServletRequest request) {
+        setPassword(null);
+        setUsername(null);
+    }
+    
+    public ActionErrors validate()
+    {
+        ActionErrors errors= new ActionErrors();
+        return errors;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

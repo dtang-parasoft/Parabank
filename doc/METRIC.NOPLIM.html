@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Physical Lines in Methods [METRIC.NOPLIM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Physical Lines in Methods [METRIC.NOPLIM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Number of Physical Lines metrics measures the total number of lines. It covers all
+kinds of lines: source code lines, lines with comments, and blank lines.
+This metric counts the number of physical lines that belong to methods.
+It includes comments that precede the methods.
+
+Anonymous methods belong to the closest regular (nested or not) methods. In the 'Anonymous methods' example part,
+method Bar has 9 lines and no other method is reported:
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+        import java.io.Serializable;
+ 
+        public class Foo
+        {
++1          /**
++1           * comment
++1           */
++1          public void bar()
++1          {
++1
++1          }
+ 
+        }
+
+Total: 7
+
+
+Anonymous methods
+
+Metric  Code 
+
+        public class Foo
+        {
++1          /**
++1           * comment
++1           */
++1          public void bar()
++1          {
++1              Runnable r = () -&gt; {
++1                      // This is a lambda method content
++1              };
++1          }
+        }
+
+Total: 9
+        
+
+</PRE>
+</BODY>
+</HTML>

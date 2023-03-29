@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'https' instead of 'http' for the 'transportReceiver' and 'transportSender' in 'axis2.xml' configuration files [APSC_DV.001750.HTTPS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'https' instead of 'http' for the 'transportReceiver' and 'transportSender' in 'axis2.xml' configuration files [APSC_DV.001750.HTTPS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where the transport sender or transport receiver 
+specified in the 'axis2.xml' configuration file uses "http" instead of "https".  
+A violation will be flagged for each "transportSender" or "transportReceiver" 
+tag where the name attribute is set to "http".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If sensitive data is being transmitted, you should use "https" (or some other 
+secure protocol) instead of "http" since "https" uses SSL to ensure that data is 
+secure.  The "http" protocol does not provide any encryption.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #4: "Encrypt transmission of cardholder data across open, 
+public networks".  Specifically, this rule helps to test for Issue 4.1: "Use 
+strong cryptography and security protocols such as SSL/TLS or IPSEC to safeguard 
+sensitive cardholder data during transmission over open, public networks."
+
+Enforcing this rule will help to protect against the OWASP 2017 Top 10
+application vulnerability "A3-Sensitive Data Exposure".
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+axis2.xml:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;transportReceiver name="http"
+                       class="org.apache.axis2.transport.http.SimpleHTTPServer"&gt;
+        &lt;parameter name="port"&gt;8080&lt;/parameter&gt;
+    &lt;/transportReceiver&gt;
+    ...
+&lt;/axisconfig&gt;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use the "https" protocol instead of "http".
+
+axis2.xml:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;axisconfig name="AxisJava2.0"&gt;
+    ...
+    &lt;transportReceiver name="https"
+                       class="org.apache.axis2.transport.http.SimpleHTTPServer"&gt;
+        &lt;parameter name="port"&gt;8080&lt;/parameter&gt;
+    &lt;/transportReceiver&gt;
+    ...
+&lt;/axisconfig&gt;
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/f0b791d6-ba2f-4d5e-84d1-fadb245c7d8e">https://app.hackedu.com/link/f0b791d6-ba2f-4d5e-84d1-fadb245c7d8e</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+PCI Data Security Standard 3.2
+6.5.4 Insecure communications
+<A HREF="https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf">https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-319: Cleartext Transmission of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/319.html">https://cwe.mitre.org/data/definitions/319.html</A>
+
+"HTTP Transport":
+<A HREF="http://ws.apache.org/axis2/1_4_1/http-transport.html">http://ws.apache.org/axis2/1_4_1/http-transport.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

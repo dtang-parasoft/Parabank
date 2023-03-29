@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "synchronized" blocks instead of making the whole method declaration "synchronized" [TRS.NSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "synchronized" blocks instead of making the whole method declaration "synchronized" [TRS.NSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of the "synchronized" method modifier.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In Java there are two ways of declaring "synchronized" code:
+
+1) Using the "synchronized" method modifier.
+2) Using the "synchronized" statement.
+
+Each way has its advantages and disadvantages. If you decide that the
+"synchronized" modifier shouldn't be used, then you can use this rule to enforce
+it.
+
+Some of the advantages of using the "synchronized" statement over the
+"synchronized" modifier are:
+
+a) It allows more fine-grained selection of the code to synchronize.  Instead
+   of synchronizing a complete method, you can synchronize only the part of the
+   method that really needs synchronization.
+
+b) It allows you to choose the monitor object. The "synchronized" modifier will
+   use the "this" object or the class of the method, so for instance all the 
+   "synchronized" "static" methods of a class will use the same object to 
+   synchronize.  If you instead use a "synchronized" statement, you can choose
+   different monitors for different groups of methods, thus decreasing the
+   probability of deadlocks.
+
+c) It is easier to debug programs which use the "synchronized" statement.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+One of the advantages of using the "synchronized" modifier over the
+"synchronized" statement is that if the whole method needs to be "synchronized",
+then the "synchronized" modifier will produce smaller and slightly faster code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class NSM {
+    synchronized int method (int i) {  // VIOLATION
+        return i - 1;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the "synchronized" modifier from the method and add a "synchronized"
+"{ }" block around the part of the method that needs synchronization.
+
+package examples.rules.trs;
+
+public class NSMFixed {
+    int method (int i) {
+        synchronized (this) {  // FIXED
+            return i - 1;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.116-122 and pp.173-176.
+
+</PRE>
+</BODY>
+</HTML>

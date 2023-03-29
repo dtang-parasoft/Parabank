@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid errors in overriding methods of "java.lang.Object" [PB.CUB.EOOM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid errors in overriding methods of "java.lang.Object" [PB.CUB.EOOM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag instances where it appears the intent was to override a
+method of Object, but there is a mistake in doing so. The rule checks for cases
+where the method name matches an Object method, but differs in the number of
+parameters. The rule also checks for cases where the method name is a
+minor misspelling of an Object method.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Static methods are not checked. This rule does not catch unintended covariants. 
+That is accomplished by the rule PB.CUB.IMC. This rule may report the same 
+violation as PB.TYPO.IMO if the attempted override is spelled incorrectly.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+-check method parameters (default true)
+-check spelling of method name (default true)
+-check "private" methods (default false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Sometimes it is necessary to to override an Object method with a customized 
+version. Elsewhere in the code the generic Object method may be invoked instead,
+which could cause confusing or incorrect behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class EOOM {
+    String _field;
+    public String toString() { //NO VIOLATION
+        return _field;
+    }
+    public boolean equals(Object obj, Object obj2) { //VIOLATION, parameters
+        return obj.toString().equals(obj2.toString);
+    }
+    public int hashcode() { //VIOLATION, spelling
+        return _field.hashCode();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class EOOMFixed {
+    String _field;
+    public String toString() { //NO VIOLATION
+        return _field;
+    }
+    public boolean equals(Object obj) { //Fixed
+        return this.toString().equals(obj.toString);
+    }
+    public int hashCode() { //Fixed
+        return _field.hashCode();
+    }
+}
+}
+
+</PRE>
+</BODY>
+</HTML>

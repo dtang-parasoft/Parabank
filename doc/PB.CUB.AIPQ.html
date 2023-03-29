@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using 'iterator()' with PriorityQueue and PriorityBlockingQueue [PB.CUB.AIPQ]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using 'iterator()' with PriorityQueue and PriorityBlockingQueue [PB.CUB.AIPQ]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to 'iterator()' made by a PriorityQueue or
+PriorityBlockingQueue. A violation is reported for each occurrence.
+See BENEFITS, DRAWBACKS, and EXAMPLE for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The Javadoc for PriorityQueue states that:
+    "iterator() is not guaranteed to traverse the elements of the PriorityQueue
+     in any particular order. If you need ordered traversal, consider using
+     Arrays.sort(pq.toArray())"
+As the queue's purpose is to provide a priority-based ordering for its contents,
+this may be counterintuitive. The same also applies to PriorityBlockingQueue.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Sometimes ordering is not a concern when iterating over a priority queue. For
+example, if some action needs to be performed on each element regardless of
+priority. This rule may flag a false positive in these cases.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+import java.util.*;
+
+public class AIPQ {
+    void checkQueue(PriorityQueue pq) {
+        for (Iterator iter = pq.iterator(); iter.hasNext(); ) { //VIOLATION
+            ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If ordering is important, get an array of the queue contents and then use
+'Arrays.sort()' to sort it. Traverse that array instead of using 'iterator()'.
+
+package examples.rules.pb.cub;
+
+import java.util.*;
+
+public class AIPQFixed {
+    void checkQueue(PriorityQueue pq) {
+        Object[] array = pq.toArray();
+        Arrays.sort(array);
+        for (int i = 0; i &lt; array.length; i++) { //FIXED
+            ...
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Arrays (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Arrays.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/Arrays.html</A>
+
+PriorityQueue (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PriorityQueue.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/PriorityQueue.html</A>
+
+PriorityBlockingQueue (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/PriorityBlockingQueue.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/PriorityBlockingQueue.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid conditional expressions that always evaluate to a constant value [PB.USC.CC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid conditional expressions that always evaluate to a constant value [PB.USC.CC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies conditional expressions that always evaluate to a constant value.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+
+This rule is deprecated and has been replaced by BD.PB.CC.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Since method calls are nondeterministic (due to possible side effects), this 
+rule will not catch many cases involving method calls.  Even when you invoke a 
+method from the same object and pass in the same arguments, it is not guaranteed 
+that the return value will be the same due to side effects.  
+
+This rule can, however, evaluate some expressions involving simple, commonly 
+used method calls which have a limited range of return values.  For instance, it 
+can evaluate some expressions involving calls to 'String.length()' because this 
+method is guaranteed not to have any side effects and must return a value 
+greater than or equal to 0.  It can also evaluate some expressions involving 
+calls to 'InputStream.read()'.  Although this method does have a side effect, it 
+is always guaranteed to return a value between -1 and 255 inclusive.  Thus, some 
+expressions involving this method can be evaluated.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+See BENEFITS.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Scope of checking:
+    -All conditional expressions (default option)
+        -Ignore "static final boolean" constants and "boolean" literals (Default 
+         is "true")
+            -Boolean constants and variables which always evaluate to the same 
+             value are less likely to be misplaced expressions.  Instead, they 
+             could be conditional expressions that are used as flags to toggle 
+             on or off code segments.  These conditional statements should not 
+             be flagged as errors.  This is why expressions consisting of just 
+             a single boolean constant or variable, as well as expressions where
+             a single boolean constant or variable is negated using the "!" 
+             operator, are not checked by default.
+            -If this parameter is enabled, comparisons of a single boolean 
+             constant or variable to "true" or "false" will also not be flagged.
+             This is equivalent to the case of a single boolean constant or 
+             variable and may indicate that the constant or variable is being 
+             used as a flag to toggle code.
+    -Only expressions that have a logical operator (&amp;&amp;, ||, &amp; or |) embedded in 
+     them
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An expression that always evaluates to constant is most likely not the expression the
+developer intended to write.
+
+This rule reports errors for expressions that evaluate to a constant. The expressions 
+should be reviewed and replaced by the correct expression
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+class CC {
+    public void process (int array_size, boolean b1, boolean b2) {
+        if (array_size &lt; 0 &amp;&amp; array_size &gt; 100 ) //VIOLATION: always evaluates to "false"
+            throw new IllegalArgumentException("invalid array size");
+        if (b1== true &amp;&amp; b1== false) //VIOLATION: always evaluates to "false"
+            throw new IllegalArgumentException("invalid b args");
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.usc;
+
+public class CCFixed {
+    public void process (int array_size, boolean b1, boolean b2) {
+        if (array_size &lt; 0 || array_size &gt; 100 ) //FIXED
+            throw new IllegalArgumentException("invalid array size");
+        if (b1== true &amp;&amp; b2== false) //FIXED
+            throw new IllegalArgumentException("invalid b args");
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

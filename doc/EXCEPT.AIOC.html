@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use instanceof in a catch block to check the exception type [EXCEPT.AIOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use instanceof in a catch block to check the exception type [EXCEPT.AIOC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses "instanceof" in a catch block to check the exception type.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Error Handling
+
+In a secure application, all exceptions should be properly handled.  If "instanceof"
+is used to check the exception type, there is a good chance that some exceptions 
+will not be properly handled.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When instanceof is used to identify the exception type in the catch block, some
+unexpected exceptions might actually be caught but get neglected. Consequently,
+each catch block should handle only a single exception type to prevent this problem.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+import java.io.*;
+
+public class AIOC {
+    public void exceptionMethod() {
+        try {
+            //some code that may throw an EOFException or a SocketException
+        } catch (IOException e) {
+            if (e instanceof EOFException) {  //VIOLATION
+                //Handle exception
+            }
+            //notice that if an unexpected SocketException is thrown
+            //it would be caught but would be ignored 
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+import java.io.*;
+import java.net.SocketException;
+
+public class AIOCFixed {
+    public void exceptionMethod() {
+        try {
+            // some code that may throw an EOFException or a SocketException
+        } catch (EOFException e) {   //FIXED
+            // exception handler
+        } catch (SocketException e) {  //FIXED
+            // exception handler
+        }
+    }
+}  
+
+</PRE>
+</BODY>
+</HTML>

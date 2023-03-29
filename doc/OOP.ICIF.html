@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid inner classes in interfaces [OOP.ICIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid inner classes in interfaces [OOP.ICIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies inner classes within interfaces.  An error is 
+reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Declaring an inner class in an interface is confusing and unnecessary.  
+Java bytecode has no concept of inner classes.  Inner classes in 
+interfaces will be translated by the compiler into ordinary classes 
+anyway, so there is no point in declaring them as inner classes.  These 
+classes should be declared as top-level classes instead.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public interface ICIF {
+    class InnerClass {  //VIOLATION
+        //some code
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the inner class to a top-level class.
+
+package examples.rules.oop;
+
+public interface ICIF_Fixed {
+}
+
+class InnerClass {  //FIXED
+    //some code
+}
+
+</PRE>
+</BODY>
+</HTML>

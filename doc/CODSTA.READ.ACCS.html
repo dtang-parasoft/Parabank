@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use complicated conditional expressions in control structures [CODSTA.READ.ACCS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use complicated conditional expressions in control structures [CODSTA.READ.ACCS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies complicated conditional expressions which are used as 
+the conditions in control structures.  By default, the rule only checks the
+conditions of "if" statements.  It can be parameterized to also check the 
+conditions of "for" statements, "do" statements, and "while" statements.  
+With the default settings of the parameters, an error is reported if there 
+are more than 2 operators in an "if" statement.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum number of operators (default value is 2)
+-Check "if" statements (default value is "true")
+-Check "for" statements (default value is "false")
+-Check "do" statements (default value is "false")
+-Check "while" statements (default value is "false")
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule makes code more readable and less error-prone. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class ACCS {
+
+    public void method(int i, int j, int k, int l) {
+
+        if (i &gt; 10 &amp;&amp; j &gt; 11 &amp;&amp; k &gt; 12 &amp;&amp; l &gt; 13) {  // VIOLATION
+
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Create a method to handle the complicated conditional statement.
+
+package examples.rules.codsta.read;
+
+public class ACCSFixed {
+
+    public boolean isConditionTrue(int i, int j, int k, int l) {
+
+        return (i &gt; 10 &amp;&amp; j &gt; 11 &amp;&amp; k &gt; 12 &amp;&amp; l &gt; 13);
+
+    }
+
+    public void method(int i, int j, int k, int l) {
+
+        if (isConditionTrue(i, j, k, l)) {  // FIXED
+    
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

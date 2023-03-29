@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Global Static Analysis [GLOBAL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Global Static Analysis [GLOBAL]
+</STRONG>
+<p>
+<PRE>
+Rules that perform Global Static Analysis.
+
+Jtest first scans all the classes in the
+project to collect global usage information.
+When testing each class, it uses that
+information to check the rules in this category.
+
+Note that by default, user-defined test cases are not
+considered in this analysis. To configure global
+static analysis to check JUnit test classes, enable
+the following Test Configuration option:
+Static&gt; Options&gt; Include user-defined test
+classes in global analysis.
+
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="GLOBAL.ACD.html">Ensure that files do not contain cyclical dependencies [GLOBAL.ACD]</a></code><br>
+<code><a href="GLOBAL.ASI.html">Make methods "static" if they do not use instance class members [GLOBAL.ASI]</a></code><br>
+<code><a href="GLOBAL.AUT.html">Avoid unused "throws" clauses [GLOBAL.AUT]</a></code><br>
+<code><a href="GLOBAL.DPAC.html">Declare "package-private" types as inaccessible as possible [GLOBAL.DPAC]</a></code><br>
+<code><a href="GLOBAL.DPAF.html">Declare package-private fields as inaccessible as possible [GLOBAL.DPAF]</a></code><br>
+<code><a href="GLOBAL.DPAM.html">Declare package-private methods as inaccessible as possible [GLOBAL.DPAM]</a></code><br>
+<code><a href="GLOBAL.DPPC.html">Declare "public/protected" types as inaccessible as possible [GLOBAL.DPPC]</a></code><br>
+<code><a href="GLOBAL.DPPF.html">Declare "public/protected" fields as inaccessible as possible [GLOBAL.DPPF]</a></code><br>
+<code><a href="GLOBAL.DPPM.html">Declare "public/protected" methods as inaccessible as possible [GLOBAL.DPPM]</a></code><br>
+<code><a href="GLOBAL.NIE.html">Avoid interfaces which are never implemented and "abstract" classes which are never extended [GLOBAL.NIE]</a></code><br>
+<code><a href="GLOBAL.SF.html">Declare non-private fields "final" if they are read-only [GLOBAL.SF]</a></code><br>
+<code><a href="GLOBAL.SPAC.html">Declare a package-private "class" "final" if it is not subclassed [GLOBAL.SPAC]</a></code><br>
+<code><a href="GLOBAL.SPAM.html">Declare a package-private method "final" if it is not overridden [GLOBAL.SPAM]</a></code><br>
+<code><a href="GLOBAL.SPPC.html">Declare a "public/protected" "class" "final" if it is not subclassed [GLOBAL.SPPC]</a></code><br>
+<code><a href="GLOBAL.SPPM.html">Declare a "public/protected" method "final" if it is not overridden [GLOBAL.SPPM]</a></code><br>
+<code><a href="GLOBAL.UCC.html">Ensure correct constructor declarations in utility classes [GLOBAL.UCC]</a></code><br>
+<code><a href="GLOBAL.UEC.html">Avoid globally unused enum constants [GLOBAL.UEC]</a></code><br>
+<code><a href="GLOBAL.UPAC.html">Avoid globally unused package-private types [GLOBAL.UPAC]</a></code><br>
+<code><a href="GLOBAL.UPAF.html">Avoid globally unused package-private fields [GLOBAL.UPAF]</a></code><br>
+<code><a href="GLOBAL.UPAM.html">Avoid globally unused package-private methods [GLOBAL.UPAM]</a></code><br>
+<code><a href="GLOBAL.UPPC.html">Avoid globally unused "public/protected" types [GLOBAL.UPPC]</a></code><br>
+<code><a href="GLOBAL.UPPF.html">Avoid globally unused "public/protected" fields [GLOBAL.UPPF]</a></code><br>
+<code><a href="GLOBAL.UPPM.html">Avoid globally unused "public/protected" methods [GLOBAL.UPPM]</a></code><br>
+</BODY>
+</HTML>

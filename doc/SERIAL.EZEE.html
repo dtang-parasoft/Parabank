@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implement Externalizable instead of Serializable [SERIAL.EZEE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implement Externalizable instead of Serializable [SERIAL.EZEE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies any class that implements 'Serializable,' and suggests that
+it implement Externalizable.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Having more control over the data serialized by an object can prevent mistakes
+made by inheriting writeReplace or writeObject methods.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Implementing Externalizable forces the developer to implement writeExternal,
+which has the most precedence when writing data to a serialized object.  This
+means that the writeExternal method defined in the class will be used when
+serializing objects, instead of any writeReplace or writeObject methods that
+have been defined.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.Serializable;
+
+public class EZEE implements Serializable{//VIOLATION
+    private static final long serialVersionUID = 13;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+public class EZEEFixed implements Externalizable{//FIXED
+    private static final long serialVersionUID = 13;
+    public void readExternal(ObjectInput in) throws IOException, 
+        ClassNotFoundException {   }
+    public void writeExternal(ObjectOutput out) throws IOException  {   }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8-2">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8-2</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,255 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against log forging [OWASP2019.API10.TDLOG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against log forging [OWASP2019.API10.TDLOG]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases of log forging when possibly tainted
+data is written to the log.
+
+Depending on the nature of the application, the log may be reviewed 
+manually or with a tool that automatically culls the logs for 
+important events or trending information. Tainted data that is written to the 
+log without proper validation may change the log format, break the 
+automated log parser, or cover an attacker's tracks.
+
+This rule supports the following logging APIs:
+   * log4j (<A HREF="http://logging.apache.org/log4j/)">http://logging.apache.org/log4j/)</A>
+   * logback (<A HREF="http://logback.qos.ch/)">http://logback.qos.ch/)</A>
+   * SLF4J (<A HREF="http://www.slf4j.org/)">http://www.slf4j.org/)</A>
+   * java.util.logging (<A HREF="https://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html)">https://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html)</A>
+   * Commons Logging (<A HREF="http://commons.apache.org/logging/)">http://commons.apache.org/logging/)</A>
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Input-Based Attacks
+
+Writing tainted user data to a log can allow an attacker to forge log entries or inject malicious content into the logs.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Servlet requests
+   * Files
+   * Pipes
+   * Return values of remote methods
+   * Reflection methods
+   * Environment variables and system properties
+   * Spring environment properties
+   * JMS (Java Message Service)
+   * Database
+   * Stream-oriented APIs (streams, readers and channels)
+   * Console
+   * GUI controls
+   * Parameters of entry point methods
+   * Parameters of remote methods
+   * Native methods
+   * Non-validating Struts forms
+   * Network
+   * Sockets
+   * Spring http requests
+
+The "Validating methods" parameter allows you to specify methods that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating methods is called. 
+Fill in the following columns to configure a validating method and specify
+the data it affects.
+- "Enabled" - enables or disables the validating method. If disabled, the rule
+    does not consider the method to be a validating method.
+- "Fully qualified type name (wildcard)" - specifies the fully qualified name
+    of the type that declares the method. You can use "*" for a method declared
+    in any type.
+- "Method name (wildcard)" - specifies the name of the method.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to methods with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance methods.
+- "'this' object is validated" - if enabled,  the method cleans the object it
+    is called on.
+- "Returns validated data" - if enabled, the method cleans its return value.
+- "Validated parameters" - specifies which method parameters are cleaned by
+    the method. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all method parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents attackers from forging log entries or injecting malicious content into the logs.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this example, user-provided data is used for visitor logging.
+Attacker can forge a log by passing the string "Attacker%0a%0aINFO:+Your+log+is+forged".
+
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+
+public class Example
+{
+    private final static Logger _log = Logger.getLogger(Example.class.getName());
+
+    public void printUser(HttpServletRequest request)
+    {
+        String user = request.getParameter("user");
+        _log.warning("User visited: " + user); // VIOLATION
+    }
+}
+	
+The result is following:
+
+WARNING: User visited: Attacker
+
+INFO: Your log is forged
+
+An attacker can use the same approach to insert arbitrary log entries.	
+	
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Validate data prior to its usage:
+
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+
+public class Repair
+{
+    private final static Logger _log = Logger.getLogger(Repair.class.getName());
+
+    public void printUser(HttpServletRequest request)
+    {
+        String user = validate(request.getParameter("user"));
+        _log.warning("User visited: " + user); // NO VIOLATION
+    }
+
+    public static String validate(Object obj)
+    {
+        // some data verification
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Introduction to Injection Attacks
+Video: <A HREF="https://vimeo.com/262069083">https://vimeo.com/262069083</A>
+PDF: <A HREF="http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf">http://research.cs.wisc.edu/mist/SoftwareSecurityCourse/Chapters/3_8-Intro-to-Injections.pdf</A>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/05545df0-ded8-442a-a50b-8e0038e97538">https://app.hackedu.com/link/05545df0-ded8-442a-a50b-8e0038e97538</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A03:2021 - Injection
+<A HREF="https://owasp.org/Top10/A03_2021-Injection/">https://owasp.org/Top10/A03_2021-Injection/</A>
+
+OWASP Top 10 2017 (A1-Injection):
+<A HREF="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html">https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html</A>
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+CWE-117: Improper Output Neutralization for Logs
+<A HREF="https://cwe.mitre.org/data/definitions/117.html">https://cwe.mitre.org/data/definitions/117.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+IDS03-J. Do not log unsanitized user input
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/IDS03-J.+Do+not+log+unsanitized+user+input">https://wiki.sei.cmu.edu/confluence/display/java/IDS03-J.+Do+not+log+unsanitized+user+input</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001290: The application must protect audit information from unauthorized modification.
+APSC-DV-001300: The application must protect audit information from unauthorized deletion.
+APSC-DV-001460: An application vulnerability assessment must be conducted.
+
+Tags: OWASP, PCI-DSS, CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

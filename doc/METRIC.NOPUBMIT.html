@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Public Members of Types [METRIC.NOPUBMIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Public Members of Types [METRIC.NOPUBMIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The following metric count the number of public members of types.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+
+        public class Foo
+        {
++1          public int bar;
+            protected int _qux;
+            private int _baz;
+ 
++1          public Foo() { /* .. */ }
+ 
++1          public void garply() { }
+            }
+ 
+            enum Plugh
+            {
++3              Foo, Bar, Baz;
+            }
+        }
+
+Total: 6
+
+</PRE>
+</BODY>
+</HTML>

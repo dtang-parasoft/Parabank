@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use sockets in web components [CWE.246.SS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use sockets in web components [CWE.246.SS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Web components should avoid usinge sockets.  This rule will flag a violation for
+each instantiation of "java.net.Socket", "java.net.ServerSocket", or any of
+their subclasses from a web component. A class or interface is considered a web
+component if it extends or implements a type from the "javax.servlet" package.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+The security policy is likely to be violated if a web component uses sockets,
+as all communication with a Web component, including authentication and
+authorization requests, is supposed to be routed through the Web container  and
+its method- and role-based authorization mechanisms.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to look for socket usage (default "2")
+    This parameter allows for indirect checking of socket usage. Specifying a
+    value of "1" will check only for direct usage of a socket. A value of "2"
+    will check if any of the methods called from the web component use a socket,
+    and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+-Check Sockets (default true)
+    Enabling this parameter will check "java.net.Socket" and its subclasses.
+
+-Check ServerSockets (default true)
+    Enabling this parameter will check "java.net.ServerSocket" and its
+    subclasses.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Although Web components are server objects, all inbound communication must be 
+routed through the Web container. If a Web component were to become a server 
+via listen and accept operations, it would interfere with the objective of 
+being a server for Web client requests. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.servlet.*;
+
+public class SS implements Servlet {
+    public void testMethodOne() {
+        try {
+            ServerSocket ss = new ServerSocket(); //VIOLATION
+        } catch (Exception e) {
+        }
+    }
+    ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use ServerSockets in web components.
+
+package examples.rules.security.wsc;
+
+import javax.servlet.*;
+
+public class SSFixed implements Servlet {
+    public void testMethodOne() {
+                                    //FIXED
+    }
+    ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-246: J2EE Bad Practices: Direct Use of Sockets
+<A HREF="https://cwe.mitre.org/data/definitions/246.html">https://cwe.mitre.org/data/definitions/246.html</A>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+</PRE>
+</BODY>
+</HTML>

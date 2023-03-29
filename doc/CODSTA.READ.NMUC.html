@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare never-modified collections as "unmodifiable" for clarity [CODSTA.READ.NMUC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare never-modified collections as "unmodifiable" for clarity [CODSTA.READ.NMUC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation when a "private" "final" Collection or Map field
+is never modified beyond initialization. By wrapping it with an "unmodifiable"
+"java.util.Collections" method readability is improved, however there may be a
+cost in performance. See BENEFITS and DRAWBACKS for more information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If the field is returned from a function or passed to a method then no violation
+is flagged, as it may be modified elsewhere.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a field is wrapped with an "unmodifiable" method from "java.util.Collections"
+then readability is improved as the purpose of the collections is more apparent.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule may have effects on performance.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class NMUC {
+    private final List POSSIBLE_VALUES = getPossibleValues(); //VIOLATION
+
+    boolean isPossibleValue(Object o) {
+        return POSSIBLE_VALUES.contains(o);
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class NMUCFixed {
+    private final List POSSIBLE_VALUES =
+        Collections.unmodifiableList(getPossibleValues()); //FIXED
+
+    boolean isPossibleValue(Object o) {
+        return POSSIBLE_VALUES.contains(o);
+    }
+    ...
+}
+
+</PRE>
+</BODY>
+</HTML>

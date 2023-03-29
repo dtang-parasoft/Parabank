@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not insert non-Javadoc comments between Javadoc comments and declarations [JAVADOC.JNJD]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not insert non-Javadoc comments between Javadoc comments and declarations [JAVADOC.JNJD]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-Javadoc comments between Javadoc comments and declarations.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Inserting a non-Javadoc comment on top of a declaration which already has a 
+Javadoc comment could be confusing because these non-Javadoc comments could easily be
+misinterpreted as a part of the Javadoc comment. However, these comments 
+would not be included when auto-generating the API documents.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class JNJD {
+
+    /**
+     * setter method.
+     * @param id1 
+     * @author ParaSoft
+     */ 
+     // Note: .... &lt;---- VIOLATION
+    public void setId (String id) {
+        _id = id;
+    }
+    private String _id;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package exmaples.rules.javadoc;
+
+public class JNJDFixed {
+
+    /** 
+     * setter method.
+     * @param id is set as the new id.
+     * @author ParaSoft
+     *
+     * Note: .... &lt;---- FIXED
+     */ 
+    public void setId (String id) {
+        _id = id;
+    }
+    private String _id;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

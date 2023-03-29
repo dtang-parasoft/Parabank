@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Redeclare a class with only "abstract" methods and "static final" fields as an "interface" [OOP.ASFI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Redeclare a class with only "abstract" methods and "static final" fields as an "interface" [OOP.ASFI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of "abstract" classes that only contain method signatures and
+"static" "final" fields. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+CLASS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-ignore classes with non-public members
+    Classes with any private or protected members will not be flagged.
+    Classes with default accessibility will still be flagged as the 
+    accessibility may have been mistakingly forgotten.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+These classes should be declared as "interface"s. The only difference
+between these classes and "interface"s is that other classes can 
+"extend" a single class, but they can "implement" multiple interfaces.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The use of "abstract" classes in place of interfaces could be part of a
+policy to avoid multiple inheritance.  However, in most cases, programming to an
+interface is recommended.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public abstract class ASFI {  // VIOLATION
+    abstract void method();
+    final static String ID = "final static string";
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace "abstract class" with "interface".
+
+package examples.rules.oop;
+
+public interface ASFIFixed {  // FIXED
+    void method();
+    String ID = "MISC_ASFI";  // No need for "final static", it is implied
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Nigel Warren, Philip Bishop: "Java in Practice - Design Styles and Idioms
+for Effective Java".  Addison-Wesley, 1999. pp.26-29
+
+</PRE>
+</BODY>
+</HTML>

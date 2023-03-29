@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Present "import" statements in alphabetical order [CODSTA.ORG.ORIMP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Present "import" statements in alphabetical order [CODSTA.ORG.ORIMP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies improperly-ordered "import" statements. An error is 
+reported when "import" statements are not presented in correct order.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+FILE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Lower case letters should come before upper case letters
+    -Default is "false".
+    -The default lexicographic ordering is for upper case letters to come 
+     before lower case letters.  However, some people prefer to have lower 
+     case letters come before upper case letters.  If you prefer to swap the
+     default ordering for lower case and upper case letters, you should 
+     enable this parameter.  
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes code easier to read and less error-prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.org;
+
+import java.util.Vector;
+import java.util.Stack;  // VIOLATION
+
+public class ORIMP {
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Reorder the import statements.
+
+package examples.rules.codsta.org;
+
+import java.util.Stack;
+import java.util.Vector; // FIXED
+
+public class ORIMPFixed {
+}
+
+</PRE>
+</BODY>
+</HTML>

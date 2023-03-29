@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always include a description of whether or not a method can return null in the Javadoc [JAVADOC.CRN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always include a description of whether or not a method can return null in the Javadoc [JAVADOC.CRN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Each method should contain a Javadoc comment which describes whether or not null
+is a possible return value from the method.  This rule will flag a violation for
+each method declaration which has a non-primitive return type and which does not
+contain a Javadoc comment with one of the following:
+
+1. an '@post' tag with either '$result != null' or '$result == null' in its 
+body
+2. an '@return' tag with '&lt;code&gt;null&lt;/code&gt;' in its body 
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Use parent method javadoc for @Override methods with no javadoc
+    Default false.  Methods that have an @Override annotation and have no
+    javadoc will use the javadoc of the method that they override.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Clearly documenting whether or not a method has null as a possible return value
+will help programmers decide whether they need to check the return value from
+the method before using it.  It is also essential to follow this rule if you
+want to use the rule PB.MCRN to catch possible NullPointerExceptions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class CRN {
+    /**
+     * method getValue  //VIOLATION
+     */
+    private String getValue(int i) {
+        String s = null;
+        if (i &lt; 0) {
+            return "s";
+        }
+        return s;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Include an '@return' or '@post' Javadoc tag for each method which describes
+whether the method can return null as detailed in the DESCRIPTION section.
+
+package examples.rules.javadoc;
+
+public class CRNFixed {
+    /**
+     * method getValue
+     * 
+     * @return the String "s", or &lt;code&gt;null&lt;/code&gt; if the number passed  //FIXED 
+     *         in is &gt;= 0
+     */
+    private String getValue(int i) {
+        String s = null;
+        if (i &lt; 0) {
+            return "s";
+        }
+        return s;
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

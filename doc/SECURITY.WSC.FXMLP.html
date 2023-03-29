@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that Secure Processing is used [SECURITY.WSC.FXMLP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that Secure Processing is used [SECURITY.WSC.FXMLP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies instantiations of certain xml text builders that do not 
+explicitly set the XMLConstants.FEATURE_SECURE_PROCESSING property to true.
+The specified classes can be changed in the parameters.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+See benefits section.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-List of classes to check
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+XMLConstants.FEATURE_SECURE_PROCESSING can prevent DDOS attacks and set limits
+on XML constructs.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
+public class FXMLP {
+    private void method() {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();//VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+     public class FXMLPFixed {
+        private void method() throws ParserConfigurationException {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature("<A HREF="http://javax.xml.xmlconstants/feature/secure-processing">http://javax.xml.xmlconstants/feature/secure-processing</A>",true);//FIXED
+        }
+    }
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#1-1">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#1-1</A>
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#3-8">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#3-8</A>
+
+</PRE>
+</BODY>
+</HTML>

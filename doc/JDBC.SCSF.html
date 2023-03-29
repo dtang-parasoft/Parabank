@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not store database connection objects in "static" fields [JDBC.SCSF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not store database connection objects in "static" fields [JDBC.SCSF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+According to the J2EE specification, objects of type "java.sql.Connection" should not be stored in
+"static" fields.  This rule will flag a violation for each "static" field of type "java.sql.
+Connection".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Objects of type "java.sql.Connection" should not be stored in "static" fields because these objects 
+should only be associated with one transaction at a time.  Storing connections in "static" fields 
+makes it easier for them to be shared by different transactions in different threads.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class SCSF {
+    public static Connection _conn;  //VIOLATION
+    
+    public SCSF() throws SQLException {
+        _conn= DriverManager.getConnection( "jdbc:myDriver:wombat", "login", "password");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The simplest fix is to just make the field an instance field instead of a "static" field.
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class SCSFFixed {
+    public Connection _conn;  //FIXED
+    
+    public SCSFFixed() throws SQLException {
+        _conn= DriverManager.getConnection( "jdbc:myDriver:wombat", "login", "password");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 4.2.3 of the J2EE specification (<A HREF="http://java.cnam.fr/iagl/biblio/spec/j2ee-1_4-fr-spec.pdf)">http://java.cnam.fr/iagl/biblio/spec/j2ee-1_4-fr-spec.pdf)</A>
+
+</PRE>
+</BODY>
+</HTML>

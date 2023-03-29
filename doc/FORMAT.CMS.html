@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place a single space character or no space character after type casting [FORMAT.CMS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place a single space character or no space character after type casting [FORMAT.CMS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is a parameterized rule that identifies either 1) code that
+does not use at least one space after type casting or 2) code that uses
+space after type casting. The requirement enforced depends on the 
+rule parameters. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-One space after type casting (enabled by default)
+-No space after type casting
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If all team members follow the same formatting style, it will be easier for each
+team member to read and understand the code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.format;
+
+import java.util.*;
+
+public class CMS {
+    private Vector table;
+    public CMS () {
+        table = new Vector();
+    }
+
+    public void add (String s) {
+        table.addElement(s);
+    }
+
+    public String get () {
+        String s = (String)table.remove(0);  // VIOLATION
+        return s;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add a space after (String).
+
+package examples.rules.format;
+
+import java.util.*;
+
+public class CMSFixed {
+    private Vector table;
+    public CMSFixed () {
+        table = new Vector();
+    }
+
+    public void add (String s) {
+        table.addElement(s);
+    }
+
+    public String get () {
+        String s = (String) table.remove(0);  // FIXED
+        return s;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#682">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#682</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused values [CWE.563.VOVR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused values [CWE.563.VOVR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a local variable is assigned with a value that is never
+subsequently read because either:
+- variable is unused, i.e. there is no possible path on which the variable is
+  subsequently used, or
+- value is overwritten, i.e. the variable is always assigned a new value before
+  it is read
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not report violations:
+- on declarations of final variables of primitive or String type
+- when null is assigned to a reference
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"This weakness could be an indication of a bug in the program or a deprecated
+variable that was not removed and is an indication of poor quality. This could
+lead to further bugs and the introduction of weaknesses." [CWE-563]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+"Report overwritten values on primitive type variable declarations": If this
+parameter is enabled, the rule triggers on declarations of primitive type
+variables if the variables are initialized with values that are never
+subsequently used, because they are overwritten on all paths where they are
+used. This parameter is disabled by default.
+
+SEE ALSO
+BD.PB.POVR
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid unused values to improve code quality and security.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is sample code that triggers a violation:
+
+public abstract class Example
+{
+    abstract int fun1();
+
+    abstract int fun2();
+
+    int fun(int a)
+    {
+        int b;
+        if (a &gt; 0) {
+            b = fun1(); // VIOLATION
+        }
+        b = fun2();
+        return b;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+public abstract class Repair
+{
+    abstract int fun1();
+
+    abstract int fun2();
+
+    int fun(int a)
+    {
+        if (a &gt; 0) {
+            return fun1();
+        }
+        return fun2();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-563: Assignment to Variable without Use
+<A HREF="https://cwe.mitre.org/data/definitions/563.html">https://cwe.mitre.org/data/definitions/563.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC56-J. Detect and remove superfluous code and values
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC56-J.+Detect+and+remove+superfluous+code+and+values">https://wiki.sei.cmu.edu/confluence/display/java/MSC56-J.+Detect+and+remove+superfluous+code+and+values</A>
+
+Tags: CWE, CERT
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+@deprecates UC.DEAD
+
+
+</PRE>
+</BODY>
+</HTML>

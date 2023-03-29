@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "static" collections or maps; they can grow without bounds [GC.STV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "static" collections or maps; they can grow without bounds [GC.STV]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that uses static collection or map fields.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule ignores "private" "static" collections which are only added to from
+static initializer blocks as they cannot grow in size. This rule also ignores
+immutable or non-growable collections.
+This rule would ignore 'WeakHashMap'. From 'WeakHashMap' documentation: 
+"the presence of a mapping for a given key will not prevent the key from being discarded by
+the garbage collector, that is, made finalizable, finalized, and then reclaimed. When a key
+has been discarded its entry is effectively removed from the map, so this class behaves somewhat
+differently than other Map implementations."
+
+'WeakHashMap' would not have the same memory leak problem as other Maps might have.
+ 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Static collection objects (i.e. Vector, Hashtable, etc) can hold
+large numbers of objects, making them candidates for memory leaks.  How can
+Java have memory leaks?  If you put a short-lived object into a "static"
+collection, that object will be referenced by the collection for the life of
+the program if you forget to remove the object from the collection when you are
+done with the object.  If you have already removed all other references to the
+object, it can be difficult to see that it is still referenced by the
+collection.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+An application might need to use an unknown and possibly
+unbounded number of objects.  Often though, this can and should be avoided
+because memory exhaustion can drastically reduce the speed of the program.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.gc;
+
+import java.util.Vector;
+
+public class STV {
+    private static final Vector vector1 = new Vector(); //VIOLATION
+    private static final Vector vector2 = new Vector(); //VIOLATION
+    
+    void initVector() {
+        vector1.add("a");
+        vector1.add("b");
+        vector1.add("c");
+    }
+
+    void addToVector () {
+        Object o = new Object ();
+        vector2.add (o); //this temporary object will never be freed
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the static variable is necessary, attempt to initialize within a static
+block. This ensures the variable cannot grow beyond a certain size.
+If this is not possible, consider using an instance field instead.
+
+package examples.rules.gc;
+
+import java.util.Vector;
+
+public class STVFixed {
+    private static final Vector vector1 = new Vector(); //FIXED
+    private final Vector vector2 = new Vector(); //FIXED
+    
+    static {
+        vector1.add("a");
+        vector1.add("b");
+        vector1.add("c");
+    }
+
+    void addToVector () {
+        Object o = new Object();
+        vector2.add(o);
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

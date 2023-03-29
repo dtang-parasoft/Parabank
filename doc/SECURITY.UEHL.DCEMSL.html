@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid untrusted input when logging messages with Seam Logging API [SECURITY.UEHL.DCEMSL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid untrusted input when logging messages with Seam Logging API [SECURITY.UEHL.DCEMSL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The software constructs all or part of a code segment using
+externally-influenced input from an upstream component, but
+it does not neutralize or incorrectly neutralizes special elements
+that could modify the syntax or behavior of the intended code
+segment." [CWE-94]
+
+Logging messages with JBoss Seam Logging API may potentially lead to executing
+untrusted code and result in security breaches. For this reason, you should
+avoid string concatenation and untrusted input in logged messages by using
+expressions that resolve to strings via interpolation.
+
+This rule can identify when JBoss Seam Logging API is used in code to log
+messages that may enable an attacker to execute arbitrary code.
+
+The rule detects when one of the following methods takes a dangerous argument
+and is called on an object of the org.jboss.seam.log.Log class:
+- debug()
+- warn()
+- info()
+- fatal()
+- trace()
+- error()
+
+The rule assumes that a dangerous argument is one of the following:
+- A concatenated string.
+- A local variable of type String that is not declared as 'final' and is not
+  initialized with a value considered to be secure.
+- A class field of type String that is not declared as 'static'. You can
+  parameterize the rule to assume that class fields are secure and can be
+  used for logging messages (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When software allows a user's input to contain code syntax, it might
+be possible for an attacker to craft the code in such a way that it will
+alter the intended control flow of the software. Such an alteration
+could lead to arbitrary code execution." [CWE-94]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Consider class fields to be secure (disabled by default)
+	With this parameter enabled, the rule assumes that class fields are
+	a secure source of messages.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid code injection when logging messages with JBoss Seam
+Logging API (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, two strings are concatenated to form the logged
+message. 
+
+package examples.rules.security.uehl;
+
+public class DCEMSL
+{
+    static Log log = Logging.getLog(DCEMSL.class);
+    void testMethod(Person person)
+    {
+        //do sth
+        log.info("Transaction for  " + person.getName()); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use an expression that will be resolved to a string via
+interpolation.
+
+package examples.rules.security.uehl;
+
+public class DCEMSLFixed
+{
+    static Log log = Logging.getLog(DCEMSLFixed.class);
+    void testMethod(Person person)
+    {
+        //do sth
+        log.info("Transaction for #0", person.getName()); //OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-94: Improper Control of Generation of Code ('Code Injection')
+<A HREF="https://cwe.mitre.org/data/definitions/94.html">https://cwe.mitre.org/data/definitions/94.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001290: The application must protect audit information from unauthorized modification
+APSC-DV-001300: The application must protect audit information from unauthorized deletion
+
+PCI Data Security Standard 4.0
+6.2.4.1 Injection attacks
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Defend against partially initialized instances of non-final classes [SECURITY.WSC.INIVF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Defend against partially initialized instances of non-final classes [SECURITY.WSC.INIVF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies mutable classes that do not have initializer flags at the
+end of their constructors.  It can also identify initializer flags that are not
+volatile.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A mutable class is one in which an object can be changed once it is created.  
+Malicious subclasses that override the Object.finalize method can resurrect 
+objects even if an exception was thrown from the constructor. Low-level classes 
+with constructors explicitly throwing a java.security.SecurityException are 
+likely to have security issues.  Putting a flag at the end of the constructor 
+allows the user to check whether a given instance has been fully initialized, 
+before any operations with that instance are completed.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+If an instance was only partially initialized, it should not be able to be used or
+operated on.  Errors can be created which could expose secure data.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Regular expression matching initializer flags(default ".*init.*")
+-Ensure flag is volatile (default on)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Refer to security relevance section.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class INIVF {
+    private  boolean initialized;
+    
+    public INIVF(){   
+        this.initialized = true; //VIOLATION
+    } 
+    
+    public INIVF(int num){ }//VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class INIVFFixed {
+    private volatile boolean initialized;
+    
+    public INIVFFixed(){   
+        this.initialized = true; //FIXED
+    } 
+    
+    public INIVFFixed(int num){ 
+        this.initialized = true; //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#7-3">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#7-3</A>
+
+</PRE>
+</BODY>
+</HTML>

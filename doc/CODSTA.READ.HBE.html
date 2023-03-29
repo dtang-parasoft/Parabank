@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using Hexadecimal binary exponents [CODSTA.READ.HBE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using Hexadecimal binary exponents [CODSTA.READ.HBE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the use of hexadecimal binary exponents for hexadecimal
+floating-point literals.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only works on Java 5 source code as this new syntax was introduced in
+JLS, 3rd edition.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule enhances readability as use of hexadecimal binary exponents is
+uncommon and may confuse the reader. The "0x" prefix also commonly suggests
+"int" or "long" literals and may cause an unexpected overloaded method to be
+called. Additionally, the hexadecimal floating-point may be a typo.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+public class HBE {
+    public void printNumber() {
+        System.out.println(0x0ABp4); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the hexadecimal value with the corresponding decimal value.
+
+package examples.rules.codsta.read;
+public class HBEFixed {
+    public void printNumber() {
+        System.out.println(2736.0); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JLS, 3rd Edition - Floating-Point Literals
+<A HREF="http://docs.oracle.com/javase/specs/jls/se5.0/html/lexical.html#3.10.2">http://docs.oracle.com/javase/specs/jls/se5.0/html/lexical.html#3.10.2</A>
+
+</PRE>
+</BODY>
+</HTML>

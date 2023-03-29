@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary self computation [PB.TYPO.BW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary self computation [PB.TYPO.BW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies when variable is self computation, e.g x &amp; x,
+x | x, x - x, x / x. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It may be a typo; otherwise, it is unnecessary to do this self 
+computation because the value can be calculated statically.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class BW {
+
+    public int myCalculation(int x) {
+        return x - x - 10;  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove 'x - x' because it won't affect the calculation
+
+package examples.rules.pb.typo;
+
+public class BWFixed {
+ 
+    public int myCalculation(int x) { // unused variable x
+        return -10; // FIXED
+    }
+
+</PRE>
+</BODY>
+</HTML>

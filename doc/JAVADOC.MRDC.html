@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the '@return' Javadoc tag in method Javadoc comments [JAVADOC.MRDC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the '@return' Javadoc tag in method Javadoc comments [JAVADOC.MRDC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-"void" methods that lack a '@return' tag
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-check "public" methods (default as true)
+-check "protected" methods (default as true)
+-check "package-private" methods (default as true)
+-check "private" methods (default as false)
+-Use this tag for overriding and implementing methods: (default is '@see')
+    -If an overriding or implementing method contains this tag, it does not have
+     to have an '@return' tag.
+     
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Commenting your code is a good way to document its behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+public class MRDC {
+    /**
+     * getStr method
+     */
+    public String getStr () {  // VIOLATION
+        return _str; 
+    }
+    private String _str;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Provide the '@return' tag in the Javadoc comments.
+
+package examples.rules.javadoc;
+
+public class MRDCFixed {
+    /**
+     * @return string  // FIXED
+     */
+    public String getStr () {
+        return _str;
+    }
+    private String _str;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JAVADOC.MRDC2
+@deprecated JAVADOC.MRDC3
+@deprecated JAVADOC.MRDC4
+
+</PRE>
+</BODY>
+</HTML>

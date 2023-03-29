@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare "public" constructors in non-public classes [CODSTA.READ.PCTOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare "public" constructors in non-public classes [CODSTA.READ.PCTOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies non-"public" classes with "public" constructors.
+An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will ignore all "inner" and "local" classes.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Constructors for non-"public" classes are not publicly
+accessible.  To avoid confusion, ensure that these constructors 
+do not have the "public" modifier.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.read;
+
+public class PCTOR {   
+
+    class PCTORInner { // package accessible class
+
+        public PCTORInner () {  // VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the "public" modifier on any constructors or add it to the class.
+
+package examples.rules.codsta.read;
+
+public class PCTORFixed {  
+ 
+    class PCTORFixedInner { // package accessible class
+
+        PCTORFixedInner () {  // FIXED
+
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

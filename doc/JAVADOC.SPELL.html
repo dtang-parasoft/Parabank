@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid misspelling words in Javadoc comments and string literals [JAVADOC.SPELL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid misspelling words in Javadoc comments and string literals [JAVADOC.SPELL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies word that is misspelled. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks the following content:
+   - description in Javadoc comment
+   - value of '@param' tag
+   - value of '@exception' tag
+   - value of '@deprecated' tag
+   - value of '@verbose' tag
+   - string literal
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- Ignore length of word less than (default value is 3)
+- Ignore uppercase word (turn on by default)
+- Ignore words in string literal (turn on by default)
+- A list of ignored words (separated with a semicolon)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Misspelled word will make javadoc hard to read and understand.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc; 
+
+/**
+ * Spull class    // VIOLATION
+ */
+public class SPELL { 
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Fixed word 'Spull' to 'Spell'
+
+package examples.rules.javadoc; 
+
+/**
+ * Spell class   // FIXED
+ */
+public class SPELLFixed {
+
+}
+
+</PRE>
+</BODY>
+</HTML>

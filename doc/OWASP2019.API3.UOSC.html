@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the ''getSecure()'' and ''setSecure()'' methods to enforce the use of secure cookies [OWASP2019.API3.UOSC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the ''getSecure()'' and ''setSecure()'' methods to enforce the use of secure cookies [OWASP2019.API3.UOSC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When using variables of the type 'javax.servlet.http.Cookie', it is important
+to make sure that all of the 'Cookie' variables are secure.  To do this, you
+should use the 'setSecure()' and 'getSecure()' methods of 'Cookie'.  This rule
+will flag a violation for each declaration of a local 'Cookie' object where
+neither 'getSecure()' nor 'setSecure()' is called on the object.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Session Management
+
+If a 'Cookie' variable is not secure, there is no guarantee that it will be sent 
+using a secure protocol (such as HTTPS or SSL).
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities, including:
+
+A2-Broken Authentication and Session Management
+A8-Cross-Site Request Forgery (CSRF)
+
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and applications".
+Specifically, this rule helps to test for Issue 6.5.3: "Broken authentication 
+and session management".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE section.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import javax.servlet.http.*;
+
+public class UOSC {
+    public void unsecure(HttpServletRequest req){
+        Cookie c[] = HttpServletRequest.getCookies();
+        Cookie myCookie = c[0];  //VIOLATION- 'setSecure()' never called on
+                                 //Cookie variable
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Call 'setSecure(true)' on the cookie object, or make sure that it is already a
+secure cookie by calling the 'getSecure()' method.
+ 
+package examples.rules.security.wsc;
+
+import javax.servlet.http.*;
+
+public class UOSCFixed {
+    public void secure(HttpServletRequest req){
+        Cookie c[] = HttpServletRequest.getCookies()
+        Cookie myCookie = c[0];
+        myCookie.setSecure(true);  //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+CWE-319: Cleartext Transmission of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/319.html">https://cwe.mitre.org/data/definitions/319.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-352: Cross-Site Request Forgery (CSRF)
+<A HREF="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</A>
+
+CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute
+<A HREF="https://cwe.mitre.org/data/definitions/614.html">https://cwe.mitre.org/data/definitions/614.html</A>
+
+CWE-807: Reliance on Untrusted Inputs in a Security Decision
+<A HREF="https://cwe.mitre.org/data/definitions/807.html">https://cwe.mitre.org/data/definitions/807.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-002220: The application must set the secure flag on session cookies
+
+</PRE>
+</BODY>
+</HTML>

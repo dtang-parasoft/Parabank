@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Allow only certain providers to be specified for the 'Security.addProvider()' method [SECURITY.WSC.BP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Allow only certain providers to be specified for the 'Security.addProvider()' method [SECURITY.WSC.BP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule enforces that only certain providers are passed to the 'addProvider()'
+method of 'java.security.Security'.  By default, the only acceptable providers 
+are the following:
+
+- sun.security.pkcs11.SunPKCS11
+- com.sun.net.ssl.internal.ssl.Provider
+- com.sun.security.sasl.Provider
+- com.sun.rsajca.Provider
+- sun.security.provider.Sun
+- com.sun.crypto.provider.SunJCE
+- sun.security.jgss.SunProvider
+- sun.security.rsa.SunRsaSign
+
+It is recommended that only the cryptography providers which are provided by Sun
+be used.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+Category: Cryptography
+
+If a custom cryptography provider is used, it may implement the cryptography 
+incorrectly, leaving the application vulnerable.  Only trusted cryptography
+providers (like the Sun providers listed above) should be used.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Approved Provider Types (Specify fully qualified names in regular expressions.)
+    -The default entries are:
+        - ^sun\.security\.pkcs11\.SunPKCS11$
+        - ^com\.sun\.net\.ssl\.internal\.ssl\.Provider$
+        - ^com\.sun\.security\.sasl\.Provider$
+        - ^com\.sun\.rsajca\.Provider$
+        - ^sun\.security\.provider\.Sun$
+        - ^com\.sun\.crypto\.provider\.SunJCE$
+        - ^sun\.security\.jgss\.SunProvider$
+        - ^sun\.security\.rsa\.SunRsaSign$
+    
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE section.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.*;
+
+public class BP {
+    public void addProvider() {
+        Security.addProvider(new CustomCrypto());  //VIOLATION
+    }
+}
+
+class CustomCrypto extends Provider{
+    CustomCrypto(){
+        super("",1,"");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use one of the approved providers, such as 'com.sun.crypto.provider.SunJCE', for 
+cryptography.
+
+package examples.rules.security.wsc;
+
+import java.security.*;
+
+public class BP {
+    public void addProvider() {
+        Security.addProvider(new com.sun.crypto.provider.SunJCE());  //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use an object to access "static" fields or methods [OOP.AUO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use an object to access "static" fields or methods [OOP.AUO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Requires that you reference "static" members of a class through the class name.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Allow use of an object to access "static" methods for chained method calls.
+    -Default is false.  If this parameter is turned on, the rule will not flag
+     a violation for chained method calls even if the methods are static 
+     methods.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This improves the code's clarity.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class AUO {
+    public static void staticMethod () {}
+    
+    public void method () {}
+
+    public static void main (String[] args) {
+        AUO object = new AUO ();
+        object.staticMethod ();  // VIOLATION
+        object.method (); 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Access "static" methods and fields through the "class".
+
+package examples.rules.oop;
+
+public class AUOFixed {
+
+    public static void staticMethod () {}
+    
+    public void method () {}
+
+    public static void main (String[] args) {
+        AUOFixed object = new AUOFixed ();
+        AUOFixed.staticMethod ();  // FIXED
+        object.method ();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Section 10.2 of <A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#587">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#587</A>
+
+</PRE>
+</BODY>
+</HTML>

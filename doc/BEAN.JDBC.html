@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use JDBC code in JavaBean classes [BEAN.JDBC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use JDBC code in JavaBean classes [BEAN.JDBC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JDBC code in JavaBean classes. An error is reported
+for each occurrence.
+ 
+JavaBean classes should not include JDBC code nor should they access the
+classes responsible for their construction.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule defines a JavaBean class as a class which implements Serializable, 
+contains a public default constructor, and has a name ending with "Bean". 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It's a best practice to have database connection operations separated 
+from business logic. Since JavaBeans deal with business logic, JDBC code
+should not be embedded in it. Integrating JDBC code into JavaBean classes
+might reduce the portability and reusability of the bean.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.bean;
+
+import java.io.*;
+import java.sql.*;
+
+public class JDBCBean implements Serializable {
+
+    public String getFieldA(String name) throws SQLException {
+	 Connection con = null;  // VIOLATION
+         String result = null;
+	 // create connection and do sql query
+
+         return result;
+    }
+
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.bean;
+
+import java.io.*;
+import java.sql.*;
+
+public class JDBCFixedBean implements Serializable {
+
+    public String getFieldA(String name)  {
+	return DataFactory.getResult(name);  // FIXED
+    }
+}
+
+class DataFactory {
+
+    public static getResult(String name) {
+        Connection con = null;
+        String result = null;
+	try {
+	 // create connection and do sql query here
+	} catch (SQLException e) {
+        } finally {
+	    if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    } 
+}
+
+</PRE>
+</BODY>
+</HTML>

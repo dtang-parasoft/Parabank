@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call the superclass' 'setUp' and 'tearDown' methods in the 'setUp' and 'tearDown' methods of JUnit test classes [JUNIT.CSUPER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call the superclass' 'setUp' and 'tearDown' methods in the 'setUp' and 'tearDown' methods of JUnit test classes [JUNIT.CSUPER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit test classes that do not call the 
+superclass' setup method in the setup method or the superclass' 
+tear-down method in the tear-down method. An error is reported for 
+each occurrence.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule would not flag classes that directly extend 
+'junit.framework.TestCase', as 'setUp' and 'tearDown' methods
+in that class do not do anything.
+
+This rule defines a setup method as any method either called 
+'setUp()' or (for JUnit versions 4.0 and later) any method with 
+the "org.junit.Before" annotation.  Similarly, a tear-down method
+is defined as any method either called 'tearDown()' or (for JUnit 
+versions 4.0 and later) any method with the "org.junit.After" 
+annotation. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The setup method must call the superclass' setup method to 
+ensure that all of the parent test classes' setup methods  are
+performed as well.
+
+The tear-down method must call the superclass' tear-down method to
+ensure that all of the parent test classes' tear-down methods  are
+performed as well.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.TestCase;
+
+public class CSUPER extends TestCase {
+    Object testObj;
+    
+    public void setUp() throws Exception { 
+        //NO VIOLATION: this class directly extends TestCase
+        testObj= new Object();
+    }
+    
+    public void tearDown() throws Exception {
+        //NO VIOLATION: this class directly extends TestCase
+        testObj= null;
+    }
+}
+
+class CSuperSubTest extends CSUPER {
+    Object subTestObject;
+    
+    public void setUp() throws Exception {
+        //VIOLATION, does not call super.setUp() 
+        subTestObject= new Object();
+    }
+    
+    public void tearDown() throws Exception {
+        //VIOLATION, does not call super.tearDown()
+        subTestObject= null;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Call super.setUp() and super.tearDown().
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class CSUPER_Fixed extends TestCase {
+    Object testObj;
+    
+    public void setUp() throws Exception { 
+        //NO VIOLATION: this class directly extends TestCase
+        testObj= new Object();
+    }
+    
+    public void tearDown() throws Exception {
+        //NO VIOLATION: this class directly extends TestCase
+        testObj= null;
+    }
+}
+
+class CSuperSubTest_Fixed extends CSUPER_Fixed {
+    Object subTestObject;
+    
+    public void setUp() throws Exception {
+        super.setUp();  //FIXED
+        subTestObject= new Object();
+    }
+    
+    public void tearDown() throws Exception {
+        try { 
+            subTestObject= null;
+        } finally { 
+            super.tearDown();  //FIXED
+        } 
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit_p.html">http://www.javaworld.com/javaworld/jw-12-2000/jw-1221-junit_p.html</A>
+
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated JUNIT.CISU
+@deprecated JUNIT.CITD
+
+</PRE>
+</BODY>
+</HTML>

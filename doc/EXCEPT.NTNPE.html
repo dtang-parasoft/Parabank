@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not throw 'NullPointerException' [EXCEPT.NTNPE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not throw 'NullPointerException' [EXCEPT.NTNPE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies any code that throws a 'NullPointerException'.
+An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+category: Error handling
+
+Since a "NullPointerException" is a "RuntimeException", Java will not enforce
+that this exception is caught or declared to be thrown.  Therefore, the 
+exception may cause the application to crash and/or a stack trace to be 
+printed which contains implementation details not meant to be seen by the 
+user. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In most cases, a NullPointerException is expected to be thrown by the JVM. 
+Consequently, throwing a NullPointerException would be confusing and 
+should be avoided.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NTNPE {
+    public void myMethod(String arg) throws NullPointerException {
+        if (arg== null)
+            throws new NullPointerException(); //VIOLATION
+        else
+            System.out.println(arg.toUpperCase());
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class NTNPEFixed {
+    public void myMethod(String arg) {
+        if (arg!= null) //FIXED
+            System.out.println(arg.toUpperCase());
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 16:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

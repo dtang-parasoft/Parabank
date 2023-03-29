@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not mix "static" and non-"static" "synchronized" methods [TRS.SNSM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not mix "static" and non-"static" "synchronized" methods [TRS.SNSM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies cases where a class has both "static" and non-"static"
+"synchronized" methods.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A "synchronized" non-"static" method will use the instance of the class as a
+lock object, but a "synchronized" "static" method will use the Class object as
+a lock object. So, it is possible for the two methods two run concurrently,
+when the user may have expected this to not be possible. To alleviate confusion
+and possible bugs, all "synchronized" methods should be either "static" or
+non-"static" when possible.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+There may be performance penalties in making a method "static" or non-"static".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class SNSM { //VIOLATION
+    synchronized void add(Object o) {
+        ...
+    }
+    synchronized static void remove() {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make all "synchronized" methods either "static" or non-"static".
+
+package examples.rules.trs;
+
+public class SNSMFixed { //FIXED
+    synchronized void add(Object o) {
+        ...
+    }
+    synchronized void remove() {
+        ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

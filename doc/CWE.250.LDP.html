@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Limit the number of "AccessController.doPrivileged" calls per class [CWE.250.LDP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Limit the number of "AccessController.doPrivileged" calls per class [CWE.250.LDP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a class contains greater than a user-specified
+number of "AccessController.doPrivileged" calls.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Following this rule can minimize the amount and locations of security of code
+which can reduce code complexity and make it less prone to errors.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Limit the number of 'AccessController.doPrivileged' calls per class to
+ (default 3)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import java.security.ActionController;
+import java.security.PrivilegedAction;
+
+public class LDP {
+    void method() throws Exception {
+        AccessController.doPrivileged(new PAImplementation1());
+        AccessController.doPrivileged(new PAImplementation2());
+        AccessController.doPrivileged(new PAImplementation3());
+        AccessController.doPrivileged(new PAImplementation4());
+    }
+}
+
+class PAImplementation1 implements PrivilegedAction { ... }
+class PAImplementation2 implements PrivilegedAction { ... }
+class PAImplementation3 implements PrivilegedAction { ... }
+class PAImplementation4 implements PrivilegedAction { ... }
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Combine actions if safe and possible or evaluate other refactoring possibilities
+that could reduce code complexity and the number of calls made to
+"AccessController.doPrivileged()".
+
+package examples.rules.security.eab;
+
+import java.security.ActionController;
+import java.security.PrivilegedAction;
+
+public class LDPFixed { //FIXED
+    void method() throws Exception {
+        AccessController.doPrivileged(new PAImplementationCombined());
+    }
+}
+
+class PAImplementationCombined implements PrivilegedAction { ... }
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+2022 CWE Weaknesses On the Cusp
+CWE-269: Improper Privilege Management
+<A HREF="https://cwe.mitre.org/data/definitions/269.html">https://cwe.mitre.org/data/definitions/269.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-250: Execution with Unnecessary Privileges
+<A HREF="https://cwe.mitre.org/data/definitions/250.html">https://cwe.mitre.org/data/definitions/250.html</A>
+
+</PRE>
+</BODY>
+</HTML>

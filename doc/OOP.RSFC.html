@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid referencing a class' subclasses from itself [OOP.RSFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid referencing a class' subclasses from itself [OOP.RSFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A class should contain as few references to its subclasses as possible.  While 
+it is not always possible to eliminate all references to subclasses from a 
+class, there is often a better way to write the code so that a class does not 
+need to reference its subclasses.  This rule will flag a violation for each
+reference to one of a class' subclasses from the body of the class itself.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Referencing the subclasses of a class from the class itself violates a basic 
+principle of object-oriented design.  Whenever possible, classes should be 
+independent of their subclasses.  Keeping classes independent of their 
+subclasses helps to avoid confusion and allows you to take full advantage of the 
+features of an object-oriented programming language.  
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In this simple example, the class "RSFC" contains a method called 'methodA()',
+and the subclasses each contain a method called 'method()'.  'methodA()' is a 
+wrapper which just calls the appropriate version of 'method()' if the calling
+object is an instance of either "RSFC_a" or "RSFC_b".  This code does not make 
+use of method overriding, so the class "RSFC" must reference its subclasses 
+several times. 
+
+package examples.rules.oop;
+
+public class RSFC {
+    public void methodA() {
+        if (this instanceof RSFC_a) {  //VIOLATION
+            ((RSFC_a)this).method();  //VIOLATION
+        } else if (this instanceof RSFC_b) {  //VIOLATION
+            ((RSFC_b)this).method();  //VIOLATION
+        } else {
+            System.out.println("In methodA() for class RSFC");
+        }
+    }
+}
+
+class RSFC_a extends RSFC {
+    public void method() {
+        System.out.println("In method() for class RSFC_a");
+    }
+}
+
+class RSFC_b extends RSFC {
+    public void method() {
+        System.out.println("In method() for class RSFC_b");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The code shown above can be rewritten to take advantage of method overriding
+and eliminate the references to the subclasses from the class "RSFC".  Once the
+name of 'methodA()' is changed to 'method()', the references to the subclasses
+from class "RSFC" become unnecessary. 
+
+package examples.rules.oop;
+
+public class RSFC_Fixed {
+    public void method() {  //FIXED- changed name of method to take advantage of
+                            //overriding so that subclasses do not need to be
+                            //explicitly referenced from this class
+        System.out.println("In method() for class RSFC_Fixed");
+    }
+}
+
+class RSFC_a extends RSFC_Fixed {
+    public void method() {
+        System.out.println("In method() for class RSFC_a");
+    }
+}
+
+class RSFC_b extends RSFC_Fixed {
+    public void method() {
+        System.out.println("In method() for class RSFC_b");
+    }  
+}
+
+</PRE>
+</BODY>
+</HTML>

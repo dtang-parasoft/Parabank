@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Halstead Program Vocabulary [METRIC.HVOCM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Halstead Program Vocabulary [METRIC.HVOCM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric is a Halstead complexity measure. It describes how many 
+elements are needed to implement a method.
+
+The Vocabulary metric is described by following formula:
+
+n = n1 + n2
+
+Where:
+n1 the number of distinct operators
+n2 the number of distinct operands 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.2.2
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+public class Foo
+{
+    // Operators: {} (3x), () (3x), if (2x), &lt;, throw, new, ==, return (2x), *, -
+    // N1=16 (all), n1=10 (distinct)
+    // Operands: long (2x), Factorial (2x), n (5x), ArgumentException,
+    // "Factorial is not defined for negative numbers", 0 (2x), 1 (2x)
+    // N2=15 (all), n2=7 (distinct)
+    // Ignored: () (2x in context of if-statement), ; (3x)
+
+    long Factorial(long n)
+    {
+        if (n &lt; 0)
+        {
+            throw new IllegalArgumentException("Factorial is not defined for negative numbers");
+        }
+
+        if (n == 0)
+        {
+            // By definition, 0! is 1
+            return 1;
+        }
+
+        return n * Factorial(n - 1);
+    }
+}
+
+Metric value: 17
+
+</PRE>
+</BODY>
+</HTML>

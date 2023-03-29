@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enforce number of blank line(s) between major sections [APSC_DV.003215.U2BL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enforce number of blank line(s) between major sections [APSC_DV.003215.U2BL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that does not have the required number of blank lines
+between the following major sections of a compilation unit and class declaration:
+
+sections in compilation unit:
+1) File header.
+2) "package" statement.
+3) "import" statements.
+4) top-level class".
+5) top-level interface.
+6) top-level Enum.
+7) top-level Annotation.
+
+sections in class declaration:
+1) field declarations
+2) method declarations
+3) Member class declarations
+4) Member interface declarations
+5) Enum constant declarations
+6) Annotation member type declarations
+7) Member enum declarations
+8) Member annotation declarations
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Blank lines in compilation unit
+  -A table which allows you to configure the number of blank line(s) for 
+   each major section:
+     1. package statement (default value is 2 blank lines)
+     2. import statements (default value is 2 blank lines)
+     3. top-level classes (default value is 2 blank lines)
+     4. top-level interfaces (default value is 2 blank lines)
+     5. top-level Enum (default value is 2 blank lines)
+     6. top-level Annotation (default value is 2 blank lines)
+  -To skip checking the number of blank lines before a type of section, uncheck 
+   the box next to that section in the "Enforce section?" column.  (By default, 
+   all sections are checked.)
+
+-Blank lines in class declaration
+  -A table which allows you to configure the number of blank line(s) for
+   each major section
+     1. field declarations (default value is 1 blank lines)
+     2. method declarations (default value is 1 blank lines)
+     3. member class declarations (default value is 1 blank lines)
+     4. member interface declarations (default value is 1 blank lines)
+     5. declaration of same kind (default value is 0 blank lines)
+     6. Enum constant declarations (default value is 1 blank lines)
+     7. Annotation member type declarations (default value is 1 blank lines)
+     8. Member enum declarations (default value is 1 blank lines)
+     9. Member annotation declarations (default value is 1 blank lines)
+  -To skip checking the number of blank lines before a type of section, uncheck 
+   the box next to that section in the "Enforce section?" column.  (By default, 
+   all sections are checked.)
+     
+-Check amount of blank lines between consecutive statements (default is false)
+   -If this parameter is enabled, the rule will check that the specified number
+    of blank lines is present between consecutive statements.  Comment lines 
+    immediately preceding a statement are ignored when counting the number of 
+    blank lines before a statement.  If there is a comment line between a 
+    statement and the previous statement that does not immediately precede the
+    statement, no violation will be flagged since it is unclear where the blank
+    lines should go in this case.
+   -Default number of blank lines is 1.
+-Recognize non javadoc comment (default is false)
+   -If this parameter is enabled, non javadoc comments will be treated the same
+    as javadoc comments.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Makes the code more organized and clear.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/*
+ * File header.
+ */
+
+package examples.rules.format;  //  VIOLATION 
+
+import java.util.Vector;  // VIOLATION 
+
+/**  // VIOLATION 
+ * Top class javadoc header.
+ */
+public class U2BL {
+    private String s = "";   // VIOLATION
+    public void method() {  // VIOLATION
+    }
+    
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/*
+ * File header.
+ */
+
+
+package examples.rules.format;  // FIXED
+
+
+import java.util.Vector;  // FIXED
+
+
+/**  // FIXED
+ * Top class javadoc header.
+ */
+public class U2BLFixed {
+    
+    private String s = ""; // FIXED
+    
+    public void method() { // FIXED
+    
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#475">http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html#475</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

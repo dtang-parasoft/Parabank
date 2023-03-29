@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use resources that have been freed [CWE.416.FREE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use resources that have been freed [CWE.416.FREE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects use of resources that have been freed. In particular, a violation is reported
+when a reference to a freed resource is:
+
+   * returned from a function,
+   * passed as a parameter to a function,
+   * used in a comparison operation (==, !=),
+   * dereferenced, or
+   * assigned to a variable/field/array element.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violation when reference to freed resource is compared to null" check box
+unsupresses/suppresses  violations where a reference to a freed resource is compared to null.
+This may be allowed by the coding policy and application design. 
+By default, such violations are not reported.
+
+The "Report violation when reference to freed resource is compared to other references" check box
+unsuppresses/suppresses violations where a references to a freed resource is compared to other
+references. This may be allowed by the coding policy and application design.
+By default, such violations are not reported.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+The types of resources handled by this rule can be viewed and edited in test configuration section:
+Static Analysis -&gt; Flow Analysis Advanced Settings -&gt; Resources
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents strange, often non-deterministic errors related to the use of freed resources.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+import java.io.PrintStream;
+
+public class Example
+{
+    void outputData(PrintStream ps, String data)
+    {
+        // do something
+        ps.print(data);
+        ps.close();
+    }
+
+    void process(PrintStream ps)
+    {
+        // do something
+        outputData(ps, "Some data");
+        ps.print("Some text"); // VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Removing the ps.close() call in the outputData() function repairs the example above.
+
+import java.io.PrintStream;
+
+public class Repair
+{
+    void outputData(PrintStream ps, String data)
+    {
+        // do something
+        ps.print(data);
+    }
+
+    void process(PrintStream ps)
+    {
+        // do something
+        outputData(ps, "Some data");
+        ps.print("Some text"); // NO VIOLATION
+    }
+
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="https://cwe.mitre.org/data/definitions/119.html">https://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-416: Use After Free
+<A HREF="https://cwe.mitre.org/data/definitions/416.html">https://cwe.mitre.org/data/definitions/416.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

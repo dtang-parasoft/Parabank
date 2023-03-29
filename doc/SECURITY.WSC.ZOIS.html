@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Inspect usage of scripting API [SECURITY.WSC.ZOIS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Inspect usage of scripting API [SECURITY.WSC.ZOIS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to ObjectInputStream.defaultReadObject.  It 
+recommends that they be replaced with calls to ObjectInputStream.readFields.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+defaultReadObject can assign arbitrary objects to non-transient fields and does
+not necessarily return.  readFields does not have these problems.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+public class ZOIS {
+    void method2(ObjectInputStream ois) throws IOException, ClassNotFoundException{
+        ois.defaultReadObject();//VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+public class ZOISFixed {
+    void method2(ObjectInputStream ois) throws IOException, ClassNotFoundException{
+        ois.readFields();//FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8-3">http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8-3</A>
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

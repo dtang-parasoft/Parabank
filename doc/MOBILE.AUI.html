@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid declaring "interface" types [MOBILE.AUI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid declaring "interface" types [MOBILE.AUI]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation if the declaring type is "interface".
+
+This rule only applies to Android version 2.1 and older, 2.2 introduces a JIT.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In embedded system, calling method through an "interface" reference will take 
+longer time than calling method through "class" reference
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile;
+
+import java.util.*;
+
+public class AUI {
+
+    public void add(String key, String value) {
+       Map map = new HashMap();  // VIOLATION
+       map.put(key, value);
+       //....
+   }
+       
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+
+package examples.rules.mobile;
+
+import java.util.*;
+
+public class AUIFixed {
+
+    public void add(String key, String value) {
+       HashMap map = new HashMap();  // FIXED
+       map.put(key, value);
+       //....
+   }
+       
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#myths">http://developer.android.com/guide/practices/design/performance.html#myths</A>
+
+</PRE>
+</BODY>
+</HTML>

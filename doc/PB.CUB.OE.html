@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid suspicious octal escapes [PB.CUB.OE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid suspicious octal escapes [PB.CUB.OE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies suspicious octal escapes in String literals. Octal
+escapes are defined as OctalDigit OR OctalDigit OctalDigit 
+OR ZeroToThree OctalDigit OctalDigit, where OctalDigit is 
+[0-7]. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When code includes an octal escape sequence that is followed by a non 
+OctalDigit or an octal escape sequence that is longer than
+3 Digits, the compiler might interpret it differently than the developer
+expects. Restructuring the escape sequence (see example) would not change
+the code semantics; however, would make the code more readable and 
+less confusing. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class OE {
+    public void myMethod() {
+	System.out.println("\218 . Do something"); //VIOLATION
+        //developers might think \218 is an escape sequence;
+        //but actually, it is an escape sequence \21 then followed
+        //by string "8 . Do something"
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class OEFixed {
+    public void myMethod() {
+        System.out.println("\21"+ "8 . Do something"); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

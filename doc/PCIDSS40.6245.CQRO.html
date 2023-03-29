@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use "read-only" AccessMode for Castor queries [PCIDSS40.6245.CQRO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use "read-only" AccessMode for Castor queries [PCIDSS40.6245.CQRO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+ 
+This rule identifies calls to the overloaded method "execute()" made by Castor
+queries (a class implementing "org.exolab.castor.jdo.Query"). A violation is
+flagged if the "execute()" method called does not specify an AccessMode or
+the access mode is not "read-only".
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An AccessMode is considered "read-only" if its name matches "ReadOnly" (case
+insensitive). This allows for the following to be considered valid:
+"Database.READONLY", "Database.ReadOnly", "AccessMode.ReadOnly", etc...
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+
+Calling "execute()" with no AccessMode uses "shared" mode by default. Use of a
+mode other than "read only" allows the query to be written to, which may leave
+the query open to malicious behavior.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Queries execute faster in "read-only" mode.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.bv;
+
+import org.exolab.castor.jdo.PersistenceException;
+import org.exolab.castor.jdo.Query;
+import org.exolab.castor.jdo.QueryResults;
+import org.exolab.castor.mapping.AccessMode;
+
+public class CQRO {
+    QueryResults executeQuery0(Query q) throws PersistenceException {
+        return q.execute(); //VIOLATION
+    }
+    QueryResults executeQuery1(Query q) throws PersistenceException {
+        return q.execute(AccessMode.Shared); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use "read-only" access mode wherever possible.
+
+package examples.rules.security.bv;
+
+import org.exolab.castor.jdo.PersistenceException;
+import org.exolab.castor.jdo.Query;
+import org.exolab.castor.jdo.QueryResults;
+import org.exolab.castor.mapping.AccessMode;
+
+public class CQRO_Fixed {
+    QueryResults executeQuery0(Query q) throws PersistenceException {
+        return q.execute(AccessMode.ReadOnly); //FIXED
+    }
+    QueryResults executeQuery1(Query q) throws PersistenceException {
+        return q.execute(AccessMode.ReadOnly); //FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Cigital Java Security Rulepack # 18 and # 19:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+Query (Castor JavaDoc)
+<A HREF="http://castor.codehaus.org/javadoc/org/exolab/castor/jdo/Query.html">http://castor.codehaus.org/javadoc/org/exolab/castor/jdo/Query.html</A>
+
+AccessMode (Castor JavaDoc)
+<A HREF="http://castor.codehaus.org/javadoc/org/exolab/castor/mapping/AccessMode.html">http://castor.codehaus.org/javadoc/org/exolab/castor/mapping/AccessMode.html</A>
+
+PCI Data Security Standard 4.0
+6.2.4.5 Attacks on access control mechanisms
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

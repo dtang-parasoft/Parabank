@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make all member classes "private" [CWE.668.INNER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make all member classes "private" [CWE.668.INNER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A nested class (also called "inner" or "member" class) is a class that is
+declared within the body of another class or interface. The use of nested
+classes is error-prone, because a nested class has access to the private fields
+of the outer class. If the nested class is declared public, the private fields
+of the outer class can be accessed by any other class within the package. In
+addition, Java bytecode has no concept of a nested class, so the compiler
+transforms a nested class into a top-level class with package-level access to
+the original outer class. This may expose private data to an attacker.
+
+This rule detects nested classes that are not declared as "private".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule may conflict with the rule OPT.ICGA, which enforces changing
+the accessibility of an inner type from "private" to  "package-private". For
+this reason, we recommend that you enable the rule that corresponds best to
+your organization's policy: this rule helps you introduce better precautions to
+minimize the risk of private data leakage, while OPT.ICGA improves code
+efficiency.
+
+This rule does not trigger if a class is nested in an anonymous class, because
+declaring an inner class of an anonymous class as "private" leads to
+compilation errors.
+
+Violations reported by this rule can be fixed in one of the following ways:
+- Refactor the code to transform the inner class into a top-level class. This
+  is the recommended approach, which allows you to avoid confusion regarding
+  accessibility when the compiler transforms the inner class into a top-level
+  class.
+- If you consciously use an inner class, ensure it is declared as "private". 
+  However, this approach may lead to compilation errors if the inner class is
+  extended by another class or classes. For example:
+  
+    public class SecurityInner {
+        protected class A {} //VIOLATION
+    }
+    public class SecurityInner2 extends SecurityInner {
+        private class B extends A {}
+    }
+
+- Alternatively, you can apply package sealing. A package within a sealed JAR
+  requires that all classes in the package originate from that JAR. This
+  prevents an attacker from adding a class to the package to access inner
+  classes. 
+  Note that this alternative approach is not supported by this rule. The rule
+  reports violations even if package sealing is used (you can suppress unwanted
+  violations).
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The Java language system weakens the accessibility of private members of
+an outer class when a nested inner class is present, which can result in
+an information leak." [SEI CERT Oracle Coding Standard for Java]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore "static" member classes (enabled by default)
+    With this parameter  enabled, the rule does not report nested classes that
+	are declared as "static", which are unable to access "private" non-static
+	members of their outer classes. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent exposing sensitive data that may occur when nested
+classes are used in code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class INNER {
+    class INNER_Class {  // VIOLATION
+        void setValue(int i) {
+            _value = i;  // now the "package" can write to this "private" field.
+        }
+    }
+    private int _value;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, make the inner class a top-level class. Alternatively, declare
+the class as "private".
+
+package examples.rules.security.wsc;
+
+public class INNERFixed {
+    private class INNER_Class {  // FIXED
+        void setValue(int i) {
+            _value = i;
+        }
+    }
+    private int _value;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-492: Use of Inner Class Containing Sensitive Data
+<A HREF="https://cwe.mitre.org/data/definitions/492.html">https://cwe.mitre.org/data/definitions/492.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+OBJ08-J. Do not expose private members of an outer class from within a nested class
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/OBJ08-J.+Do+not+expose+private+members+of+an+outer+class+from+within+a+nested+class">https://wiki.sei.cmu.edu/confluence/display/java/OBJ08-J.+Do+not+expose+private+members+of+an+outer+class+from+within+a+nested+class</A>
+
+</PRE>
+</BODY>
+</HTML>

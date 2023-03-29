@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Mark cookies as HttpOnly [CWE.668.SCHTTP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Mark cookies as HttpOnly [CWE.668.SCHTTP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The HttpOnly flag directs compatible browsers to prevent client-side script
+from accessing cookies. Including the HttpOnly flag in the Set-Cookie HTTP
+response header helps mitigate the risk associated with Cross-Site Scripting
+(XSS) where an attacker's script code might attempt to read the contents of
+a cookie and exfiltrate information obtained. When set, browsers that support
+the flag will not reveal the contents of the cookie to a third party via
+client-side script executed via XSS." [CWE-1004]
+
+This rule detects when the setHttpOnly(true) method fails to be called 
+on objects of type javax.servlet.http.Cookie.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The setHttpOnly() method is available since Java Servlet 3.0.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"If the HttpOnly flag is not set, then sensitive information stored in
+the cookie may be exposed to unintended parties.
+If the cookie in question is an authentication cookie, then not setting
+the HttpOnly flag may allow an adversary to steal authentication data
+(e.g., a session ID) and assume the identity of the user." [CWE-1004]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code security by helping you ensure that cookies are
+properly configured against Cross-Site Scripting (XSS) attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, javax.servlet.http.Cookie is not properly configured.
+
+public class SCHTTP {
+
+    void prepareResponse(HttpServletResponse response) {
+        // ...
+        String sessionID = generateSessionId();
+        Cookie c = new Cookie("session_id", sessionID); //VIOLATION
+        response.addCookie(c);
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by configuring the 'HttpOnly' flag.
+
+public class SCHTTP {
+
+    void prepareResponseRepaired(HttpServletResponse response) {
+        // ...
+        String sessionID = generateSessionId();
+        Cookie c = new Cookie("session_id", sessionID);
+        c.setHttpOnly(true); //FIXED
+        response.addCookie(c);
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-732: Incorrect Permission Assignment for Critical Resource
+<A HREF="https://cwe.mitre.org/data/definitions/732.html">https://cwe.mitre.org/data/definitions/732.html</A>
+
+CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag
+<A HREF="https://cwe.mitre.org/data/definitions/1004.html">https://cwe.mitre.org/data/definitions/1004.html</A>
+
+OWASP API Security Top 10-2019
+API2-Broken User Authentication
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa2-broken-user-authentication.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002210: The application must set the HTTPOnly flag on session cookies
+
+PCI Data Security Standard 4.0
+6.2.4.4 Attacks on business logic
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

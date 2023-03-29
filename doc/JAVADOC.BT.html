@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unsupported '@' tags and other tags that should not be used in Javadoc comments [JAVADOC.BT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unsupported '@' tags and other tags that should not be used in Javadoc comments [JAVADOC.BT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unsupported '@' tags in Javadoc comments. An error is
+reported for each '@' tag that does not match one of the regular expressions
+specified in the parameter table.  It also can check for any tags which are
+supported but which, for some reason, the user does not want to use.  For
+instance, according to the Eclipse Javadoc conventions, '@version' tags should
+be avoided.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Allowed Javadoc tag list (in regular expressions)
+  By default, the following Javadoc tags are allowed:
+      @author
+      @version
+      @see
+      @param
+      @return
+      @exception
+      @throws
+      @deprecated
+      @since
+      @serial
+      @serialData
+      @serialField
+      @linkplain
+      @inheritdoc
+      @category
+      @cat
+      @list
+      @example
+      @tutorial
+      @index
+      @exclude
+      @hide
+      @docRoot
+      @obsolete
+      @todo
+      @internal
+      @beaninfo
+      @pre
+      @preconditions
+      @post
+      @postconditions
+      @concurrency
+      @assert
+      @verbose
+      @invariant
+      @date
+      @link
+ To disallow the use of one of the above supported tags, you need to remove it
+ from this list.  You can also add another supported tag to the list.
+    -This list accepts regular expressions.  For instance, to specify that all tags
+     beginning with "@ejb" are to be allowed, you would add the regular
+     expression "^@ejb.*" to the list.
+    -If a regular expression is entered which does not begin with "^" or end
+     with "$", the rule will assume that these characters should have been
+     included and add them for you.  This saves the need to deal with awkward
+     regular expression syntax if you just want to specify the tag names.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A Javadoc comment may use special tags, which all begin with the '@' character,
+to allow Javadoc to provide additional formatting for the documentation.  Also,
+there are some instances where the user wants to disallow the use of a certain
+tag even though this tag is supported (such as the "@version" tag when
+following the Eclipse conventions).
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+/**
+ * Javadoc comment
+ * @unsupported tag
+ */
+public class BT {
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Either change the tag to one of the allowed tags or remove it.  Also, if the
+Javadoc comments contain HTML markup tags, you should check for errors in the
+HTML tags.
+
+package examples.rules.javadoc;
+
+/**
+ * Javadoc comment
+ * replaced tag with comment text.  // FIXED
+ */
+public class BTFixed {
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://wiki.eclipse.org/index.php/Javadoc">http://wiki.eclipse.org/index.php/Javadoc</A>
+
+</PRE>
+</BODY>
+</HTML>

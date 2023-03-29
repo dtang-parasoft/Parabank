@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a naming convention for JUnit test classes [NAMING.NTEST]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a naming convention for JUnit test classes [NAMING.NTEST]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies JUnit test classes that do not follow a naming convention.
+By default, the rule requires that test class names end with "Test", "Tests",
+or "TestCase". You can parameterize the rule to specify a custom naming
+convention with regular expressions (see PARAMETERS).
+
+This rule assumes that test classes are classes that meet the following
+conditions:
+- In JUnit 3, a test class is a class that extends the junit.framework.TestCase
+  class.
+- In JUnit 4, a test class is a class that contains a method marked with
+  the @Test annotation.
+- In JUnit 5, a test class is a class that contains a method marked with
+  one of the following annotations: @Test, @TestFactory, @TestTemplate,
+  @ParameterizedTest, @RepeatedTest
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Top-level class
+    -the regular expression of a top-level class
+        -Class names should match the listed regular expression.
+        -The default is "Test(s|Case)?$". This enforces that the names of JUnit
+         test classes end with "Test", "Tests", or "TestCase".
+    -check public top-level class (the default is true)
+    -check package-private top-level class (the default is true)
+
+-Member class
+    -the regular expression of a member class
+        -Class names should match the listed regular expression.
+        -The default is "Test(s|Case)?$". This enforces that the names of JUnit
+         test classes end with "Test", "Tests", or "TestCase".
+    -check public member class (the default is true)
+    -check protected member class. (the default is true)
+    -check package-private member class (the default is true)
+    -check private member class (the default is true)
+
+-Local class (class inside method)
+    -the regular expression of a local class
+        -Class names should match the listed regular expression.
+        -The default is "Test(s|Case)?$". This enforces that the names of JUnit
+         test classes end with "Test", "Tests", or "TestCase".
+    -check package-private local class the (the default is true)
+
+-Negate regular expression (This option is available on all tabs.)
+    -If this parameter is enabled, the rule triggers when the name of
+     a JUnit test class matches the pattern specified regular expression.
+    -By default, this parameter is disabled. This means that the rule reports
+     JUnit test class names that do not match the specified regular
+	 expressions.
+-Ignore case (This option is available on all tabs.)
+    -If this parameter is enabled, regular expressions are not case sensitive.
+    -By default, this parameter is disabled. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you enforce a naming convention.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following example assumes the default naming convention.
+
+package examples.rules.naming;
+
+import org.junit.jupiter.api.*;
+
+public class Foo {  //VIOLATION
+    @Test
+    public void testMethod() {
+        //some user code
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, rename the test class to follow the convention,
+for example, by adding the 'Test' suffix.
+
+package examples.rules.naming;
+
+import org.junit.jupiter.api.*;
+
+public class FooTest {  //FIXED
+    @Test
+    public void testMethod() {
+        //some user code
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define a no argument constructor whenever possible [CODSTA.POD.DCTOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define a no argument constructor whenever possible [CODSTA.POD.DCTOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes that do not define a no argument constructor
+whenever possible. An error is reported if a class lacks a 
+constructor that takes no arguments.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+CLASS
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+By default, Jtest will ignore utility classes and 
+classes which are "abstract" or "static".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Constructor that takes no argument allows classes of unknown types to be dynamically 
+loaded and instantiated at runtime (for example, when loading unknown 
+Applets from html pages). In Java 1.1 and later, reflection somewhat 
+alleviates the need for no-argument constructors, but many classes that 
+dynamically instantiate other classes at runtime still depend on their 
+presence.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta.pod;
+
+public class DCTOR {  // VIOLATION: no default constructor defined
+    public DCTOR (int size) {
+        _size = size;
+    }
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Define a default constructor whenever a class might be dynamically loaded by
+code that does not know the type of the class.
+
+package examples.rules.codsta.pod;
+
+public class DCTORFixed {  // FIXED
+    public DCTORFixed () {
+        _size = 0;
+    }
+    public DCTORFixed (int size) {
+        _size = size;
+    }
+    private int _size;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/coding-standard-java-caltech.htm">http://www.sourceformat.com/coding-standard-java-caltech.htm</A>
+
+</PRE>
+</BODY>
+</HTML>

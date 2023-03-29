@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hide 'catch' blocks [EXCEPT.HCB]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hide 'catch' blocks [EXCEPT.HCB]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule looks for hidden 'catch' blocks.  It will flag an error for any 
+'catch' block which cannot be reached because all exceptions of the type 
+specified in the block will be caught by an earlier 'catch' block or because
+the specified type cannot be thrown in the 'try' block.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule will not check 'catch' blocks where the exception is of the type 
+'java.lang.Exception', 'java.lang.RuntimeException', 'java.lang.Throwable' or 
+any subclass of 'java.lang.RuntimeException' to make sure that the exception 
+can be thrown in the corresponding 'try' block.  This is because unexpected 
+runtime exceptions can be caught by these blocks.  Since it is difficult to 
+predict when these exceptions can happen, the rule will not check that these 
+exception types can be thrown in the 'try' block.  The rule will, however, check 
+that these 'catch' blocks are not hidden by earlier 'catch' blocks.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hidden 'catch' blocks are useless.  They may indicate a misunderstanding of how 
+the code in the corresponding 'try' block works, or they may simply be a 
+mistake.  In either case, they are confusing and should be removed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.except;
+
+public class HCB{
+    public void test() {
+        try {
+            throw new java.io.CharConversionException();
+        } catch (java.io.CharConversionException e) {
+            //some code
+        } catch (java.io.IOException e) {  //VIOLATION- 'catch' block is hidden
+            //some code
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the useless 'catch' block.
+
+package examples.rules.except;
+
+public class HCBFixed {
+    public void test() {
+        try {
+            throw new java.io.CharConversionException();
+        } catch (java.io.CharConversionException e) {  //FIXED
+            //some code
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+the "Java Compiler" page of the Help section of Eclipse 3.1.2
+
+</PRE>
+</BODY>
+</HTML>

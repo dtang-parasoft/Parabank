@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid off-by-one errors in loop conditions [PB.LOGIC.AOBO]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid off-by-one errors in loop conditions [PB.LOGIC.AOBO]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "for" loop conditions which may have an off-by-one error.
+This rule only considers simple loop cases where the loop updater is compared
+against one of the following:
+    1) array.length
+    2) string.length()
+    3) collection.size()
+    4) map.size()
+See BENEFITS and DRAWBACKS for more information.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"A product calculates or uses an incorrect maximum or minimum value that is
+1 more, or 1 less, than the correct value. . . This weakness will generally
+lead to undefined behavior and therefore crashes. In the case of overflows
+involving loop index variables, the likelihood of infinite loops is also
+high. . .  This weakness can sometimes trigger buffer overflows which can be
+used to execute arbitrary code." [CWE-193]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Off-by-one errors may occur due to a typo or confusion regarding zero-based
+indexing. Repairing these errors may prevent an ArrayIndexOutOfBoundsException
+at runtime or an operation being performed fewer than expected times.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some algorithms may purposefully be off-by-one in which case this rule may flag
+a false positive.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class AOBO {
+    public String getArrayString(Object[] array) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer(array[0].toString());
+
+        for (int i = 1; i &lt;= array.length; i++) { //VIOLATION
+            sb.append(", ").append(array[i]);
+        }
+        return sb.toString();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class AOBOFixed {
+    public String getArrayString(Object[] array) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer(array[0].toString());
+
+        for (int i = 1; i &lt; array.length; i++) { //FIXED
+            sb.append(", ").append(array[i]);
+        }
+        return sb.toString();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-193: Off-by-one Error
+<A HREF="https://cwe.mitre.org/data/definitions/193.html">https://cwe.mitre.org/data/definitions/193.html</A>
+
+</PRE>
+</BODY>
+</HTML>

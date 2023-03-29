@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing same fields and methods multiple times [MOBILE.ACFM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing same fields and methods multiple times [MOBILE.ACFM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule will flag a violation if a field is accessed multiple times in a method.
+
+This rule only applies to Android version 2.1 and older, 2.2 introduces a JIT.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It is because accessing a field is slower than accessing a local variable. 
+So we can increase the performance, if we assign the field to a local
+variable and access that local variable instead of the field.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class ACFM {
+
+    private int[] numbers;
+    
+    public int getTotal() {
+    
+        int total = 0;
+        for (int i = 0; i &lt; numbers.length; i++) {
+            total += numbers[i];   // VIOLATION
+        }
+        return total;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class ACFMFixed {
+
+    private int[] numbers;
+    
+    public int getTotal() {
+    
+        int total = 0;
+        int[] myNumbers = numbers;  // FIXED
+        int count = myNumbers.length;
+        for (int i = 0; i &lt; count; i++) {
+            total += myNumbers[i];
+        }
+        return total;
+    }
+} 
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#myths">http://developer.android.com/guide/practices/design/performance.html#myths</A>
+
+</PRE>
+</BODY>
+</HTML>

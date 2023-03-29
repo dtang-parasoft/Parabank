@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid negating boolean parameters to assertTrue() or assertFalse() [JUNIT.ANBA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid negating boolean parameters to assertTrue() or assertFalse() [JUNIT.ANBA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the 'assertTrue()' or 'assertFalse()' method is called
+with a negated boolean as an argument.
+
+'assertTrue()' called with a negated boolean can be replaced by 'assertFalse()'.
+'assertFalse()' called with a negated boolean can be replaced by 'assertTrue()'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not trigger if method parameters contain comparison
+to "null". See the JUNIT.ANAT rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve test code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class ANBA extends TestCase {  
+    public void testMethod() {
+        boolean b = someMethod();
+        assertTrue(!b); //VIOLATION
+    }
+
+    private boolean someMethod() {
+       ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.junit;
+
+import junit.framework.*;
+
+public class ANBAFixed extends TestCase {
+    public void testMethod() {
+        boolean b = someMethod();
+        assertFalse(b); //FIXED
+    }
+
+    private boolean someMethod() {
+       ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

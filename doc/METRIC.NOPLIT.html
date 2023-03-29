@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Physical Lines in Types [METRIC.NOPLIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Physical Lines in Types [METRIC.NOPLIT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Number of Physical Lines metrics measures the total number of lines. It covers all
+kinds of lines: source code lines, lines with comments, and blank lines.
+This metric measures the number of physical lines that belong to types.
+It includes comments that precede the types.
+
+All nested types are reported separately, thus lines of nested types belong to the nested type only. In
+the 'Nested types' example, separate values are reported for class Foo and class Bar.
+
+Anonymous types belong to the closest regular (nested or not) type. In the 'Anonymous Types' example part, class
+Foo has 10 lines and no other type is reported.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.1.3
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code 
+
+        import java.io.Serializable;
+  
++1      /**
++1       * comment
++1       */
++1      public class Foo
++1      {
++1          public void bar()
++1          {
++1 
++1          }
++1
++1      }
+
+Total: 11
+
+
+Nested types
+
+Metric  Metric  Code
+ Foo     Bar
+
+                import java.io.Serializable;
+  
++1              public class Foo
++1              {
++1                  public void qux() { }
++1     
+        +1          class Bar
+        +1          {
+        +1              public Bar() { }
+        +1          }
++1              }
+                
+Total: 5, 4
+
+
+Anonymous Types
+
+Metric  Code
+        
++1      class Foo
++1      {
++1          void bar()
++1          {
++1              IFilter f = new IFilter {
++1              boolean filter(Object o) {
++1                  return true;
++1              }
++1          }
++1      }
+
+Total: 10
+
+</PRE>
+</BODY>
+</HTML>

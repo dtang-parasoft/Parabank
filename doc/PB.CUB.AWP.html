@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid confusing assignments to constructor arguments [PB.CUB.AWP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid confusing assignments to constructor arguments [PB.CUB.AWP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies confusing assignments to constructor arguments.
+An error is reported for any write access to a parameter inside a constructor
+when the parameter name matches the name of a field defined in the same 
+enclosing class, except for the case mentioned in the "NOTES" section.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An error will not be reported for the case where a parameter is written to 
+inside the body of an "if" statement which checks the value of the parameter.
+This is usually done intentionally to modify the value of the parameter if the 
+value that is passed in is invalid.  The modified parameter value is usually
+assigned to the field later in the constructor.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Because the constructors' parameters might sometimes have the same names as
+the corresponding fields, it is easy to confuse the fields and the parameters.
+This confusion can be indicated by write access of parameters. In most cases,
+write access to a parameter is actually meant to be a write access to a field.
+However, such write access is syntactically correct and difficult to notice.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class AWP {
+    int value;
+    public AWP (int value, int offset) {
+        value= value+ offset; //VIOLATION, should be this.value= value+ offset
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.cub;
+
+public class AWPFixed {
+    int value;
+    public AWPFixed (int value, int offset) {
+        this.value= value+ offset; //FIXED
+   }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not set or create a new SecurityManager in EJBs [OWASP2019.API7.SMSN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not set or create a new SecurityManager in EJBs [OWASP2019.API7.SMSN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Enterprise beans should avoid setting (calling "System.setSecurityManager()") or
+creating a new SecurityManager. Doing so may interfere with proper EJB container
+functionality and create security holes.
+
+A class is considered a bean class if it meets one of the following:
+    1. Implements "javax.ejb.EnterpriseBean" or a subinterface ("EntityBean",
+       "MessageDrivenBean", "SessionBean")
+    2. Has the annotation "javax.ejb.MessageDriven", "java.ejb.Stateful",
+       "javax.ejb.Stateless", or "javax.persistence.Entity"
+    3. Is denoted as an Entity, MessageDriven, Stateful, or Stateless bean in
+       "ejb-jar.xml"
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Backdoor Vulnerabilities
+
+The EJB specification states that an enterprise bean must not attempt to set
+the security manager or create a new security manager. The reasoning is as
+follows:
+    "These functions are reserved for the EJB container. Allowing the enterprise
+     bean to use these functions could compromise security and decrease the
+     container's ability to properly manage the runtime environment."
+
+Enforcing this rule will help to protect against some of the OWASP Top 10 
+application vulnerabilities including "A5-Security Misconfiguration".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum depth to check for SecurityManager setting or creation (default "2")
+    This parameter allows for indirect checking of SecurityManager setting or
+    creation. Specifying a value of "1" will check for instances directly
+    from the bean class. A value of "2" will also check if any of the methods
+    called from the bean class set or create a SecurityManager. A value of "3"
+    checks an additional level deep and so on.
+    Note that using a large value may significantly slow execution of the rule.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb;
+
+@Stateless
+public class SMSN {
+    void setSecurityManager(SecurityManager sm) {
+        System.setSecurityManager(sm); //VIOLATION
+    }
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not create a new SecurityManager or call System.setSecurityManager() in EJBs.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. Enterprise JavaBeans 3.0 Specification
+   <A HREF="http://download.oracle.com/otndocs/jcp/ejb-3_0-fr-eval-oth-JSpec/">http://download.oracle.com/otndocs/jcp/ejb-3_0-fr-eval-oth-JSpec/</A>
+
+2. "Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+   Static Analysis Tools" by Michael Ware:
+   <A HREF="http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf">http://www.mikeware.us/thesis/ware-writingsecurejavacode-may08.pdf</A>
+
+3. OWASP Top 10 2013 (A5-Security Misconfiguration):
+   <A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+4. OWASP API Security Top 10-2019
+   API7-Security Misconfiguration
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+</PRE>
+</BODY>
+</HTML>

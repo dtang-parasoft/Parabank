@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid invoking methods using "static" 'Calendar', 'DateFormat', or 'SimpleDateFormat' [TRS.CDF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid invoking methods using "static" 'Calendar', 'DateFormat', or 'SimpleDateFormat' [TRS.CDF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule is to avoid calling methods on static fields of type
+'java.util.Calendar', 'java.text.DateFormat', or 'java.text.SimpleDateFormat'
+ because static fields are not thread-safe. An error is reported for each
+ occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+'java.util.Calendar', 'java.text.DateFormat', and 'java.text.SimpleDateFormat'
+are inherently unsafe for multithreaded use. Users should not declare static
+fields of type 'java.util.Calendar', 'java.text.DateFormat', or
+'java.text.SimpleDateFormat' in order to avoid unexpected runtime exceptions.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+import java.util.*;
+
+public class CDF {
+
+    private static Calendar calendar = Calendar.getInstance();
+    
+    public int getMonth() {
+        return calendar.get(Calendar.MONTH);  // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid using static 'Calendar' fields. Use a call 'Calendar.getInstance()' 
+instead to accomplish the same thing.
+
+package examples.rules.trs;
+
+import java.util.*;
+
+public class CDFFixed {
+
+    public int getMonth() {
+        return Calendar.getInstance().get(Calendar.MONTH);  // FIXED
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6231579">http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6231579</A>
+
+<A HREF="http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6178997">http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6178997</A>
+
+</PRE>
+</BODY>
+</HTML>

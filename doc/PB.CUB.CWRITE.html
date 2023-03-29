@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid usage of File.canWrite() method because it may returns true even if directory is not writable [PB.CUB.CWRITE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid usage of File.canWrite() method because it may returns true even if directory is not writable [PB.CUB.CWRITE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects the usage of the File.canWrite() method and reports it as a violation.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The setWritable method from the java.io.File class no longer sets a readonly attribute on directories
+and always returns false in Java 7 on Windows. To preserve the relationship with canWrite,
+the canWrite method returns true for directories.
+
+This change in behavior implies that code using canWrite can work differently under Java up to version 6
+and under Java 7. Therefore, such code should be rewritten to use java.nio.file.Files.isWritable method
+instead of canWrite. 
+
+This rule is a supplement to FIO.DRWA Runtime Error Detection rule. 
+
+NOTE
+This rule has one quickfix - "Replace with {...proposal...} statement that uses new Files API"
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+if (file.canWrite()) { // VIOLATION
+    file.setWritable(true); 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+if (Files.isWritable(file.toPath())) { // FIXED
+    file.setWritable(true); 
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+1. <A HREF="http://www.oracle.com/technetwork/java/javase/compatibility-417013.html">http://www.oracle.com/technetwork/java/javase/compatibility-417013.html</A>
+
+</PRE>
+</BODY>
+</HTML>

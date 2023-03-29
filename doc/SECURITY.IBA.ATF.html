@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid temporary files [SECURITY.IBA.ATF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid temporary files [SECURITY.IBA.ATF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The createTempFile() method used in the Java code creates a temp file that
+may be readable and writable to all users. [It] place[s] place the file into
+a default directory. On UNIX systems the default directory is usually "/tmp"
+or "/var/tmp" and on Windows systems the default directory is usually
+"C:\\Windows\\Temp", which may be easily accessible to attackers, possibly
+enabling them to read and modify the contents of the temp file." [CWE-378]
+
+This rule detects calls to the 'createTempFile' method of the 'java.io.File'
+class.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Opening temporary files without appropriate measures or controls can leave
+the file, its contents and any function that it impacts vulnerable to attack."
+[CWE-378]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent creating temporary files that may be exploited
+by an attacker.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+import java.io.File;
+import java.io.IOException;
+
+package examples.rules.security.iba;
+
+public class ATF {
+    private static final String _PREFIX = "tmp";
+
+    public File getTmpFile() {
+        try {
+            File file = File.createTempFile(_PREFIX, null); //VIOLATION
+            file.deleteOnExit();
+            return file;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid creating the temporary file or ensure that the directory that contains
+the file has proper permissions to prevent unwanted access.
+
+In Java 7 or higher, you can use the Files.createTempDirectory method to ensure
+that the file is created in a location that is unpredictable to the attacker:
+
+public File getTmpFile() {
+        try {
+            Path filePath = Files.createTempDirectory(_PATH,_PREFIX, null); //OK
+            return filePath.toFile();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-377: Insecure Temporary File
+<A HREF="https://cwe.mitre.org/data/definitions/377.html">https://cwe.mitre.org/data/definitions/377.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+OWASP Top 10-2017
+A9-Using Components with Known Vulnerabilities
+<A HREF="https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities">https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO03-J. Remove temporary files before termination
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO03-J.+Remove+temporary+files+before+termination">https://wiki.sei.cmu.edu/confluence/display/java/FIO03-J.+Remove+temporary+files+before+termination</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid non-random "byte[]" when using IvParameterSpec [SECURITY.WSC.IVR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid non-random "byte[]" when using IvParameterSpec [SECURITY.WSC.IVR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks that IvParameterSpec is initialized using a random byte
+array. A byte array is considered to be random if it was passed to SecureRandom#nextBytes().
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Use of a non-random initialization vector may result in unintended disclosure of
+information which could be used by an attacker. Use of "java.util.Random" is
+discouraged in favor of "java.security.SecureRandom" as SecureRandom is
+considered cryptographically strong, while Random is not.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class IVR {
+    IvParameterSpec getInitializationVector() {
+        byte[] array = new byte[128];
+        new Random().nextBytes(array);
+        return new IvParameterSpec(array); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the byte array is non-random use SecureRandom#nextBytes(). Also, use
+SecureRandom instead of Random.
+
+public class IVR_Fixed {
+    IvParameterSpec getInitializationVector() {
+        byte[] array = new byte[128];
+        new SecureRandom().nextBytes(array); //FIXED
+        return new IvParameterSpec(array);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/7f61f6bc-ae4b-4750-ad40-a3071049312a">https://app.hackedu.com/link/7f61f6bc-ae4b-4750-ad40-a3071049312a</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-329: Not Using a Random IV with CBC Mode
+<A HREF="https://cwe.mitre.org/data/definitions/329.html">https://cwe.mitre.org/data/definitions/329.html</A>
+
+OWASP Top 10-2021
+A02:2021 – Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+Cigital Java Security Rulepack # 14:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+IvParameterSpec (Java 2 Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/javax/crypto/spec/IvParameterSpec.html">http://java.sun.com/j2se/1.5.0/docs/api/javax/crypto/spec/IvParameterSpec.html</A>
+
+SecureRandom (Java 2. Platform SE 5.0)
+<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/security/SecureRandom.html">http://java.sun.com/j2se/1.5.0/docs/api/java/security/SecureRandom.html</A>
+
+Initialization vector - Wikipedia, the free encyclopedia
+<A HREF="http://en.wikipedia.org/wiki/Initialization_vector">http://en.wikipedia.org/wiki/Initialization_vector</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

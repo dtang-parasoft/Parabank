@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow a naming convention for setter methods [NAMING.SETA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow a naming convention for setter methods [NAMING.SETA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies setter methods whose names do not follow the user-defined
+naming convention (as specified in a regular expression).  By default, the rule 
+requires that the name of each setter method begin with "set".  An error is 
+reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-regular expression
+    -Setter method names should match the listed regular expression.  
+    -The default is "^set.".  This enforces that the names of setter methods 
+     begin with "set".)
+-check public method. (default is true)
+-check protected method. (default is true)
+-check package-private method. (default is true)
+-check private method. (default is false)
+-Negate regular expression
+    -If this parameter is enabled, a violation will be flagged if the name of a
+     setter method matches the specified regular expression.
+    -By default, this parameter is off.  This means that a violation will be 
+     flagged for setter method names which do not match the regular expression
+     specified.
+-Ignore case
+    -If this parameter is enabled, the regular expression will not be case
+     sensitive.
+    -By default, this parameter is off.  This means that the names of setter
+     methods must match the regular expression specified, including in case. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This follows the JavaBeans naming conventions.  Also, using the 'set' prefix 
+makes it clear that the method is a mutator that sets the value of the field.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class SETA {
+    public void method(int count) {  // VIOLATION
+        _count = count;
+    }
+    private int _count = 0;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the setter method name to 'set&lt;Field name&gt;'.
+
+package examples.rules.naming;
+
+public class SETAFixed {
+    public void setCount(int count) {  // FIXED
+        _count = count;
+    }
+    private int _count = 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf">http://www.sourceformat.com/pdf/java-coding-standard-ambysoft.pdf</A>
+
+</PRE>
+</BODY>
+</HTML>

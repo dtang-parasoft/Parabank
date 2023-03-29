@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing arrays out of bounds [CWE.131.ARRAY]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing arrays out of bounds [CWE.131.ARRAY]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects array access operations which may result in out of bounds access.
+Specifically, a violation is reported if an execution path with obvious out-of-bounds
+access is possible. This occurs when an index value is negative, equal to,
+or greater than the array size.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The potential to access arrays beyond their boundaries is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to
+execute arbitrary code and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Application of the rule helps to keep the code free from as serious problem as accessing 
+an array out of its bounds is. This helps to ensure robustness of the application 
+as a whole.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is sample code that triggers a violation:
+
+public class Example
+{
+    void fillArray(int array[], int size)
+    {
+        for (int i = 0; i &lt;= size; i++) { // iterate from 0 to 100
+            array[i] = 0; // VIOLATION
+        }
+    }
+
+    void example()
+    {
+        int[] array = new int[100];
+        fillArray(array, 100);
+        // ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In order to get rid of the violation, replace '&lt;=' comparison operator with '&lt;':
+
+public class Example
+{
+    void fillArray(int array[], int size)
+    {
+        for (int i = 0; i &lt; size; i++) { // iterate from 0 to 99
+            array[i] = 0; // NO VIOLATION
+        }
+    }
+
+    void example()
+    {
+        int[] array = new int[100];
+        fillArray(array, 100);
+        // ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+PCI Data Security Standard 4.0
+6.2.4.2 Attacks on data and data structures
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="https://cwe.mitre.org/data/definitions/20.html">https://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="https://cwe.mitre.org/data/definitions/119.html">https://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-125: Out-of-bounds Read
+<A HREF="https://cwe.mitre.org/data/definitions/125.html">https://cwe.mitre.org/data/definitions/125.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="https://cwe.mitre.org/data/definitions/787.html">https://cwe.mitre.org/data/definitions/787.html</A>
+
+CWE-129: Improper Validation of Array Index
+<A HREF="https://cwe.mitre.org/data/definitions/129.html">https://cwe.mitre.org/data/definitions/129.html</A>
+
+CWE-131: Incorrect Calculation of Buffer Size
+<A HREF="https://cwe.mitre.org/data/definitions/131.html">https://cwe.mitre.org/data/definitions/131.html</A>
+
+Tags: PCI-DSS, CWE
+
+</PRE>
+</BODY>
+</HTML>

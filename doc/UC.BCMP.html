@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary "boolean" comparisons [UC.BCMP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary "boolean" comparisons [UC.BCMP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unnecessary boolean comparisons. An error is 
+reported if the ==/!= operator is used in a comparison while at least
+one side is a boolean literal.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Comparing something with a boolean literal is essentially
+redundant. Code is simplified when you avoid these unnecessary comparisons.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class BCMP {
+    public void myMethod(boolean b) {
+        if (b== true)  //VIOLATION
+            System.out.println("got a true");
+        else
+            System.out.println("got a false");
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class BCMPFixed {
+    public void myMethod(boolean b) {
+        if (b) //FIXED
+	    System.out.println("got a true");
+	else
+	    System.out.println("got a false");
+    }
+}
+  
+ 
+
+</PRE>
+</BODY>
+</HTML>

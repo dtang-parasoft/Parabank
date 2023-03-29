@@ -1,0 +1,238 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure resources are deallocated [CWE.459.LEAKS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure resources are deallocated [CWE.459.LEAKS]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule helps to ensure that allocated resources are deallocated on all paths.
+Violations of the rule identify execution paths in an application where resources
+are leaked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v8.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+category: Erratic Application Behavior
+
+Failure to close resources may lead to starvation, which could have
+security implications.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Assume resource references can be stored by third-party methods of the following
+types" set of parameters allows you to determine how strict the rule is when a reference
+to a resource may be stored by a third-party method. For example, if there is a
+third-party method SpecialCollection.add() and a resource is passed as a parameter
+to this method, it will be stored in a collection and may later be closed by iterating
+over the collection. Since Flow Analysis does not know the exact behavior of arbitrary
+third-party methods, it behaves in either of the following ways:
+
+   * With "Any methods" parameter enabled (the default approach), Flow Analysis assumes
+	 that any third-party method may store a reference to a resource if the resource is
+	 passed into the method. This prevents the rule from reporting false positives if
+	 the resource is later closed using the stored reference. However, this may also
+	 lead to some false negatives (real leaks are not reported as violations) if the
+	 method does not store a reference to the resource.
+     
+   * With "Methods with names matching the pattern" parameter enabled, Flow Analysis
+	 assumes that any third-party method which matches regex may store a reference to
+	 a resource if the resource is passed into the method. This prevents the rule from reporting
+	 false positives if the resource is later closed using the stored reference. However,
+	 this may also lead to some false negatives (real leaks are not reported as violations)
+	 if the method does not store a reference to the resource.
+
+   * With all the parameters disabled, Flow Analysis takes a more aggressive approach and it
+	 assumes that third-party methods do not affect resources in any way. This approach
+	 may lead to some false positives, but it will not overlook any of the real leaks
+	 that the default approach may miss.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+The types of resources handled by this rule can be viewed and edited in test configuration section:
+Static Analysis -&gt; Flow Analysis Advanced Settings -&gt; Resources
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Having a strict policy with respect to closing resources helps to make an application more
+robust by preventing resource starvation.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers violations:
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.Socket;
+
+public abstract class Example
+{
+    public String readData(String sRequest)
+    {
+        String sResult = null;
+        int type = getRequestType(sRequest);
+        try {
+            InputStream input = getSource(sRequest, type);
+            byte[] bytes = new byte[256];
+            input.read(bytes, 0, bytes.length);
+            sResult = new String(bytes);
+        } catch (Exception e) {
+            System.out.println("Cannot read data");
+        }
+        return sResult; // at this point reference to input stream is lost and it is left not closed
+    } // VIOLATION
+
+    public InputStream getSource(String sLocation, int type)
+        throws Exception
+    {
+        InputStream source = null;
+        switch (type) {
+            case 1:
+                source = _socket.getInputStream();
+                break;
+            default:
+                source = new FileInputStream("...");
+        }
+        return source;
+    }
+
+    Socket _socket;
+
+    protected abstract int getRequestType(String sRequest);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To fix this problem, close the stream:
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.Socket;
+
+public abstract class Repair
+{
+    public String readData(String sRequest)
+    {
+        String sResult = null;
+        int type = getRequestType(sRequest);
+        try (InputStream input = getSource(sRequest, type)) {
+            byte[] bytes = new byte[256];
+            input.read(bytes, 0, bytes.length);
+            sResult = new String(bytes);
+        } catch (Exception e) {
+            System.out.println("Cannot read data");
+        }
+        return sResult;
+    } // NO VIOLATION
+
+    public InputStream getSource(String sLocation, int type)
+        throws Exception
+    {
+        InputStream source = null;
+        switch (type) {
+            case 1:
+                source = _socket.getInputStream();
+                break;
+            default:
+                source = new FileInputStream("...");
+        }
+        return source;
+    }
+
+    Socket _socket;
+
+    protected abstract int getRequestType(String sRequest);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-400: Uncontrolled Resource Consumption
+<A HREF="https://cwe.mitre.org/data/definitions/400.html">https://cwe.mitre.org/data/definitions/400.html</A>
+
+CWE-459: Incomplete Cleanup
+<A HREF="https://cwe.mitre.org/data/definitions/459.html">https://cwe.mitre.org/data/definitions/459.html</A>
+
+CWE-771: Missing Reference to Active Allocated Resource
+<A HREF="https://cwe.mitre.org/data/definitions/771.html">https://cwe.mitre.org/data/definitions/771.html</A>
+
+CWE-772: Missing Release of Resource after Effective Lifetime
+<A HREF="https://cwe.mitre.org/data/definitions/772.html">https://cwe.mitre.org/data/definitions/772.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+FIO04-J. Release resources when they are no longer needed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/FIO04-J.+Release+resources+when+they+are+no+longer+needed">https://wiki.sei.cmu.edu/confluence/display/java/FIO04-J.+Release+resources+when+they+are+no+longer+needed</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC04-J. Do not leak memory
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC04-J.+Do+not+leak+memory">https://wiki.sei.cmu.edu/confluence/display/java/MSC04-J.+Do+not+leak+memory</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002000: The application must terminate all network connections associated with a communications session at the end of the session.
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

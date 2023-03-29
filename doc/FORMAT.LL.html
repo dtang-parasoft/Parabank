@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Limit the maximum length of a line [FORMAT.LL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Limit the maximum length of a line [FORMAT.LL]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+   
+This rule detects lines whose length exceeds the maximum specified value.
+The rule must be parameterized to specify the maximum acceptable length of
+code lines and comment lines.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule also applies to JavaDoc comments.
+
+    
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum line width (the default is 80 characters )- specifies the maximum
+    acceptable length of code lines.
+-Maximum comment line width (the default is 80 characters) - specifies
+    the acceptable maximum length of comment lines.
+-Tab size (the default is 4 characters) - specifies the number of characters
+   a tab represents. By default, the rule assumes that a tab corresponds
+   to four characters.
+-Ignore trailing spaces (enabled by default)
+-Ignore trailing comments 
+-Ignore import statements and package declarations
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code readability by helping you avoid long code lines,
+which are difficult to read, print out, and share.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the rule exceeds the maximum line length
+specified with the parameters.
+
+package examples.rules.format;
+
+public class LL {
+    // VIOLATION
+    public void method (int i, int j, int k, int l, int m, int n, int o, int p, int q) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, break the single line into multiple well-formatted lines.  
+
+package examples.rules.format;
+
+public class LLFixed {
+    public void method ( // FIXED
+        int i
+        , int j
+        , int k
+        , int l
+        , int m
+        , int n
+        , int o 
+        , int p
+        , int q
+    ) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Java SE Documentation
+4.1 Line Length
+<A HREF="https://www.oracle.com/technetwork/java/javase/documentation/codeconventions-136091.html">https://www.oracle.com/technetwork/java/javase/documentation/codeconventions-136091.html</A>
+
+The Elements of Java Style, SIGS Cambridge
+Allan Vermeulen, Scott W. Ambler, Greg Bumgardner, Eldon Metz, Trevor Misfeldt, Jim Shur, Patrick Thompson
+pp. 8 - 10
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-003215: The application development team must follow a set of coding standards
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary 'if' statements [UC.UCIF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary 'if' statements [UC.UCIF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies unnecessary 'if' statements. An error is reported for each
+occurrence.
+
+Any 'if' statement that does not contain a field, local variable or method
+invocation in its condition is considered to be unnecessary as the body would
+either be executed all the time or not at all. Also, in  some situations, using 
+flags or constants would easily solve this problem without changing the program
+functionality.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+V6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"This weakness could be an indication of a bug in the program. . . and is
+an indication of poor quality. This could lead to further bugs and
+the introduction of weaknesses." [CWE-563:]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If possible, unnecessary statements should be eliminated in order to decrease
+program complexity. If an 'if' statement is needed (for testing etc.), using
+flags or constants might be a better solution.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UCIF {
+    public class myMethod() {
+        if (true) //flag
+            System.out.println("Hello"); 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public class UCIFFixed {
+    public class myMethod() {
+        //FIXED
+        System.out.println("Hello"); 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-570: Expression is Always False
+<A HREF="https://cwe.mitre.org/data/definitions/570.html">https://cwe.mitre.org/data/definitions/570.html</A>
+
+CWE-571: Expression is Always True
+<A HREF="https://cwe.mitre.org/data/definitions/571.html">https://cwe.mitre.org/data/definitions/571.html</A>
+
+</PRE>
+</BODY>
+</HTML>

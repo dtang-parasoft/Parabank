@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid uninitialized reads of fields before or during constructor execution [CWE.457.UIRC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid uninitialized reads of fields before or during constructor execution [CWE.457.UIRC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The code uses a variable that has not been initialized, leading to
+unpredictable or unintended results." [CWE-457]
+
+This rule identifies code with read access of uninitialized fields before or
+during constructor execution. An error is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Initial variables usually contain junk, which can not be trusted for
+consistency. This can lead to denial of service conditions, or modify
+control flow in unexpected ways. In some cases, an attacker can
+"pre-initialize" the variable using previous actions, which might enable
+code execution. This can cause a race condition if a lock variable check
+passes when it should not." [CWE-457]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Maximum level of checking allowed (default is 4)
+ Note that initializers and constructors could call other setter methods to
+ initialize field values. However, the ones that are called might actually call
+ other methods. Consequently, the total number of methods involved might be 
+ extremely large. By setting the number of levels, you can determine the extent
+ of the  algorithm's checking. If you set the level to a high number, fewer
+ false positive errors would be reported, but the computation could increase.
+ False positives are generally unlikely when the level is set at '3'.
+
+-Check non-static fields. (default is true)
+-Check static fields. (default is true)
+-Ignore fields of primitive types. (default is false)
+    -Fields of primitive types are implicitly initialized to either "0" or 
+     "false" when they are declared.  Because of this, it may be ok to have a
+     read access to a field of a primitive type.  Still, it is a good idea to 
+     initialize all fields explicitly to make the code easier to read.  If you
+     do not follow this convention, you may want to turn this parameter on to
+     prevent false positives for fields of primitive types which are 
+     intentionally read without being explicitly initialized.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Read access of uninitialized fields is generally dangerous and could 
+indicate a bug-- especially when the read access is placed in or before
+a constructor.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class UIRC {
+    Vector v; //uninitialized field
+    UIRC(Object singleElement) {
+        v.add(singleElement); //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.init;
+
+public class UIRCFixed {
+    Vector v;
+    UIRC(Object singleElement) {
+        v= new Vector();      //FIXED
+        v.add(singleElement); //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-457: Use of Uninitialized Variable
+<A HREF="https://cwe.mitre.org/data/definitions/457.html">https://cwe.mitre.org/data/definitions/457.html</A>
+
+</PRE>
+</BODY>
+</HTML>

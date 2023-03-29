@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always declare writeObject and readObject methods for Serializable subclasses of non-Serializable parents [OWASP2017.A8.SCBNP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always declare writeObject and readObject methods for Serializable subclasses of non-Serializable parents [OWASP2017.A8.SCBNP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Throw an error if a class has a non-serializable parent but implements 
+Serializable without specifying readObject or WriteObject methods.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"The impact of deserialization flaws cannot be overstated. These flaws can lead
+to remote code execution attacks, one of the most serious attacks possible."
+[OWASP Top 10-2017, A8]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you have an instance of a subclass, that subclass likely defines and uses the
+instance variables of its superclass.  When you serialize and then deserialize
+that instance of the subclass, you will lose the instance variables of the
+superclass if the superclass is not serializable.  Specifying readObject and 
+writeObject methods is a way to keep the instance variables of the superclass
+with the serialized object, so that when it is deserialized, it will be the same
+as when it was serialized.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class SCBNP extends SCBNP2 implements Serializable {
+    private static final long serialVersionUID = 13;
+
+    private String _name;
+
+    public SCBNP (String name) {
+        super();
+        _name = name;
+    }
+    
+    public String getName () {
+        return _name;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.serial;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class SCBNP extends SCBNP2 implements Serializable {
+    private static final long serialVersionUID = 13;
+
+    private String _name;
+
+    public SCBNP (String name) {
+        super();
+        _name = name;
+    }
+
+    public String getName () {
+        return _name;
+    }
+
+    private void writeObject(ObjectOutputStream out)  //FIXED
+        throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(getNumber());
+    }
+
+    private void readObject(ObjectInputStream in)     //FIXED
+        throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        setNumber(in.readInt());
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/e13c356e-fe1a-4bf0-bbd7-0a08e1d7e656">https://app.hackedu.com/link/e13c356e-fe1a-4bf0-bbd7-0a08e1d7e656</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A08:2021 – Software and Data Integrity Failures
+<A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001460: An application vulnerability assessment must be conducted
+
+</PRE>
+</BODY>
+</HTML>

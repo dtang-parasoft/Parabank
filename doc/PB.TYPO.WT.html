@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that arguments passed to Java wrapper classes do not contain typos [PB.TYPO.WT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that arguments passed to Java wrapper classes do not contain typos [PB.TYPO.WT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags identifies typos in in arguments passed to the Java wrapper
+classes 'Byte', 'Short', 'Integer', 'Float', 'Double' and 'Boolean'. An error
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Typos in arguments will trigger NumberFormatException if they are passed into
+a numeric wrapper class. For 'Boolean', a typo might alter the intended boolean
+value without being noticed.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class WT {
+    Integer i= new Integer("10A"); //VIOLATION
+    public Boolean myMethod() {
+        return Boolean.valueOf(" true"); //VIOLATION, would return "false"
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.typo;
+
+public class WTFixed {
+    Integer i= new Integer("10"); //FIXED
+    public Boolean myMethod() {
+        return Boolean.valueOf("true"); //FIXED
+    }
+}
+
+  
+
+</PRE>
+</BODY>
+</HTML>

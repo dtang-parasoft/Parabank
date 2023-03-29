@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that passwords are not stored as plaintext and are sufficiently long [OWASP2021.A4.PWDPROP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that passwords are not stored as plaintext and are sufficiently long [OWASP2021.A4.PWDPROP]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies the following unsecure password types in configuration files:
+   - empty password strings
+   - passwords which are too short
+   - plaintext passwords
+
+An error is reported for each occurrence.
+
+A plaintext password is a password which is not encrypted. Since there are many 
+different kinds of encryption algorithms on the market, this rule assumes 
+that an encrypted password is a combination of uppercase letters, lowercase 
+letters, digits and symbols.
+
+A similar rule for XML files is SECURITY.UEC.PWDXML.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.2.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Unsafe Environment Configuration
+
+If a user stores a plaintext password in an XML configuration file, the password can be easily obtained
+by anybody who can read the file, and used to access the password-protected resource.
+If an empty string is used as a password, it is very easy for an attacker to guess. Passwords shorter than 6 characters
+are also easy to guess with a brute-force approach of trial and error.
+
+This rule helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.6: 
+"Removal of custom application accounts, user IDs, and passwords before 
+applications become active or are released to customers".
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+    - You can enable one of the following options:
+        -() Check all property files (default option)
+                If this option is enabled, all property files will be analyzed.
+                It includes a 'List of property files to be ignored', which allows you to specify the files
+                the rule will not apply to.
+        -() Only check the following property files  
+                This option allows you to specify the property files which will be analyzed. The rule
+                will apply only to the files from the list.
+    - Minimum length of password (by default, the minimum length is 6 characters)
+    - List of names in the property files which are used to store the password
+        The name list is a table with two columns:
+        * In the 'Name is used to store password' column, you can specify the property key
+        * In the 'Ignore value' column, you can specify RegExp expression to ignore some values - for example, when a build framework (Maven or similar)
+        injects a value into the property file
+       
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Lowers the risk of a security breach by preventing storage of weak passwords.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+password=John
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+password=SnRlc3Q6bnVsbA==
+
+
+
+</PRE>
+<STRONG>
+EDUCATION AND TRAINING
+</STRONG>
+<PRE>
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/9202dda2-4816-44bd-86a5-65470d8286b4">https://app.hackedu.com/link/9202dda2-4816-44bd-86a5-65470d8286b4</A>
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+PCI Data Security Standard 4.0
+6.2.4.3 Attacks on cryptography usage
+<A HREF="https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf">https://pcisecuritystandards.org/documents/PCI-DSS-v4_0.pdf</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+CWE-287: Improper Authentication
+<A HREF="https://cwe.mitre.org/data/definitions/287.html">https://cwe.mitre.org/data/definitions/287.html</A>
+
+2020 CWE Weaknesses On the Cusp
+CWE-284: Improper Access Control
+<A HREF="https://cwe.mitre.org/data/definitions/284.html">https://cwe.mitre.org/data/definitions/284.html</A>
+
+CWE-256: Unprotected Storage of Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/256.html">https://cwe.mitre.org/data/definitions/256.html</A>
+
+CWE-258: Empty Password in Configuration File
+<A HREF="https://cwe.mitre.org/data/definitions/258.html">https://cwe.mitre.org/data/definitions/258.html</A>
+
+CWE-312: Cleartext Storage of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/312.html">https://cwe.mitre.org/data/definitions/312.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-522: Insufficiently Protected Credentials
+<A HREF="https://cwe.mitre.org/data/definitions/522.htmls">https://cwe.mitre.org/data/definitions/522.htmls</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+Cigital Java Security Rulepack # 25:
+<A HREF="http://www.cigital.com/securitypack/view/index.html">http://www.cigital.com/securitypack/view/index.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC62-J. Store passwords using a hash function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function">https://wiki.sei.cmu.edu/confluence/display/java/MSC62-J.+Store+passwords+using+a+hash+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000160: The application must implement DoD-approved encryption to protect the confidentiality of remote access sessions
+APSC-DV-000170: The application must implement cryptographic mechanisms to protect the integrity of remote access sessions
+APSC-DV-001460: An application vulnerability assessment must be conducted
+APSC-DV-001740: The application must only store cryptographic representations of passwords
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords
+APSC-DV-001850: The application must not display passwords/PINs as clear text
+
+</PRE>
+</BODY>
+</HTML>

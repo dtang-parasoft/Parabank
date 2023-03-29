@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using finally block for closing resource only [EXCEPT.CLFIN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using finally block for closing resource only [EXCEPT.CLFIN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies areas where the finally block is used to close resources.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule has one quickfix - "Move declared resources to a try-with-resources statement"
+which closes resource declarations with the try-with-resources statement. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Java SE 7 has a new try-with-resources statement. 
+The new try statement declares one or more resources and ensures 
+that each resource is closed at the end of the statement. 
+The try-with-resources statement makes sure that all resources will be closed.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+Applying try-with-resource statement is not always possible, so errors will not be reported 
+in all cases. Quickfix may not be applicable for complex cases.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+1)
+BufferedReader br = new BufferedReader(new FileReader("fileA.txt"));
+try {
+    br.readLine();
+} finally {
+    br.close(); // VIOLATION
+}
+
+2)
+BufferedReader br = new BufferedReader(new FileReader("fileB.txt"));
+try {
+    br.readLine();
+} finally {
+    if (br != null)
+    br.close(); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+1)
+try (BufferedReader br = new BufferedReader(new FileReader("fileA.txt")))  { // FIXED
+    br.readLine();
+} 
+
+2) 
+try (BufferedReader br = new BufferedReader(new FileReader("fileB.txt")))  { // FIXED
+    br.readLine();
+} 
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+<A HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/language/try-with-resources.html">http://docs.oracle.com/javase/7/docs/technotes/guides/language/try-with-resources.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+ERR54-J. Use a try-with-resources statement to safely handle closeable resources
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR54-J.+Use+a+try-with-resources+statement+to+safely+handle+closeable+resources">https://wiki.sei.cmu.edu/confluence/display/java/ERR54-J.+Use+a+try-with-resources+statement+to+safely+handle+closeable+resources</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using enums [MOBILE.ENUM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using enums [MOBILE.ENUM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports violations when any enums are defined.  There is a lot
+of hidden overhead involved with creating enums, so it is ideal to use 
+static variables when compile time checking is not a necessity.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+When using enums, it can be less expensive to use the ordinal() method than 
+to compare objects directly.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule can help optimize code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.mobile;
+
+public class ENUM {
+	enum Direction {
+		NORTH, // gets ordinal = 0
+		SOUTH, // gets ordinal = 1
+		EAST, // gets ordinal = 2
+		WEST; // gets ordinal = 3
+	}
+	public void test(){
+		int heading = (Direction.SOUTH);
+	}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use static variables instead of the enum.
+
+
+package examples.rules.mobile;
+
+public class ENUM {
+	private static final int NORTH = 0;
+	private static final int SOUTH = 1;
+	private static final int EAST = 2;
+	private static final int WEST = 3;
+
+	public void test(){
+		int heading = SOUTH;
+	}
+}
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+<A HREF="http://developer.android.com/guide/practices/design/performance.html#avoid_enums">http://developer.android.com/guide/practices/design/performance.html#avoid_enums</A>
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure 'Iterator.next()' method implementations throw 'NoSuchElementException' [PB.RE.CTNSE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure 'Iterator.next()' method implementations throw 'NoSuchElementException' [PB.RE.CTNSE]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects any 'Iterator.next()' method implementation that does not
+throw 'NoSuchElementException'. An error is reported if an iterator contains
+a next() method that could not throw 'NoSuchElementException'.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Methods which throw an 'UnsupportedOperationException' in the method body are
+ignored.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Error Handling
+
+Failure to account for 'NoSuchElementException' may cause unexpected behavior
+and have security implications. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When a class correctly implements the interface java.util.Iterator, its
+'next()' method should be able to throw a 'NoSuchElementException' if the
+iterator iterates to the end of the collection. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+import java.util.Iterator;
+
+public class CTNSE{
+    class MyIterator implements Iterator {
+        List list;
+        int currentIndex;
+        //... other method implementations
+        
+        public Object next() { //VIOLATION
+            currentIndex++;
+            return list.get(currentIndex);
+        }
+        
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.re;
+
+import java.util.Iterator;
+
+public class CTNSEFixed {
+    class MyIterator implements Iterator {
+        List list;
+        int currentIndex;
+        //... other method implementations
+        
+        public Object next() { //FIXED
+            currentIndex++;
+            if (currentIndex&gt;= list.size())
+                throw new java.util.NoSuchElementException();
+            return list.get(currentIndex);
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure 'SecurityManager' checks before 'Socket' transfers or retrievals [OWASP2019.API3.SMSTR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure 'SecurityManager' checks before 'Socket' transfers or retrievals [OWASP2019.API3.SMSTR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if a call to "Socket.getInputStream()" or
+"Socket.getOutputStream()" is not preceded by a call to a "SecurityManager"
+"check" method. An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+"SecurityManager" is used to check for permissions before performing unsafe or
+sensitive operations. To improve security, transfers and retrievals from sockets
+should be preceded by a SecurityManager check.
+
+This rule helps to protect against the OWASP 2013 Top 10 application 
+vulnerability "A6-Sensitive Data Exposure".
+
+This rule also helps to enforce the PCI DSS (Payment Card Industry Data Security 
+Standard) Requirement #6: "Develop and maintain secure systems and 
+applications".  Specifically, this rule helps to test for Issue 6.3.1.4: 
+"Validation of secure communications".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class SMSTR {
+    void method(Socket s) {
+        InputStream is = s.getInputStream();
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+public class SMSTRFixed {
+    void method(Socket s) {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            try {
+                sm.checkPermission(new SocketPermission(HOST, ACTION);
+                InputStream is = s.getInputStream();
+                ...
+            }
+            catch (SecurityException se) {
+                ...
+            }
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+    
+1.  "Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+2.  OWASP Top 10 2013 (A6-Sensitive Data Exposure):
+    <A HREF="https://www.owasp.org/index.php/Top_10_2013-Top_10">https://www.owasp.org/index.php/Top_10_2013-Top_10</A>
+
+3.  OWASP API Security Top 10-2019
+    API3-Excessive Data Exposure
+    <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+4.  PCI Data Security Standard:
+    <A HREF="https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml">https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml</A>
+
+</PRE>
+</BODY>
+</HTML>

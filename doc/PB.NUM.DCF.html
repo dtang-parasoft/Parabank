@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not compare floating point types [PB.NUM.DCF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not compare floating point types [PB.NUM.DCF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies floating point numbers that are compared for equality using 
+"==" or "!=".  An error is reported for each occurrence. See BENEFITS for more
+information.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check cases where a comparison is made to Double.NaN or
+Float.NaN. These cases are covered by the rule PB.NUM.NAN and it may be
+beneficial to run the rules in conjunction with one another.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+
+Unexpected numeric results may cause unexpected behavior and create security
+holes. See BENEFITS for more information.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Ignore floating point comparisons to "infinity" (default true)
+    Double and Float infinity values are unique so comparisons to these values
+    are generally safe.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This prevents logic errors that can occur when a floating point comparison's
+outcome is changed by the imprecision of the numbers' representation.
+Specifically, comparisons involving computed floating point numbers are most
+suspect. For example the following expression:
+    (0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 == 1)
+resolves to false.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.num;
+
+public class DCF {
+    int method(double d) {
+        if (d == 1) {  // VIOLATION
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change the types of the numbers being compared or change the comparison
+to allow for some imprecision.
+
+package examples.rules.pb.num;
+
+public class DCFFixed {
+    int method(int d) {  // FIXED
+        if (d == 1) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

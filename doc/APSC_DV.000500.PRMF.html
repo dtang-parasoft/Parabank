@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare the 'run()' method of 'PrivilegedAction' and 'PrivilegedExceptionAction' implementations "final" [APSC_DV.000500.PRMF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare the 'run()' method of 'PrivilegedAction' and 'PrivilegedExceptionAction' implementations "final" [APSC_DV.000500.PRMF]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation if the 'run()' method of a
+"java.security.PrivilegedAction" or "java.security.PrivilegedExceptionAction"
+implementation is not declared "final".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+
+Implementations of 'PrivilegedAction' and 'PrivilegedExceptionAction' are used
+to to interact with sensitive data or operations. If the 'run()' method is not
+declared "final" an attacker could subclass the implementation and override the
+'run()' method. This may allow the privileged code to be bypassed or otherwise
+interfered with.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check implementations of "java.security.PrivilegedAction" (default on)
+-Check implementations of "java.security.PrivilegedExceptionAction" (default on)
+-Ignore "final" classes (default on)
+    Ignores 'run()' methods enclosed by classes which are "final" and are
+    otherwise unable to be extended. For example a "static" class enclosed by a
+    "final" class may still be able to be extended. A violation would still be
+    reported for this case.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.PrivilegedAction;
+
+public class PAF implements PrivilegedAction {
+    public Object run() { //VIOLATION
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.wsc;
+
+import java.security.PrivilegedAction;
+
+public class PAFFixed implements PrivilegedAction {
+    public final Object run() { //FIXED
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+"Writing Secure Java Code: A Taxonomy of Heuristics and an Evaluation of 
+    Static Analysis Tools" by Michael Ware
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling, circumventing, or altering implemented security safeguards/countermeasures
+APSC-DV-000510: The application must execute without excessive account permissions
+
+</PRE>
+</BODY>
+</HTML>

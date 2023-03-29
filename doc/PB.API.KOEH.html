@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that all types which are used as keys in Sets and Maps override the 'equals()' and 'hashCode()' methods [PB.API.KOEH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that all types which are used as keys in Sets and Maps override the 'equals()' and 'hashCode()' methods [PB.API.KOEH]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Objects which are used as keys in Maps or inserted into Sets generally should 
+override the 'equals()' and 'hashCode()' methods.  This rule will flag a 
+violation for each case where an object which does not override 'equals()' and/or 
+'hashCode()' is inserted into a 'Set' or used as the key in a 'Map'.  The rule 
+will check the interface types 'java.util.Map' and 'java.util.Set' as well as the 
+concrete implementations of these interfaces 'java.util.HashMap', 'java.util.
+HashSet', and 'java.util.Hashtable'.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.1
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Allow the following types as keys in Sets and Maps (Specify fully qualified 
+ type names): 
+    -Types in this list will be ignored when they are used as keys in Maps or as
+     entries in Sets.    
+    -This rule may report several violations for types which you know are 
+     acceptable to use as entries in Sets or keys in Maps when you first run
+     the rule.  To prevent the rule from flagging violations for these key 
+     types, you should add the types to this list.
+    -By default, this list is empty.  You must add your own values to it.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If an object which does not override 'equals()' and/or 'hashCode()' is used as 
+the key in a Map or inserted into a Set, future lookups will likely not behave
+as expected.  These lookups will either fail or be inefficient unless the object
+that is being looked up is the exact same object as the one that was originally
+inserted into the 'Map' or 'Set'.  Usually, this is not what was intended.  
+Future lookups should succeed as long as the object being looked up has values
+in its fields which are equal to the values in the fields of the object which 
+was originally inserted.  This is accomplished by overriding the 'equals()' 
+method.  If the 'equals()' method is overridden, the 'hashCode()' method should 
+also be overridden.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Note that, since the 'IntWrapper' class does not override the 'equals()' method
+or the 'hashCode()' method, the 'main()' method will not find the "IntWrapper" 
+object which was inserted into the 'Map'.  Thus, "null" will be printed out.
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class KOEH {
+    public static void main(String[] args) {
+        IntWrapper iw= new IntWrapper(0);
+        Map m= new HashMap();
+        m.put(iw, "FOUND");  //VIOLATION
+        IntWrapper iw2= new IntWrapper(0);
+        System.out.println(m.get(iw2));
+    }
+    
+    private static class IntWrapper {
+        private final int _field;
+        
+        IntWrapper(int a) {
+            _field= a;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Override the 'equals()' and 'hashCode()' methods so that two 'IntWrapper'
+objects will be considered equal (and have the same hash code) as long as their
+fields have the same value.  After this is done, the 'main()' method will print
+out "FOUND", which is probably what was originally intended.
+
+package examples.rules.pb.api;
+
+import java.util.*;
+
+public class KOEHFixed {
+    public static void main(String[] args) {
+        IntWrapper iw= new IntWrapper(0);
+        Map m= new HashMap();
+        m.put(iw, "FOUND");  //FIXED
+        IntWrapper iw2= new IntWrapper(0);
+        System.out.println(m.get(iw2));
+    }
+    
+    private static class IntWrapper {
+        private final int _field;
+        
+        IntWrapper(int a) {
+            _field= a;
+        }
+        
+        public int hashCode() {
+            return _field;
+        }
+        
+        public boolean equals(Object o) {
+            if(!(o instanceof IntWrapper)){
+                return false;
+            }
+            return ((IntWrapper)o)._field == _field;
+        }
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

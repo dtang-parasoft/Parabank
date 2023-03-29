@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid "abstract" classes without "abstract" methods [OOP.NAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid "abstract" classes without "abstract" methods [OOP.NAM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies "abstract" classes that do not contain at least one 
+"abstract" method.  The rule will flag a violation for each class which meets
+all of the following conditions:
+
+1.  The class is declared "abstract".
+2.  There are no "abstract" methods defined within the class.
+3.  There are no "abstract" methods inherited from "abstract" superclasses.
+4.  There are no "abstract" methods from implemented interfaces for which no
+concrete implementation is provided.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If there are no "abstract" methods in a class and the class does not inherit any 
+"abstract" methods from "abstract" superclasses or interfaces, there is no point 
+in declaring the class "abstract".  "Abstract" classes should provide at least 
+one "abstract" method which concrete subclasses must implement in order to 
+extend the class.  If there is no such method, it is confusing and unnecessary 
+to declare the class "abstract".  An "abstract" class with no "abstract" methods 
+usually indicates that someone forgot to add an "abstract" method or that the 
+class was accidentally declared "abstract".
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public abstract class NAM {  //VIOLATION: This "abstract" class does not contain 
+                             //any "abstract" methods.
+    public void foo(){}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+There are three possible repairs:
+
+1. Remove the "abstract" keyword from the class declaration.
+2. Declare one of the existing methods "abstract".
+3. Add an "abstract" method.
+
+Which one of these solutions is appropriate depends on the situation.  Fixes #2 
+and #3 are shown below.
+
+package examples.rules.oop;
+
+public abstract class NAMFixed { //FIXED 
+    public void foo(){}
+    public abstract void foo2();
+}
+
+or... 
+
+package examples.rules.oop
+
+public abstract class NAMFixed { //FIXED
+   public abstract void foo();
+}
+
+</PRE>
+</BODY>
+</HTML>

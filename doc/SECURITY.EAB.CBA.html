@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass byte arrays to ObjectOutputStream in the 'writeObject()' method [SECURITY.EAB.CBA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass byte arrays to ObjectOutputStream in the 'writeObject()' method [SECURITY.EAB.CBA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that passes byte arrays to ObjectOutputStream in the
+'writeObject()' method. An error is reported if byte[] fields are passed to
+ObjectOutputStream.write(byte[]) in a custom serialization method
+(writeObject). Fields of type byte[] should be cloned before being passed to
+the serialization output stream.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Erratic Application Behavior
+category: Data Security
+
+The class ObjectOutputStream may be subclassed by a malicious class that tries 
+to modify object-internal data. When a direct reference to the byte[] field is 
+passed to the ObjectOutputStream, this reference can be used to access and 
+modify the array contents. Passing a clone of the original array makes this 
+kind of attack impossible.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class CBA implements Serializable {
+    protected byte[] field;
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.write(field); // VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.security.eab;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class CBAFixed implements Serializable {
+    protected byte[] field;
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.write((byte[])field.clone()); // FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Secure Programming for Linux and Unix HOWTO - Chap 10. Language-Specific Issues
+<A HREF="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/java.html">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/java.html</A> (rule #14)
+
+</PRE>
+</BODY>
+</HTML>

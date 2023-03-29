@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure parameters and return type of remote business methods are Serializable [EJB.EJB3.SRBM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure parameters and return type of remote business methods are Serializable [EJB.EJB3.SRBM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks methods declared in remote business interfaces. A violation is
+flagged for each method that has a non-Serializable return type or parameters.
+As remote business methods may be invoked via RMI, the parameters and return
+type must be Serializable.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule considers an interface a remote business interface if it is has the
+"@Remote" annotation.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.ejb.ejb3;
+
+@Remote
+public interface SRBM {
+    int getInt();
+    void setInt(int i);
+    Object getName(); //VIOLATION
+    void setName(Object o); //VIOLATION
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If possible, reimplement the method using Serializable types.
+
+package examples.rules.ejb.ejb3;
+
+@Remote
+public interface SRBMFixed {
+    int getInt();
+    void setInt(int i);
+    String getName(); //FIXED
+    void setName(String o); //FIXED
+    ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Debu Panda, Reza Rahman, and Derek Lane. EJB3 in Action.
+Greenwich: Manning, 2007. pp. 78, 88.
+
+</PRE>
+</BODY>
+</HTML>

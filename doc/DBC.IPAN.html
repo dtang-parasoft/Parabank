@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include a '@pre != null' tag for each parameter that is dereferenced before being checked for null [DBC.IPAN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include a '@pre != null' tag for each parameter that is dereferenced before being checked for null [DBC.IPAN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags parameters which are dereferenced before being checked for
+"null". Parameters which have a "@pre" javadoc tag denoting they are never null
+are ignored. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a parameter is dereferenced by assignment, field access, or method invocation
+then the user may know that the parameter is never null. Otherwise, a
+NullPointerException would be thrown. If this is the case a "@pre" javadoc tag
+should be added denoting this fact. Also, the user may have mistakingly
+forgotten to check for "null"
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "public" methods (default true)
+-Check "protected" methods (default true)
+-Check "package-private" methods (default true)
+-Check "private" methods (default true)
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.dbc;
+
+public class IPAN {
+    /**
+     * @pre s != null
+     */
+    public String concat(Object s, Object t) {
+        return s.toString() + t.toString(); //VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the misleading postcondition, or change it so that it is correct.
+
+package examples.rules.dbc;
+
+public class IPANFixed {
+    /**
+     * @pre s != null
+     * @pre t != null
+     */
+    public String concat(Object s, Object t) {
+        return s.toString() + t.toString(); //FIXED
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

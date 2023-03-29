@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Weighted Methods of Class [METRIC.WMC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Weighted Methods of Class [METRIC.WMC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This metric calculates the sum of Strict Cyclomatic Complexity (see METRIC.SCC)
+of methods of a class.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.1.3
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The weighted methods of class (WMC) metric is the sum of the complexities
+of all type methods where the number of methods and the complexity of the methods
+involved is a predictor of how much time and effort is required to develop
+and maintain the type. WMC measures usability and reusability via strict cyclomatic
+complexities by summing METRIC.SCC of the declared methods and constructors of type.
+A type with a low WMC usually points to greater polymorphism, while a type with a high WMC
+indicates that the type is complex and therefore harder to reuse and maintain. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Metric  Code
+        
+        class Foo
+        {
++1          String Bar(int i, int j, int k)
+            {
+                String str = null;
++1              if (i &gt;= 2)
+                {
++2                  if (j &gt; 4 &amp;&amp; k &lt; 3)
+                    {
+                        str = "correct";
+                    }
+                }
++1              if (j &gt; 10)
+                {
+                    return "out of range";
+                }
+                return str;
+            }
+ 
++1          String Qux(int i)
+            {
+                String str = null;
+                switch (i)
+                {
++1                  case 0:
+                        return "nothing";
++1                  case 1:
+                        throw new IllegalArgumentException();
+                }
+                return str;
+            }
+        }
+
+Total: 8
+
+</PRE>
+</BODY>
+</HTML>

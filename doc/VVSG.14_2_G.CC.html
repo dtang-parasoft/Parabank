@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid conditions that always evaluate to the same value [VVSG.14_2_G.CC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid conditions that always evaluate to the same value [VVSG.14_2_G.CC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies conditions that always evaluate to the same value. Such conditions
+often appear in the course of refactoring and during code evolution - especially when
+code is edited by multiple developers. Often, the existence of such conditions indicates
+logical errors in code (as shown below in the Example section). Additionally, such conditions
+may indicate overly loose assumptions, which results in less efficient code and fragments
+of dead code.
+This rule analyzes top-level conditions and sub-conditions in:
+- if statements
+- switch statements
+- while loops
+- for loops
+- do...while loops
+- ternary operator
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+When both the condition and the code that makes this condition constant are within
+the same method, this almost always indicates a problem with the logic. When
+one of them is in a different method, a more careful review is needed before
+proceeding to fix the reported violation. Even though an obvious solution may be
+to remove the check, it is possible that the check protects against future changes.
+
+When the "Report violations on inner conditions" parameter is turned on, some 
+violations usually need additional analysis to be fully understood. For example: 
+
+void test(int a)
+{
+    if (a &gt; 3 &amp;&amp; a &gt; 2) { // Violation Condition "a &gt; 2" always evaluates to true
+    }
+}
+
+This example does not show that condition "a &gt; 2" will be always true at the function
+entry. It shows that if condition "a &gt; 2" is evaluated, it always evaluates to true.
+The condition will only be evaluated if "a &gt; 3" is fulfilled.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violations on inner conditions" parameter enables reporting violations on 
+sub-conditions. If the parameter is turned off, the rule will report only on top-level 
+controlling expressions.
+This option is enabled by default.
+
+The "Report violations when a constant value is used as a condition" parameter enables 
+reporting violations when a constant value is used as a controlling expression.
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you keep your code in good shape and eliminate logical
+inconsistencies as soon as they are introduced.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+public class Example
+{
+    public void handleException(Throwable thr)
+    {
+        if (thr instanceof Exception) {
+            System.err.println("Exception found: " + ((Exception)thr).getMessage());
+        } else if (thr instanceof RuntimeException) { // Violation
+            ((RuntimeException)thr).printStackTrace(System.err);
+        } else {
+            System.out.println("Throwable: " + thr.toString());
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, rearrange the order of the operators:
+
+public class Repair
+{
+    public void handleException(Throwable thr)
+    {
+        if (thr instanceof RuntimeException) {
+            ((RuntimeException)thr).printStackTrace(System.err);
+        } else if (thr instanceof Exception) {
+            System.err.println("Exception found: " + ((Exception)thr).getMessage());
+        } else {
+            System.out.println("Throwable: " + thr.toString());
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-561: Dead Code
+<A HREF="https://cwe.mitre.org/data/definitions/561.html">https://cwe.mitre.org/data/definitions/561.html</A>
+
+CWE-570: Expression is Always False
+<A HREF="https://cwe.mitre.org/data/definitions/570.html">https://cwe.mitre.org/data/definitions/570.html</A>
+
+CWE-571: Expression is Always True
+<A HREF="https://cwe.mitre.org/data/definitions/571.html">https://cwe.mitre.org/data/definitions/571.html</A>
+
+SEI CERT Oracle Coding Standard for Java
+MSC56-J. Detect and remove superfluous code and values
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MSC56-J.+Detect+and+remove+superfluous+code+and+values">https://wiki.sei.cmu.edu/confluence/display/java/MSC56-J.+Detect+and+remove+superfluous+code+and+values</A>
+
+Tags: CWE, CERT
+
+</PRE>
+</BODY>
+</HTML>

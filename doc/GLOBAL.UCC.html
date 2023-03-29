@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure correct constructor declarations in utility classes [GLOBAL.UCC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure correct constructor declarations in utility classes [GLOBAL.UCC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Utility classes should contain only "private" constructors.  This rule
+identifies utility classes which have a constructor that is not "private".  An
+error is reported for each occurrence.  A utility class is a class which has no
+instance fields and no instance methods.  There are many other requirements for
+a utility class which can optionally be enforced.   Since different people have
+different definitions for what is considered a utility class, these requirements
+can be customized in the rule's parameters.
+
+Global analysis is required in this rule.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+
+METHOD
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There was significant overlap between this rule and the rule 'OPT.PCSC: Declare
+the constructors for classes with only static members "private" or "protected"'.
+Because of this, GLOBAL.UCC and OPT.PCSC were combined into a new, parameterized
+version of GLOBAL.UCC.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Weak Security Controls
+category: Code Quality
+
+See BENEFITS.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Requirements for a Utility Class
+    -Must be "public" (Default is "true")
+    -Must not be "abstract" (Default is "true")
+    -Must not have a superclass other than "java.lang.Object" (Default is
+     "true")
+    -Must have at least one non-"private" method (Default is "true")
+    -Must not declare any inner types (Default is "true")
+    -Constructor(s) must never be called (requires global analysis)
+        -Default is "true".
+        -If this parameter is enabled, the rule must perform global analysis to
+         make sure that the constructors of the class are not called globally.
+         This will greatly slow down the rule when it is running for the first
+         time, but it will also help to eliminate false positives.  By
+         definition, utility classes should not be instantiated.  If a class is
+         instantiated, it is probably not a utility class.
+        -If you want this rule to run quickly, you should disable this parameter
+         (as well as the "Must not have any subclasses (requires global
+         analysis)" parameter).  However, disabling this parameter may result in
+         the rule becoming less accurate.
+    -Must not have any subclasses (requires global analysis)
+        -Default is "true".
+        -If this parameter is enabled, the rule must perform global analysis to
+         make sure that the class does not have any subclasses.  This will
+         greatly slow down the rule when it is running for the first time, but
+         it will also help to eliminate false positives.  Utility classes are
+         generally not intended to be subclassed.  Classes which are subclassed
+         are probably not utility classes.
+        -If you want this rule to run quickly, you should disable this parameter
+         (as well as the "Constructor(s) must never be called (requires global
+         analysis)" parameter).  However, disabling this parameter may result in
+         the rule becoming less accurate.
+
+By default, the rule will enforce all of these requirements.  That is, for a
+class to be considered a utility class, it must be "public", must not be
+"abstract", must not have a superclass other than "java.lang.Object", must have
+at least one non-"private" method other than the 'main()' method (if any), must
+not declare any inner types, and must not have any subclasses.  Additionally,
+the class must not have any instance methods or instance fields.  Any classes
+which do not meet all of these requirements will not be flagged by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A utility class contains only "static" methods and "static" fields. Since the
+utility class is not designed to be instantiated, all of the constructors
+should be "private". If no explicit constructor is present, then a "private"
+constructor should be declared in order to prevent instantiations through the
+default constructor.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.codsta;
+
+public class UCC {  //VIOLATION: missing private constructor
+    public UCC() {}  // VIOLATION: utility class should not have public constructor
+    public static String getS() {
+        return s;
+    }
+    public static String s = "foo";
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.codsta;
+
+public class UCCFixed {
+    private UCCFixed() {}  // FIXED
+    public static String getS() {
+        return s;
+    }
+    public static String s = "foo";
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Joshua Bloch: "Effective Java - Programming Language Guide"
+Addison Wesley, 2001, pp. 12
+
+
+</PRE>
+<STRONG>
+LOG
+</STRONG>
+<PRE>
+
+@deprecated CODSTA.UCC
+@deprecated CODSTA.UCDC
+@deprecated OPT.PCSC
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use 'wait()' and 'notifyAll()' instead of polling loops [TRS.UWNA]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use 'wait()' and 'notifyAll()' instead of polling loops [TRS.UWNA]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule identifies the coding pattern known as a "polling loop" or 
+"busy wait".  A "polling loop" is code which repeatedly calls 'Thread.sleep()' 
+within a "while" loop which waits for some condition to be satisfied.  An 
+error is reported for each occurrence of this pattern.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"Each thread of execution will "hang" and prevent tasks from completing.
+In some cases, CPU consumption may occur if a lock check occurs in a tight
+loop." [CWE-833]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using 'sleep()' in a polling loop is not efficient.  Polling loops use 
+processor cycles to repeatedly execute the 'sleep()' calls and test the
+condition.  The 'wait()', 'notify()', and 'notifyAll()' methods are much 
+more efficient alternatives.  When using the 'wait()', 'notify()', and 
+'notifyAll()' methods, the condition will only be tested when it is possible
+that it has been changed by another thread.  Also, using these methods 
+avoids the need to waste processor cycles by repeatedly calling 'Thread.sleep()'.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class UWNA {
+    void method (Object o) {
+        while (true) {
+            while (!_ready) {
+                try {
+                    Thread.sleep(300);  // VIOLATION
+                } catch (Exception e) {
+                }
+            }
+            synchronized (o) {
+                // process data.
+            }
+        }
+    }
+
+    public void ready () { 
+        _ready = true; 
+    }
+
+    private boolean _ready;
+}    
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Replace the call to 'sleep()' with a call to 'wait()', and add a call to 
+'notifyAll()'.  Place the code which calls 'wait()' and tests the condition
+inside a "synchronized" block.
+
+package examples.rules.trs;
+
+public class UWNAFixed {
+    void method () {
+        while (true) {
+            synchronized (lock) {
+                while (!_ready) {
+                    try {
+                        lock.wait();    
+                    } catch (Exception e) {}
+                }
+                // process data.
+            }
+        }
+    }
+
+    public void ready () {
+        _ready = true;
+        lock.notifyAll();
+    }
+
+    private boolean _ready;
+    private Object lock;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-833: Deadlock
+<A HREF="https://cwe.mitre.org/data/definitions/833.html">https://cwe.mitre.org/data/definitions/833.html</A>
+
+Peter Haggar: "Practical Java - Programming Language Guide".
+Addison Wesley, 2000, pp.191 - 193
+
+</PRE>
+</BODY>
+</HTML>

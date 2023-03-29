@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using dollar signs in names [NAMING.DSN]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using dollar signs in names [NAMING.DSN]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule flags a violation for names containing '$'. The names which are
+checked can be specified through the parameters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check type declarations (default true)
+    -Check annotation declarations (default true)
+    -Check enum declarations (default true)
+    -Check class declarations (default true)
+    -Check interface declarations (default true)
+-Check method declarations (default true)
+-Check variable declarations (default true)
+    -Check field declarations (default true)
+    -Check local variable declarations (default true)
+    -Check parameter declarations (default true)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Java may use '$' in auto-generated names. Standard practice is to avoid using
+'$' in names in spite of it being a valid identifier.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class DSN {
+    class Inner$Class { //VIOLATION
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.naming;
+
+public class DSNFixed {
+    class Inner$Class { //FIXED
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+The Java Tutorials
+<A HREF="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html">https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html</A>
+
+</PRE>
+</BODY>
+</HTML>

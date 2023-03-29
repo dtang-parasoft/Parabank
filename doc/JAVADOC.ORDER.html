@@ -1,0 +1,196 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Order Javadoc tags appropriately [JAVADOC.ORDER]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Order Javadoc tags appropriately [JAVADOC.ORDER]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies classes whose Javadoc tags are not ordered according to
+Sun's recommendation. By default, an error is reported if Javadoc tags are not in the 
+following order:
+
+    1.  @author
+    2.  @version
+    3.  @concurrency
+    4.  @param
+    5.  @return
+    6.  @exception
+    7.  @throws
+    8.  @see
+    9.  @since
+    10. @serial
+    11. @serialdata
+    12. @serialfield
+    13. @deprecated
+    14. other tags (e.g DbC tags : @pre, @post, @invariant)
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v5.0
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+- a Javadoc tag table which user can change the javadoc tag order and add
+  their own tags.
+  
+To give several tags the same order priority, add them as a new comma separated list to 
+the rule parameters.
+
+For example, to allow @author and @version to be used in any order before the rest of 
+the tags:
+    1. View/Change Rule parameters
+    2. Uncheck @author and @version
+    3. Add a new element '@author, @version'
+    4. Move '@author, @version' to the top.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If everyone follows the same Javadoc tag ordering, it will help others to
+read the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.javadoc;
+
+import java.sql.*;
+
+// VIOLATION
+/**
+ * this is an example class
+ *
+ * @deprecated
+ * @version 1.0
+ * @author jtest
+ */
+public class ORDER {
+
+    // VIOLATION
+    /**
+     * this method will return a Database Connection
+     *
+     * @pre url != null
+     * @pre db != null
+     * @post $result != null
+     * @param url URL
+     * @param db database name
+     * @exception SQLException
+     * @exception Exception
+     * @return Connection
+     */
+    public Connection getConnection(String url, String db) 
+        throws SQLException, Exception
+    {
+    Connection con = null;
+    // create db connection
+    return con;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Re-order the Javadoc tags to follow the convention.
+
+package examples.rules.javadoc;
+
+import java.sql.*;
+
+// OK 
+/**
+ * this is an example class
+ *
+ * @author jtest
+ * @version 1.0
+ * @deprecated
+ */
+public class ORDERFixed {
+
+    // OK 
+    /**
+     * this method will return a Database Connection
+     *
+     * @param url URL
+     * @param db database name
+     * @return Connection
+     * @exception SQLException
+     * @exception Exception
+     * @pre url != null
+     * @pre db != null
+     * @post $result != null
+     */
+    public Connection getConnection(String url, String db) 
+        throws SQLException, Exception
+    {
+    Connection con = null;
+    // create db connection
+    return con;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#styleguide">http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#styleguide</A>
+
+OWASP API Security Top 10-2019
+API9-Improper Assets Management
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

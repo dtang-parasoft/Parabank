@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Add the "@Deprecated" annotation to the declarations of deprecated members [PB.API.DANNOT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Add the "@Deprecated" annotation to the declarations of deprecated members [PB.API.DANNOT]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When using JDK 1.5 or higher, the "@Deprecated" annotation should be used for
+deprecated members.  This rule checks for deprecated types, methods, and fields 
+which are not declared using the "@Deprecated" annotation.  
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.0
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When the "@Deprecated" annotation is used, the compiler can enforce that the
+member declared as deprecated is actually deprecated.  For instance, using the
+"-Xlint:deprecation" flag, the compiler will issue a warning if a deprecated 
+method is overridden when the "@Deprecated" annotation is used.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.api;
+
+public class DANNOT {
+    /**
+     * @deprecated
+     */
+    public void deprecatedMethod()  //VIOLATION
+    {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Add the "@Deprecated" annotation to the declaration of deprecated members.
+
+package examples.rules.pb.api;
+
+public class DANNOTFixed {
+    /**
+     * @deprecated
+     */
+    @Deprecated                     //FIXED
+    public void deprecatedMethod()
+    {
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

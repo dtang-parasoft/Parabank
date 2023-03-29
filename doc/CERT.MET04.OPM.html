@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not override an instance "private" method [CERT.MET04.OPM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not override an instance "private" method [CERT.MET04.OPM]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies code that attempts to override instance 
+"private" methods. An error is reported if a class contains any 
+instance methods with the same signature as an instance "private" 
+method in a parent class.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+METHOD
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v4.5
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An instance "private" method in a superclass is not overridden by
+a method with the same name in the current class.  This can lead
+to confusion.  Also, if the method accessibility in the superclass 
+is changed to non-private, then the program semantics will change
+because the method will then be overridden.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.oop;
+
+public class OPM extends Super {
+    private void method () {}  // VIOLATION
+}
+
+class Super {
+    private void method () {}
+
+    public static void main (String[] args) {
+        OPM x = new OPM ();
+        test (x);
+    }
+
+    private static void test (Super x) {
+        x.method ();  // invokes 'Super.method ()', not 'OPM.method ()'
+    }  
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use different names for the methods to clarify that they are
+unrelated and to avoid possible problems if the access modifier
+is changed.
+
+package examples.rules.oop;
+
+public class OPMFixed extends Super {
+    private void renamedMethod () {}  // FIXED
+}
+
+class Super {
+    private void method () {}
+
+    public static void main (String[] args) {
+        OPMFixed x = new OPMFixed ();
+        test (x);
+    }
+
+    private static void test (Super x) {
+        x.method ();  // invokes 'Super.method ()', not 'OPMFixed.renamedMethod ()'
+    }  
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+MET04-J. Do not increase the accessibility of overridden or hidden methods
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/MET04-J.+Do+not+increase+the+accessibility+of+overridden+or+hidden+methods">https://wiki.sei.cmu.edu/confluence/display/java/MET04-J.+Do+not+increase+the+accessibility+of+overridden+or+hidden+methods</A>
+
+</PRE>
+</BODY>
+</HTML>

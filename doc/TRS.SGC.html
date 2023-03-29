@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not synchronize on the class object returned by the 'getClass' method [TRS.SGC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not synchronize on the class object returned by the 'getClass' method [TRS.SGC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects synchronizing on the return value of the 'getClass()' method.
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected synchronization behaviors. Synchronizing on the result of
+the 'getClass()' method is especially dangerous when using inheritance.
+"Synchronizing on the return value of the Object.getClass() method can lead to unexpected behavior.
+Whenever the implementing class is subclassed, the subclass locks on the subclass's type. The Class
+object of the subclass is entirely distinct from the Class object of the parent class."
+[SEI CERT Oracle Coding Standard for Java; LCK02-J. Do not synchronize on the class object returned
+by getClass()]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following code triggers a violation:
+
+package examples.rules.trs;
+
+public class SGC {
+    public void handle() {
+        synchronized(getClass()) { //VIOLATION
+            //compute
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.trs;
+
+public class SGCFixed {
+    public void handle() {
+        synchronized(SGCFixed.class) { //FIXED
+            //compute
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+LCK02-J. Do not synchronize on the class object returned by getClass()
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487849">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88487849</A>
+
+</PRE>
+</BODY>
+</HTML>

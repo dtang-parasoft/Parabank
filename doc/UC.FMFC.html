@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid redundant "final" keywords in method declarations in "final" classes [UC.FMFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid redundant "final" keywords in method declarations in "final" classes [UC.FMFC]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies methods declared "final" in classes which are also declared
+"final".  An error is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v8.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Declaring a method as "final" in a final class is redundant.  A final class cannot 
+be extended; hence, its methods cannot be overridden.  This means that it is not 
+necessary to declare these methods "final".
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Declaring methods "final" in "final" classes helps to emphasize that these methods
+cannot be overridden.  Although it is not necessary, some people may still prefer to
+declare such methods as "final" for this reason.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.uc;
+
+public final class FMFC {
+    public final void myMethod() {  //VIOLATION
+        //some code
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove the "final" keyword from the method declaration.
+
+package examples.rules.uc;
+
+public final class FMFC {
+    public void myMethod() {  //FIXED
+        //some code
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

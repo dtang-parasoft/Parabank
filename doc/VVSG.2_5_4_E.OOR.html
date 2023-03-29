@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid out of range comparisons [VVSG.2_5_4_E.OOR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid out of range comparisons [VVSG.2_5_4_E.OOR]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies comparisons that have one side as char/byte/short/int
+variable and the other side as a constant. If the constant is not within the 
+corresponding range of possible values, then the comparison is flagged.
+
+
+
+</PRE>
+<STRONG>
+SCOPE LEVEL
+</STRONG>
+<PRE>
+LINE
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v6.0
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+-Check "char" comparisons (default true)
+-Check "byte" comparisons (default false)
+-Check "short" comparisons (default false)
+-Check "int" comparisons (default false)
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It does not make sense to compare a char/byte/short/int variable to a constant that 
+is either less than or greater than the bounds of the type, as the comparison
+would always return "true", or always return "false" regardless of the
+variable's value.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class UIF {
+    public static String getAsciiString(String inString) {
+        StringBuffer outStringBuffer= new StringBuffer();
+        for (int i= 0; i&lt; inString.length(); i++) {
+            char currentChar= inString.charAt(i);
+            if (currentChar&gt; -1 &amp;&amp; currentChar&lt; 256) { //VIOLATION, -1 is not a possible value of "char"
+                outStringBuffer.append(currentChar);
+            }
+        }
+        return outStringBuffer.toString();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+package examples.rules.pb.logic;
+
+public class UIFFixed {
+    public static String getAsciiString(String inString) {
+        StringBuffer outStringBuffer= new StringBuffer();
+        for (int i= 0; i&lt; inString.length(); i++) {
+            char currentChar= inString.charAt(i);
+            if (currentChar&lt; 256) { //FIXED, removed the -1 comparison
+                outStringBuffer.append(currentChar);
+            }
+        }
+        return outStringBuffer.toString();
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid writing to Consoles [SECURITY.ESD.ACW]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid writing to Consoles [SECURITY.ESD.ACW]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies calls to the 'flush', 'format', or 'printf' method of a
+'java.io.Console'. This rule also identifies calls to an output method by the
+'PrintWriter' returned from a call to 'java.io.Console#writer()'. A violation
+is reported for each occurrence.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is only applicable to JDK 1.6 or later. This rule is primarily useful
+for non-command-line applications. Otherwise, this rule may flag data which is
+purposefully output to a Console.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+category: Exposing Sensitive Data
+
+Output to a Console may reveal system data or leftover debugging information
+which could then be used by an attacker.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+See SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+package examples.rules.security.esd;
+
+public class ACW {
+    void checkPassword(String password) {
+        if (isValidPassword(password)) {
+            Console console = System.console();
+            console.writer().print(password + " is valid"); //VIOLATION
+        }
+        else {
+            throw new SecurityException();
+        }
+    }
+
+    private boolean isValidPassword(String password) {
+        ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If the Console method call is leftover from debugging or is not part of an
+application's functionality then it should be removed.
+
+package examples.rules.security.esd;
+
+public class ACWFixed {
+    void checkPassword(String password) {
+        if (isValidPassword(password)) {
+            //FIXED
+        }
+        else {
+            throw new SecurityException();
+        }
+    }
+
+    private boolean isValidPassword(String password) {
+        ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+SEI CERT Oracle Coding Standard for Java
+ERR01-J. Do not allow exceptions to expose sensitive information
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information">https://wiki.sei.cmu.edu/confluence/display/java/ERR01-J.+Do+not+allow+exceptions+to+expose+sensitive+information</A>
+
+OWASP API Security Top 10-2019
+API10-Insufficient Logging &amp; Monitoring
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+</PRE>
+</BODY>
+</HTML>

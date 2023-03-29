@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid double locking [BD.TRS.DLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid double locking [BD.TRS.DLOCK]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where a lock is acquired twice without 
+intermediate releasing. While this is legal for the so-called recursive 
+mutexes, it is not allowed for regular locks and may cause deadlocks.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.0.7
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents application deadlocks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Example
+{
+    private ReentrantLock lock = null;
+
+    void exclusivelyCompute()
+    {
+        lock.lock(); // VIOLATION
+        if (preconditionHolds()) {
+            /* perform some computations */
+            exclusivelyCompute();
+        }
+        lock.unlock();
+    }
+
+    public void run()
+    {
+        lock = new ReentrantLock();
+        exclusivelyCompute();
+    }
+
+    private boolean preconditionHolds()
+    {
+        return new Random().nextBoolean();
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The example can be repaired by separating locking and computation in 
+different functions (but ensuring that the function performing unlocked 
+computation is only called from functions performing appropriate locking):
+
+import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Repair
+{
+    private ReentrantLock lock = null;
+
+    void exclusivelyCompute()
+    {
+        lock.lock(); // NO VIOLATION
+        nonexclusivelyCompute();
+        lock.unlock();
+    }
+
+    public void run()
+    {
+        lock = new ReentrantLock();
+        exclusivelyCompute();
+    }
+
+    private static boolean preconditionHolds()
+    {
+        return new Random().nextBoolean();
+    }
+
+    private static void nonexclusivelyCompute()
+    {
+        if (preconditionHolds()) {
+            /* perform some computations */
+            nonexclusivelyCompute(); // NO VIOLATION
+        }
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+CWE-764: Multiple Locks of a Critical Resource
+<A HREF="https://cwe.mitre.org/data/definitions/764.html">https://cwe.mitre.org/data/definitions/764.html</A>
+
+Tags: CWE
+
+</PRE>
+</BODY>
+</HTML>

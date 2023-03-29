@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use ids as bean identifiers [SPRING.USEID]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use ids as bean identifiers [SPRING.USEID]
+</STRONG>
+<p>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies uses of the 'name' attribute of the &lt;bean/&gt; element in Spring xml configuration files. 
+A violation is reported for each occurrence of this attribute where the id attribute is not specified.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can specify either an id or name as the bean identifier. Using id is preferred for the reason
+below. 
+ 
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you follow this rule, the XML parser can validate the bean references.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+&lt;bean name="listOrdersController" class="org.springframework.samples.jpetstore.web.spring.ListOrdersController" /&gt;
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Change name to id:
+
+&lt;bean id="listOrdersController" class="org.springframework.samples.jpetstore.web.spring.ListOrdersController" /&gt;
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Twelve Best Practices For Spring XML Configurations by Jason Zhicheng Li (O'Reilly ONJava.com)
+<A HREF="http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html">http://onjava.com/pub/a/onjava/2006/01/25/spring-xml-configuration-best-practices.html</A>
+
+</PRE>
+</BODY>
+</HTML>
