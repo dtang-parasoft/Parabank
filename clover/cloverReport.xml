@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage generated="2023-05-08T12:00:00" clover="5.3.1">
   <project timestamp="2023-05-08T12:00:00">
-    <metrics statements="8000" coveredstatements="6400" conditionals="0" coveredconditionals="0" methods="500" coveredmethods="400" elements="10000" coveredelements="8000"/>
+    <metrics statements="8000" coveredstatements="400" conditionals="0" coveredconditionals="0" methods="500" coveredmethods="400" elements="10000" coveredelements="8000"/>
     <file name="com/mypackage1/MyClass1.java" path="src/main/java/com/mypackage1/MyClass1.java">
       <metrics statements="100" coveredstatements="90" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="9" elements="150" coveredelements="135"/>
       <class name="com.mypackage1.MyClass1" filename="com/mypackage1/MyClass1.java" complexity="5" coveredmethods="9" methods="10">
