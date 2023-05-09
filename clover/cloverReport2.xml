@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1683602156224" clover="4.1.2">
+   <project name="testproject Coverage Report" timestamp="1683602045003">
+      <metrics coveredelements="24" complexity="11" loc="76" methods="9" classes="4" statements="19" packages="2" coveredconditionals="3" coveredmethods="6" elements="32" ncloc="60" files="4" conditionals="4" coveredstatements="15"/>
+      <package name="com.cenqua.clovertest.subpackage">
+         <metrics coveredelements="6" complexity="5" loc="32" methods="4" classes="2" statements="6" coveredconditionals="1" coveredmethods="2" elements="12" ncloc="26" files="2" conditionals="2" coveredstatements="3"/>
+         <file path="E:\idea15\IntelliJ IDEA Community Edition 15.0.6\workspace\clover\clover-idea\testproject\src\com\cenqua\clovertest\subpackage\M.java" name="M.java">
+            <metrics coveredelements="6" coveredconditionals="1" complexity="3" loc="18" coveredmethods="2" methods="2" elements="8" classes="1" ncloc="15" statements="4" conditionals="2" coveredstatements="3"/>
+            <class name="M">
+               <metrics coveredelements="6" coveredconditionals="1" complexity="3" coveredmethods="2" methods="2" elements="8" statements="4" conditionals="2" coveredstatements="3"/>
+            </class>
+         </file>
+         <file path="E:\idea15\IntelliJ IDEA Community Edition 15.0.6\workspace\clover\clover-idea\testproject\src\com\cenqua\clovertest\subpackage\N.java" name="N.java">
+            <metrics coveredelements="0" coveredconditionals="0" complexity="2" loc="14" coveredmethods="0" methods="2" elements="4" classes="1" ncloc="11" statements="2" conditionals="0" coveredstatements="0"/>
+            <class name="N">
+               <metrics coveredelements="0" coveredconditionals="0" complexity="2" coveredmethods="0" methods="2" elements="4" statements="2" conditionals="0" coveredstatements="0"/>
+            </class>
+         </file>
+      </package>
+      <package name="com.cenqua.clovertest">
+         <metrics coveredelements="18" complexity="6" loc="44" methods="5" classes="2" statements="13" coveredconditionals="2" coveredmethods="4" elements="20" ncloc="34" files="2" conditionals="2" coveredstatements="12"/>
+         <file path="E:\idea15\IntelliJ IDEA Community Edition 15.0.6\workspace\clover\clover-idea\testproject\src\com\cenqua\clovertest\A.java" name="A.java">
+            <metrics coveredelements="16" coveredconditionals="2" complexity="4" loc="30" coveredmethods="3" methods="3" elements="16" classes="1" ncloc="23" statements="11" conditionals="2" coveredstatements="11"/>
+            <class name="A">
+               <metrics coveredelements="16" coveredconditionals="2" complexity="4" coveredmethods="3" methods="3" elements="16" statements="11" conditionals="2" coveredstatements="11"/>
+            </class>
+         </file>
+         <file path="E:\idea15\IntelliJ IDEA Community Edition 15.0.6\workspace\clover\clover-idea\testproject\src\com\cenqua\clovertest\B.java" name="B.java">
+            <metrics coveredelements="2" coveredconditionals="0" complexity="2" loc="14" coveredmethods="1" methods="2" elements="4" classes="1" ncloc="11" statements="2" conditionals="0" coveredstatements="1"/>
+            <class name="B">
+               <metrics coveredelements="2" coveredconditionals="0" complexity="2" coveredmethods="1" methods="2" elements="4" statements="2" conditionals="0" coveredstatements="1"/>
+            </class>
+         </file>
+      </package>
+   </project>
+   <testproject name="testproject Coverage Report" timestamp="1683602045003">
+      <metrics coveredelements="11" complexity="3" loc="26" methods="3" classes="1" statements="8" packages="1" coveredconditionals="0" coveredmethods="3" elements="11" ncloc="19" files="1" conditionals="0" coveredstatements="8"/>
+      <package name="com.cenqua.clovertest.subpackage">
+         <metrics coveredelements="11" complexity="3" loc="26" methods="3" classes="1" statements="8" coveredconditionals="0" coveredmethods="3" elements="11" ncloc="19" files="1" conditionals="0" coveredstatements="8"/>
+         <file path="E:\idea15\IntelliJ IDEA Community Edition 15.0.6\workspace\clover\clover-idea\testproject\test\com\cenqua\clovertest\subpackage\MTest.java" name="MTest.java">
+            <metrics coveredelements="11" coveredconditionals="0" complexity="3" loc="26" coveredmethods="3" methods="3" elements="11" classes="1" ncloc="19" statements="8" conditionals="0" coveredstatements="8"/>
+            <class name="MTest">
+               <metrics coveredelements="11" complexity="3" methods="3" testruns="3" statements="8" coveredconditionals="0" coveredmethods="3" elements="11" testfailures="0" testduration="0.011" conditionals="0" coveredstatements="8" testpasses="3"/>
+            </class>
+         </file>
+      </package>
+   </testproject>
+</coverage>
