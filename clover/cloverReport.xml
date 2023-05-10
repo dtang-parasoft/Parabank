@@ -18,31 +18,4 @@
          </file>
       </package>
    </project>
-<!--    <testproject name="testproject Coverage Report" timestamp="1683688422817">
-      <metrics coveredelements="11" complexity="8" loc="65" methods="8" classes="3" statements="18" packages="2" coveredconditionals="0" coveredmethods="3" elements="26" ncloc="47" files="3" conditionals="0" coveredstatements="8"/>
-      <package name="com.cenqua.clovertest.subpackage">
-         <metrics coveredelements="11" complexity="3" loc="26" methods="3" classes="1" statements="8" coveredconditionals="0" coveredmethods="3" elements="11" ncloc="19" files="1" conditionals="0" coveredstatements="8"/>
-         <file path="E:\idea2016\IntelliJ IDEA Community Edition 2016.3.8\workspace\clover\clover-idea\testproject\test\com\cenqua\clovertest\subpackage\MTest.java" name="MTest.java">
-            <metrics coveredelements="11" coveredconditionals="0" complexity="3" loc="26" coveredmethods="3" methods="3" elements="11" classes="1" ncloc="19" statements="8" conditionals="0" coveredstatements="8"/>
-            <class name="MTest">
-               <metrics coveredelements="11" complexity="3" methods="3" testruns="3" statements="8" coveredconditionals="0" coveredmethods="3" elements="11" testfailures="0" testduration="0.016" conditionals="0" coveredstatements="8" testpasses="3"/>
-            </class>
-         </file>
-      </package>
-      <package name="com.cenqua.clovertest">
-         <metrics coveredelements="0" complexity="5" loc="39" methods="5" classes="2" statements="10" coveredconditionals="0" coveredmethods="0" elements="15" ncloc="28" files="2" conditionals="0" coveredstatements="0"/>
-         <file path="E:\idea2016\IntelliJ IDEA Community Edition 2016.3.8\workspace\clover\clover-idea\testproject\test\com\cenqua\clovertest\AOnlyTest.java" name="AOnlyTest.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="4" loc="25" coveredmethods="0" methods="4" elements="10" classes="1" ncloc="18" statements="6" conditionals="0" coveredstatements="0"/>
-            <class name="AOnlyTest">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="4" coveredmethods="0" methods="4" elements="10" statements="6" conditionals="0" coveredstatements="0"/>
-            </class>
-         </file>
-         <file path="E:\idea2016\IntelliJ IDEA Community Edition 2016.3.8\workspace\clover\clover-idea\testproject\test\com\cenqua\clovertest\ABTest.java" name="ABTest.java">
-            <metrics coveredelements="0" coveredconditionals="0" complexity="1" loc="14" coveredmethods="0" methods="1" elements="5" classes="1" ncloc="10" statements="4" conditionals="0" coveredstatements="0"/>
-            <class name="ABTest">
-               <metrics coveredelements="0" coveredconditionals="0" complexity="1" coveredmethods="0" methods="1" elements="5" statements="4" conditionals="0" coveredstatements="0"/>
-            </class>
-         </file>
-      </package>
-   </testproject> -->
 </coverage>
