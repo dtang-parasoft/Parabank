@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" tests="6" id="1" package="" time="0.018" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testIsIndustryImplemented(AEROSPACE, true) [1]" classname="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" time="0.003"/>
+    <testcase name="testIsIndustryImplemented(DEFENSE, true) [0]" classname="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" time="0.005"/>
+    <testcase name="testIsIndustryImplemented(RETAIL, false) [5]" classname="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" time="0.002"/>
+    <testcase name="testIsIndustryImplemented(HEALTHCARE, false) [3]" classname="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" time="0.003"/>
+    <testcase name="testIsIndustryImplemented(OUTDOOR, true) [2]" classname="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" time="0.002"/>
+    <testcase name="testIsIndustryImplemented(GOVERNMENT, false) [4]" classname="com.parasoft.demoapp.config.ImplementedIndustriesParameterizedTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.util.AuthenticationUtilTest" tests="9" id="2" package="" time="0.030" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testgetUserRoleNameInAuthentication_nullAuthentication" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.002"/>
+    <testcase name="testGetUsernameInAuthentication_nullAuthentication" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.002"/>
+    <testcase name="testGetUsernameInAuthentication_normal" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.003"/>
+    <testcase name="testGetUserIdInAuthentication_nullAuthentication" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.002"/>
+    <testcase name="testGetUserIdInAuthentication_nullPrincipal" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.005"/>
+    <testcase name="testGetUsernameInAuthentication_nullPrincipal" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.004"/>
+    <testcase name="testGetUserRoleNameInAuthentication_nullPrincipal" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.005"/>
+    <testcase name="testGetUserRoleNameInAuthentication_normal" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.003"/>
+    <testcase name="testGetUserIdInAuthentication_normal" classname="com.parasoft.demoapp.util.AuthenticationUtilTest" time="0.004"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" tests="17" id="3" package="" time="0.614" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateGlobalPreferences_normal_blankEndpointUrl2" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.012"/>
+    <testcase name="testAddNewGlobalPreferences_nullRestEndPoints" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.420"/>
+    <testcase name="testAddNewGlobalPreferences_normal" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.008"/>
+    <testcase name="testGetCurrentGlobalPreferences_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.007"/>
+    <testcase name="testUpdateGlobalPreferences_normal_with_jms" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.015"/>
+    <testcase name="testGetCurrentGlobalPreferences_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.008"/>
+    <testcase name="testUpdateGlobalPreferences_normal_with_kafka" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.017"/>
+    <testcase name="testUpdateGlobalPreferences_normal_nullEndpointUrl" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.034"/>
+    <testcase name="testUpdateGlobalPreferences_normal_blankEndpointUrl1" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.012"/>
+    <testcase name="testAddNewGlobalPreferences_nullAdvertisingEnabled" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.006"/>
+    <testcase name="testUpdateGlobalPreferences_exception_nullMqType" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.012"/>
+    <testcase name="testUpdateGlobalPreferences_exception_nullIndustry" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.007"/>
+    <testcase name="testUpdateGlobalPreferences_normal_with_rabbitmq" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.017"/>
+    <testcase name="testAddNewGlobalPreferences_nullDemoBugs" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.007"/>
+    <testcase name="testUpdateGlobalPreferences_exception_nullOrderServiceListenOn" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.013"/>
+    <testcase name="testGetCurrentGlobalPreferences_normal" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.006"/>
+    <testcase name="testUpdateGlobalPreferences_exception_nullOrderServiceSendTo" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest" time="0.013"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.RoleServiceTest" tests="6" id="4" package="" time="0.114" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetRoleByRoleName_normal" classname="com.parasoft.demoapp.service.RoleServiceTest" time="0.007"/>
+    <testcase name="testAddNewRole_normal" classname="com.parasoft.demoapp.service.RoleServiceTest" time="0.006"/>
+    <testcase name="testAddNewRole_roleNameExistsAlready" classname="com.parasoft.demoapp.service.RoleServiceTest" time="0.009"/>
+    <testcase name="testGetRoleByRoleName_nullReturn" classname="com.parasoft.demoapp.service.RoleServiceTest" time="0.006"/>
+    <testcase name="testRoleExists_roleNameNotExists" classname="com.parasoft.demoapp.service.RoleServiceTest" time="0.080"/>
+    <testcase name="testRoleExists_roleNameExists" classname="com.parasoft.demoapp.service.RoleServiceTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.util.SqlStringEscapeUtilTest" tests="1" id="5" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testEscapeLikeString1" classname="com.parasoft.demoapp.util.SqlStringEscapeUtilTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.CategoryServiceTest" tests="31" id="6" package="" time="0.945" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetByCategoryName_emptyName" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.006"/>
+    <testcase name="testUpdateCategory_emptyName" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.004"/>
+    <testcase name="testUpdateCategory_nullCategoryId" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.005"/>
+    <testcase name="testGetByCategoryName_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.108"/>
+    <testcase name="testRemoveCategory_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.013"/>
+    <testcase name="testRemoveCategory_categoryNotExists" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.007"/>
+    <testcase name="testNumberOfImageUsedInCategories_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.007"/>
+    <testcase name="testGetCategories_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.036"/>
+    <testcase name="testUpdateCategory_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.007"/>
+    <testcase name="testAddNewCategory_nameExistsAlready" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.005"/>
+    <testcase name="testSearchCategoriesByNameOrDescription_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.009"/>
+    <testcase name="testGetByCategoryName_noCategory" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.610"/>
+    <testcase name="testAddNewCategory_emptyDescription" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.006"/>
+    <testcase name="testGetByCategoryName_nullName" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.004"/>
+    <testcase name="testAddNewCategory_nullName" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.011"/>
+    <testcase name="testAddNewCategory_emptyName" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.007"/>
+    <testcase name="testSearchCategoriessByNameOrDescription_emptyKey" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.003"/>
+    <testcase name="testGetByCategoryId_notFound" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.006"/>
+    <testcase name="testAddNewCategory_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.012"/>
+    <testcase name="testRemoveCategory_categoryHasAtLeastOneItemException" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.007"/>
+    <testcase name="testUpdateCategory_emptyDescription" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.005"/>
+    <testcase name="testGetByCategoryId_normal" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.008"/>
+    <testcase name="testSearchCategoriesByNameOrDescription_nullKey" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.003"/>
+    <testcase name="testUpdateCategory_nullName" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.004"/>
+    <testcase name="testUpdateCategory_nameExistsAlready" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.008"/>
+    <testcase name="testAddNewCategory_nullDescription" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.006"/>
+    <testcase name="testRemoveCategory_failToDeleteImage" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.019"/>
+    <testcase name="testRemoveCategory_nullCategoryId" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.005"/>
+    <testcase name="testUpdateCategory_nullDescription" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.004"/>
+    <testcase name="testNumberOfImageUsedInCategories_nullImagePath" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.004"/>
+    <testcase name="testGetByCategoryId_nullId" classname="com.parasoft.demoapp.service.CategoryServiceTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" tests="31" id="7" package="" time="16.405" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test_getOrders_noAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.071"/>
+    <testcase name="test_updateOrderByOrderNumber_normal_purchaser" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.161"/>
+    <testcase name="test_createOrder_emptyEventId" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.065"/>
+    <testcase name="test_createOrder_noPermission" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.055"/>
+    <testcase name="test_updateOrderByOrderNumber_changeToUnreviewed" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.206"/>
+    <testcase name="test_updateOrderByOrderNumber_invalidOrderStatus" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_createOrder_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.047"/>
+    <testcase name="test_updateOrderByOrderNumber_updateCanceledOrder" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.168"/>
+    <testcase name="test_getOrderByOrderNumber_noAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.086"/>
+    <testcase name="test_updateOrderByOrderNumber_updateSubmittedOrder" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.192"/>
+    <testcase name="test_updateOrderByOrderNumber_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.057"/>
+    <testcase name="test_createOrder_emptyEventNumber" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.076"/>
+    <testcase name="test_getUnreviewedNumber_noAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.043"/>
+    <testcase name="test_createOrder_emptyLocation" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_updateOrderByOrderNumber_orderNotFound" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.072"/>
+    <testcase name="test_updateOrderByOrderNumber_noPermission" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.166"/>
+    <testcase name="test_updateOrderByOrderNumber_emptyOrderNumber" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.068"/>
+    <testcase name="test_createOrder_emptyReceiverId" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.097"/>
+    <testcase name="test_getOrderByOrderNumber_emptyOrderNumber" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.068"/>
+    <testcase name="test_updateOrderByOrderNumber_noAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.054"/>
+    <testcase name="test_getOrders_normal" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.144"/>
+    <testcase name="test_createOrder_regionNotFound" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.070"/>
+    <testcase name="test_getOrders_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.267"/>
+    <testcase name="test_createOrder_normal" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.164"/>
+    <testcase name="test_createOrder_noAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.052"/>
+    <testcase name="test_updateOrderByOrderNumber_revertOrderStatus" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.170"/>
+    <testcase name="test_getOrderByOrderNumber_normal" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.167"/>
+    <testcase name="test_getUnreviewedNumber_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.059"/>
+    <testcase name="test_getOrderByOrderNumber_orderNumberNotFound" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_updateOrderByOrderNumber_normal_approver" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.198"/>
+    <testcase name="test_getUnreviewedNumber_normal" classname="com.parasoft.demoapp.graphql.OrderGraphQLDataFetcherTest" time="1.176"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" tests="8" id="8" package="" time="0.380" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testValidateVirtualizeGroupId_normal" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.002"/>
+    <testcase name="testValidateVirtualizeServerUrl_virtualizeServerUrlException_not200" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.338"/>
+    <testcase name="testValidateVirtualizeGroupId_nullGroupId" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.002"/>
+    <testcase name="testValidateVirtualizeServerPath_illegalServerPath" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.003"/>
+    <testcase name="testValidateVirtualizeServerPath_nullServerPath" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.002"/>
+    <testcase name="testValidateVirtualizeGroupId_illegalGroupId" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.002"/>
+    <testcase name="testValidateVirtualizeServerPath_normal" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.002"/>
+    <testcase name="testValidateVirtualizeServerUrl_virtualizeServerUrlException_timeOut" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceTest" time="0.029"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ItemInventoryMQServiceTest" tests="4" id="9" package="" time="0.731" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testSendToInventoryResponseDestination_rabbit" classname="com.parasoft.demoapp.service.ItemInventoryMQServiceTest" time="0.011"/>
+    <testcase name="testSendToInventoryResponseDestination_kafka" classname="com.parasoft.demoapp.service.ItemInventoryMQServiceTest" time="0.006"/>
+    <testcase name="testSendToInventoryResponseDestination_jms" classname="com.parasoft.demoapp.service.ItemInventoryMQServiceTest" time="0.007"/>
+    <testcase name="testSend" classname="com.parasoft.demoapp.service.ItemInventoryMQServiceTest" time="0.707"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" tests="26" id="10" package="" time="2.320" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test_deleteCategoryById_invalidCategoryId" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.074"/>
+    <testcase name="test_addCategory_emptyName" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.059"/>
+    <testcase name="test_getCategoryById_invalidCategoryId" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.073"/>
+    <testcase name="test_addCategory_normal" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.139"/>
+    <testcase name="test_updateCategory_emptyDescription" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.063"/>
+    <testcase name="test_addCategory_nameExist" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.068"/>
+    <testcase name="test_deleteCategoryById_categoryIdNotFound" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.087"/>
+    <testcase name="test_updateCategory_categoryIdNotFound" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.075"/>
+    <testcase name="test_updateCategory_emptyName" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.232"/>
+    <testcase name="test_addCategory_noAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.050"/>
+    <testcase name="test_getCategoryById_normal" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.067"/>
+    <testcase name="test_getCategories_normal" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.189"/>
+    <testcase name="test_deleteCategoryById_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.052"/>
+    <testcase name="test_addCategory_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.061"/>
+    <testcase name="test_getCategoryByName_categoryNameNotFound" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.079"/>
+    <testcase name="test_getCategoryById_notAuthenticated" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.052"/>
+    <testcase name="test_getCategoryByName_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.057"/>
+    <testcase name="test_addCategory_emptyDescription" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.099"/>
+    <testcase name="test_deleteCategoryById_normal" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.159"/>
+    <testcase name="test_getCategories_invalidSort" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.160"/>
+    <testcase name="test_getCategoryByName_normal" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.047"/>
+    <testcase name="test_updateCategory_noAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.057"/>
+    <testcase name="test_updateCategory_nameExist" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.063"/>
+    <testcase name="test_updateCategory_normal" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.161"/>
+    <testcase name="test_updateCategory_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.049"/>
+    <testcase name="test_getCategories_noAuthentication" classname="com.parasoft.demoapp.graphql.CategoryGraphQLDataFetcherTest" time="0.048"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" tests="8" id="11" package="" time="5.823" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test_getGRPCProperties_normal" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.326"/>
+    <testcase name="test_validateRabbitMQServerUrl_rabbitMQIsNotAvailable" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.117"/>
+    <testcase name="test_validateKafkaBrokerUrl_incorrectAuthentication" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.038"/>
+    <testcase name="test_getMQProperties_incorrectAuthentication" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.025"/>
+    <testcase name="test_getGRPCProperties_incorrectAuthentication" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.039"/>
+    <testcase name="test_getMQProperties_normal" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.121"/>
+    <testcase name="test_validateKafkaBrokerUrl_kafkaIsNotAvailable" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="5.132"/>
+    <testcase name="test_validateRabbitMQServerUrl_incorrectAuthentication" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerSpringTest" time="0.025"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.global.GlobalPreferencesCreatorSpringTest" tests="1" id="12" package="" time="0.023" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGlobalPreferencesCreateSuccessfully" classname="com.parasoft.demoapp.defaultdata.global.GlobalPreferencesCreatorSpringTest" time="0.023"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.ItemControllerTest" tests="24" id="13" package="" time="0.581" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDeleteItemById_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testDeleteItemByName_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testAddNewItem_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testUpdateItemInStock_exception_itemNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.004"/>
+    <testcase name="testUpdateItemById_exception_itemNameExistsAlready" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.008"/>
+    <testcase name="testUpdateItemInStock_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testUpdateItemById_exception_itemNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testDeleteItemByName_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testGetItems_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.453"/>
+    <testcase name="testGetItemById_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.004"/>
+    <testcase name="testUpdateItemById_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testGetItemByName_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testGetItemByName_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testGetItemById_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testGetItemByName_exception_itemNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testAddNewItem_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testUpdateItemById_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.008"/>
+    <testcase name="testDeleteItemByName_exception_itemNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testDeleteItemById_parameterException" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testGetItemById_exception_itemNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testAddNewItem_exception_itemNameExistsAlready" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testAddNewItem_exception_categoryNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.006"/>
+    <testcase name="testDeleteItemById_exception_itemNotFound" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.005"/>
+    <testcase name="testUpdateItemInStock_normal" classname="com.parasoft.demoapp.controller.ItemControllerTest" time="0.004"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" tests="32" id="14" package="" time="5.631" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test_getCartItemByItemId_itemIdNotFound" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.107"/>
+    <testcase name="test_removeAllCartItems_normal" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.159"/>
+    <testcase name="test_updateItemInCart_invalidItemQty_inventoryNotEnough" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.260"/>
+    <testcase name="test_updateItemInCart_invalidItemQty_negativeNumber" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.379"/>
+    <testcase name="test_updateItemInCart_cartItemNotFound" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.070"/>
+    <testcase name="test_removeCartItem_noAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.048"/>
+    <testcase name="test_getCartItems_noPermission" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.063"/>
+    <testcase name="test_updateItemInCart_noPermission" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.057"/>
+    <testcase name="test_removeAllCartItems_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.057"/>
+    <testcase name="test_removeCartItem_notFound" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.072"/>
+    <testcase name="test_removeAllCartItems_noPermission" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="2.139"/>
+    <testcase name="test_addItemInCart_noAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.059"/>
+    <testcase name="test_updateItemInCart_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.056"/>
+    <testcase name="test_addItemInCart_invalidItemQty" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.078"/>
+    <testcase name="test_getCartItemByItemId_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.059"/>
+    <testcase name="test_updateItemInCart_normal" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.196"/>
+    <testcase name="test_addItemInCart_normal" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.152"/>
+    <testcase name="test_removeCartItem_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.056"/>
+    <testcase name="test_removeAllCartItems_notFound" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.066"/>
+    <testcase name="test_removeAllCartItems_noAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.069"/>
+    <testcase name="test_getCartItems_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.051"/>
+    <testcase name="test_getCartItems_normal" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.169"/>
+    <testcase name="test_updateItemInCart_noAuthentication" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.171"/>
+    <testcase name="test_addItemInCart_noPermission" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.058"/>
+    <testcase name="test_addItemInCart_invalidItemQty_IsZero" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.082"/>
+    <testcase name="test_addItemInCart_invalidItemQty_IsNegative" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.067"/>
+    <testcase name="test_removeCartItem_noPermission" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.087"/>
+    <testcase name="test_addItemInCart_itemIdNotFound" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.172"/>
+    <testcase name="test_getCartItemByItemId_noPermission" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.056"/>
+    <testcase name="test_getCartItemByItemId_normal" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.108"/>
+    <testcase name="test_updateItemInCart_invalidItemQty_equalsZero" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.215"/>
+    <testcase name="test_removeCartItem_normal" classname="com.parasoft.demoapp.graphql.CartItemGraphQLDataFetcherTest" time="0.193"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" tests="15" id="15" package="" time="0.138" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetCurrentIndustry_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.010"/>
+    <testcase name="testGetCurrentIndustry_normal" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.005"/>
+    <testcase name="testValidateUrl_VirtualizeServerUrlException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.006"/>
+    <testcase name="testGetCurrentIndustry_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.007"/>
+    <testcase name="testDoSaveChanges_parameterException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.006"/>
+    <testcase name="testClearCurrentIndustryDatabase" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.004"/>
+    <testcase name="testDoSaveChanges_normal" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.006"/>
+    <testcase name="testDoSaveChanges_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.005"/>
+    <testcase name="testGetCurrentPreferences_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.008"/>
+    <testcase name="testGetCurrentPreferences_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.006"/>
+    <testcase name="testGetDefaultPreferences_normal" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.016"/>
+    <testcase name="testResetAllIndustriesDatabase" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.005"/>
+    <testcase name="testGetCurrentPreferences_normal" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.016"/>
+    <testcase name="testDoSaveChanges_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.006"/>
+    <testcase name="testValidateUrl" classname="com.parasoft.demoapp.controller.GlobalPreferencesControllerTest" time="0.032"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ItemServiceTest" tests="54" id="16" package="" time="0.378" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateItem_nullName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testUpdateItem_categoryIdNotExists" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testAddNewItem_negativeNumberInStock" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testAddNewItem_nullCategoryId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testRemoveItemByName_failToDeleteImage" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.016"/>
+    <testcase name="testGetItems_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.010"/>
+    <testcase name="testUpdateItemInStock_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.007"/>
+    <testcase name="testUpdateItem_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.009"/>
+    <testcase name="testNumberOfImageUsedInItems_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.007"/>
+    <testcase name="testGetItemByName_noItem" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.007"/>
+    <testcase name="testAddNewItem_emptyName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.007"/>
+    <testcase name="testRemoveItemByName_nullItemName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testUpdateItem_normal_nameChange" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.021"/>
+    <testcase name="testAddNewItem_nullRegion" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testSearchItemsByNameOrDescription_nullKey" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testRemoveItemById_failToDeleteImage" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.017"/>
+    <testcase name="testUpdateItem_nameExistAlready" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.010"/>
+    <testcase name="testGetItemById_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.009"/>
+    <testcase name="testUpdateItem_nullRegion" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testUpdateItem_nullItemId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testGetItemByName_emptyName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.003"/>
+    <testcase name="testUpdateItem_emptyName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testRemoveItemById_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.010"/>
+    <testcase name="testRemoveItemByName_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.013"/>
+    <testcase name="testGetAllItems_noItems" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testAddNewItem_negativeInStock" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testRemoveItemById_nullItemId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testUpdateItem_nullCategoryId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testGetItemById_notFound" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testAddNewItem_nullName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.004"/>
+    <testcase name="testAddNewItem_categoryIdNotExists" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testGetItemByName_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.007"/>
+    <testcase name="testUpdateItemInStock_exception_nullItemId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testSearchItemsByNameOrDescription_emptyKey" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.010"/>
+    <testcase name="testAddNewItem_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.009"/>
+    <testcase name="testUpdateItem_nullinStock" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testRemoveItemById_itemNotExist" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testAddNewItem_emptyDescription" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testUpdateItem_incorrectRegionInCurrentIndustry" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.010"/>
+    <testcase name="testNumberOfImageUsedInItems_nullImagePath" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testUpdateItem_emptyDescription" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testUpdateItemInStock_exception_negativeItemId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testUpdateItem_nullDescription" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testRemoveItemByName_emptyItemName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testGetAllItems_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testSearchItemsByNameOrDescription_normal" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.009"/>
+    <testcase name="testGetItemById_nullId" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testAddNewItem_incorrectRegionInCurrentIndustry" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.010"/>
+    <testcase name="testAddNewItem_nameExistsAlready" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.008"/>
+    <testcase name="testAddNewItem_nullDescription" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.007"/>
+    <testcase name="testGetItemByName_nullName" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <testcase name="testAddNewItem_nullInStock" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testUpdateItem_negativeInStock" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.005"/>
+    <testcase name="testRemoveItemByName_itemNotExist" classname="com.parasoft.demoapp.service.ItemServiceTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.PageControllerTest" tests="22" id="17" package="" time="5.335" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testShowOrdersPage_normal" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.010"/>
+    <testcase name="testShowHomePage_approver" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.013"/>
+    <testcase name="testShowDemoAdminPage_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.008"/>
+    <testcase name="testShowOrdersPage_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.009"/>
+    <testcase name="testShowOrderWizardPage_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.008"/>
+    <testcase name="testShowItemDetailsPage_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.009"/>
+    <testcase name="testShowItemsListPage_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.011"/>
+    <testcase name="testShowOrdersPage_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.008"/>
+    <testcase name="testShowDemoAdminPage_normal" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.010"/>
+    <testcase name="testShowHomePage_purchaser" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.011"/>
+    <testcase name="testShowOrderWizardPage_normal" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.013"/>
+    <testcase name="testShowItemsListPage_error_notFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.017"/>
+    <testcase name="testShowDemoAdminPage_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.008"/>
+    <testcase name="testShowItemDetailsPage_error_notFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.012"/>
+    <testcase name="testShowHomePage_unsupportedRole" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.014"/>
+    <testcase name="testShowOrderWizardPage_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.008"/>
+    <testcase name="testShowItemsListPage_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="4.991"/>
+    <testcase name="testShowItemsListPage_normal" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.011"/>
+    <testcase name="testShowItemDetailsPage_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.008"/>
+    <testcase name="testShowHomePage_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.012"/>
+    <testcase name="testShowItemDetailsPage_normal" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.010"/>
+    <testcase name="testShowHomePage_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.PageControllerTest" time="0.134"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" tests="9" id="18" package="" time="0.778" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetStockByItemId_nullRequest" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.079"/>
+    <testcase name="testGetStockByItemId_inStockNotFound" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.095"/>
+    <testcase name="testUpdateItemsInStock_normal" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.055"/>
+    <testcase name="testGetItemsInStock_itemsNotFound" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.085"/>
+    <testcase name="testUpdateItemsInStock_itemNotFound" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.123"/>
+    <testcase name="testUpdateItemsInStock_inStockNotEnough" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.079"/>
+    <testcase name="testGetStockByItemId_normal" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.063"/>
+    <testcase name="testGetItemsInStock_normal" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.114"/>
+    <testcase name="testUpdateItemsInStock_nullItem" classname="com.parasoft.demoapp.grpc.GrpcProtobufServiceImplSpringTest" time="0.085"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" tests="43" id="19" package="" time="3.363" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test_updateItemByItemId_itemNameExist" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.072"/>
+    <testcase name="test_getItemByItemId_itemIdNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.064"/>
+    <testcase name="test_addNewItem_itemNameExist" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.064"/>
+    <testcase name="test_updateItemByItemId_categoryNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.066"/>
+    <testcase name="test_getItemByName_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.055"/>
+    <testcase name="test_deleteItemByName_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.184"/>
+    <testcase name="test_addNewItem_emptyItemName" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.061"/>
+    <testcase name="test_deleteItemByName_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.150"/>
+    <testcase name="test_getItems_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.119"/>
+    <testcase name="test_updateItemByItemId_itemNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.065"/>
+    <testcase name="test_getItems_invalidSort" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.061"/>
+    <testcase name="test_getItemByItemId_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.052"/>
+    <testcase name="test_getItemByName_emptyItemName" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_updateItemInStockByItemId_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.160"/>
+    <testcase name="test_deleteItemByName_noAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.051"/>
+    <testcase name="test_addNewItem_categoryIdNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.132"/>
+    <testcase name="test_updateItemInStockByItemId_noAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.056"/>
+    <testcase name="test_addNewItem_noAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.055"/>
+    <testcase name="test_getItemByItemId_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_updateItemByItemId_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.052"/>
+    <testcase name="test_deleteItemByItemId_noAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.058"/>
+    <testcase name="test_updateItemByItemId_noAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.056"/>
+    <testcase name="test_addNewItem_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.051"/>
+    <testcase name="test_getItems_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.058"/>
+    <testcase name="test_updateItemByItemId_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.180"/>
+    <testcase name="test_deleteItemByItemId_invalidItemId" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.064"/>
+    <testcase name="test_addNewItem_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.192"/>
+    <testcase name="test_getItemByName_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.061"/>
+    <testcase name="test_updateItemByItemId_emptyItemDescription" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_updateItemInStockByItemId_itemIdNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.066"/>
+    <testcase name="test_deleteItemByItemId_normal" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.135"/>
+    <testcase name="test_deleteItemByItemId_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.045"/>
+    <testcase name="test_updateItemByItemId_emptyItemName" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.056"/>
+    <testcase name="test_addNewItem_regionNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.060"/>
+    <testcase name="test_updateItemInStockByItemId_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.050"/>
+    <testcase name="test_addNewItem_invalidNumberInStock" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.071"/>
+    <testcase name="test_deleteItemByItemId_itemIdNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.055"/>
+    <testcase name="test_deleteItemByName_itemNameNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.067"/>
+    <testcase name="test_getItemByName_itemNameNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.075"/>
+    <testcase name="test_addNewItem_emptyDescription" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.057"/>
+    <testcase name="test_deleteItemByName_emptyName" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.060"/>
+    <testcase name="test_updateItemByItemId_invalidNumberInStock" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.065"/>
+    <testcase name="test_updateItemByItemId_regionNotFound" classname="com.parasoft.demoapp.graphql.ItemGraphQLDataFetcherTest" time="0.076"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.OrderServiceTest" tests="42" id="20" package="" time="0.339" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateOrderByOrderNumber_purchaser_exception_IncorrectOperationExcetion" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.007"/>
+    <testcase name="testUpdateOrderByOrderNumber_exception_ParameterException_reviewedByAPV" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.010"/>
+    <testcase name="testHandleMessageFromResponse_normal" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.009"/>
+    <testcase name="testHandleMessageFromResponse_orderNotExist" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.032"/>
+    <testcase name="testUpdateOrderByOrderNumber_declined_normal" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.007"/>
+    <testcase name="testAddNewOrder_exception_nullLocationException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testGetAllOrders_normal_nullUserRoleName" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testAddNewOrder_exception_noCartItemsInCart" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.046"/>
+    <testcase name="testHandleMessageFromResponse_inventoryNotEnough" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.011"/>
+    <testcase name="testGetOrderByOrderNumber_normal" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testAddNewOrder_exception_blankReceiverIdException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testUpdateOrderByOrderNumber_purchaser_exception_NoPermissionException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testGetAllOrders_exception_nullUserNameException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.003"/>
+    <testcase name="testAddNewOrder_exception_blankEventIdException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testGetAllOrders_withPageable_unwantedRoleName" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testUpdateOrderByOrderNumber_exception_ParameterException_reviewedByPRCH" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testUpdateStatusOfOrderByOrderNumber_exception_nullOrderNumberException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.007"/>
+    <testcase name="testAddNewOrder_exception_regionTypeNotFound" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testAddNewOrder_exception_blankEventNumberException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testAddNewOrder_exception_nullRegionException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testGetAllOrders_normal_approver" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testAddNewOrder_exception_blankLocationException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testUpdateStatusOfOrderByOrderNumber_exception_blankOrderNumberException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testUpdateOrderByOrderNumber_purchaser_normal" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.008"/>
+    <testcase name="testHandleMessageFromResponse_reversedProcess" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.033"/>
+    <testcase name="testGetAllOrders_withPageable_nullUserName" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testAddNewOrder_normal" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.008"/>
+    <testcase name="testUpdateOrderByOrderNumber_exception_ParameterException_orderHasBeenCancelled" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testAddNewOrder_exception_nullEventNumberException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testGetOrderByOrderNumber_exception_blankOrderNumberException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.003"/>
+    <testcase name="testGetAllOrders_normal_purchaser" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testGetAllOrders_withPageable_approver" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testAddNewOrder_exception_nullUserIdException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.009"/>
+    <testcase name="testAddNewOrder_exception_nullReceiverIdException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testAddNewOrder_exception_nullUserNameException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testUpdateOrderByOrderNumber_exception_ParameterException_changeToInternalStatus" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.007"/>
+    <testcase name="testUpdateStatusOfOrderByOrderNumber_exception_nullStatusException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testUpdateOrderByOrderNumber_exception_ParameterException_orderHasNotPrepared" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.006"/>
+    <testcase name="testAddNewOrder_exception_nullEventIdException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testGetOrderByOrderNumber_exception_nullOrderNumberException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.005"/>
+    <testcase name="testGetOrderByOrderNumber_exception_noOrderCorrespondingToException" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.004"/>
+    <testcase name="testGetAllOrders_withPageable_purcher" classname="com.parasoft.demoapp.service.OrderServiceTest" time="0.011"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.ShoppingCartControllerTest" tests="16" id="21" package="" time="0.304" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testRemoveAllCartItems_exception_CartItemNotFoundException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.006"/>
+    <testcase name="testUpdateCartItemQuantity_normal" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.007"/>
+    <testcase name="testAddItemInCart_exception_ParameterException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.012"/>
+    <testcase name="testUpdateCartItemQuantity_exception_ParameterException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.037"/>
+    <testcase name="testGetCartItems_normal" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.007"/>
+    <testcase name="testRemoveCartItemByItemId_normal" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.009"/>
+    <testcase name="testUpdateCartItemQuantity_exception_CartItemNotFoundException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.008"/>
+    <testcase name="testRemoveCartItemByItemId_exception_ParameterException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.006"/>
+    <testcase name="testAddItemInCart_exception_ItemNotFoundException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.041"/>
+    <testcase name="testGetCartItemByItemId_exception_ParameterException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.009"/>
+    <testcase name="testRemoveAllCartItems_normal" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.007"/>
+    <testcase name="testUpdateCartItemQuantity_exception_ItemNotFoundException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.008"/>
+    <testcase name="testGetCartItemByItemId_normal" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.119"/>
+    <testcase name="testAddItemInCart_normal" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.013"/>
+    <testcase name="testRemoveCartItemByItemId_exception_CartItemNotFoundException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.006"/>
+    <testcase name="testAddItemInCart_exception_InventoryNotFoundException" classname="com.parasoft.demoapp.controller.ShoppingCartControllerTest" time="0.009"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ImageServiceTest" tests="14" id="22" package="" time="0.134" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDeleteUploadedImageByPath_uploadedImageCanNotDeleteException" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.011"/>
+    <testcase name="testDeleteUploadedImageByPath_normal" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.008"/>
+    <testcase name="testRemoveAllIndustriesUploadedImages_normal" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.011"/>
+    <testcase name="testDeleteUploadedImageByPath_invalidImagePath" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.005"/>
+    <testcase name="testRemoveAllIndustriesUploadedImages_someImageRemoveUnsuccessfully" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.012"/>
+    <testcase name="testHandleImageAndReturnStaticLocation_normal" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.039"/>
+    <testcase name="testRemoveAllIndustriesUploadedImages_uploadedImagesDirNotExists" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.007"/>
+    <testcase name="testHandleImageAndReturnStaticLocation_emptyImage" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.006"/>
+    <testcase name="testDeleteUploadedImageByPath_nullImagePath" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.007"/>
+    <testcase name="testHandleImageAndReturnStaticLocation_originalFileNameWithoutSuffixName" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.005"/>
+    <testcase name="testHandleImageAndReturnStaticLocation_unsupportedSuffixName" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.006"/>
+    <testcase name="testNumberOfImageUsed_nullImagePath" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.004"/>
+    <testcase name="testHandleImageAndReturnStaticLocation_nullImage" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.004"/>
+    <testcase name="testNumberOfImageUsed_normal" classname="com.parasoft.demoapp.service.ImageServiceTest" time="0.009"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.CategoryControllerTest" tests="19" id="23" package="" time="0.177" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetCategoryById_categoryNotFoundException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.006"/>
+    <testcase name="testGetCategoryById_normal" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.004"/>
+    <testcase name="testGetCategoryByName_parameterException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.007"/>
+    <testcase name="testAddNewCategory_categoryNameExistsAlreadyException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.008"/>
+    <testcase name="testGetCategoryByName_normal" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.004"/>
+    <testcase name="testDeleteCategory_parameterException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.006"/>
+    <testcase name="testGetCategoryById_parameterException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.007"/>
+    <testcase name="testGetCategoryByName_categoryNotFoundException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.009"/>
+    <testcase name="testUpdateCategory_categoryNameExistsAlreadyException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.010"/>
+    <testcase name="testAddNewCategory_normal" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.007"/>
+    <testcase name="testDeleteCategory_normal" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.006"/>
+    <testcase name="testAddNewCategory_parameterException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.008"/>
+    <testcase name="testUpdateCategory_categoryNotFoundException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.064"/>
+    <testcase name="testDeleteCategory_categoryNotFoundException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.005"/>
+    <testcase name="testGetByCategoryId_categoryNotFoundException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.004"/>
+    <testcase name="testDeleteCategory_categoryHasAtLeastOneItemException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.006"/>
+    <testcase name="testUpdateCategory_parameterException" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.005"/>
+    <testcase name="testGetCategories_normal" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.006"/>
+    <testcase name="testUpdateCategory_normal" classname="com.parasoft.demoapp.controller.CategoryControllerTest" time="0.005"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.DemoBugServiceTest" tests="15" id="24" package="" time="0.268" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_nullOrders" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.008"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_bugIsNotIntroduced_noBugs" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.005"/>
+    <testcase name="testRemoveGlobalPreferencesById_normal" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.009"/>
+    <testcase name="testIntroduceBugWithReverseOrdersIfNeeded_bugIsNotIntroduced_noBugs" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.007"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_nullOrder" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.147"/>
+    <testcase name="testIntroduceBugWithCannotDetermineTargetDatasourceIfNeeded_exception" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.009"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_industryIsNotImplemented" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.018"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_bugIsNotIntroduced_orderStatusIsNotApproved" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.004"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_demoBugsIntroduceFailedException" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.009"/>
+    <testcase name="testIntroduceBugWithCannotDetermineTargetDatasourceIfNeeded_bugIsIntroduced" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.009"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_bugIsIntroducedForOrders" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.005"/>
+    <testcase name="testIntroduceBugWithReverseOrdersIfNeeded_bugIsIntroduced" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.012"/>
+    <testcase name="testIntroduceBugWithCannotDetermineTargetDatasourceIfNeeded_IsNotIntroduced_noBugs" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.008"/>
+    <testcase name="testIntroduceBugWithIncorrectLocationForApprovedOrdersIfNeeded_bugIsIntroducedForOrder" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.013"/>
+    <testcase name="testRemoveGlobalPreferencesById_nullId" classname="com.parasoft.demoapp.service.DemoBugServiceTest" time="0.005"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ShoppingCartServiceTest" tests="35" id="25" package="" time="0.274" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testAddCartItemInShoppingCart_exception_nullUserId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testGetCartItemsByUserId_normal2" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.007"/>
+    <testcase name="testUpdateCartItemQuantity_normal" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.006"/>
+    <testcase name="testGetCartItemByUserIdAndItemId_normal2" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.006"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_inventoryNotExists" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.004"/>
+    <testcase name="testRemoveCartItemByUserIdAndItemId_normal" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.005"/>
+    <testcase name="testRemoveCartItemByUserIdAndItemId_exception_noCartItem" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.005"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_existsCartItem_overQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.009"/>
+    <testcase name="testUpdateCartItemQuantity_normal2" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.009"/>
+    <testcase name="testGetCartItemsByUserId_exception_nullUserId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testUpdateCartItemQuantity_exception_cartItemNotFound" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.005"/>
+    <testcase name="testUpdateCartItemQuantity_exception_nullItemId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testClearShoppingCart_normal" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.007"/>
+    <testcase name="testAddCartItemInShoppingCart_normal2" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.013"/>
+    <testcase name="testAddCartItemInShoppingCart_normal1" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.012"/>
+    <testcase name="testGetCartItemsByUserId_normal1" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.006"/>
+    <testcase name="testRemoveCartItemByUserIdAndItemId_exception_nullUserId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testClearShoppingCart_exception_nullUserId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.004"/>
+    <testcase name="testGetCartItemByUserIdAndItemId_exception_nullUserId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.004"/>
+    <testcase name="testUpdateCartItemQuantity_exception_negativeQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.072"/>
+    <testcase name="testUpdateCartItemQuantity_exception_nullQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testGetCartItemByUserIdAndItemId_normal1" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.020"/>
+    <testcase name="testClearShoppingCart_exception_noCartItems" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.004"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_nullItemId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testGetCartItemByUserIdAndItemId_normal3" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.007"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_nullQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testRemoveCartItemByUserIdAndItemId_exception_nullItemId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testUpdateCartItemQuantity_exception_zeroQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.004"/>
+    <testcase name="testGetCartItemByUserIdAndItemId_exception_nullItemId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.005"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_overQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.006"/>
+    <testcase name="testAddCartItemInShoppingCart_normal_cartItemExists" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.017"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_zeroQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testAddCartItemInShoppingCart_exception_negativeQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.003"/>
+    <testcase name="testUpdateCartItemQuantity_exception_overQuantity" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.005"/>
+    <testcase name="testUpdateCartItemQuantity_exception_nullUserId" classname="com.parasoft.demoapp.service.ShoppingCartServiceTest" time="0.002"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.dto.ForgotPasswordResponseDTOTest" tests="2" id="26" package="" time="0.017" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetInstance" classname="com.parasoft.demoapp.dto.ForgotPasswordResponseDTOTest" time="0.014"/>
+    <testcase name="testGetInstanceFrom" classname="com.parasoft.demoapp.dto.ForgotPasswordResponseDTOTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" tests="7" id="27" package="" time="0.264" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testLocateRoutes_normal_nullPath" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.010"/>
+    <testcase name="testLocateRoutes_normal_pathWithoutSlash" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.007"/>
+    <testcase name="testLocateRoutes_normal" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.009"/>
+    <testcase name="testLocateRoutes_normal_emptyPath" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.008"/>
+    <testcase name="testLocateRoutes_normal_emptyUrl" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.209"/>
+    <testcase name="testRefresh" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.013"/>
+    <testcase name="testLocateRoutes_normal_nullUrl" classname="com.parasoft.demoapp.config.endpoint.CustomRouteLocatorTest" time="0.008"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.model.global.UserEntityTest" tests="13" id="28" package="" time="0.041" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetId" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testSetUsername" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testIsCredentialsNonExpired" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testGetAuthorities" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.004"/>
+    <testcase name="testGetRole" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testIsEnabled" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testToString" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testEquals" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testSetPassword" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.004"/>
+    <testcase name="testGetPassword" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testIsAccountNonLocked" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testGetUsername" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <testcase name="testIsAccountNonExpired" classname="com.parasoft.demoapp.model.global.UserEntityTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" tests="8" id="29" package="" time="0.576" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test_getAllRegionTypesOfCurrentIndustry_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.044"/>
+    <testcase name="test_getLocation_incorrectAuthentication" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.173"/>
+    <testcase name="test_getLocation_normal" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.051"/>
+    <testcase name="test_getAllRegionTypesOfCurrentIndustry_normal" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.069"/>
+    <testcase name="test_getAllRegionTypesOfCurrentIndustry_unsupportedRequest" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.055"/>
+    <testcase name="test_getLocation_regionNotFound" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.081"/>
+    <testcase name="test_getLocation_noAuthentication" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.062"/>
+    <testcase name="test_getAllRegionTypesOfCurrentIndustry_noAuthentication" classname="com.parasoft.demoapp.graphql.LocationGraphQLDataFetcherTest" time="0.041"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.util.UrlUtilTest" tests="2" id="30" package="" time="0.006" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testIsGoodHttpForm_negative" classname="com.parasoft.demoapp.util.UrlUtilTest" time="0.003"/>
+    <testcase name="testIsGoodHttpForm_positive" classname="com.parasoft.demoapp.util.UrlUtilTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" tests="6" id="31" package="" time="0.761" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testOnMessage_MessageToReply_NotNull" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" time="0.011"/>
+    <testcase name="testRefreshDestination_ChangedDestination" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" time="0.009"/>
+    <testcase name="testRegisterListener" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" time="0.006"/>
+    <testcase name="testStopAllListenedDestinations" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" time="0.005"/>
+    <testcase name="testOnMessage_MessageToReply_Null" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" time="0.010"/>
+    <testcase name="testRefreshDestination_UnchangedDestination" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryResponseQueueListenerTest" time="0.720"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.CustomUserDetailsServiceTest" tests="2" id="32" package="" time="0.013" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testLoadUserByUsername" classname="com.parasoft.demoapp.service.CustomUserDetailsServiceTest" time="0.007"/>
+    <testcase name="testLoadUserByUsername_usernameNotFoundException" classname="com.parasoft.demoapp.service.CustomUserDetailsServiceTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.UserServiceTest" tests="17" id="33" package="" time="0.180" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateUser_normal" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.005"/>
+    <testcase name="testAddNewUser_nullUsername" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.003"/>
+    <testcase name="testRemoveUser_nullUserId" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.063"/>
+    <testcase name="testGetUserByUsername_usernameNotFound" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.005"/>
+    <testcase name="testGetFirstUserByRoleName_normal" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.051"/>
+    <testcase name="testAddNewUser_nullPassword" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.003"/>
+    <testcase name="testGetUserByUsername_normal_withRole" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.004"/>
+    <testcase name="testAddNewUser_normal" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.005"/>
+    <testcase name="testRemoveUser_normal" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.006"/>
+    <testcase name="testGetUserByUsername_normal_noRole" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.005"/>
+    <testcase name="testUpdateUser_userIdNotExists" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.004"/>
+    <testcase name="testAddNewUser_userExistsAlready" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.004"/>
+    <testcase name="testUpdateUser_nullUserId" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.003"/>
+    <testcase name="testGetUserByUsername_nullUsername" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.006"/>
+    <testcase name="testRemoveUser_userIdNotExists" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.004"/>
+    <testcase name="testGetFirstUserByRoleName_UserNotFoundException" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.006"/>
+    <testcase name="testUpdateUser_nullUser" classname="com.parasoft.demoapp.service.UserServiceTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.OrderControllerTest" tests="13" id="34" package="" time="0.333" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testAddNewOrder_exception_ParameterException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.060"/>
+    <testcase name="testGetOrderByOrderNumber_exception_ParameterException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.005"/>
+    <testcase name="testUpdateStatusOfOrderByOrderNumber_exception_OrderNotFoundException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.007"/>
+    <testcase name="testGetOrderByOrderNumber_normal" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.142"/>
+    <testcase name="testGetOrderByOrderNumber_exception_OrderNotFoundException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.006"/>
+    <testcase name="testUpdateStatusOfOrderByOrderNumber_exception_ParameterException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.048"/>
+    <testcase name="testUpdateStatusOfOrderByOrderNumber_normal" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.008"/>
+    <testcase name="testAddNewOrder_exception_CartItemNotFoundException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.010"/>
+    <testcase name="testShowAllOrders_withPageable_parameterException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.010"/>
+    <testcase name="testShowAllOrders_normal" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.005"/>
+    <testcase name="testShowAllOrders_withPageable_normal" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.013"/>
+    <testcase name="testAddNewOrder_exception_ItemNotFoundException" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.010"/>
+    <testcase name="testAddNewOrder_normal" classname="com.parasoft.demoapp.controller.OrderControllerTest" time="0.009"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.interceptor.ParasoftJDBCProxyValidateInterceptorTest" tests="4" id="35" package="" time="3.100" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="preHandle_notUseParasoftJDBCProxy" classname="com.parasoft.demoapp.config.interceptor.ParasoftJDBCProxyValidateInterceptorTest" time="0.012"/>
+    <testcase name="preHandle_useParasoftJDBCProxy_successToConnect_needToRefreshProxyDataSource" classname="com.parasoft.demoapp.config.interceptor.ParasoftJDBCProxyValidateInterceptorTest" time="2.773"/>
+    <testcase name="preHandle_useParasoftJDBCProxy_failToConnect" classname="com.parasoft.demoapp.config.interceptor.ParasoftJDBCProxyValidateInterceptorTest" time="0.300"/>
+    <testcase name="preHandle_useParasoftJDBCProxy_successToConnect_noNeedToRefreshProxyDataSource" classname="com.parasoft.demoapp.config.interceptor.ParasoftJDBCProxyValidateInterceptorTest" time="0.015"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.LocationControllerTest" tests="5" id="36" package="" time="0.061" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetLocation_parameterException" classname="com.parasoft.demoapp.controller.LocationControllerTest" time="0.004"/>
+    <testcase name="testGetLocation_locationNotFoundException" classname="com.parasoft.demoapp.controller.LocationControllerTest" time="0.037"/>
+    <testcase name="testGetAllRegionTypesOfCurrentIndustry_unsupportedOperationInCurrentIndustryException" classname="com.parasoft.demoapp.controller.LocationControllerTest" time="0.009"/>
+    <testcase name="testGetLocation_normal" classname="com.parasoft.demoapp.controller.LocationControllerTest" time="0.006"/>
+    <testcase name="testGetAllRegionTypesOfCurrentIndustry_normal" classname="com.parasoft.demoapp.controller.LocationControllerTest" time="0.005"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.exception.ExceptionHandlersTest" tests="9" id="37" package="" time="0.397" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testEndpointInvalidExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.033"/>
+    <testcase name="testIncorrectOperationExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.035"/>
+    <testcase name="testNoPermissionExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.045"/>
+    <testcase name="testResourceExistsAlreadyExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.092"/>
+    <testcase name="testUnsupportedOperationInCurrentIndustryExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.042"/>
+    <testcase name="testExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.041"/>
+    <testcase name="testParameterExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.035"/>
+    <testcase name="testCategoryHasAtLeastOneItemExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.031"/>
+    <testcase name="testResourceNotFoundExceptionHandler" classname="com.parasoft.demoapp.exception.ExceptionHandlersTest" time="0.043"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" tests="10" id="38" package="" time="1.198" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="UpdateGlobalPreferences_updateGraphQLEndpoint_emptyEndpoint" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.044"/>
+    <testcase name="testUpdateGlobalPreferences_useParasoftJDBCProxy" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.241"/>
+    <testcase name="testUpdateGlobalPreferences_updateGraphQLEndpoint" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.046"/>
+    <testcase name="testUpdateGlobalPreferences_useParasoftJDBCProxy_defaultVirtualizeServerUrl" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.049"/>
+    <testcase name="UpdateGlobalPreferences_refreshEndpoint_useDefaultEndpointsWhenNoRestEndpointInDatabase" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.337"/>
+    <testcase name="testUpdateGlobalPreferences_industryChange" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.051"/>
+    <testcase name="testUpdateGlobalPreferences_demoBugsIntroduction" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.064"/>
+    <testcase name="testClearCurrentIndustryDatabase" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.248"/>
+    <testcase name="testUpdateGlobalPreferences_refreshEndpoint" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.059"/>
+    <testcase name="testUpdateLabelOverridedStatus" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceSpringTest" time="0.059"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.util.BugsTypeSortOfDemoBugsTest" tests="3" id="39" package="" time="0.045" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testCompare_less_than" classname="com.parasoft.demoapp.util.BugsTypeSortOfDemoBugsTest" time="0.037"/>
+    <testcase name="testCompare_greater_than" classname="com.parasoft.demoapp.util.BugsTypeSortOfDemoBugsTest" time="0.004"/>
+    <testcase name="testCompare_equal" classname="com.parasoft.demoapp.util.BugsTypeSortOfDemoBugsTest" time="0.004"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.OrderMQServiceTest" tests="8" id="40" package="" time="0.069" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testSendToInventoryRequestDestination_with_info_rabbit" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.005"/>
+    <testcase name="testSendToInventoryRequestDestination_without_info_kafka" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.029"/>
+    <testcase name="testSendToPurchaser" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.006"/>
+    <testcase name="testSendToInventoryRequestDestination_with_info_kafka" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.007"/>
+    <testcase name="testSendToInventoryRequestDestination_without_info_jms" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.005"/>
+    <testcase name="testSendToInventoryRequestDestination_with_info_jms" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.006"/>
+    <testcase name="testSendToApprover" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.005"/>
+    <testcase name="testSend" classname="com.parasoft.demoapp.service.OrderMQServiceTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.LocationServiceTest" tests="9" id="41" package="" time="0.080" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetLocationByRegion_locationNotFound" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.005"/>
+    <testcase name="testGetRegionsOfCurrentIndustry_normal1" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.053"/>
+    <testcase name="testIsCorrectRegionInCurrentIndustry_correctRegionInCurrentIndustry" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.003"/>
+    <testcase name="testGetLocationByRegion_normal" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.004"/>
+    <testcase name="testGetAllLocations_normal" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.003"/>
+    <testcase name="testGetLocationByRegion_nullRegion" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.002"/>
+    <testcase name="testGetRegionsOfCurrentIndustry_unsupportedOperationInCurrentIndustryException" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.003"/>
+    <testcase name="testGetRegionsOfCurrentIndustry_normal2" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.004"/>
+    <testcase name="testIsCorrectRegionInCurrentIndustry_incorrectRegion" classname="com.parasoft.demoapp.service.LocationServiceTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.ImageControllerTest" tests="6" id="42" package="" time="0.069" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testImageUpload_iOException" classname="com.parasoft.demoapp.controller.ImageControllerTest" time="0.007"/>
+    <testcase name="testImageDelete_uploadedImageCanNotDeleteException" classname="com.parasoft.demoapp.controller.ImageControllerTest" time="0.005"/>
+    <testcase name="testImageDelete_normal" classname="com.parasoft.demoapp.controller.ImageControllerTest" time="0.008"/>
+    <testcase name="testImageUpload_parameterException" classname="com.parasoft.demoapp.controller.ImageControllerTest" time="0.006"/>
+    <testcase name="testImageUpload_normal" classname="com.parasoft.demoapp.controller.ImageControllerTest" time="0.036"/>
+    <testcase name="testImageDelete_parameterException" classname="com.parasoft.demoapp.controller.ImageControllerTest" time="0.007"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.EndpointServiceTest" tests="4" id="43" package="" time="0.015" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testValidateUrl_ErrorUrlException" classname="com.parasoft.demoapp.service.EndpointServiceTest" time="0.002"/>
+    <testcase name="testValidateUrl" classname="com.parasoft.demoapp.service.EndpointServiceTest" time="0.006"/>
+    <testcase name="testValidateUrl_NullUrl" classname="com.parasoft.demoapp.service.EndpointServiceTest" time="0.003"/>
+    <testcase name="testValidateUrl_ConnectionException" classname="com.parasoft.demoapp.service.EndpointServiceTest" time="0.004"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceSpringTest" tests="1" id="44" package="" time="0.276" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testRefreshParasoftJDBCProxyDataSource" classname="com.parasoft.demoapp.service.ParasoftJDBCProxyServiceSpringTest" time="0.276"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.InitializationEntranceSpringTest" tests="1" id="45" package="" time="0.019" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="test" classname="com.parasoft.demoapp.defaultdata.InitializationEntranceSpringTest" time="0.019"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.LocalizationServiceTest" tests="7" id="46" package="" time="5.008" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetLocalization_parameterException" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="0.877"/>
+    <testcase name="testGetLocalizationForKey_ResourceNotFoundException" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="3.805"/>
+    <testcase name="testGetLocalizationForKey" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="0.008"/>
+    <testcase name="testGetLocalization_normal_Aerospace" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="0.107"/>
+    <testcase name="testGetLocalization_normal_Defense" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="0.051"/>
+    <testcase name="testGetLocalization_normal_overrideValue" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="0.139"/>
+    <testcase name="testGetLocalization_localizationException" classname="com.parasoft.demoapp.service.LocalizationServiceTest" time="0.021"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.LabelServiceSpringTest" tests="3" id="47" package="" time="0.135" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateLabelsInDB_normal_sameLanguageOfLabelCannotBothExist" classname="com.parasoft.demoapp.service.LabelServiceSpringTest" time="0.045"/>
+    <testcase name="testUpdateLabelsInDB_normal_differentLanguageOfLabelCanBothExist" classname="com.parasoft.demoapp.service.LabelServiceSpringTest" time="0.074"/>
+    <testcase name="testUpdateLabelsInDB_exception_labelNameNotExistsInPropertiesFile" classname="com.parasoft.demoapp.service.LabelServiceSpringTest" time="0.016"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.LabelControllerTest" tests="8" id="48" package="" time="0.117" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetDefaultLabels_parameterException" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.006"/>
+    <testcase name="testGetOverridedLabels_normal" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.006"/>
+    <testcase name="testGetDefaultLabels_normal" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.003"/>
+    <testcase name="testGetDefaultLabels_localizationException" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.006"/>
+    <testcase name="testGetOverridedLabels_parameterException" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.007"/>
+    <testcase name="testUpdateLabels_normal" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.015"/>
+    <testcase name="testUpdateLabels_parameterException" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.005"/>
+    <testcase name="testUpdateLabels_localizationException" classname="com.parasoft.demoapp.controller.LabelControllerTest" time="0.069"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.security.CustomAuthenticationSuccessHandlerTest" tests="4" id="49" package="" time="0.033" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="onAuthenticationSuccess_loginWithPurchaserUserOnNonAndroidDevice" classname="com.parasoft.demoapp.config.security.CustomAuthenticationSuccessHandlerTest" time="0.005"/>
+    <testcase name="onAuthenticationSuccess_loginWithApproverUserOnNonAndroidDevice" classname="com.parasoft.demoapp.config.security.CustomAuthenticationSuccessHandlerTest" time="0.018"/>
+    <testcase name="onAuthenticationSuccess_loginWithPurchaserUserOnAndroidDevice" classname="com.parasoft.demoapp.config.security.CustomAuthenticationSuccessHandlerTest" time="0.005"/>
+    <testcase name="onAuthenticationSuccess_loginWithApproverUserOnAndroidDevice" classname="com.parasoft.demoapp.config.security.CustomAuthenticationSuccessHandlerTest" time="0.005"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.security.CustomAuthenticationFailureHandlerTest" tests="1" id="50" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="onAuthenticationFailure" classname="com.parasoft.demoapp.config.security.CustomAuthenticationFailureHandlerTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" tests="12" id="51" package="" time="0.950" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateItemsInStock_normal" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.056"/>
+    <testcase name="testUpdateItemsInStock_nullItemId" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.079"/>
+    <testcase name="testUpdateItemsInStock_nullItem" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.148"/>
+    <testcase name="testUpdateItemsInStock_nullOperation" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.060"/>
+    <testcase name="testGetItemsInStock_itemsNotFound" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.079"/>
+    <testcase name="testGetStockByItemId_notFound" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.053"/>
+    <testcase name="testGetStockByItemId_nullItemId" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.095"/>
+    <testcase name="testGetItemsInStock_normal" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.071"/>
+    <testcase name="testUpdateItemsInStock_InStockNotEnough" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.078"/>
+    <testcase name="testUpdateItemsInStock_notFound" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.081"/>
+    <testcase name="testGetStockByItemId_normal" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.053"/>
+    <testcase name="testGetStockByItemId_nullRequest" classname="com.parasoft.demoapp.grpc.GrpcJsonServiceImplSpringTest" time="0.097"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ItemInventoryServiceTest" tests="17" id="52" package="" time="0.115" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDecrease_itemNotExist" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.004"/>
+    <testcase name="testSaveItemInStock_nullInStock" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.003"/>
+    <testcase name="testGetInStockByItemId_ItemInventoryNotExist" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.003"/>
+    <testcase name="testDecrease_normal" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.006"/>
+    <testcase name="testGetInStockByItemId_normal" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.005"/>
+    <testcase name="testRemoveItemInventoryByItemId_itemInventoryNotExist" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.005"/>
+    <testcase name="testRemoveItemInventoryByItemId_normal" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.004"/>
+    <testcase name="testDecrease_noRequestItem" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.003"/>
+    <testcase name="testIncrease_normal" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.006"/>
+    <testcase name="testSaveItemInStock_negativeInStock" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.004"/>
+    <testcase name="testIncrease_itemNotExist" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.049"/>
+    <testcase name="testIncrease_noRequestItem" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.003"/>
+    <testcase name="testSaveItemInStock_normal" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.004"/>
+    <testcase name="testRemoveItemInventoryByItemId_nullItemId" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.004"/>
+    <testcase name="testSaveItemInStock_nullItemId" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.003"/>
+    <testcase name="testDecrease_itemOutOfStock" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.005"/>
+    <testcase name="testGetInStockByItemId_nullItemId" classname="com.parasoft.demoapp.service.ItemInventoryServiceTest" time="0.004"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.RestEndpointServiceTest" tests="9" id="53" package="" time="0.081" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetItemsBaseUrl" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.003"/>
+    <testcase name="testUpdateEndpoint_nullId" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.004"/>
+    <testcase name="testGetCartBaseUrl" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.002"/>
+    <testcase name="testGetCategoriesBaseUrl" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.052"/>
+    <testcase name="testUpdateEndpoint_endpointNotFound" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.005"/>
+    <testcase name="testGetOrdersBaseUrl" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.003"/>
+    <testcase name="testUpdateEndpoint_nullParameter" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.003"/>
+    <testcase name="testUpdateEndpoint_normal" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.006"/>
+    <testcase name="testGetLocationsBaseUrl" classname="com.parasoft.demoapp.service.RestEndpointServiceTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ItemServiceSpringTest" tests="3" id="54" package="" time="0.172" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdate_defaultImage" classname="com.parasoft.demoapp.service.ItemServiceSpringTest" time="0.038"/>
+    <testcase name="testGetItems_normal" classname="com.parasoft.demoapp.service.ItemServiceSpringTest" time="0.103"/>
+    <testcase name="testAddItems_defaultImage" classname="com.parasoft.demoapp.service.ItemServiceSpringTest" time="0.031"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.ForgotPasswordControllerTest" tests="2" id="55" package="" time="0.115" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testForgotPassword_UserNotFoundException" classname="com.parasoft.demoapp.controller.ForgotPasswordControllerTest" time="0.017"/>
+    <testcase name="testForgotPassword_normal" classname="com.parasoft.demoapp.controller.ForgotPasswordControllerTest" time="0.098"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.ParasoftJDBCProxyControllerTest" tests="1" id="56" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetParasoftJDBCProxyStatus" classname="com.parasoft.demoapp.controller.ParasoftJDBCProxyControllerTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.model.global.RoleEntityTest" tests="5" id="57" package="" time="0.017" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testEquals" classname="com.parasoft.demoapp.model.global.RoleEntityTest" time="0.005"/>
+    <testcase name="testSetName" classname="com.parasoft.demoapp.model.global.RoleEntityTest" time="0.003"/>
+    <testcase name="testGetName" classname="com.parasoft.demoapp.model.global.RoleEntityTest" time="0.003"/>
+    <testcase name="testGetId" classname="com.parasoft.demoapp.model.global.RoleEntityTest" time="0.003"/>
+    <testcase name="testToString" classname="com.parasoft.demoapp.model.global.RoleEntityTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.LoginControllerTest" tests="4" id="58" package="" time="0.074" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testLogin_error_globalPreferencesMoreThanOneException" classname="com.parasoft.demoapp.controller.LoginControllerTest" time="0.006"/>
+    <testcase name="testLogin_error_globalPreferencesNotFoundException" classname="com.parasoft.demoapp.controller.LoginControllerTest" time="0.006"/>
+    <testcase name="testLogin_returnHomePage" classname="com.parasoft.demoapp.controller.LoginControllerTest" time="0.006"/>
+    <testcase name="testLogin_returnLoginPage" classname="com.parasoft.demoapp.controller.LoginControllerTest" time="0.056"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.industry.OutdoorDefaultDataSpringTest" tests="4" id="59" package="" time="0.109" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDefaultOutdoorOverridedLabelsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.OutdoorDefaultDataSpringTest" time="0.024"/>
+    <testcase name="testDefaultOutdoorOrdersSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.OutdoorDefaultDataSpringTest" time="0.023"/>
+    <testcase name="testDefaultOutdoorAssetsCreateSuccessfully" classname="com.parasoft.demoapp.defaultdata.industry.OutdoorDefaultDataSpringTest" time="0.039"/>
+    <testcase name="testDefaultOutdoorLocationsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.OutdoorDefaultDataSpringTest" time="0.023"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.global.GlobalUsersCreatorSpringTest" tests="1" id="60" package="" time="0.213" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDefaultUsersCreateSuccessfully" classname="com.parasoft.demoapp.defaultdata.global.GlobalUsersCreatorSpringTest" time="0.213"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.industry.DefenseDefaultDataSpringTest" tests="4" id="61" package="" time="0.113" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDefaultDefenseOrdersSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.DefenseDefaultDataSpringTest" time="0.024"/>
+    <testcase name="testDefaultOutdoorOverridedLabelsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.DefenseDefaultDataSpringTest" time="0.032"/>
+    <testcase name="testDefaultDefenseLocationsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.DefenseDefaultDataSpringTest" time="0.019"/>
+    <testcase name="testDefaultDefenseAssetsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.DefenseDefaultDataSpringTest" time="0.038"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.ResetEntranceSpringTest" tests="1" id="62" package="" time="0.228" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testRun" classname="com.parasoft.demoapp.defaultdata.ResetEntranceSpringTest" time="0.228"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.OrderServiceExtraTest" tests="1" id="63" package="" time="0.057" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetUnreviewedOrderNumber" classname="com.parasoft.demoapp.service.OrderServiceExtraTest" time="0.057"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.SearchControllerTest" tests="4" id="64" package="" time="0.024" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testSearchCategories_parameterException" classname="com.parasoft.demoapp.controller.SearchControllerTest" time="0.006"/>
+    <testcase name="testSearchItems_parameterException" classname="com.parasoft.demoapp.controller.SearchControllerTest" time="0.006"/>
+    <testcase name="testSearchItems_normal" classname="com.parasoft.demoapp.controller.SearchControllerTest" time="0.006"/>
+    <testcase name="testSearchCategories_normal" classname="com.parasoft.demoapp.controller.SearchControllerTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.LocalizationControllerTest" tests="4" id="65" package="" time="0.031" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetLocalization" classname="com.parasoft.demoapp.controller.LocalizationControllerTest" time="0.015"/>
+    <testcase name="testGetLocalizationForKey" classname="com.parasoft.demoapp.controller.LocalizationControllerTest" time="0.004"/>
+    <testcase name="testGetLocalization_exception" classname="com.parasoft.demoapp.controller.LocalizationControllerTest" time="0.006"/>
+    <testcase name="testGetLocalizationForKey_ResourceNotFoundException" classname="com.parasoft.demoapp.controller.LocalizationControllerTest" time="0.006"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" tests="7" id="66" package="" time="0.028" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testIsRestfulApiRequest_true1" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.003"/>
+    <testcase name="testIsRestfulApiRequest_true3" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.004"/>
+    <testcase name="testCommence_returnJsonString" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.006"/>
+    <testcase name="testCommence_redirectToLoginPage" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.003"/>
+    <testcase name="testIsRestfulApiRequest_true2" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.003"/>
+    <testcase name="testIsRestfulApiRequest_true4" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.006"/>
+    <testcase name="testIsRestfulApiRequest_false" classname="com.parasoft.demoapp.config.security.CustomAuthenticationEntryPointTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.datasource.IndustryDataSourceConfigSpringTest" tests="1" id="67" package="" time="0.115" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testIndustryTransactionManager_exceptionWithCustomizedMessage" classname="com.parasoft.demoapp.config.datasource.IndustryDataSourceConfigSpringTest" time="0.115"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.LabelServiceTest" tests="2" id="68" package="" time="0.084" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateLabelsInDB_nullLabelEntities" classname="com.parasoft.demoapp.service.LabelServiceTest" time="0.079"/>
+    <testcase name="testUpdateLabelsInDB_nullLanguageType" classname="com.parasoft.demoapp.service.LabelServiceTest" time="0.005"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.GlobalPreferencesServiceTest2" tests="2" id="69" package="" time="0.655" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetDefaultIndustry_normal" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest2" time="0.007"/>
+    <testcase name="testGetCurrentIndustry_normal" classname="com.parasoft.demoapp.service.GlobalPreferencesServiceTest2" time="0.648"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.ClearEntranceSpringTest" tests="1" id="70" package="" time="0.359" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testRun" classname="com.parasoft.demoapp.defaultdata.ClearEntranceSpringTest" time="0.359"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.BuildInfoServiceTest" tests="1" id="71" package="" time="0.060" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetBuildInfo" classname="com.parasoft.demoapp.service.BuildInfoServiceTest" time="0.060"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.util.RouteIdSortOfRestEndpointTest" tests="3" id="72" package="" time="0.071" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testCompare_greater_than" classname="com.parasoft.demoapp.util.RouteIdSortOfRestEndpointTest" time="0.003"/>
+    <testcase name="testCompare_less_than" classname="com.parasoft.demoapp.util.RouteIdSortOfRestEndpointTest" time="0.065"/>
+    <testcase name="testCompare_equal" classname="com.parasoft.demoapp.util.RouteIdSortOfRestEndpointTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.SwaggerUIControllerTest" tests="3" id="73" package="" time="3.469" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="swaggerOAuth2Logout_error_cannotLogoutFromKeycloakException" classname="com.parasoft.demoapp.controller.SwaggerUIControllerTest" time="3.435"/>
+    <testcase name="testShowSwaggerUIPage" classname="com.parasoft.demoapp.controller.SwaggerUIControllerTest" time="0.004"/>
+    <testcase name="swaggerOAuth2Logout_success" classname="com.parasoft.demoapp.controller.SwaggerUIControllerTest" time="0.030"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.model.industry.RegionTypeTest" tests="3" id="74" package="" time="0.007" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testIsIndustry" classname="com.parasoft.demoapp.model.industry.RegionTypeTest" time="0.002"/>
+    <testcase name="testGetRegionByIndustryType_Defense" classname="com.parasoft.demoapp.model.industry.RegionTypeTest" time="0.003"/>
+    <testcase name="testGetRegionsByIndustryType_Aerospace" classname="com.parasoft.demoapp.model.industry.RegionTypeTest" time="0.002"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryRequestQueueListenerTest" tests="2" id="75" package="" time="0.819" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testOnMessage_MessageToReply_Null" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryRequestQueueListenerTest" time="0.741"/>
+    <testcase name="testOnMessage_MessageToReply_NotNull" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQInventoryRequestQueueListenerTest" time="0.078"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.OrderServiceSpringTest" tests="5" id="76" package="" time="5.583" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateOrderByOrderNumber3" classname="com.parasoft.demoapp.service.OrderServiceSpringTest" time="1.108"/>
+    <testcase name="testUpdateOrderByOrderNumber1" classname="com.parasoft.demoapp.service.OrderServiceSpringTest" time="2.186"/>
+    <testcase name="testAddNewOrder" classname="com.parasoft.demoapp.service.OrderServiceSpringTest" time="0.056"/>
+    <testcase name="testUpdateOrderByOrderNumber2" classname="com.parasoft.demoapp.service.OrderServiceSpringTest" time="1.126"/>
+    <testcase name="testUpdateOrderByOrderNumber4" classname="com.parasoft.demoapp.service.OrderServiceSpringTest" time="1.107"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.CategoryServiceSpringTest" tests="3" id="77" package="" time="0.090" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetCategories" classname="com.parasoft.demoapp.service.CategoryServiceSpringTest" time="0.055"/>
+    <testcase name="testUpdateCategory_default" classname="com.parasoft.demoapp.service.CategoryServiceSpringTest" time="0.018"/>
+    <testcase name="testAddNewCategories_defaultImage" classname="com.parasoft.demoapp.service.CategoryServiceSpringTest" time="0.017"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.util.PropertiesMapUtilTest" tests="2" id="78" package="" time="0.005" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testSortByKey_null" classname="com.parasoft.demoapp.util.PropertiesMapUtilTest" time="0.002"/>
+    <testcase name="testSortByKey_normal" classname="com.parasoft.demoapp.util.PropertiesMapUtilTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.model.global.preferences.RestEndpointEntityTest" tests="1" id="79" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testToRealZuulRoute" classname="com.parasoft.demoapp.model.global.preferences.RestEndpointEntityTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.defaultdata.industry.AerospaceDefaultDataSpringTest" tests="4" id="80" package="" time="0.130" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDefaultAerospaceOrdersSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.AerospaceDefaultDataSpringTest" time="0.030"/>
+    <testcase name="testDefaultAerospaceAssetsCreateSuccessfully" classname="com.parasoft.demoapp.defaultdata.industry.AerospaceDefaultDataSpringTest" time="0.040"/>
+    <testcase name="testDefaultOutdoorOverridedLabelsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.AerospaceDefaultDataSpringTest" time="0.034"/>
+    <testcase name="testDefaultAerospaceLocationsSuccessfullyCreated" classname="com.parasoft.demoapp.defaultdata.industry.AerospaceDefaultDataSpringTest" time="0.026"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.model.industry.OrderEntityTest" tests="1" id="81" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testCopy" classname="com.parasoft.demoapp.model.industry.OrderEntityTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.rabbitmq.RabbitMQConfigSpringTest" tests="1" id="82" package="" time="0.020" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testInitRabbitMQConfig" classname="com.parasoft.demoapp.config.rabbitmq.RabbitMQConfigSpringTest" time="0.020"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.BuildInfoControllerTest" tests="1" id="83" package="" time="0.030" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGetBuildInfo" classname="com.parasoft.demoapp.controller.BuildInfoControllerTest" time="0.030"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.security.CustomAccessDeniedHandlerTest" tests="2" id="84" package="" time="0.012" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="handle_restApiRequest" classname="com.parasoft.demoapp.config.security.CustomAccessDeniedHandlerTest" time="0.005"/>
+    <testcase name="handle_noRestApiRequest" classname="com.parasoft.demoapp.config.security.CustomAccessDeniedHandlerTest" time="0.007"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.datasource.IndustryRoutingDataSourceTest" tests="1" id="85" package="" time="0.088" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testDetermineTargetDataSource_exception_IllegalStateException" classname="com.parasoft.demoapp.config.datasource.IndustryRoutingDataSourceTest" time="0.088"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.GlobalPreferencesMQServiceTest" tests="1" id="86" package="" time="0.256" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testSendToIndustryChangeTopic" classname="com.parasoft.demoapp.service.GlobalPreferencesMQServiceTest" time="0.256"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.OrderServiceSpringTest3" tests="1" id="87" package="" time="2.107" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testAddNewOrderSynchronized_concurrency" classname="com.parasoft.demoapp.service.OrderServiceSpringTest3" time="2.107"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.dto.LabelsRequestDTOTest" tests="1" id="88" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testToEntities_nullLabelPairs" classname="com.parasoft.demoapp.dto.LabelsRequestDTOTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.MQIntegrationTest" tests="1" id="89" package="" time="7.599" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testOrderFlowAgainstDifferentMQs" classname="com.parasoft.demoapp.config.MQIntegrationTest" time="7.599"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.OrderServiceSpringTest4" tests="1" id="90" package="" time="3.171" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUpdateOrderByOrderNumberSynchronized_concurrency" classname="com.parasoft.demoapp.service.OrderServiceSpringTest4" time="3.171"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.config.ImplementedIndustriesTest" tests="1" id="91" package="" time="0.003" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testGet" classname="com.parasoft.demoapp.config.ImplementedIndustriesTest" time="0.003"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.dto.InventoryInfoDTOTest" tests="1" id="92" package="" time="0.002" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testConvertFrom" classname="com.parasoft.demoapp.dto.InventoryInfoDTOTest" time="0.002"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.service.ShoppingCartServiceSpringTest" tests="1" id="93" package="" time="5.126" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testAddCartItemInShoppingCart_concurrency" classname="com.parasoft.demoapp.service.ShoppingCartServiceSpringTest" time="5.126"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+  <testsuite name="com.parasoft.demoapp.controller.OrderControllerExtraTest" tests="1" id="94" package="" time="0.049" hostname="DESKTOP-DA1F8Q7" timestamp="2023-05-06T03:30:05" failures="0" errors="0">
+    <properties/>
+    <testcase name="testUnreviewedOrderNumber" classname="com.parasoft.demoapp.controller.OrderControllerExtraTest" time="0.049"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
