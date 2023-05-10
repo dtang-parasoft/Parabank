@@ -18,7 +18,7 @@
          </file>
       </package>
    </project>
-   <testproject name="testproject Coverage Report" timestamp="1683688422817">
+<!--    <testproject name="testproject Coverage Report" timestamp="1683688422817">
       <metrics coveredelements="11" complexity="8" loc="65" methods="8" classes="3" statements="18" packages="2" coveredconditionals="0" coveredmethods="3" elements="26" ncloc="47" files="3" conditionals="0" coveredstatements="8"/>
       <package name="com.cenqua.clovertest.subpackage">
          <metrics coveredelements="11" complexity="3" loc="26" methods="3" classes="1" statements="8" coveredconditionals="0" coveredmethods="3" elements="11" ncloc="19" files="1" conditionals="0" coveredstatements="8"/>
@@ -44,5 +44,5 @@
             </class>
          </file>
       </package>
-   </testproject>
+   </testproject> -->
 </coverage>
