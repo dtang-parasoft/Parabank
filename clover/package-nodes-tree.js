@@ -8,11 +8,11 @@ var Packages = {
     "id": "com.cenqua.clovertest",
     "text": "com.cenqua.clovertest",
     "package": "com.cenqua.clovertest",
-    "url": "com/cenqua/clovertest/pkg-summary.html",
-            "coverage": "90%",
+    "url": "com/cenqua/clovertest/testsrc-pkg-summary.html",
+            "coverage": "0%",
         "icon": "aui-icon aui-icon-small aui-iconfont-devtools-folder-closed",
             "li_attr": {"data-is-link": "true"},
-        "a_attr": {"href": "com/cenqua/clovertest/pkg-summary.html"},
+        "a_attr": {"href": "com/cenqua/clovertest/testsrc-pkg-summary.html"},
     "children": [
                                             
                 
