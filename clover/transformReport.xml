@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage generated="1683612513186" clover="4.1.2">
   <project name="first report" timestamp="1684850147488">
-    <metrics coveredelements="16" complexity="15" loc="46" methods="14" classes="12" statements="16" packages="11" coveredconditionals="11" coveredmethods="12" elements="22" ncloc="36" files="1" conditionals="12" coveredstatements="13"/>
+    <metrics coveredelements="16" complexity="15" loc="46" methods1="14" classes="12" statements="16" packages="11" coveredconditionals="11" coveredmethods="12" elements="22" ncloc="36" files="1" conditionals="12" coveredstatements="13"/>
     <package name="com.cenqua.clovertest.subpackage">
       <metrics coveredelements="6" complexity="5" loc="32" methods="4" classes="2" statements="6" coveredconditionals="1" coveredmethods="2" elements="12" ncloc="26" files="2" conditionals="2" coveredstatements="3"/>
       <file path="E:subpackageM1.java" name="M1.java">
